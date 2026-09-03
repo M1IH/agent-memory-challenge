@@ -21,9 +21,16 @@ _LATIN_WORD = re.compile(r"[a-z0-9]+(?:['_-][a-z0-9]+)*", re.I)
 _CJK_RUN = re.compile(r"[\u3400-\u9fff]+")
 _OPTION_LABEL = re.compile(r"^\s*(?:[A-Z]|\d+)[.、:)）]\s*", re.I)
 _CONCEPT_GROUPS = (
-    ("住", "居住", "生活", "定居", "落脚", "live", "reside"),
+    (
+        "住", "居住", "生活", "定居", "落脚", "搬到", "迁居",
+        "live", "reside", "relocate", "relocated", "move", "moved",
+    ),
     ("买", "购买", "入手", "添置", "购置", "bought", "buy", "purchase"),
     ("喜欢", "偏爱", "最爱", "首选", "favorite", "prefer"),
+    (
+        "避免", "不吃", "讨厌", "不喜欢", "过敏",
+        "avoid", "cannot stand", "dislike", "hate", "allergic", "allergy",
+    ),
     ("工作", "职业", "职位", "任职", "job", "career", "work"),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")

@@ -2,6 +2,8 @@
 
 个人参赛的 Agent Memory Challenge 文本赛道开源基线系统。
 
+本项目采用 [MIT License](LICENSE)。
+
 当前版本实现官方同步 `Add / Search` 协议，使用 SQLite 持久化，并通过
 `user_id` 严格隔离不同用户。检索融合 BM25 风格词项匹配、本地 BGE
 英文向量、选择题选项通道和时间更新加权。模型在 Docker 构建时固化，

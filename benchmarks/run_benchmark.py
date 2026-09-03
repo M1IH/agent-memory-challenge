@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import tempfile
 from collections import defaultdict
@@ -9,10 +10,18 @@ from app.store import MemoryStore
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run the local retrieval benchmark.")
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="print ranked candidates for cases with evidence outside rank one",
+    )
+    args = parser.parse_args()
     cases_path = Path(__file__).with_name("retrieval_cases.json")
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     reciprocal_rank_sum = 0.0
     hits_at_1 = 0
+    hits_at_3 = 0
     hits_at_5 = 0
     evidence_count = 0
     category_scores: dict[str, list[float]] = defaultdict(list)
@@ -59,14 +68,20 @@ def main() -> None:
             reciprocal_ranks = [0.0 if rank is None else 1.0 / rank for rank in ranks]
             reciprocal_rank_sum += sum(reciprocal_ranks)
             hits_at_1 += sum(rank == 1 for rank in ranks)
+            hits_at_3 += sum(rank is not None and rank <= 3 for rank in ranks)
             hits_at_5 += sum(rank is not None and rank <= 5 for rank in ranks)
             evidence_count += len(ranks)
             case_score = sum(reciprocal_ranks) / len(reciprocal_ranks)
             category_scores[case["category"]].append(case_score)
             passed = all(rank is not None and rank <= 5 for rank in ranks)
             print(f"{'PASS' if passed else 'MISS'}  {case['name']}: ranks={ranks}")
+            if args.verbose and any(rank != 1 for rank in ranks):
+                for rank, result in enumerate(results, start=1):
+                    content = result["content"].replace("\n", " | ")
+                    print(f"      {rank:>2}. {result['score']:.6f}  {content}")
 
     print(f"\nEvidence Hit@1: {hits_at_1 / evidence_count:.3f} ({hits_at_1}/{evidence_count})")
+    print(f"Evidence Hit@3: {hits_at_3 / evidence_count:.3f} ({hits_at_3}/{evidence_count})")
     print(f"Evidence Hit@5: {hits_at_5 / evidence_count:.3f} ({hits_at_5}/{evidence_count})")
     print(f"Evidence MRR:   {reciprocal_rank_sum / evidence_count:.3f}")
     print("Categories:")

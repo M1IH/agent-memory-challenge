@@ -78,6 +78,15 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertIn("入手", terms)
         self.assertIn("购买", terms)
 
+    def test_semantic_expansion_connects_residence_and_avoidance_phrases(self):
+        residence_terms = semantic_expansion_terms("Which city do I live in now?")
+        avoidance_terms = semantic_expansion_terms(
+            "Which ingredient should a recommendation avoid?"
+        )
+        self.assertIn("relocated", residence_terms)
+        self.assertIn("cannot", avoidance_terms)
+        self.assertIn("stand", avoidance_terms)
+
     def test_current_question_prefers_later_updated_memory(self):
         self.add("alice", "req-1", "我现在最喜欢的早餐是豆浆油条", 1704067200000)
         self.add("alice", "req-2", "后来口味变了，早餐首选燕麦酸奶", 1735689600000)
