@@ -1,0 +1,173 @@
+[
+  {
+    "name": "direct_fact_zh",
+    "category": "direct_fact",
+    "memories": [
+      {"content": "我最喜欢喝乌龙茶", "timestamp": 1704067200000},
+      {"content": "我周末经常去爬山", "timestamp": 1704153600000}
+    ],
+    "query": "我喜欢喝什么？",
+    "options": ["A. 咖啡", "B. 乌龙茶"],
+    "expected": "乌龙茶"
+  },
+  {
+    "name": "direct_fact_en",
+    "category": "direct_fact",
+    "memories": [
+      {"content": "My emergency contact is Jordan Lee.", "timestamp": 1704067200000},
+      {"content": "I ordered a mechanical keyboard yesterday.", "timestamp": 1704153600000}
+    ],
+    "query": "Who is my emergency contact?",
+    "options": null,
+    "expected": "Jordan Lee"
+  },
+  {
+    "name": "option_distractors",
+    "category": "multiple_choice",
+    "memories": [
+      {"content": "我的宠物名字叫豆包", "timestamp": 1704067200000},
+      {"content": "雪球、咖啡、北京和蓝色是会议中的候选词", "timestamp": 1704153600000}
+    ],
+    "query": "我的宠物叫什么名字？",
+    "options": ["A. 雪球", "B. 咖啡", "C. 北京", "D. 豆包"],
+    "expected": "豆包"
+  },
+  {
+    "name": "latest_preference",
+    "category": "temporal_update",
+    "memories": [
+      {"content": "我现在最喜欢的早餐是豆浆油条", "timestamp": 1704067200000},
+      {"content": "后来口味变了，早餐首选燕麦酸奶", "timestamp": 1735689600000}
+    ],
+    "query": "我现在最喜欢什么早餐？",
+    "options": null,
+    "expected": "燕麦酸奶"
+  },
+  {
+    "name": "paraphrase_residence",
+    "category": "paraphrase",
+    "memories": [
+      {"content": "毕业以后我定居在成都", "timestamp": 1704067200000},
+      {"content": "武汉是一座生活节奏很鲜明的城市", "timestamp": 1704153600000}
+    ],
+    "query": "我目前在哪座城市生活？",
+    "options": null,
+    "expected": "成都"
+  },
+  {
+    "name": "paraphrase_purchase",
+    "category": "paraphrase",
+    "memories": [
+      {"content": "上周入手了一台白色的空气炸锅", "timestamp": 1704067200000},
+      {"content": "厨房里的厨具清单需要重新整理", "timestamp": 1704153600000}
+    ],
+    "query": "我最近添置的厨具是什么？",
+    "options": null,
+    "expected": "空气炸锅"
+  },
+  {
+    "name": "session_context",
+    "category": "multi_turn",
+    "memories": [
+      {"content": "周六上午我要去滨江图书馆还书", "timestamp": 1704067200000},
+      {"content": "周日下午和小林在东湖公园跑步", "timestamp": 1704153600000}
+    ],
+    "query": "我周六上午要去哪里？",
+    "options": null,
+    "expected": "滨江图书馆"
+  },
+  {
+    "name": "negative_noise",
+    "category": "noise_resistance",
+    "memories": [
+      {"content": "代码仓库的访问口令提示词是蓝鲸", "timestamp": 1704067200000},
+      {"content": "今天看了一篇介绍鲸鱼迁徙的文章", "timestamp": 1704153600000},
+      {"content": "蓝色的文件夹已经归档", "timestamp": 1704240000000}
+    ],
+    "query": "代码仓库的口令提示是什么？",
+    "options": null,
+    "expected": "蓝鲸"
+  },
+  {
+    "name": "english_residence_paraphrase",
+    "category": "paraphrase",
+    "memories": [
+      {"content": "After graduation, I relocated to Seattle.", "timestamp": 1704067200000},
+      {"content": "Boston is a city with several famous universities.", "timestamp": 1704153600000}
+    ],
+    "query": "Which city do I live in now?",
+    "options": null,
+    "expected": "Seattle"
+  },
+  {
+    "name": "implicit_food_preference",
+    "category": "personalization",
+    "memories": [
+      {"content": "I cannot stand cilantro in any dish.", "timestamp": 1704067200000},
+      {"content": "The restaurant also serves dishes with basil and mint.", "timestamp": 1704153600000}
+    ],
+    "query": "Which ingredient should a restaurant recommendation avoid for me?",
+    "options": null,
+    "expected": "cilantro"
+  },
+  {
+    "name": "two_hop_family_location",
+    "category": "multi_hop",
+    "memories": [
+      {"content": "My brother's name is Noah.", "timestamp": 1704067200000},
+      {"content": "Noah moved to Lisbon for a new job.", "timestamp": 1704153600000},
+      {"content": "My cousin Maya visited Madrid last summer.", "timestamp": 1704240000000}
+    ],
+    "query": "Where does my brother live?",
+    "options": null,
+    "expected_all": ["brother's name is Noah", "Noah moved to Lisbon"]
+  },
+  {
+    "name": "complete_activity_list",
+    "category": "list_recall",
+    "memories": [
+      {"content": "I joined a pottery class on Tuesdays.", "timestamp": 1704067200000},
+      {"content": "I also started indoor climbing on Fridays.", "timestamp": 1704153600000},
+      {"content": "On Sunday mornings I volunteer at the animal shelter.", "timestamp": 1704240000000},
+      {"content": "My colleague spends weekends playing tennis.", "timestamp": 1704326400000}
+    ],
+    "query": "What new weekly activities did I take up?",
+    "options": null,
+    "expected_all": ["pottery class", "indoor climbing", "animal shelter"]
+  },
+  {
+    "name": "privacy_process_rule",
+    "category": "rules_privacy",
+    "memories": [
+      {"content": "Before sharing a report externally, always remove customer email addresses.", "timestamp": 1704067200000},
+      {"content": "Reports use the blue presentation template.", "timestamp": 1704153600000}
+    ],
+    "query": "What privacy step is required before I send a report outside the company?",
+    "options": null,
+    "expected": "remove customer email addresses"
+  },
+  {
+    "name": "english_latest_status",
+    "category": "temporal_update",
+    "memories": [
+      {"content": "I currently commute by bus.", "timestamp": 1704067200000},
+      {"content": "After buying a bicycle, I switched to cycling to work.", "timestamp": 1735689600000}
+    ],
+    "query": "How do I currently get to work?",
+    "options": null,
+    "expected": "cycling"
+  },
+  {
+    "name": "conversation_coreference",
+    "category": "multi_turn",
+    "single_add": true,
+    "memories": [
+      {"role": "user", "content": "My new manager is Priya.", "timestamp": 1704067200000},
+      {"role": "assistant", "content": "She moved the weekly review to Thursday.", "timestamp": 1704067260000},
+      {"role": "user", "content": "Thanks, I will update my calendar.", "timestamp": 1704067320000}
+    ],
+    "query": "When is Priya's weekly review?",
+    "options": null,
+    "expected_all": ["My new manager is Priya", "weekly review to Thursday"]
+  }
+]

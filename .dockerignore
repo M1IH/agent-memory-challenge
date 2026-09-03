@@ -1,0 +1,15 @@
+.git
+.docker-cli
+.venv
+__pycache__
+*.py[cod]
+*.db
+*.sqlite*
+.pytest_cache
+.mypy_cache
+.ruff_cache
+benchmarks
+docs
+scripts
+tests
+
