@@ -83,12 +83,14 @@ class MemoryStore:
         self.path = str(path)
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
-        if embedder is False or os.getenv("AML_EMBED_ENABLED", "true").lower() in {
-            "0", "false", "no", "off"
-        }:
+        if embedder is False:
             self._embedder = None
         elif embedder is not None:
             self._embedder = embedder
+        elif os.getenv("AML_EMBED_ENABLED", "true").lower() in {
+            "0", "false", "no", "off"
+        }:
+            self._embedder = None
         else:
             self._embedder = EmbeddingBackend()
         self._initialize()
