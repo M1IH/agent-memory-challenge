@@ -23,3 +23,36 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
 
+  docker-offline-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t agent-memory-challenge:ci .
+      - name: Verify baked model without runtime network
+        run: |
+          docker run -d --name aml-ci --network none -e AML_API_KEY=ci-secret agent-memory-challenge:ci
+          for attempt in $(seq 1 30); do
+            docker exec aml-ci python -c "import urllib.request; assert urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200" && break
+            sleep 2
+          done
+          docker exec -i aml-ci python - <<'PY'
+          import json
+          import urllib.request
+
+          def post(path, payload):
+              request = urllib.request.Request(
+                  "http://127.0.0.1:8000" + path,
+                  data=json.dumps(payload).encode(),
+                  headers={"Authorization": "Bearer ci-secret", "Content-Type": "application/json"},
+              )
+              with urllib.request.urlopen(request) as response:
+                  return json.load(response)
+
+          post("/add", {
+              "request_id": "ci-offline", "user_id": "alice", "session_id": "session",
+              "messages": [{"role": "user", "content": "My emergency contact is Jordan."}],
+          })
+          result = post("/search", {"query": "emergency contact", "user_id": "alice", "top_k": 10})
+          assert "Jordan" in result["data"][0]["content"]
+          PY

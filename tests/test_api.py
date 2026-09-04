@@ -97,6 +97,37 @@ class ApiContractTests(unittest.TestCase):
         )
         self.assertEqual(422, response.status_code)
 
+    def test_blank_content_and_unrepresentable_timestamp_are_rejected(self):
+        base = {
+            "request_id": "req-invalid",
+            "user_id": "alice",
+            "session_id": "session-1",
+        }
+        blank = self.client.post(
+            "/add", json={**base, "messages": [{"role": "user", "content": "   "}]}
+        )
+        bad_time = self.client.post(
+            "/add",
+            json={**base, "messages": [{"role": "user", "content": "ok", "timestamp": 10**30}]},
+        )
+        self.assertEqual(422, blank.status_code)
+        self.assertEqual(422, bad_time.status_code)
+
+    def test_request_id_reuse_with_different_payload_is_rejected(self):
+        base = {
+            "request_id": "req-reused",
+            "user_id": "alice",
+            "session_id": "session-1",
+        }
+        first = self.client.post(
+            "/add", json={**base, "messages": [{"role": "user", "content": "first"}]}
+        )
+        conflict = self.client.post(
+            "/add", json={**base, "messages": [{"role": "user", "content": "second"}]}
+        )
+        self.assertEqual(200, first.status_code)
+        self.assertEqual(409, conflict.status_code)
+
     def test_system_messages_are_accepted_and_searchable(self):
         add_response = self.client.post(
             "/add",

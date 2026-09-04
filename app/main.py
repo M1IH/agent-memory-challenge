@@ -2,23 +2,42 @@ from __future__ import annotations
 
 import os
 import secrets
+from datetime import datetime, timezone
 from fastapi import Depends, FastAPI, Header, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from .store import MemoryStore
 
 
 class Message(BaseModel):
     role: str = Field(min_length=1, max_length=32)
-    content: str = Field(min_length=1)
+    content: str = Field(min_length=1, max_length=100_000)
     timestamp: int | None = None
+
+    @field_validator("content")
+    @classmethod
+    def content_must_not_be_blank(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("content must not be blank")
+        return value
+
+    @field_validator("timestamp")
+    @classmethod
+    def timestamp_must_be_representable(cls, value: int | None) -> int | None:
+        if value is not None:
+            try:
+                datetime.fromtimestamp(value / 1000, tz=timezone.utc)
+            except (OverflowError, OSError, ValueError) as exc:
+                raise ValueError("timestamp is outside the supported range") from exc
+        return value
 
 
 class AddRequest(BaseModel):
-    request_id: str = Field(min_length=1)
-    messages: list[Message] = Field(min_length=1)
-    user_id: str = Field(min_length=1)
-    session_id: str = Field(min_length=1)
+    request_id: str = Field(min_length=1, max_length=512)
+    messages: list[Message] = Field(min_length=1, max_length=1000)
+    user_id: str = Field(min_length=1, max_length=512)
+    session_id: str = Field(min_length=1, max_length=512)
 
 
 class AddResponse(BaseModel):
@@ -29,9 +48,9 @@ class AddResponse(BaseModel):
 
 
 class SearchRequest(BaseModel):
-    query: str = Field(min_length=1)
-    options: list[str] | None = None
-    user_id: str = Field(min_length=1)
+    query: str = Field(min_length=1, max_length=100_000)
+    options: list[str] | None = Field(default=None, max_length=1000)
+    user_id: str = Field(min_length=1, max_length=512)
     top_k: int = Field(ge=1, le=1000)
 
 
@@ -73,12 +92,15 @@ def health() -> dict[str, str]:
 
 @app.post("/add", response_model=AddResponse, dependencies=[Depends(require_api_key)])
 def add_memory(request: AddRequest) -> AddResponse:
-    store.add(
-        request_id=request.request_id,
-        user_id=request.user_id,
-        session_id=request.session_id,
-        messages=[message.model_dump() for message in request.messages],
-    )
+    try:
+        store.add(
+            request_id=request.request_id,
+            user_id=request.user_id,
+            session_id=request.session_id,
+            messages=[message.model_dump() for message in request.messages],
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     return AddResponse(
         success=True,
         request_id=request.request_id,

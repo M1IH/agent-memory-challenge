@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 import os
 import re
@@ -132,6 +133,16 @@ class MemoryStore:
             connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_memories_user ON memories(user_id)"
             )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS add_requests (
+                    user_id TEXT NOT NULL,
+                    request_id TEXT NOT NULL,
+                    payload_hash TEXT NOT NULL,
+                    PRIMARY KEY (user_id, request_id)
+                )
+                """
+            )
             columns = {
                 row["name"]
                 for row in connection.execute("PRAGMA table_info(memories)").fetchall()
@@ -176,6 +187,10 @@ class MemoryStore:
             if self._embedder is not None
             else [None] * len(raw_contents)
         )
+        if len(embeddings) != len(message_values):
+            raise RuntimeError(
+                "embedding backend returned a different number of vectors than messages"
+            )
         rows = []
         now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         for index, (message, content, display_content, index_content, embedding) in enumerate(
@@ -201,7 +216,32 @@ class MemoryStore:
                     None if embedding is None else embedding.tobytes(),
                 )
             )
+        payload_hash = hashlib.sha256(
+            json.dumps(
+                {"session_id": session_id, "messages": message_values},
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
         with self._lock, self._connection() as connection:
+            claim = connection.execute(
+                """
+                INSERT OR IGNORE INTO add_requests (user_id, request_id, payload_hash)
+                VALUES (?, ?, ?)
+                """,
+                (user_id, request_id, payload_hash),
+            )
+            if claim.rowcount == 0:
+                existing = connection.execute(
+                    "SELECT payload_hash FROM add_requests WHERE user_id = ? AND request_id = ?",
+                    (user_id, request_id),
+                ).fetchone()
+                if existing["payload_hash"] != payload_hash:
+                    raise ValueError(
+                        "request_id was already used with a different payload"
+                    )
+                return
             connection.executemany(
                 """
                 INSERT OR IGNORE INTO memories
@@ -241,18 +281,20 @@ class MemoryStore:
         if not db_rows:
             return []
 
-        memories = [
-            Memory(
+        memories = []
+        for row in db_rows:
+            embedding = None
+            if row["embedding"] is not None:
+                try:
+                    embedding = np.frombuffer(row["embedding"], dtype=np.float32)
+                except ValueError:
+                    embedding = None
+            memories.append(Memory(
                 id=row["id"], content=row["content"],
                 timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
                 terms=row["terms"].split(),
-                embedding=(
-                    np.frombuffer(row["embedding"], dtype=np.float32)
-                    if row["embedding"] is not None else None
-                ),
-            )
-            for row in db_rows
-        ]
+                embedding=embedding,
+            ))
         document_frequency: dict[str, int] = {}
         for memory in memories:
             for term in set(memory.terms):
@@ -313,10 +355,17 @@ class MemoryStore:
             scores = lexical_scores
         else:
             query_vector = self._embedder.encode([query])[0]
+            compatible_memories = [
+                memory for memory in memories
+                if memory.embedding is not None
+                and memory.embedding.shape == query_vector.shape
+            ]
+            if not compatible_memories:
+                return self._results(lexical_scores, top_k)
             dense_scores = sorted(
                 (
                     (float(np.dot(query_vector, memory.embedding)), memory)
-                    for memory in memories if memory.embedding is not None
+                    for memory in compatible_memories
                 ),
                 key=lambda item: (item[0], item[1].timestamp_ms or 0),
                 reverse=True,
@@ -347,12 +396,16 @@ class MemoryStore:
                 key=lambda item: (item[0], item[1].timestamp_ms or 0), reverse=True
             )
             scores = fused
+        return self._results(scores, top_k)
+
+    @staticmethod
+    def _results(scores: list[tuple[float, Memory]], top_k: int) -> list[dict]:
         return [
             {
                 "id": memory.id,
                 "content": memory.content,
                 "score": round(score, 6),
-                "created_at": self._source_time(memory),
+                "created_at": MemoryStore._source_time(memory),
             }
             for score, memory in scores[:top_k]
         ]

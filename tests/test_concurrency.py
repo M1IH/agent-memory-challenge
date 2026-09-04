@@ -62,6 +62,20 @@ class ConcurrencyTests(unittest.TestCase):
             result_ids = list(executor.map(search, range(64)))
         self.assertEqual(1, len(set(result_ids)))
 
+    def test_same_request_is_idempotent_across_store_instances(self):
+        path = Path(self.temp_dir.name) / "multi-instance.db"
+        stores = [MemoryStore(path, embedder=False), MemoryStore(path, embedder=False)]
+        payload = [{"role": "user", "content": "only once", "timestamp": None}]
+
+        def add(index: int) -> None:
+            stores[index % 2].add("same-request", "alice", "session", payload)
+
+        with ThreadPoolExecutor(max_workers=16) as executor:
+            list(executor.map(add, range(64)))
+
+        results = stores[0].search("alice", "only once", 10)
+        self.assertEqual(1, len(results))
+
 
 if __name__ == "__main__":
     unittest.main()
