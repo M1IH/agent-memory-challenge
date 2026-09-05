@@ -92,9 +92,12 @@ python -m benchmarks.run_benchmark
 ```
 
 脚本输出 Hit@1、MRR 和各题型得分，用于确保检索增强不是只凭感觉调参。
-使用 `--suite extended` 会在 15 个核心案例之外运行 100 个确定性合成案例；
+使用 `--suite extended` 会在 15 个核心案例之外运行 110 个确定性合成案例；
 `--json-output result.json` 可保存机器可读指标，`--fail-on-miss` 可让任何
 Evidence Hit@5 漏召回直接使命令失败。扩展案例只用于回归测试，不含官方评测数据。
+
+运行 `python -m benchmarks.run_ablation` 可比较纯词法、纯向量、完整融合、
+关闭概念扩展、关闭时间加权、等权 RRF，以及不同 `top_k` 的指标差异。
 
 设置 `AML_EMBED_ENABLED=false` 可关闭向量通道，退回纯关键词检索。
 

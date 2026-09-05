@@ -80,5 +80,13 @@ def build_extended_cases() -> list[dict]:
                              {"content": "I keep old tickets in a drawer.", "timestamp": base + 1}],
                 "query": "我最想去哪个城市旅行？", "expected": cities[i],
             },
+            {
+                "name": f"extended_hard_temporal_{i}", "category": "temporal_update",
+                "memories": [
+                    {"content": f"My current desk location is Room-{100 + i}.", "timestamp": base},
+                    {"content": f"Later, it changed to Room-{200 + i}.", "timestamp": base + 100_000},
+                ],
+                "query": "What is my current desk location?", "expected": f"Room-{200 + i}",
+            },
         ])
     return cases

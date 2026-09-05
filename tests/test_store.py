@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from app.store import MemoryStore, semantic_expansion_terms, tokenize
+from app.store import MemoryStore, RetrievalConfig, semantic_expansion_terms, tokenize
 
 
 class MemoryStoreTests(unittest.TestCase):
@@ -92,6 +92,18 @@ class MemoryStoreTests(unittest.TestCase):
         self.add("alice", "req-2", "后来口味变了，早餐首选燕麦酸奶", 1735689600000)
         results = self.store.search("alice", "我现在最喜欢什么早餐", 10)
         self.assertIn("燕麦酸奶", results[0]["content"])
+
+    def test_temporal_ablation_switch_removes_update_preference(self):
+        self.add("alice", "req-1", "My current desk location is Room-101.", 1704067200000)
+        self.add("alice", "req-2", "Later, it changed to Room-202.", 1704067300000)
+        self.assertIn("Room-202", self.store.search("alice", "What is my current desk location?", 1)[0]["content"])
+        ablated = MemoryStore(
+            Path(self.temp_dir.name) / "test.db",
+            embedder=False,
+            retrieval_config=RetrievalConfig(temporal_enabled=False),
+        )
+        result = ablated.search("alice", "What is my current desk location?", 1)
+        self.assertIn("Room-101", result[0]["content"])
 
     def test_returned_memory_carries_timestamp_and_role(self):
         self.add("alice", "req-1", "周六去图书馆", 1704067200000)

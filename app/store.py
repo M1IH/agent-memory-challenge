@@ -38,6 +38,15 @@ _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", 
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
 
 
+@dataclass(frozen=True)
+class RetrievalConfig:
+    lexical_enabled: bool = True
+    expansion_enabled: bool = True
+    temporal_enabled: bool = True
+    lexical_weight: float = 1.0
+    dense_weight: float = 0.85
+
+
 def tokenize(text: str) -> list[str]:
     """Tokenize English words and overlapping Chinese characters/bigrams."""
     lowered = text.lower()
@@ -80,10 +89,12 @@ class MemoryStore:
         self,
         path: str | Path,
         embedder: Encoder | bool | None = None,
+        retrieval_config: RetrievalConfig | None = None,
     ):
         self.path = str(path)
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
+        self._retrieval = retrieval_config or RetrievalConfig()
         if embedder is False:
             self._embedder = None
         elif embedder is not None:
@@ -260,7 +271,8 @@ class MemoryStore:
         options: list[str] | None = None,
     ) -> list[dict]:
         query_terms = tokenize(query)
-        expansion_terms = semantic_expansion_terms(query)
+        config = self._retrieval
+        expansion_terms = semantic_expansion_terms(query) if config.expansion_enabled else []
         option_texts = [
             _OPTION_LABEL.sub("", option).strip()
             for option in (options or [])
@@ -304,6 +316,10 @@ class MemoryStore:
         lexical_scores = []
         newest_timestamp = max((memory.timestamp_ms or 0) for memory in memories)
         oldest_timestamp = min((memory.timestamp_ms or 0) for memory in memories)
+        rank_timestamp = (
+            (lambda memory: memory.timestamp_ms or 0)
+            if config.temporal_enabled else (lambda memory: 0)
+        )
         asks_for_current = any(marker in query.lower() for marker in _CURRENT_MARKERS)
         for memory in memories:
             score = self._bm25(
@@ -337,7 +353,7 @@ class MemoryStore:
                 score += 2.0
             if any(option.lower() in memory.content.lower() for option in option_texts):
                 score += 0.5
-            if asks_for_current:
+            if config.temporal_enabled and asks_for_current:
                 if newest_timestamp > oldest_timestamp and memory.timestamp_ms is not None:
                     score += 0.4 * (
                         (memory.timestamp_ms - oldest_timestamp)
@@ -345,11 +361,11 @@ class MemoryStore:
                     )
                 if any(marker in memory.content.lower() for marker in _UPDATE_MARKERS):
                     score += 10.0
-            if score > 0:
+            if config.lexical_enabled and score > 0:
                 lexical_scores.append((score, memory))
 
         lexical_scores.sort(
-            key=lambda item: (item[0], item[1].timestamp_ms or 0), reverse=True
+            key=lambda item: (item[0], rank_timestamp(item[1])), reverse=True
         )
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
@@ -367,7 +383,7 @@ class MemoryStore:
                     (float(np.dot(query_vector, memory.embedding)), memory)
                     for memory in compatible_memories
                 ),
-                key=lambda item: (item[0], item[1].timestamp_ms or 0),
+                key=lambda item: (item[0], rank_timestamp(item[1])),
                 reverse=True,
             )
             lexical_ranks = {
@@ -384,16 +400,16 @@ class MemoryStore:
             for memory_id in set(lexical_ranks) | set(dense_ranks):
                 score = 0.0
                 if memory_id in lexical_ranks:
-                    score += 1.0 / (60 + lexical_ranks[memory_id])
+                    score += config.lexical_weight / (60 + lexical_ranks[memory_id])
                 if memory_id in dense_ranks:
-                    score += 0.85 / (60 + dense_ranks[memory_id])
+                    score += config.dense_weight / (60 + dense_ranks[memory_id])
                 # Preserve strong temporal/update preferences established in the
                 # lexical channel without letting raw BM25 scale dominate fusion.
-                if lexical_raw.get(memory_id, 0.0) >= 8.0:
+                if config.lexical_weight > 0 and lexical_raw.get(memory_id, 0.0) >= 8.0:
                     score += 0.002
                 fused.append((score, memory_by_id[memory_id]))
             fused.sort(
-                key=lambda item: (item[0], item[1].timestamp_ms or 0), reverse=True
+                key=lambda item: (item[0], rank_timestamp(item[1])), reverse=True
             )
             scores = fused
         return self._results(scores, top_k)
