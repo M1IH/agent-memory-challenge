@@ -37,6 +37,7 @@ _CONCEPT_GROUPS = (
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
 _TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
+_ENTITY_STOP = {"My", "The", "A", "An", "I", "He", "She", "It", "We", "They", "Project", "Room", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 
 
 def topic_terms(text: str) -> set[str]:
@@ -49,6 +50,15 @@ def topic_terms(text: str) -> set[str]:
     return {
         part for token in tokenize(text) for part in re.split(r"[-_]", token)
         if len(part) > 1 and not part.isdigit() and part not in _TOPIC_STOP
+    }
+
+
+def entity_terms(text: str) -> set[str]:
+    """Extract conservative Latin proper-name tokens for one-hop linkage."""
+    return {
+        token.lower()
+        for token in re.findall(r"(?<![\w-])[A-Z][a-z]+(?:-[A-Z]?[a-z]+)?", text)
+        if token not in _ENTITY_STOP
     }
 
 
@@ -66,6 +76,7 @@ class RetrievalConfig:
     lexical_enabled: bool = True
     expansion_enabled: bool = True
     temporal_enabled: bool = True
+    linkage_enabled: bool = True
     lexical_weight: float = 1.0
     dense_weight: float = 0.85
 
@@ -374,6 +385,7 @@ class MemoryStore:
 
         average_length = sum(len(memory.terms) for memory in memories) / len(memories)
         lexical_scores = []
+        lexical_candidates = []
         newest_timestamp = max((memory.timestamp_ms or 0) for memory in memories)
         oldest_timestamp = min((memory.timestamp_ms or 0) for memory in memories)
         rank_timestamp = (
@@ -450,10 +462,43 @@ class MemoryStore:
                     )
                 if has_marker(memory.content, _UPDATE_MARKERS):
                     score += 10.0
-            if config.lexical_enabled and score > 0:
-                lexical_scores.append((score, memory))
+            if config.lexical_enabled:
+                lexical_candidates.append((score, memory))
+                if score > 0:
+                    lexical_scores.append((score, memory))
 
         lexical_scores.sort(key=rank_key)
+        if config.lexical_enabled and config.linkage_enabled and lexical_scores:
+            entity_frequency: dict[str, int] = {}
+            entities_by_id = {memory.id: entity_terms(memory.content) for memory in memories}
+            for entities in entities_by_id.values():
+                for entity in entities:
+                    entity_frequency[entity] = entity_frequency.get(entity, 0) + 1
+            seeds = [lexical_scores[0][1]]
+            seeds.extend(
+                memory for _, memory in lexical_scores[1:5]
+                if re.search(r"\b(?:is|are|was|were)\b", memory.content, re.I)
+            )
+            seed_ids = {seed.id for seed in seeds}
+            bridge_terms = {
+                entity
+                for seed in seeds
+                for entity in entities_by_id[seed.id] - entity_terms(query)
+                if 1 < entity_frequency.get(entity, 0) <= 4
+            }
+            linked_scores = []
+            for score, memory in lexical_candidates:
+                shared = bridge_terms & entities_by_id[memory.id]
+                if memory.id in seed_ids:
+                    bridge_score = 4.0 if shared else 0.0
+                else:
+                    bridge_score = min(
+                        10.0,
+                        sum(16.0 / entity_frequency[term] for term in shared),
+                    )
+                if score + bridge_score > 0:
+                    linked_scores.append((score + bridge_score, memory))
+            lexical_scores = sorted(linked_scores, key=rank_key)
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
         else:

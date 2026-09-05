@@ -1,0 +1,358 @@
+{
+  "suite": "hard",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 15,
+  "hit_at_1": 0.3333333333333333,
+  "hit_at_3": 0.8,
+  "hit_at_5": 1.0,
+  "mrr": 0.5722222222222222,
+  "categories": {
+    "list": 0.5659722222222222,
+    "multi_hop": 0.4583333333333333,
+    "multi_hop_zh": 0.611111111111111,
+    "temporal_distractors": 1.0
+  },
+  "complete_at_1": 0.16666666666666666,
+  "complete_at_3": 0.5,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "evaluation_version": 2,
+  "suite_sha256": "8ed8335cc52a516dcd74aad4a22215a9af9edaa37f262b2dcc6a7a5ec1e193f6",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.0,
+    "dense_weight": 0.85
+  },
+  "embedding_model": null,
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": "1200"
+  },
+  "retrieval_code_sha256": "61c63c97b3325adc6bb64679b272bc0f864cfb643f382a965b0573b0779d8d92",
+  "case_traces": [
+    {
+      "name": "manager-review-chain",
+      "category": "multi_hop",
+      "candidate_count": 14,
+      "expected": [
+        "manager",
+        "schedule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        4,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_0c8f15e01a2ccb1a23ce88fd",
+          "content": "user: Priya Nair holds her team check-in every Thursday.",
+          "score": 10.0,
+          "created_at": "2026-09-05T10:44:49.638346Z",
+          "source_id": "schedule"
+        },
+        {
+          "id": "mem_ee4336a2ee1adea1fc44537c",
+          "content": "user: Priya Shah holds her team check-in every Wednesday.",
+          "score": 5.333333,
+          "created_at": "2026-09-05T10:44:49.643141Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_d79f05906e40aab4c5578087",
+          "content": "user: My manager's monthly budget review is on the first Friday.",
+          "score": 4.610138,
+          "created_at": "2026-09-05T10:44:49.663101Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_9f363da77abf2e653d4a2ce1",
+          "content": "user: My manager is Priya Nair.",
+          "score": 4.246233,
+          "created_at": "2026-09-05T10:44:49.603703Z",
+          "source_id": "manager"
+        },
+        {
+          "id": "mem_29029707854f0d5fe13c90be",
+          "content": "user: The sales manager runs a weekly review on Tuesday.",
+          "score": 3.071538,
+          "created_at": "2026-09-05T10:44:49.618591Z",
+          "source_id": "d03"
+        }
+      ]
+    },
+    {
+      "name": "project-room-key-chain",
+      "category": "multi_hop",
+      "candidate_count": 14,
+      "expected": [
+        "room",
+        "key"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        4,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e57a1bb8852197dcb5256e85",
+          "content": "user: Lena keeps the key to the Maple room.",
+          "score": 13.224124,
+          "created_at": "2026-09-05T10:44:49.708083Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_41e00463e1f7c77cbba2f1af",
+          "content": "user: The Juniper room key is held by Alex. It is not the Cedar room.",
+          "score": 7.322949,
+          "created_at": "2026-09-05T10:44:49.751489Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_c4d15c5e1a0b1bc03cf4c786",
+          "content": "user: The Cedar room key is held by Mei Chen.",
+          "score": 5.834379,
+          "created_at": "2026-09-05T10:44:49.736465Z",
+          "source_id": "key"
+        },
+        {
+          "id": "mem_b12b9eac2caae9ec8a7c5312",
+          "content": "user: Project Juniper was assigned the Cedar room.",
+          "score": 5.646619,
+          "created_at": "2026-09-05T10:44:49.685347Z",
+          "source_id": "room"
+        },
+        {
+          "id": "mem_94bd01319a6eb0449b06bb88",
+          "content": "user: Omar keeps the key to the Willow room.",
+          "score": 5.224124,
+          "created_at": "2026-09-05T10:44:49.713176Z",
+          "source_id": "d06"
+        }
+      ]
+    },
+    {
+      "name": "chinese-delivery-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 15,
+      "expected": [
+        "teacher",
+        "parcel",
+        "pickup"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        3,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f03c8793d2ad46dd85e8f77c",
+          "content": "user: 星河快递统一送到北门书店取件点。",
+          "score": 15.597199,
+          "created_at": "2026-09-05T10:44:49.819986Z",
+          "source_id": "pickup"
+        },
+        {
+          "id": "mem_de39643dbb81c92a7e48cd1b",
+          "content": "user: 我的摄影课老师是林岚。",
+          "score": 14.157249,
+          "created_at": "2026-09-05T10:44:49.758843Z",
+          "source_id": "teacher"
+        },
+        {
+          "id": "mem_dbe014ff1fcd35ee54c44239",
+          "content": "user: 林岚寄来的相册使用星河快递。",
+          "score": 11.498544,
+          "created_at": "2026-09-05T10:44:49.775205Z",
+          "source_id": "parcel"
+        },
+        {
+          "id": "mem_3dd14daff40e62675ba366ef",
+          "content": "user: 摄影课老师建议相册使用哑光纸。",
+          "score": 11.221661,
+          "created_at": "2026-09-05T10:44:49.769672Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_845b47d82c3b1345ba37a21e",
+          "content": "user: 摄影课老师希望相册按拍摄日期排序。",
+          "score": 10.858876,
+          "created_at": "2026-09-05T10:44:49.831335Z",
+          "source_id": "d11"
+        }
+      ]
+    },
+    {
+      "name": "camping-packed-list",
+      "category": "list",
+      "candidate_count": 16,
+      "expected": [
+        "tent",
+        "stove",
+        "filter",
+        "lamp"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        4,
+        2,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_7b4c29fee1d25fbbf3eb8e4f",
+          "content": "user: I packed a tent for the Lake Rowan camping trip.",
+          "score": 7.08058,
+          "created_at": "2026-09-05T10:44:49.848718Z",
+          "source_id": "tent"
+        },
+        {
+          "id": "mem_b79a9a1238cc3440fe56d7b5",
+          "content": "user: I put a water filter in the Lake Rowan trip backpack.",
+          "score": 4.326901,
+          "created_at": "2026-09-05T10:44:49.884312Z",
+          "source_id": "filter"
+        },
+        {
+          "id": "mem_7863b2d5f43cd44a99b794db",
+          "content": "user: My headlamp is packed and ready for Lake Rowan.",
+          "score": 2.654767,
+          "created_at": "2026-09-05T10:44:49.905009Z",
+          "source_id": "lamp"
+        },
+        {
+          "id": "mem_a1b18fb9b7f49df979541f77",
+          "content": "user: The camping stove went into my bag for Lake Rowan.",
+          "score": 2.441648,
+          "created_at": "2026-09-05T10:44:49.864585Z",
+          "source_id": "stove"
+        },
+        {
+          "id": "mem_9f16c310330f365e6a923eee",
+          "content": "user: For Lake Rowan camping I considered packing binoculars, but left them at home.",
+          "score": 0.812998,
+          "created_at": "2026-09-05T10:44:49.910263Z",
+          "source_id": "d10"
+        }
+      ]
+    },
+    {
+      "name": "approved-speakers-list",
+      "category": "list",
+      "candidate_count": 15,
+      "expected": [
+        "nora",
+        "sam",
+        "yuki"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        1,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_47449482ac6879af9a2cdb3f",
+          "content": "user: Sam confirmed he will speak at the Harbor workshop.",
+          "score": 10.791073,
+          "created_at": "2026-09-05T10:44:49.963509Z",
+          "source_id": "sam"
+        },
+        {
+          "id": "mem_ff27a6e6973a8234695e6d01",
+          "content": "user: Nora accepted the invitation to give a talk at Harbor workshop.",
+          "score": 3.353628,
+          "created_at": "2026-09-05T10:44:49.940820Z",
+          "source_id": "nora"
+        },
+        {
+          "id": "mem_68fe631855de39d1cd6ef219",
+          "content": "user: Yuki said yes to presenting at Harbor workshop and sent her slides.",
+          "score": 1.565214,
+          "created_at": "2026-09-05T10:44:49.993241Z",
+          "source_id": "yuki"
+        },
+        {
+          "id": "mem_070b4de1c99d042771172e48",
+          "content": "user: Harbor workshop invited speaker Chloe; no reply yet.",
+          "score": 0.201501,
+          "created_at": "2026-09-05T10:44:49.946397Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_2339e443be357f765bc021ca",
+          "content": "user: Harbor workshop invited speaker Grace; no reply yet.",
+          "score": 0.201501,
+          "created_at": "2026-09-05T10:44:49.974122Z",
+          "source_id": "d07"
+        }
+      ]
+    },
+    {
+      "name": "unrelated-updates",
+      "category": "temporal_distractors",
+      "candidate_count": 13,
+      "expected": [
+        "desk"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e098e51dda761295b7bfaa15",
+          "content": "[2024-01-01T00:00:00Z] user: My current desk location is Room-204.",
+          "score": 7.830864,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "desk"
+        },
+        {
+          "id": "mem_62f9f1b08fca8f254cf1dfa7",
+          "content": "[2024-01-13T00:00:00Z] user: My current breakfast changed to porridge.",
+          "score": 0.327378,
+          "created_at": "2024-01-13T00:00:00Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_f195aa928cfc22b186163fac",
+          "content": "[2024-01-12T00:00:00Z] user: My current weekend plan changed to hiking.",
+          "score": 0.323048,
+          "created_at": "2024-01-12T00:00:00Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_e885d4168b881567ef6859f1",
+          "content": "[2024-01-11T00:00:00Z] user: My current television subscription changed to monthly.",
+          "score": 0.323048,
+          "created_at": "2024-01-11T00:00:00Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_c60ed49dbdcb7f29963d0eb3",
+          "content": "[2024-01-09T00:00:00Z] user: My current coffee order changed to decaf.",
+          "score": 0.323048,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": "d08"
+        }
+      ]
+    }
+  ]
+}

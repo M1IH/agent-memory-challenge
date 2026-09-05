@@ -1,0 +1,358 @@
+{
+  "suite": "hard",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 15,
+  "hit_at_1": 0.26666666666666666,
+  "hit_at_3": 0.5333333333333333,
+  "hit_at_5": 0.6666666666666666,
+  "mrr": 0.40777777777777774,
+  "categories": {
+    "list": 0.47916666666666663,
+    "multi_hop": 0.25,
+    "multi_hop_zh": 0.2611111111111111,
+    "temporal_distractors": 1.0
+  },
+  "complete_at_1": 0.16666666666666666,
+  "complete_at_3": 0.16666666666666666,
+  "complete_at_5": 0.3333333333333333,
+  "complete_at_k": 0.3333333333333333,
+  "evaluation_version": 2,
+  "suite_sha256": "8ed8335cc52a516dcd74aad4a22215a9af9edaa37f262b2dcc6a7a5ec1e193f6",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": false,
+    "lexical_weight": 1.0,
+    "dense_weight": 0.85
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": "1200"
+  },
+  "retrieval_code_sha256": "cb2b3d58d433246f7ec363a8bff8d284c15fcd0047c564e2ce9c4bce857c44c1",
+  "case_traces": [
+    {
+      "name": "manager-review-chain",
+      "category": "multi_hop",
+      "candidate_count": 14,
+      "expected": [
+        "manager",
+        "schedule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_d79f05906e40aab4c5578087",
+          "content": "user: My manager's monthly budget review is on the first Friday.",
+          "score": 0.029272,
+          "created_at": "2026-09-05T10:45:48.287208Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_29029707854f0d5fe13c90be",
+          "content": "user: The sales manager runs a weekly review on Tuesday.",
+          "score": 0.029154,
+          "created_at": "2026-09-05T10:45:47.761892Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_6a26ae8f5e03d4d1b6fdd774",
+          "content": "user: The design manager runs a weekly review on Monday.",
+          "score": 0.029117,
+          "created_at": "2026-09-05T10:45:47.712120Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_b91754bac63fb9ee361d7359",
+          "content": "user: The finance manager runs a weekly review on Friday.",
+          "score": 0.029094,
+          "created_at": "2026-09-05T10:45:47.874191Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_f81a68ec7af0b40005f00afb",
+          "content": "user: The operations manager runs a weekly review on Wednesday.",
+          "score": 0.029086,
+          "created_at": "2026-09-05T10:45:47.818807Z",
+          "source_id": "d04"
+        }
+      ]
+    },
+    {
+      "name": "project-room-key-chain",
+      "category": "multi_hop",
+      "candidate_count": 14,
+      "expected": [
+        "room",
+        "key"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_b12b9eac2caae9ec8a7c5312",
+          "content": "user: Project Juniper was assigned the Cedar room.",
+          "score": 0.030103,
+          "created_at": "2026-09-05T10:45:48.502044Z",
+          "source_id": "room"
+        },
+        {
+          "id": "mem_41e00463e1f7c77cbba2f1af",
+          "content": "user: The Juniper room key is held by Alex. It is not the Cedar room.",
+          "score": 0.029086,
+          "created_at": "2026-09-05T10:45:49.156308Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_e7b77c3ad9dd0ebcd9025b35",
+          "content": "user: Mei Lin keeps the key to the Elm room.",
+          "score": 0.028906,
+          "created_at": "2026-09-05T10:45:49.042363Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_94bd01319a6eb0449b06bb88",
+          "content": "user: Omar keeps the key to the Willow room.",
+          "score": 0.028629,
+          "created_at": "2026-09-05T10:45:48.758503Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_e57a1bb8852197dcb5256e85",
+          "content": "user: Lena keeps the key to the Maple room.",
+          "score": 0.028192,
+          "created_at": "2026-09-05T10:45:48.705296Z",
+          "source_id": "d05"
+        }
+      ]
+    },
+    {
+      "name": "chinese-delivery-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 15,
+      "expected": [
+        "teacher",
+        "parcel",
+        "pickup"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3,
+        4,
+        5
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_845b47d82c3b1345ba37a21e",
+          "content": "user: 摄影课老师希望相册按拍摄日期排序。",
+          "score": 0.031094,
+          "created_at": "2026-09-05T10:45:50.048153Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_3dd14daff40e62675ba366ef",
+          "content": "user: 摄影课老师建议相册使用哑光纸。",
+          "score": 0.030906,
+          "created_at": "2026-09-05T10:45:49.398404Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_de39643dbb81c92a7e48cd1b",
+          "content": "user: 我的摄影课老师是林岚。",
+          "score": 0.030629,
+          "created_at": "2026-09-05T10:45:49.276268Z",
+          "source_id": "teacher"
+        },
+        {
+          "id": "mem_dbe014ff1fcd35ee54c44239",
+          "content": "user: 林岚寄来的相册使用星河快递。",
+          "score": 0.030192,
+          "created_at": "2026-09-05T10:45:49.458023Z",
+          "source_id": "parcel"
+        },
+        {
+          "id": "mem_f03c8793d2ad46dd85e8f77c",
+          "content": "user: 星河快递统一送到北门书店取件点。",
+          "score": 0.02988,
+          "created_at": "2026-09-05T10:45:49.936864Z",
+          "source_id": "pickup"
+        }
+      ]
+    },
+    {
+      "name": "camping-packed-list",
+      "category": "list",
+      "candidate_count": 16,
+      "expected": [
+        "tent",
+        "stove",
+        "filter",
+        "lamp"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3,
+        null,
+        2
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_7b4c29fee1d25fbbf3eb8e4f",
+          "content": "user: I packed a tent for the Lake Rowan camping trip.",
+          "score": 0.030328,
+          "created_at": "2026-09-05T10:45:50.285627Z",
+          "source_id": "tent"
+        },
+        {
+          "id": "mem_7863b2d5f43cd44a99b794db",
+          "content": "user: My headlamp is packed and ready for Lake Rowan.",
+          "score": 0.029365,
+          "created_at": "2026-09-05T10:45:50.947837Z",
+          "source_id": "lamp"
+        },
+        {
+          "id": "mem_a1b18fb9b7f49df979541f77",
+          "content": "user: The camping stove went into my bag for Lake Rowan.",
+          "score": 0.029335,
+          "created_at": "2026-09-05T10:45:50.463996Z",
+          "source_id": "stove"
+        },
+        {
+          "id": "mem_9f16c310330f365e6a923eee",
+          "content": "user: For Lake Rowan camping I considered packing binoculars, but left them at home.",
+          "score": 0.027885,
+          "created_at": "2026-09-05T10:45:51.009794Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_3630085d76fbc53601f95591",
+          "content": "user: For Lake Rowan camping I considered packing a blanket, but left it at home.",
+          "score": 0.027838,
+          "created_at": "2026-09-05T10:45:51.065205Z",
+          "source_id": "d11"
+        }
+      ]
+    },
+    {
+      "name": "approved-speakers-list",
+      "category": "list",
+      "candidate_count": 15,
+      "expected": [
+        "nora",
+        "sam",
+        "yuki"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        1,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_47449482ac6879af9a2cdb3f",
+          "content": "user: Sam confirmed he will speak at the Harbor workshop.",
+          "score": 0.032328,
+          "created_at": "2026-09-05T10:45:51.577994Z",
+          "source_id": "sam"
+        },
+        {
+          "id": "mem_ff27a6e6973a8234695e6d01",
+          "content": "user: Nora accepted the invitation to give a talk at Harbor workshop.",
+          "score": 0.029206,
+          "created_at": "2026-09-05T10:45:51.348717Z",
+          "source_id": "nora"
+        },
+        {
+          "id": "mem_070b4de1c99d042771172e48",
+          "content": "user: Harbor workshop invited speaker Chloe; no reply yet.",
+          "score": 0.028125,
+          "created_at": "2026-09-05T10:45:51.403664Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_3189ebe0545b2ec64408cc7e",
+          "content": "user: Harbor workshop invited speaker Ben; no reply yet.",
+          "score": 0.02803,
+          "created_at": "2026-09-05T10:45:51.288646Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_61128cff848271a5ae07de2d",
+          "content": "user: Harbor workshop invited speaker Alice; no reply yet.",
+          "score": 0.027985,
+          "created_at": "2026-09-05T10:45:51.230322Z",
+          "source_id": "d01"
+        }
+      ]
+    },
+    {
+      "name": "unrelated-updates",
+      "category": "temporal_distractors",
+      "candidate_count": 13,
+      "expected": [
+        "desk"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e098e51dda761295b7bfaa15",
+          "content": "[2024-01-01T00:00:00Z] user: My current desk location is Room-204.",
+          "score": 0.030328,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "desk"
+        },
+        {
+          "id": "mem_ddc1ae60f229c5a14f709d1f",
+          "content": "[2024-01-08T00:00:00Z] user: My current gym schedule changed to Tuesday.",
+          "score": 0.028433,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_62f9f1b08fca8f254cf1dfa7",
+          "content": "[2024-01-13T00:00:00Z] user: My current breakfast changed to porridge.",
+          "score": 0.028272,
+          "created_at": "2024-01-13T00:00:00Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_c60ed49dbdcb7f29963d0eb3",
+          "content": "[2024-01-09T00:00:00Z] user: My current coffee order changed to decaf.",
+          "score": 0.027703,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_f195aa928cfc22b186163fac",
+          "content": "[2024-01-12T00:00:00Z] user: My current weekend plan changed to hiking.",
+          "score": 0.027679,
+          "created_at": "2024-01-12T00:00:00Z",
+          "source_id": "d11"
+        }
+      ]
+    }
+  ]
+}

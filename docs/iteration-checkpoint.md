@@ -38,6 +38,17 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 ## Remaining priorities
 
+## One-hop entity linkage iteration
+
+- Root cause reproduced: first-hop evidence entered lexical top-5, but a second-hop record with zero query overlap was filtered before it could become a candidate.
+- Rejected a broad low-frequency-topic expansion after it polluted other entities and hurt the Chinese chain. Final implementation only bridges repeated Latin proper-name tokens from the top lexical seed and explicit identity/assignment seeds in the top five.
+- Zero-overlap records remain excluded unless they share a bounded bridge entity. Seed evidence receives a small fixed bonus so multi-hop answers retain both ends of the chain. Generic `Room`, weekday names, and entities already present in the query are excluded.
+- Linkage has an explicit `RetrievalConfig.linkage_enabled` switch and `--disable-linkage` ablation flag.
+- 49 local unit tests pass after adding deterministic manager-to-schedule, project-to-room-key, and disabled-linkage regressions. Temporal ablation remains independent after excluding generic `Room` from entities.
+- Fixed hard suite with real embeddings: evidence Hit@5 improves from 10/15 to 13/15, MRR from 0.408 to 0.521, and complete cases from 2/6 to 4/6. Both English multi-hop cases now retrieve all required source IDs. With linkage disabled, Hit@5 is 10/15 and complete cases are 2/6.
+- Lexical hard diagnostic reaches 15/15 evidence and 6/6 complete cases, while hybrid remains 13/15 and 4/6 because dense fusion drops one item from each list case. Next priority is evidence-list completeness / diversity handling, measured against these fixed traces.
+- Real-model extended regression remains Hit@5 1.0 and MRR 0.891519. These repeated-template cases are regression evidence, not an independent score.
+
 - The extended suite contains repeated templates and generally only 2-4 memories per query. Hit@5 saturation is not strong evidence of competitive recall.
 - Cross-language examples cover one question template. Broader multilingual ability remains unverified.
 - Initial high-distractor, source-ID baseline is now in place. Next: topic-scoped temporal boosts and entity-linked second-hop candidate retrieval; compare on fixed hard plus original extended suites, then add independent holdout cases before tuning fusion or diversity weights.

@@ -15,6 +15,7 @@ VARIANTS = {
     "dense_only": ["--disable-lexical"],
     "no_expansion": ["--disable-expansion"],
     "no_temporal": ["--disable-temporal"],
+    "no_linkage": ["--disable-linkage"],
     "equal_rrf": ["--lexical-weight", "1.0", "--dense-weight", "1.0"],
 }
 
