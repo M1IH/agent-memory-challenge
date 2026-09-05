@@ -36,6 +36,20 @@ _CONCEPT_GROUPS = (
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
+_TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
+
+
+def topic_terms(text: str) -> set[str]:
+    # Keep Chinese bigrams, discard grammatical single characters and numeric
+    # dates. Split Room-101 so explicit room updates can share a topic anchor.
+    text = re.sub(r"\[\d{4}-\d{2}-\d{2}T[^\]]+\]", " ", text)
+    for marker in (*_CURRENT_MARKERS, *_UPDATE_MARKERS):
+        if not marker.isascii():
+            text = text.replace(marker, " ")
+    return {
+        part for token in tokenize(text) for part in re.split(r"[-_]", token)
+        if len(part) > 1 and not part.isdigit() and part not in _TOPIC_STOP
+    }
 
 
 def has_marker(text: str, markers: tuple[str, ...]) -> bool:
@@ -367,6 +381,30 @@ class MemoryStore:
             if config.temporal_enabled else (lambda memory: 0)
         )
         asks_for_current = has_marker(query, _CURRENT_MARKERS)
+        temporal_ids: set[str] = set()
+        if config.temporal_enabled and asks_for_current:
+            query_topics = topic_terms(query)
+            memory_topics = {memory.id: topic_terms(memory.content) for memory in memories}
+            anchors = [memory for memory in memories if query_topics & memory_topics[memory.id]]
+            temporal_ids = {memory.id for memory in anchors}
+            earliest_anchor: dict[str, int] = {}
+            for anchor in anchors:
+                if anchor.timestamp_ms is not None:
+                    for term in memory_topics[anchor.id]:
+                        earliest_anchor[term] = min(
+                            earliest_anchor.get(term, anchor.timestamp_ms), anchor.timestamp_ms
+                        )
+            # One-hop linkage only. An omitted topic needs an explicit shared
+            # term and a known later timestamp; generic pronouns alone do not
+            # establish that an update belongs to the queried subject.
+            for memory in memories:
+                if memory.timestamp_ms is None or not has_marker(memory.content, _UPDATE_MARKERS):
+                    continue
+                if any(
+                    term in earliest_anchor and memory.timestamp_ms > earliest_anchor[term]
+                    for term in memory_topics[memory.id]
+                ):
+                    temporal_ids.add(memory.id)
         # A total order makes ties independent of SQLite insertion order and
         # Python's randomized set iteration across worker processes.
         def rank_key(item):
@@ -404,7 +442,7 @@ class MemoryStore:
                 score += 2.0
             if any(option.lower() in memory.content.lower() for option in option_texts):
                 score += 0.5
-            if config.temporal_enabled and asks_for_current:
+            if memory.id in temporal_ids:
                 if newest_timestamp > oldest_timestamp and memory.timestamp_ms is not None:
                     score += 0.4 * (
                         (memory.timestamp_ms - oldest_timestamp)

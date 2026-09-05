@@ -6,7 +6,7 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 - Fixed ablation subprocesses inheriting AML_EMBED_ENABLED=false and mislabeling lexical runs as hybrid/dense.
 - Reject non-finite, negative, and zero RRF weights before search. Channel removal uses explicit switches.
-- 42 unit tests pass locally, including concurrent writes across store instances and strict-source benchmark integration. This does not establish that the entire repository is bug-free.
+- 46 unit tests pass locally, including concurrent writes across store instances and strict-source benchmark integration. This does not establish that the entire repository is bug-free.
 - Reproduced and fixed ambiguous NUL-delimited memory IDs dropping another user's record. New IDs hash a JSON array; existing rows are not rewritten. Unexpected ID collisions now fail the transaction instead of silently discarding a row.
 - Reproduced and fixed replay requiring a working encoder. Ledger preflight skips encoding for completed replays/conflicts; transactional claiming remains authoritative for concurrent writers.
 - Reproduced and fixed connection leakage on PRAGMA failure.
@@ -25,7 +25,18 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 - Results: `benchmarks/hard-review.json`, `benchmarks/hard-lexical.json`, `benchmarks/hard-no-temporal.json`. These are small development diagnostics, not independent held-out evaluation or proof of competitive performance.
 - The unrelated-update case moves from missing to rank 1 without temporal weighting. Fix topic relevance / entity linkage before changing global weights; old temporal-conflict cases benefit from the existing boost.
 
-## Evaluation limitations and next work
+## Topic-scoped temporal iteration
+
+- Root cause reproduced: unrelated `changed` records received +10 solely because the query asked for current information. Even a record with zero lexical overlap was returned.
+- Temporal score boosts now require query-topic overlap, or a one-hop shared topical term with an explicitly relevant older timestamped record. English grammatical terms, Chinese temporal phrases and grammatical bigrams, and formatted timestamps are excluded from topic anchors.
+- Shared-anchor lookup uses a term-to-earliest-timestamp index instead of pairwise memory comparisons. No new schema, model, external dependency, or global weight change.
+- 46 local unit tests pass. New regressions cover unrelated updates, zero-overlap false recall, Chinese grammatical overlap, and same-topic updates without timestamps. Existing Room-101/Room-202 pronoun-update regression remains passing.
+- Real-model extended regression (125 cases) passes the existing Hit@5 gate after the final changes.
+- Fixed hard suite: unrelated updates now returns source `desk` at rank 1. Hybrid evidence Hit@5 improves from 9/15 to 10/15; complete cases from 1/6 to 2/6. Saved trace: `benchmarks/hard-temporal-scoped.json`.
+- Limitations: topic overlap is a conservative heuristic, not entity resolution. Same-topic different-person facts can still be confused. English multi-hop and list misses remain. Next algorithm work is entity-linked candidate retrieval with separate holdout tests; keep these fixed suites for regression.
+- Git push tried with default transport and HTTP/1.1, both timed out. Public GitHub API responded with a rate-limit error. No remote update or CI success is claimed for this iteration.
+
+## Remaining priorities
 
 - The extended suite contains repeated templates and generally only 2-4 memories per query. Hit@5 saturation is not strong evidence of competitive recall.
 - Cross-language examples cover one question template. Broader multilingual ability remains unverified.
