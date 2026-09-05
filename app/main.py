@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
-from .store import MemoryStore
+from .store import MemoryStore, RequestConflictError
 
 
 class Message(BaseModel):
@@ -99,7 +99,7 @@ def add_memory(request: AddRequest) -> AddResponse:
             session_id=request.session_id,
             messages=[message.model_dump() for message in request.messages],
         )
-    except ValueError as exc:
+    except RequestConflictError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     return AddResponse(
         success=True,

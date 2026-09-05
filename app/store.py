@@ -38,6 +38,15 @@ _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", 
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
 
 
+def has_marker(text: str, markers: tuple[str, ...]) -> bool:
+    lowered = text.lower()
+    return any(
+        re.search(r"\b" + re.escape(marker) + r"\b", lowered) is not None
+        if marker.isascii() else marker in lowered
+        for marker in markers
+    )
+
+
 @dataclass(frozen=True)
 class RetrievalConfig:
     lexical_enabled: bool = True
@@ -45,6 +54,11 @@ class RetrievalConfig:
     temporal_enabled: bool = True
     lexical_weight: float = 1.0
     dense_weight: float = 0.85
+
+    def __post_init__(self) -> None:
+        for weight in (self.lexical_weight, self.dense_weight):
+            if not math.isfinite(weight) or weight <= 0:
+                raise ValueError("RRF weights must be finite and positive; use channel switches to disable retrieval")
 
 
 def tokenize(text: str) -> list[str]:
@@ -84,6 +98,10 @@ class Encoder(Protocol):
     def encode(self, texts: Iterable[str]) -> list[np.ndarray]: ...
 
 
+class RequestConflictError(ValueError):
+    """An existing request ID was reused with different input."""
+
+
 class MemoryStore:
     def __init__(
         self,
@@ -109,9 +127,13 @@ class MemoryStore:
 
     def _connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self.path, timeout=30)
-        connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA journal_mode=WAL")
-        connection.execute("PRAGMA foreign_keys=ON")
+        try:
+            connection.row_factory = sqlite3.Row
+            connection.execute("PRAGMA journal_mode=WAL")
+            connection.execute("PRAGMA foreign_keys=ON")
+        except BaseException:
+            connection.close()
+            raise
         return connection
 
     @contextmanager
@@ -169,6 +191,25 @@ class MemoryStore:
         messages: Iterable[dict],
     ) -> None:
         message_values = list(messages)
+        payload_hash = hashlib.sha256(
+            json.dumps(
+                {"session_id": session_id, "messages": message_values},
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        # Fast path only: the transactional claim below still arbitrates races
+        # between concurrent writers, including separate worker processes.
+        with self._connection() as connection:
+            existing = connection.execute(
+                "SELECT payload_hash FROM add_requests WHERE user_id = ? AND request_id = ?",
+                (user_id, request_id),
+            ).fetchone()
+        if existing is not None:
+            if existing["payload_hash"] != payload_hash:
+                raise RequestConflictError("request_id was already used with a different payload")
+            return
         raw_contents = [message["content"].strip() for message in message_values]
         max_context_chars = int(os.getenv("AML_MAX_CONTEXT_CHARS", "1200"))
         index_contents: list[str] = []
@@ -216,8 +257,10 @@ class MemoryStore:
             role = message["role"]
             timestamp_ms = message.get("timestamp")
             digest = hashlib.sha256(
-                f"{request_id}\0{user_id}\0{session_id}\0{index}\0{role}\0"
-                f"{timestamp_ms}\0{content}".encode()
+                json.dumps(
+                    [request_id, user_id, session_id, index, role, timestamp_ms, content],
+                    ensure_ascii=False, separators=(",", ":"),
+                ).encode("utf-8")
             ).hexdigest()[:24]
             rows.append(
                 (
@@ -227,15 +270,14 @@ class MemoryStore:
                     None if embedding is None else embedding.tobytes(),
                 )
             )
-        payload_hash = hashlib.sha256(
-            json.dumps(
-                {"session_id": session_id, "messages": message_values},
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            ).encode("utf-8")
-        ).hexdigest()
         with self._lock, self._connection() as connection:
+            # Legacy databases may contain memories without a payload ledger.
+            # Their raw messages cannot be recovered from contextual display
+            # text, so never guess equivalence or append a duplicate batch.
+            legacy = connection.execute(
+                "SELECT 1 FROM memories WHERE user_id = ? AND request_id = ? LIMIT 1",
+                (user_id, request_id),
+            ).fetchone()
             claim = connection.execute(
                 """
                 INSERT OR IGNORE INTO add_requests (user_id, request_id, payload_hash)
@@ -249,13 +291,17 @@ class MemoryStore:
                     (user_id, request_id),
                 ).fetchone()
                 if existing["payload_hash"] != payload_hash:
-                    raise ValueError(
+                    raise RequestConflictError(
                         "request_id was already used with a different payload"
                     )
                 return
+            if legacy is not None:
+                raise RequestConflictError(
+                    "legacy request_id exists without a verifiable payload; use a new request_id"
+                )
             connection.executemany(
                 """
-                INSERT OR IGNORE INTO memories
+                INSERT INTO memories
                 (id, request_id, user_id, session_id, role, content,
                  timestamp_ms, created_at, terms, embedding)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -320,7 +366,12 @@ class MemoryStore:
             (lambda memory: memory.timestamp_ms or 0)
             if config.temporal_enabled else (lambda memory: 0)
         )
-        asks_for_current = any(marker in query.lower() for marker in _CURRENT_MARKERS)
+        asks_for_current = has_marker(query, _CURRENT_MARKERS)
+        # A total order makes ties independent of SQLite insertion order and
+        # Python's randomized set iteration across worker processes.
+        def rank_key(item):
+            return (-item[0], -rank_timestamp(item[1]), item[1].id)
+
         for memory in memories:
             score = self._bm25(
                 query_terms, memory.terms, document_frequency,
@@ -359,14 +410,12 @@ class MemoryStore:
                         (memory.timestamp_ms - oldest_timestamp)
                         / (newest_timestamp - oldest_timestamp)
                     )
-                if any(marker in memory.content.lower() for marker in _UPDATE_MARKERS):
+                if has_marker(memory.content, _UPDATE_MARKERS):
                     score += 10.0
             if config.lexical_enabled and score > 0:
                 lexical_scores.append((score, memory))
 
-        lexical_scores.sort(
-            key=lambda item: (item[0], rank_timestamp(item[1])), reverse=True
-        )
+        lexical_scores.sort(key=rank_key)
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
         else:
@@ -383,8 +432,7 @@ class MemoryStore:
                     (float(np.dot(query_vector, memory.embedding)), memory)
                     for memory in compatible_memories
                 ),
-                key=lambda item: (item[0], rank_timestamp(item[1])),
-                reverse=True,
+                key=rank_key,
             )
             lexical_ranks = {
                 memory.id: rank
@@ -408,9 +456,7 @@ class MemoryStore:
                 if config.lexical_weight > 0 and lexical_raw.get(memory_id, 0.0) >= 8.0:
                     score += 0.002
                 fused.append((score, memory_by_id[memory_id]))
-            fused.sort(
-                key=lambda item: (item[0], rank_timestamp(item[1])), reverse=True
-            )
+            fused.sort(key=rank_key)
             scores = fused
         return self._results(scores, top_k)
 
@@ -437,7 +483,7 @@ class MemoryStore:
             frequencies[term] = frequencies.get(term, 0) + 1
         k1, b = 1.5, 0.75
         score = 0.0
-        for term in set(query_terms):
+        for term in sorted(set(query_terms)):
             frequency = frequencies.get(term, 0)
             if not frequency:
                 continue

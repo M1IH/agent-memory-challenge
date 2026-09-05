@@ -1,0 +1,131 @@
+[
+  {
+    "name": "manager-review-chain", "category": "multi_hop",
+    "query": "On which day is the weekly review run by my manager?",
+    "expected_source_ids": ["manager", "schedule"],
+    "memories": [
+      {"source_id": "manager", "content": "My manager is Priya Nair."},
+      {"source_id": "d01", "content": "My weekly review notes are stored in the shared folder."},
+      {"source_id": "d02", "content": "The design manager runs a weekly review on Monday."},
+      {"source_id": "d03", "content": "The sales manager runs a weekly review on Tuesday."},
+      {"source_id": "d04", "content": "The operations manager runs a weekly review on Wednesday."},
+      {"source_id": "d05", "content": "The finance manager runs a weekly review on Friday."},
+      {"source_id": "d06", "content": "My manager asked me to prepare a weekly review agenda."},
+      {"source_id": "schedule", "content": "Priya Nair holds her team check-in every Thursday."},
+      {"source_id": "d07", "content": "Priya Shah holds her team check-in every Wednesday."},
+      {"source_id": "d08", "content": "My former manager was Daniel Wu."},
+      {"source_id": "d09", "content": "Daniel Wu holds his weekly review on Monday."},
+      {"source_id": "d10", "content": "The weekly review was discussed in the manager training course."},
+      {"source_id": "d11", "content": "My manager's monthly budget review is on the first Friday."},
+      {"source_id": "d12", "content": "The weekly review presentation uses a blue title slide."}
+    ]
+  },
+  {
+    "name": "project-room-key-chain", "category": "multi_hop",
+    "query": "Who keeps the key to the room assigned to Project Juniper?",
+    "expected_source_ids": ["room", "key"],
+    "memories": [
+      {"source_id": "d01", "content": "Project Juniper's launch checklist includes a room booking."},
+      {"source_id": "room", "content": "Project Juniper was assigned the Cedar room."},
+      {"source_id": "d02", "content": "Project Juniper's owner is Lena."},
+      {"source_id": "d03", "content": "Project Juniper's budget reviewer is Omar."},
+      {"source_id": "d04", "content": "Project Juniper's room has a projector."},
+      {"source_id": "d05", "content": "Lena keeps the key to the Maple room."},
+      {"source_id": "d06", "content": "Omar keeps the key to the Willow room."},
+      {"source_id": "d07", "content": "Project Birch was assigned the Maple room."},
+      {"source_id": "d08", "content": "Project Juniper's key milestone is a September demonstration."},
+      {"source_id": "d09", "content": "The Cedar room has a whiteboard and six chairs."},
+      {"source_id": "key", "content": "The Cedar room key is held by Mei Chen."},
+      {"source_id": "d10", "content": "Mei Lin keeps the key to the Elm room."},
+      {"source_id": "d11", "content": "Project Juniper's room booking request was approved."},
+      {"source_id": "d12", "content": "The Juniper room key is held by Alex. It is not the Cedar room."}
+    ]
+  },
+  {
+    "name": "chinese-delivery-chain", "category": "multi_hop_zh",
+    "query": "我的摄影课老师寄来的相册应该送到哪个取件点？",
+    "expected_source_ids": ["teacher", "parcel", "pickup"],
+    "memories": [
+      {"source_id": "teacher", "content": "我的摄影课老师是林岚。"},
+      {"source_id": "d01", "content": "我的摄影课教材放在书桌上。"},
+      {"source_id": "d02", "content": "摄影课老师建议相册使用哑光纸。"},
+      {"source_id": "parcel", "content": "林岚寄来的相册使用星河快递。"},
+      {"source_id": "d03", "content": "我的绘画课老师是周宁。"},
+      {"source_id": "d04", "content": "周宁寄来的画册使用山海快递。"},
+      {"source_id": "d05", "content": "山海快递的包裹送到南门便利店。"},
+      {"source_id": "d06", "content": "摄影课的展示相册要在周五带去教室。"},
+      {"source_id": "d07", "content": "我的摄影课同学陈晨寄来了一张明信片。"},
+      {"source_id": "d08", "content": "明信片送到学校收发室。"},
+      {"source_id": "d09", "content": "林岚的摄影课在二号楼上课。"},
+      {"source_id": "pickup", "content": "星河快递统一送到北门书店取件点。"},
+      {"source_id": "d10", "content": "我的相册封面选了浅灰色。"},
+      {"source_id": "d11", "content": "摄影课老师希望相册按拍摄日期排序。"},
+      {"source_id": "d12", "content": "我从南门便利店买过一个空白相册。"}
+    ]
+  },
+  {
+    "name": "camping-packed-list", "category": "list",
+    "query": "List every item I packed for the Lake Rowan camping trip.",
+    "expected_source_ids": ["tent", "stove", "filter", "lamp"],
+    "memories": [
+      {"source_id": "d01", "content": "For Lake Rowan camping I considered packing a hammock, but left it at home."},
+      {"source_id": "tent", "content": "I packed a tent for the Lake Rowan camping trip."},
+      {"source_id": "d02", "content": "For Lake Rowan camping I considered packing a folding chair, but left it at home."},
+      {"source_id": "d03", "content": "For Lake Rowan camping I considered packing a fishing rod, but left it at home."},
+      {"source_id": "stove", "content": "The camping stove went into my bag for Lake Rowan."},
+      {"source_id": "d04", "content": "For Lake Rowan camping I considered packing a cooler, but left it at home."},
+      {"source_id": "d05", "content": "For Lake Rowan camping I considered packing a camera, but left it at home."},
+      {"source_id": "d06", "content": "For Lake Rowan camping I considered packing a guitar, but left it at home."},
+      {"source_id": "filter", "content": "I put a water filter in the Lake Rowan trip backpack."},
+      {"source_id": "d07", "content": "For Lake Rowan camping I considered packing a pillow, but left it at home."},
+      {"source_id": "d08", "content": "For Lake Rowan camping I considered packing a board game, but left it at home."},
+      {"source_id": "d09", "content": "For Lake Rowan camping I considered packing a radio, but left it at home."},
+      {"source_id": "lamp", "content": "My headlamp is packed and ready for Lake Rowan."},
+      {"source_id": "d10", "content": "For Lake Rowan camping I considered packing binoculars, but left them at home."},
+      {"source_id": "d11", "content": "For Lake Rowan camping I considered packing a blanket, but left it at home."},
+      {"source_id": "d12", "content": "For Lake Rowan camping I considered packing a drone, but left it at home."}
+    ]
+  },
+  {
+    "name": "approved-speakers-list", "category": "list",
+    "query": "Which speakers have confirmed they will speak at the Harbor workshop?",
+    "expected_source_ids": ["nora", "sam", "yuki"],
+    "memories": [
+      {"source_id": "d01", "content": "Harbor workshop invited speaker Alice; no reply yet."},
+      {"source_id": "d02", "content": "Harbor workshop invited speaker Ben; no reply yet."},
+      {"source_id": "nora", "content": "Nora accepted the invitation to give a talk at Harbor workshop."},
+      {"source_id": "d03", "content": "Harbor workshop invited speaker Chloe; no reply yet."},
+      {"source_id": "d04", "content": "Harbor workshop invited speaker David; no reply yet."},
+      {"source_id": "d05", "content": "Harbor workshop invited speaker Elena; no reply yet."},
+      {"source_id": "sam", "content": "Sam confirmed he will speak at the Harbor workshop."},
+      {"source_id": "d06", "content": "Harbor workshop invited speaker Felix; no reply yet."},
+      {"source_id": "d07", "content": "Harbor workshop invited speaker Grace; no reply yet."},
+      {"source_id": "d08", "content": "Harbor workshop invited speaker Hugo; no reply yet."},
+      {"source_id": "d09", "content": "Harbor workshop invited speaker Iris; no reply yet."},
+      {"source_id": "yuki", "content": "Yuki said yes to presenting at Harbor workshop and sent her slides."},
+      {"source_id": "d10", "content": "Harbor workshop invited speaker Jack; no reply yet."},
+      {"source_id": "d11", "content": "Harbor workshop invited speaker Karen; no reply yet."},
+      {"source_id": "d12", "content": "Harbor workshop invited speaker Leo; no reply yet."}
+    ]
+  },
+  {
+    "name": "unrelated-updates", "category": "temporal_distractors",
+    "query": "What is my current desk location?",
+    "expected_source_ids": ["desk"],
+    "memories": [
+      {"source_id": "desk", "content": "My current desk location is Room-204.", "timestamp": 1704067200000},
+      {"source_id": "d01", "content": "My current phone wallpaper changed to blue.", "timestamp": 1704153600000},
+      {"source_id": "d02", "content": "My current lunch plan changed to soup.", "timestamp": 1704240000000},
+      {"source_id": "d03", "content": "My current running route changed to the park.", "timestamp": 1704326400000},
+      {"source_id": "d04", "content": "My current travel plan changed to May.", "timestamp": 1704412800000},
+      {"source_id": "d05", "content": "My current music playlist changed to jazz.", "timestamp": 1704499200000},
+      {"source_id": "d06", "content": "My current shopping list changed to include apples.", "timestamp": 1704585600000},
+      {"source_id": "d07", "content": "My current gym schedule changed to Tuesday.", "timestamp": 1704672000000},
+      {"source_id": "d08", "content": "My current coffee order changed to decaf.", "timestamp": 1704758400000},
+      {"source_id": "d09", "content": "My current reading list changed to include poetry.", "timestamp": 1704844800000},
+      {"source_id": "d10", "content": "My current television subscription changed to monthly.", "timestamp": 1704931200000},
+      {"source_id": "d11", "content": "My current weekend plan changed to hiking.", "timestamp": 1705017600000},
+      {"source_id": "d12", "content": "My current breakfast changed to porridge.", "timestamp": 1705104000000}
+    ]
+  }
+]

@@ -155,6 +155,16 @@ class ApiContractTests(unittest.TestCase):
         self.assertEqual(200, search_response.status_code)
         self.assertIn("system:", search_response.json()["data"][0]["content"])
 
+    def test_backend_value_error_is_not_reported_as_request_conflict(self):
+        with patch("app.main.store.add", side_effect=ValueError("backend failure")):
+            with TestClient(app, raise_server_exceptions=False) as client:
+                response = client.post("/add", json={
+                    "request_id": "req-error", "user_id": "alice", "session_id": "s",
+                    "messages": [{"role": "user", "content": "tea"}],
+                })
+        self.assertEqual(500, response.status_code)
+        self.assertNotIn("backend failure", response.text)
+
 
 if __name__ == "__main__":
     unittest.main()
