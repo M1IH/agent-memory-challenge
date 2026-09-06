@@ -2,10 +2,40 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from app.store import MemoryStore, RetrievalConfig
+from app.store import MemoryStore, RetrievalConfig, entity_terms
 
 
 class MultiHopRetrievalTests(unittest.TestCase):
+    def test_conservative_chinese_entity_extraction(self):
+        self.assertEqual({"许舟"}, entity_terms("修好键盘的师傅叫许舟。"))
+        self.assertEqual(
+            {"许舟", "云帆快递"}, entity_terms("user: 许舟寄回时使用了云帆快递。")
+        )
+        self.assertEqual(
+            {"云帆快递"}, entity_terms("user: 云帆快递统一投放到三号柜。")
+        )
+
+    def test_chinese_two_hop_chain_keeps_bridge_and_destination(self):
+        self.add_all([
+            "修好我蓝色机械键盘的师傅叫许舟。",
+            "许舟寄回键盘时使用了云帆快递。",
+            "云帆快递统一投放到东区三号取件柜。",
+            "蓝色机械键盘使用青轴。",
+            "另一把键盘送到了南门便利店。",
+            "机械键盘的备用键帽在抽屉里。",
+            "我考虑自己修蓝色键盘，但没有拆开。",
+            "蓝色键盘不是在校内维修的。",
+            "打印店老板也叫许舟。",
+            "我的黑色薄膜键盘由周越修理。",
+        ])
+        results = self.store.search(
+            "u", "给我修蓝色机械键盘的师傅把它送到了哪个取件柜？", 5
+        )
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("师傅叫许舟", contents)
+        self.assertIn("许舟寄回键盘", contents)
+        self.assertIn("东区三号取件柜", contents)
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.store = MemoryStore(Path(self.directory.name) / "test.db", embedder=False)

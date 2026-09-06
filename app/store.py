@@ -39,6 +39,12 @@ _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", 
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
 _TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
 _ENTITY_STOP = {"My", "The", "A", "An", "I", "He", "She", "It", "We", "They", "Project", "Room", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+_CJK_ENTITY_PATTERNS = (
+    re.compile(r"叫([\u3400-\u9fff]{2,4})(?=[，。！？,.!?]|$)"),
+    re.compile(r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})(?=寄|负责|管理|保管|持有)"),
+    re.compile(r"(?:使用(?:了)?|通过)([\u3400-\u9fff]{2,6}快递)"),
+    re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
+)
 
 
 def topic_terms(text: str) -> set[str]:
@@ -55,12 +61,15 @@ def topic_terms(text: str) -> set[str]:
 
 
 def entity_terms(text: str) -> set[str]:
-    """Extract conservative Latin proper-name tokens for one-hop linkage."""
-    return {
+    """Extract conservative proper-name tokens for bounded linkage."""
+    entities = {
         token.lower()
         for token in re.findall(r"(?<![\w-])[A-Z][a-z]+(?:-[A-Z]?[a-z]+)?", text)
         if token not in _ENTITY_STOP
     }
+    for pattern in _CJK_ENTITY_PATTERNS:
+        entities.update(pattern.findall(text))
+    return entities
 
 
 def has_marker(text: str, markers: tuple[str, ...]) -> bool:
@@ -521,26 +530,42 @@ class MemoryStore:
                 memory for _, memory in lexical_scores[1:5]
                 if re.search(r"\b(?:is|are|was|were)\b", memory.content, re.I)
             )
-            seed_ids = {seed.id for seed in seeds}
-            bridge_terms = {
-                entity
-                for seed in seeds
-                for entity in entities_by_id[seed.id] - entity_terms(query)
-                if 1 < entity_frequency.get(entity, 0) <= 4
-            }
-            linked_scores = []
-            for score, memory in lexical_candidates:
-                shared = bridge_terms & entities_by_id[memory.id]
-                if memory.id in seed_ids:
-                    bridge_score = 4.0 if shared else 0.0
-                else:
-                    bridge_score = min(
-                        10.0,
-                        sum(16.0 / entity_frequency[term] for term in shared),
-                    )
-                if score + bridge_score > 0:
-                    linked_scores.append((score + bridge_score, memory))
-            lexical_scores = sorted(linked_scores, key=rank_key)
+            query_entities = entity_terms(query)
+
+            def linked_ranking(
+                candidates: list[tuple[float, Memory]], active_seeds: list[Memory]
+            ) -> list[tuple[float, Memory]]:
+                active_seed_ids = {seed.id for seed in active_seeds}
+                bridge_terms = {
+                    entity
+                    for seed in active_seeds
+                    for entity in entities_by_id[seed.id] - query_entities
+                    if 1 < entity_frequency.get(entity, 0) <= 4
+                }
+                linked_scores = []
+                for score, memory in candidates:
+                    shared = bridge_terms & entities_by_id[memory.id]
+                    if memory.id in active_seed_ids:
+                        bridge_score = 4.0 if shared else 0.0
+                    else:
+                        bridge_score = min(
+                            10.0,
+                            sum(16.0 / entity_frequency[term] for term in shared),
+                        )
+                    if score + bridge_score > 0:
+                        linked_scores.append((score + bridge_score, memory))
+                return sorted(linked_scores, key=rank_key)
+
+            lexical_scores = linked_ranking(lexical_candidates, seeds)
+            # CJK text has no capitalization signal. A first linked result can
+            # therefore reveal one additional named organization or courier.
+            # Limit the second hop to ten seeds and CJK queries only. The wider
+            # seed window is needed because a bridge statement can rank below
+            # surface-form distractors before linkage is applied.
+            if _CJK_RUN.search(query):
+                lexical_scores = linked_ranking(
+                    lexical_scores, [memory for _, memory in lexical_scores[:10]]
+                )
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
         else:
