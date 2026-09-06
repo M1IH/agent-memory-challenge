@@ -45,6 +45,7 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 - Before any tuning on these cases, the default top-5 result was Evidence Hit@5 58.3%, complete-case@5 33.3%, MRR 0.288. Lexical-only complete-case@5 was 16.7%; dense-only was 33.3%; default top-10 complete-case coverage was 83.3%.
 - The failures expose four concrete gaps: list evidence displacement, Chinese entity-chain propagation, cross-lingual embedding quality and scoped current-fact fusion. These cases are now a diagnostic development set; a separate holdout must be authored after fixes before claiming generalization.
 - First diagnosed fix: the old semantic group incorrectly treated dislike/avoidance as equivalent to a medical allergy, letting negated preference distractors dominate. Splitting medical allergy into its own concept group raised confirmation Hit@5 from 58.3% to 66.7%, complete-case@5 from 33.3% to 50.0%, and MRR from 0.288 to 0.304. All 55 tests plus hard and extended fail-on-miss regressions passed.
+- Rejected trials: a packing/suitcase synonym expansion recovered one missing list item but displaced another, leaving complete-case coverage unchanged. `paraphrase-multilingual-MiniLM-L12-v2` (about 220 MB) also left confirmation Hit@5 and complete-case@5 unchanged while slightly lowering MRR. Neither change was retained; the latter also emits a FastEmbed pooling-compatibility warning that would require an explicit version/identity decision.
 
 ## External review and embedding identity iteration (2026-09-06)
 
