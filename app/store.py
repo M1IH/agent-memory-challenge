@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import math
 import os
 import re
@@ -16,6 +17,9 @@ from typing import Iterable, Protocol
 import numpy as np
 
 from .embedding import EmbeddingBackend
+
+
+logger = logging.getLogger(__name__)
 
 
 _LATIN_WORD = re.compile(r"[a-z0-9]+(?:['_-][a-z0-9]+)*", re.I)
@@ -630,7 +634,20 @@ class MemoryStore:
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
         else:
-            query_vector = self._embedder.encode([query])[0]
+            try:
+                encoded_query = self._embedder.encode([query])
+                query_vector = encoded_query[0]
+                if not np.all(np.isfinite(query_vector)):
+                    raise ValueError("embedding backend returned a non-finite query vector")
+            except Exception:
+                # Search remains useful when the rebuildable semantic channel is
+                # temporarily unavailable. The durable lexical index is already
+                # loaded and provides a deterministic degraded response.
+                logger.warning(
+                    "query embedding failed; falling back to lexical retrieval",
+                    exc_info=True,
+                )
+                return self._results(lexical_scores, top_k)
             compatible_memories = [
                 memory for memory in memories
                 if memory.embedding is not None

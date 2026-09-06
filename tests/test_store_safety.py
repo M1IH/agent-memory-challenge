@@ -96,3 +96,59 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertEqual(1, len(results))
         self.assertIn("amber kite", results[0]["content"])
         self.assertTrue(np.isfinite(results[0]["score"]))
+
+    def test_query_encoder_failure_falls_back_to_lexical_search(self):
+        encoder = Mock()
+        encoder.index_identity = "test:failure-v1"
+        encoder.encode.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
+        store = MemoryStore(self.path, embedder=encoder)
+        store.add(
+            "req",
+            "alice",
+            "session",
+            [{"role": "user", "content": "My fallback phrase is copper moon."}],
+        )
+        encoder.encode.side_effect = RuntimeError("encoder unavailable")
+
+        with self.assertLogs("app.store", level="WARNING"):
+            results = store.search("alice", "fallback phrase copper moon", 1)
+
+        self.assertEqual(1, len(results))
+        self.assertIn("copper moon", results[0]["content"])
+
+    def test_nonfinite_query_vector_falls_back_to_lexical_search(self):
+        encoder = Mock()
+        encoder.index_identity = "test:query-finite-v1"
+        encoder.encode.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
+        store = MemoryStore(self.path, embedder=encoder)
+        store.add(
+            "req",
+            "alice",
+            "session",
+            [{"role": "user", "content": "My stable phrase is silver pine."}],
+        )
+        encoder.encode.return_value = [np.array([np.inf, 0.0], dtype=np.float32)]
+
+        with self.assertLogs("app.store", level="WARNING"):
+            results = store.search("alice", "stable phrase silver pine", 1)
+
+        self.assertEqual(1, len(results))
+        self.assertIn("silver pine", results[0]["content"])
+
+    def test_failed_add_encoding_does_not_claim_request_id(self):
+        encoder = Mock()
+        encoder.index_identity = "test:add-retry-v1"
+        encoder.encode.side_effect = RuntimeError("encoder unavailable")
+        store = MemoryStore(self.path, embedder=encoder)
+        payload = [{"role": "user", "content": "retry after recovery"}]
+
+        with self.assertRaisesRegex(RuntimeError, "encoder unavailable"):
+            store.add("req", "alice", "session", payload)
+        with store._connection() as connection:
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+
+        encoder.encode.side_effect = None
+        encoder.encode.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
+        store.add("req", "alice", "session", payload)
+        self.assertEqual(1, len(store.search("alice", "retry recovery", 10)))
