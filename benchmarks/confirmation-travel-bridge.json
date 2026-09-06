@@ -1,0 +1,354 @@
+{
+  "suite": "confirmation",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 12,
+  "hit_at_1": 0.16666666666666666,
+  "hit_at_3": 0.5833333333333334,
+  "hit_at_5": 1.0,
+  "mrr": 0.41111111111111115,
+  "categories": {
+    "cross_lingual": 0.3333333333333333,
+    "list_negation": 0.5208333333333334,
+    "multi_hop": 0.26666666666666666,
+    "multi_hop_zh": 0.48333333333333334,
+    "temporal_negation": 0.2,
+    "temporal_supersession": 0.3333333333333333
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.3333333333333333,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "evaluation_version": 2,
+  "suite_sha256": "80fd8be2d82eea1b305ea110af4472b8016428a2bb1504ed521a43c7a08f674b",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": "1200"
+  },
+  "retrieval_code_sha256": "a05c06b54672eac471275f6b14c5753609c5fd1bcd4c9879a99e787a28eb58e0",
+  "case_traces": [
+    {
+      "name": "confirmation-current-vet",
+      "category": "temporal_supersession",
+      "candidate_count": 18,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_3dccf6e8541b27e5cb66f07b",
+          "content": "user: My dog Luna visits Harbor Animal Clinic.",
+          "score": 0.034282,
+          "created_at": "2026-09-06T05:26:43.368661Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_86e26a82996c0a5cfbbe4722",
+          "content": "user: Harbor Animal Clinic moved to Pine Street.",
+          "score": 0.033656,
+          "created_at": "2026-09-06T05:26:43.576001Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_524c780212c13f7268939383",
+          "content": "[2024-04-01T00:00:00Z] user: Miso's veterinarian is now Dr. Imani at Cedar Pet Care.",
+          "score": 0.032585,
+          "created_at": "2024-04-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_61fc4e68ddef8acf485965c1",
+          "content": "user: Cedar Pet Care called about Luna by mistake.",
+          "score": 0.03258,
+          "created_at": "2026-09-06T05:26:43.802412Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_44e0a9d4f39923f2c4b9361d",
+          "content": "user: Dr. Imani gave a talk about senior dogs.",
+          "score": 0.03222,
+          "created_at": "2026-09-06T05:26:43.430039Z",
+          "source_id": "d04"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-lab-access-chain",
+      "category": "multi_hop",
+      "candidate_count": 19,
+      "expected": [
+        "lab",
+        "contact"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        5,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_788e8c64799bcd98666459c2",
+          "content": "user: Ava is the contact for meeting-room access.",
+          "score": 0.033084,
+          "created_at": "2026-09-06T05:26:44.950261Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_f76a923253a7bffca0908707",
+          "content": "user: Fatima Noor also orders safety goggles.",
+          "score": 0.032523,
+          "created_at": "2026-09-06T05:26:44.448714Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_ae50abef342b1ff7945de868",
+          "content": "user: Access badges for the Orion lab are issued by Fatima Noor.",
+          "score": 0.032382,
+          "created_at": "2026-09-06T05:26:44.225720Z",
+          "source_id": "contact"
+        },
+        {
+          "id": "mem_516eac048695e621b934ceb1",
+          "content": "user: The Orion meeting room is booked by Ava.",
+          "score": 0.03222,
+          "created_at": "2026-09-06T05:26:44.501650Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_98c22cece8d35ed34f0707d0",
+          "content": "user: Project Kestrel uses the Orion lab for prototype testing.",
+          "score": 0.031274,
+          "created_at": "2026-09-06T05:26:44.168365Z",
+          "source_id": "lab"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-packed-conference-list",
+      "category": "list_negation",
+      "candidate_count": 21,
+      "expected": [
+        "adapter",
+        "badge",
+        "notebook",
+        "medicine"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3,
+        2,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b72a70c331274f27c16b44b6",
+          "content": "user: I put the travel adapter in my bag for the Lumen conference.",
+          "score": 0.03439,
+          "created_at": "2026-09-06T05:26:45.297931Z",
+          "source_id": "adapter"
+        },
+        {
+          "id": "mem_288c461ae2fd2cadf7246967",
+          "content": "user: I packed the green notebook for Lumen.",
+          "score": 0.034166,
+          "created_at": "2026-09-06T05:26:45.397608Z",
+          "source_id": "notebook"
+        },
+        {
+          "id": "mem_af41e74d02d5ee0e72676753",
+          "content": "user: My Lumen conference badge is packed in the front pocket.",
+          "score": 0.033874,
+          "created_at": "2026-09-06T05:26:45.349634Z",
+          "source_id": "badge"
+        },
+        {
+          "id": "mem_7212008b7b33894d151fadb1",
+          "content": "user: The allergy medicine went into my Lumen conference suitcase.",
+          "score": 0.03325,
+          "created_at": "2026-09-06T05:26:45.456080Z",
+          "source_id": "medicine"
+        },
+        {
+          "id": "mem_ce6eec3a653d83e723c355a3",
+          "content": "user: I bought an umbrella after arriving at the Lumen conference.",
+          "score": 0.031013,
+          "created_at": "2026-09-06T05:26:45.700139Z",
+          "source_id": "d04"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-chinese-pickup-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 20,
+      "expected": [
+        "repairer",
+        "courier",
+        "locker"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        4,
+        5
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_cc05ed374fbd902cf78f1ba7",
+          "content": "user: 修好我蓝色机械键盘的师傅叫许舟。",
+          "score": 0.034655,
+          "created_at": "2026-09-06T05:26:46.517599Z",
+          "source_id": "repairer"
+        },
+        {
+          "id": "mem_5892e0bdfe35de276f7f6d1c",
+          "content": "user: 蓝色机械键盘使用青轴。",
+          "score": 0.03344,
+          "created_at": "2026-09-06T05:26:46.932616Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_70b3e9ad278c163430e0418e",
+          "content": "user: 另一把键盘送到了南门便利店。",
+          "score": 0.032659,
+          "created_at": "2026-09-06T05:26:47.105990Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_94ae7aacc38f4431c8651924",
+          "content": "user: 许舟寄回键盘时使用了云帆快递。",
+          "score": 0.032653,
+          "created_at": "2026-09-06T05:26:46.573226Z",
+          "source_id": "courier"
+        },
+        {
+          "id": "mem_fd4bed8066f6a617a9a891cf",
+          "content": "user: 云帆快递在学校统一投放到东区三号取件柜。",
+          "score": 0.032382,
+          "created_at": "2026-09-06T05:26:46.639775Z",
+          "source_id": "locker"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-bilingual-booking",
+      "category": "cross_lingual",
+      "candidate_count": 17,
+      "expected": [
+        "booking"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_43bf500b90b6f526e623cc2a",
+          "content": "user: 我收藏了京都青松旅馆，但没有预订。",
+          "score": 0.034403,
+          "created_at": "2026-09-06T05:26:47.819214Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_6ac887065377060cc7a4a27d",
+          "content": "user: 朋友推荐了京都月影民宿。",
+          "score": 0.033746,
+          "created_at": "2026-09-06T05:26:48.508083Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_cfd7d27ab57064158aa7efb8",
+          "content": "user: I confirmed my Kyoto accommodation at Maple Lantern Guesthouse.",
+          "score": 0.033336,
+          "created_at": "2026-09-06T05:26:47.759311Z",
+          "source_id": "booking"
+        },
+        {
+          "id": "mem_2fd9f293067b3c553967f5b5",
+          "content": "user: 我在奈良住的是鹿鸣旅馆。",
+          "score": 0.03279,
+          "created_at": "2026-09-06T05:26:48.937181Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_6d9624d1a7b808af57c35a3b",
+          "content": "user: 京都住宿的预算是每晚一万日元。",
+          "score": 0.032585,
+          "created_at": "2026-09-06T05:26:48.210344Z",
+          "source_id": "d04"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-current-allergy",
+      "category": "temporal_negation",
+      "candidate_count": 19,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        5
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_00212e6959bf50395180d629",
+          "content": "user: I am not allergic to cats.",
+          "score": 0.033439,
+          "created_at": "2026-09-06T05:26:52.196787Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_a50e097d13b212635b7d4626",
+          "content": "user: My brother is allergic to peanuts.",
+          "score": 0.033336,
+          "created_at": "2026-09-06T05:26:50.731678Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_4154e12e07e57d513ac889ff",
+          "content": "[2023-01-01T00:00:00Z] user: Testing later showed I am not allergic to strawberries.",
+          "score": 0.032852,
+          "created_at": "2023-01-01T00:00:00Z",
+          "source_id": "cleared"
+        },
+        {
+          "id": "mem_68ae8e6f058ef65fc2830298",
+          "content": "[2021-01-01T00:00:00Z] user: As a child I was thought to be allergic to strawberries.",
+          "score": 0.03279,
+          "created_at": "2021-01-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_a35c0514c5066af4434129c0",
+          "content": "[2024-01-01T00:00:00Z] user: My current confirmed food allergy is sesame.",
+          "score": 0.030924,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "current"
+        }
+      ]
+    }
+  ]
+}

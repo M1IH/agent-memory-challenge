@@ -34,6 +34,15 @@ _CONCEPT_GROUPS = (
     ),
     ("过敏", "allergic", "allergy"),
     ("工作", "职业", "职位", "任职", "job", "career", "work"),
+    (
+        "预订", "预约", "订了", "订房",
+        "book", "booked", "booking", "reserve", "reserved", "reservation",
+        "confirm", "confirmed",
+    ),
+    (
+        "住宿", "旅馆", "酒店", "民宿",
+        "accommodation", "hotel", "hostel", "guesthouse", "inn", "lodging",
+    ),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
@@ -153,13 +162,14 @@ def tokenize(text: str) -> list[str]:
 
 def semantic_expansion_terms(text: str) -> list[str]:
     """Return small, auditable synonym expansions without a paid model."""
-    lowered = text.lower()
     expansions: list[str] = []
     for group in _CONCEPT_GROUPS:
-        if any(phrase in lowered for phrase in group):
+        if has_marker(text, group):
             # Only add actual alternatives. Re-adding the query's own wording
             # would amplify lexical distractors instead of bridging paraphrases.
-            alternatives = [phrase for phrase in group if phrase not in lowered]
+            alternatives = [
+                phrase for phrase in group if not has_marker(text, (phrase,))
+            ]
             expansions.extend(tokenize(" ".join(alternatives)))
     return expansions
 
