@@ -1,0 +1,36 @@
+{
+  "config": {
+    "add_requests": 500,
+    "messages_per_request": 20,
+    "memory_count": 10000,
+    "search_requests": 96,
+    "add_workers": 64,
+    "search_workers": 32,
+    "top_k": 100,
+    "embeddings_enabled": false,
+    "percentile_method": "nearest-rank"
+  },
+  "add": {
+    "wall_seconds": 5.264286300051026,
+    "successful_messages": 10000,
+    "throughput_messages_per_second": 1899.592732998407,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 0.6275870035993867,
+    "p50_seconds": 0.6974534000037238,
+    "p95_seconds": 0.8687003999948502,
+    "p99_seconds": 0.8912973999977112
+  },
+  "search": {
+    "wall_seconds": 28.79514460003702,
+    "throughput_requests_per_second": 3.3338953956798876,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 96,
+    "top_1_accuracy": 1.0,
+    "mean_seconds": 8.825824332286478,
+    "p50_seconds": 9.066764200048055,
+    "p95_seconds": 11.324624800006859,
+    "p99_seconds": 12.62631910003256
+  }
+}

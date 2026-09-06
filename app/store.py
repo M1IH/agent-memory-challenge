@@ -12,7 +12,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable, Protocol
+from typing import Callable, Iterable, Protocol
 
 import numpy as np
 
@@ -585,17 +585,29 @@ class MemoryStore:
 
         lexical_scores.sort(key=rank_key)
         if config.lexical_enabled and config.linkage_enabled and lexical_scores:
-            entity_frequency: dict[str, int] = {}
-            entities_by_id = {memory.id: entity_terms(memory.content) for memory in memories}
-            for entities in entities_by_id.values():
-                for entity in entities:
-                    entity_frequency[entity] = entity_frequency.get(entity, 0) + 1
             seeds = [lexical_scores[0][1]]
             seeds.extend(
                 memory for _, memory in lexical_scores[1:5]
                 if re.search(r"\b(?:is|are|was|were)\b", memory.content, re.I)
             )
             query_entities = entity_terms(query)
+            seed_entities = {
+                entity
+                for seed in seeds
+                for entity in entity_terms(seed.content) - query_entities
+            }
+            # If the seeds expose no proper-name bridge, linkage cannot change
+            # any score. Avoid running several regexes over the entire user's
+            # corpus on this common direct-retrieval path.
+            if not seed_entities and not _CJK_RUN.search(query):
+                return self._finish_search(
+                    query, memories, lexical_scores, rank_key, config, top_k
+                )
+            entity_frequency: dict[str, int] = {}
+            entities_by_id = {memory.id: entity_terms(memory.content) for memory in memories}
+            for entities in entities_by_id.values():
+                for entity in entities:
+                    entity_frequency[entity] = entity_frequency.get(entity, 0) + 1
 
             def linked_ranking(
                 candidates: list[tuple[float, Memory]], active_seeds: list[Memory]
@@ -631,6 +643,17 @@ class MemoryStore:
                 lexical_scores = linked_ranking(
                     lexical_scores, [memory for _, memory in lexical_scores[:10]]
                 )
+        return self._finish_search(query, memories, lexical_scores, rank_key, config, top_k)
+
+    def _finish_search(
+        self,
+        query: str,
+        memories: list[Memory],
+        lexical_scores: list[tuple[float, Memory]],
+        rank_key: Callable[[tuple[float, Memory]], tuple[float, int, str]],
+        config: RetrievalConfig,
+        top_k: int,
+    ) -> list[dict]:
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
         else:

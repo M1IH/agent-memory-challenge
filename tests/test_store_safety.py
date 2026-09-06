@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 import numpy as np
 
-from app.store import MemoryStore
+from app.store import MemoryStore, entity_terms
 
 
 class StoreSafetyTests(unittest.TestCase):
@@ -152,3 +152,19 @@ class StoreSafetyTests(unittest.TestCase):
         encoder.encode.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
         store.add("req", "alice", "session", payload)
         self.assertEqual(1, len(store.search("alice", "retry recovery", 10)))
+
+    def test_direct_retrieval_skips_corpus_wide_entity_extraction(self):
+        store = MemoryStore(self.path, embedder=False)
+        for index in range(40):
+            store.add(
+                f"req-{index}",
+                "alice",
+                "session",
+                [{"role": "user", "content": f"project code token-{index}"}],
+            )
+
+        with patch("app.store.entity_terms", wraps=entity_terms) as extractor:
+            results = store.search("alice", "project code token-17", 1)
+
+        self.assertIn("token-17", results[0]["content"])
+        self.assertLessEqual(extractor.call_count, 6)
