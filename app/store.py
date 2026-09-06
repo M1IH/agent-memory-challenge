@@ -478,6 +478,11 @@ class MemoryStore:
                     embedding = np.frombuffer(row["embedding"], dtype=np.float32)
                 except ValueError:
                     embedding = None
+                if embedding is not None and not np.all(np.isfinite(embedding)):
+                    # Embeddings are a rebuildable index. A partially corrupted
+                    # vector must not poison ranking or JSON serialization; keep
+                    # the durable text available through lexical retrieval.
+                    embedding = None
             memories.append(Memory(
                 id=row["id"], content=row["content"],
                 timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],

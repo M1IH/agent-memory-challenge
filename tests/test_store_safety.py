@@ -73,3 +73,26 @@ class StoreSafetyTests(unittest.TestCase):
         store.add("a", "alice", "s", [{"role": "user", "content": "My desk location is Room-204."}])
         store.add("b", "alice", "s", [{"role": "user", "content": "My lunch changed to soup."}])
         self.assertIn("Room-204", store.search("alice", "Do you know my desk location?", 1)[0]["content"])
+
+    def test_nonfinite_persisted_vector_falls_back_to_lexical_search(self):
+        encoder = Mock()
+        encoder.index_identity = "test:finite-v1"
+        encoder.encode.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
+        store = MemoryStore(self.path, embedder=encoder)
+        store.add(
+            "req",
+            "alice",
+            "session",
+            [{"role": "user", "content": "My recovery phrase is amber kite."}],
+        )
+        with store._connection() as connection:
+            connection.execute(
+                "UPDATE memories SET embedding = ? WHERE user_id = ?",
+                (np.array([np.nan, 0.0], dtype=np.float32).tobytes(), "alice"),
+            )
+
+        results = store.search("alice", "recovery phrase amber kite", 1)
+
+        self.assertEqual(1, len(results))
+        self.assertIn("amber kite", results[0]["content"])
+        self.assertTrue(np.isfinite(results[0]["score"]))
