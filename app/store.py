@@ -77,8 +77,8 @@ class RetrievalConfig:
     expansion_enabled: bool = True
     temporal_enabled: bool = True
     linkage_enabled: bool = True
-    lexical_weight: float = 1.0
-    dense_weight: float = 0.85
+    lexical_weight: float = 1.5
+    dense_weight: float = 0.5
 
     def __post_init__(self) -> None:
         for weight in (self.lexical_weight, self.dense_weight):

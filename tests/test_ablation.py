@@ -10,6 +10,11 @@ from benchmarks.run_ablation import run_variant
 
 
 class AblationTests(unittest.TestCase):
+    def test_default_fusion_weights_match_evidence_backed_configuration(self):
+        config = RetrievalConfig()
+        self.assertEqual(1.5, config.lexical_weight)
+        self.assertEqual(0.5, config.dense_weight)
+
     def test_inherited_disabled_embeddings_do_not_contaminate_variants(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "result.json"

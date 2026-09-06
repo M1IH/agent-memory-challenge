@@ -6,7 +6,7 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 - Fixed ablation subprocesses inheriting AML_EMBED_ENABLED=false and mislabeling lexical runs as hybrid/dense.
 - Reject non-finite, negative, and zero RRF weights before search. Channel removal uses explicit switches.
-- 46 unit tests pass locally, including concurrent writes across store instances and strict-source benchmark integration. This does not establish that the entire repository is bug-free.
+- 50 unit tests pass locally, including concurrent writes across store instances and strict-source benchmark integration. This does not establish that the entire repository is bug-free.
 - Reproduced and fixed ambiguous NUL-delimited memory IDs dropping another user's record. New IDs hash a JSON array; existing rows are not rewritten. Unexpected ID collisions now fail the transaction instead of silently discarding a row.
 - Reproduced and fixed replay requiring a working encoder. Ledger preflight skips encoding for completed replays/conflicts; transactional claiming remains authoritative for concurrent writers.
 - Reproduced and fixed connection leakage on PRAGMA failure.
@@ -34,9 +34,17 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 - Real-model extended regression (125 cases) passes the existing Hit@5 gate after the final changes.
 - Fixed hard suite: unrelated updates now returns source `desk` at rank 1. Hybrid evidence Hit@5 improves from 9/15 to 10/15; complete cases from 1/6 to 2/6. Saved trace: `benchmarks/hard-temporal-scoped.json`.
 - Limitations: topic overlap is a conservative heuristic, not entity resolution. Same-topic different-person facts can still be confused. English multi-hop and list misses remain. Next algorithm work is entity-linked candidate retrieval with separate holdout tests; keep these fixed suites for regression.
-- Git push tried with default transport and HTTP/1.1, both timed out. Public GitHub API responded with a rate-limit error. No remote update or CI success is claimed for this iteration.
+- Commit `e3e6ef4` was pushed and GitHub Actions run 33961161902 passed both unit/extended evaluation and Linux Docker offline Add/Search. Later commit `3bd5a2f` and the current fusion iteration still require push and exact-SHA CI.
 
 ## Remaining priorities
+
+## List-completeness fusion iteration
+
+- Root cause isolated by ablation: lexical hard retrieval returned all 15/15 required evidence items, while dense-heavy fusion displaced one required item from each list case at top_k=5.
+- Fixed-suite weight sweep: lexical/dense 1.25/0.75 reached 14/15 and 5/6 complete; 1.5/0.5 and 2.0/0.5 both reached 15/15 and 6/6. Chose the smaller 1.5/0.5 lexical emphasis.
+- On the pre-existing 125-case extended suite, 1.5/0.5 exactly preserves Hit@1 0.804734, Hit@3/5 1.0, MRR 0.891519, and every reported category score compared with the prior default.
+- Default weights and benchmark CLI now share `RetrievalConfig` values to prevent configuration drift. Equal-RRF and explicit weight flags remain available for ablation.
+- This is development-set evidence, not independent validation. Next evaluation task is a separately authored high-distractor confirmation set before further weight/reranking changes.
 
 ## One-hop entity linkage iteration
 
@@ -54,5 +62,4 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 - Initial high-distractor, source-ID baseline is now in place. Next: topic-scoped temporal boosts and entity-linked second-hop candidate retrieval; compare on fixed hard plus original extended suites, then add independent holdout cases before tuning fusion or diversity weights.
 - Keep evaluation cases fixed when comparing retrieval changes; changing the suite means headline scores cannot be compared directly with prior runs.
 - Review model identity compatibility, temporal boosts on unrelated updated facts, and deterministic tie-breaking in subsequent correctness passes. Legacy replay is now guarded, not automatically migrated.
-- Local commit 137bda6 previously failed to push; verify current remote status before shipping accumulated fixes.
-- Latest remote connectivity check also failed: ordinary `git ls-remote` could not connect; the sandbox-external retry was reset. Remote CI for accumulated changes remains unverified. Resume push/CI gate before claiming deployment readiness.
+- Resume the push/CI gate for the latest local commit before claiming its deployment readiness; GitHub connectivity remains intermittent.
