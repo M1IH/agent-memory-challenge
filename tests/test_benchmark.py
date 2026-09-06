@@ -12,6 +12,24 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_holdout_is_disjoint_strict_and_high_distractor(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        holdout = json.loads((root / "holdout_cases.json").read_text(encoding="utf-8"))
+        known_names = set()
+        for filename in ("hard_cases.json", "confirmation_cases.json"):
+            known_names.update(
+                case["name"]
+                for case in json.loads((root / filename).read_text(encoding="utf-8"))
+            )
+        self.assertGreaterEqual(len(holdout), 6)
+        self.assertFalse({case["name"] for case in holdout} & known_names)
+        self.assertEqual(len(holdout), len({case["name"] for case in holdout}))
+        for case in holdout:
+            validate_source_case(case)
+            self.assertGreaterEqual(
+                len(case["memories"]) - len(case["expected_source_ids"]), 15
+            )
+
     def test_confirmation_cases_are_separate_strict_high_distractor_cases(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         confirmation = json.loads((root / "confirmation_cases.json").read_text(encoding="utf-8"))

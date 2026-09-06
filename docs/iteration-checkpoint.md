@@ -38,6 +38,12 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 ## Remaining priorities
 
+## Fresh holdout baseline (2026-09-06)
+
+- Added six new strict source-identity cases disjoint from both `hard_cases.json` and `confirmation_cases.json`, each with at least 15 distractors. The suite covers unseen bilingual adviser/schedule language, temporal replacement, English and Chinese multi-hop chains, confirmed-event lists and reverse-direction bilingual lodging.
+- First run was frozen before any tuning: 12 evidence items, Hit@1 16.7%, Hit@3 41.7%, Hit@5 66.7%, MRR 0.340 and complete-case@5 50.0%. Suite SHA-256: `9ed70912360b2253c87c767609fdf33520156ed0512169393e082c86468eeeee`.
+- Failures show that the earlier diagnostic set's 100% does not generalize to arbitrary bilingual concepts or every multi-hop phrasing. Do not patch this holdout in place. If used for the next algorithm iteration, copy it to a development suite and author a third untouched holdout before claiming generalization.
+
 ## Independent high-distractor confirmation baseline (2026-09-06)
 
 - Added six source-identity-scored cases that are disjoint from `hard_cases.json`, each with at least 15 distractors. They cover temporal supersession, English and Chinese multi-hop retrieval, negated list distractors, cross-lingual retrieval and temporal negation.

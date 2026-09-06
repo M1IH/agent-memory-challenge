@@ -1,0 +1,354 @@
+{
+  "suite": "holdout",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 12,
+  "hit_at_1": 0.16666666666666666,
+  "hit_at_3": 0.4166666666666667,
+  "hit_at_5": 0.6666666666666666,
+  "mrr": 0.34027777777777773,
+  "categories": {
+    "cross_lingual": 0.0,
+    "cross_lingual_reverse": 0.25,
+    "list_negation": 0.5833333333333334,
+    "multi_hop": 0.125,
+    "multi_hop_zh": 0.5,
+    "temporal_supersession": 0.3333333333333333
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.16666666666666666,
+  "complete_at_5": 0.5,
+  "complete_at_k": 0.5,
+  "evaluation_version": 2,
+  "suite_sha256": "9ed70912360b2253c87c767609fdf33520156ed0512169393e082c86468eeeee",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": "1200"
+  },
+  "retrieval_code_sha256": "a05c06b54672eac471275f6b14c5753609c5fd1bcd4c9879a99e787a28eb58e0",
+  "case_traces": [
+    {
+      "name": "holdout-adviser-office-hours",
+      "category": "cross_lingual",
+      "candidate_count": 18,
+      "expected": [
+        "identity",
+        "schedule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_08f037d02d130afed0c0a9cd",
+          "content": "user: 我的课程助教每周一答疑。",
+          "score": 0.034655,
+          "created_at": "2026-09-06T09:38:26.773574Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_9479f0cb8aa3571da9105a04",
+          "content": "user: 我的实验课老师周五答疑。",
+          "score": 0.03439,
+          "created_at": "2026-09-06T09:38:27.295554Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_c2d983508f93bc8dd8e3d327",
+          "content": "user: 论文写作小组周四开会。",
+          "score": 0.031746,
+          "created_at": "2026-09-06T09:38:27.034879Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_d6058c5a6ad430e82b7cb140",
+          "content": "user: 答疑预约需要提前一天。",
+          "score": 0.03125,
+          "created_at": "2026-09-06T09:38:27.557629Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_d7ca92e5213ce883cdef8f3b",
+          "content": "user: Weekly office-hour notes are in a folder.",
+          "score": 0.007692,
+          "created_at": "2026-09-06T09:38:27.361943Z",
+          "source_id": "d10"
+        }
+      ]
+    },
+    {
+      "name": "holdout-current-dentist",
+      "category": "temporal_supersession",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_ecb8952697dcd51f20b7dcc9",
+          "content": "user: Rosa Chen spoke at a health workshop.",
+          "score": 0.033084,
+          "created_at": "2026-09-06T09:38:28.216274Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_f341970c16cd020e92caef93",
+          "content": "user: Dr. Rosa Patel is an orthodontist.",
+          "score": 0.033043,
+          "created_at": "2026-09-06T09:38:28.660057Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_0fef1657195d1b366e6ccdbb",
+          "content": "[2024-06-01T00:00:00Z] user: I now visit Dr. Rosa Chen at Willow Dental for dentistry.",
+          "score": 0.032006,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_6c58346f635967ecac4f23e7",
+          "content": "user: Willow Dental has a blue waiting room.",
+          "score": 0.030382,
+          "created_at": "2026-09-06T09:38:28.155168Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_616e6661fe2ca97828f37980",
+          "content": "[2023-01-01T00:00:00Z] user: My dentist used to be Dr. Salim at North Dental.",
+          "score": 0.03019,
+          "created_at": "2023-01-01T00:00:00Z",
+          "source_id": "old"
+        }
+      ]
+    },
+    {
+      "name": "holdout-club-storage-contact",
+      "category": "multi_hop",
+      "candidate_count": 18,
+      "expected": [
+        "room",
+        "key"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null,
+        4
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_19c30d1f43a75d5998d68aa9",
+          "content": "user: Maya has the key to the meeting room.",
+          "score": 0.033733,
+          "created_at": "2026-09-06T09:38:29.620447Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_25cb9ba8b27dafa8d2de235b",
+          "content": "user: Noor Hassan leads the photography club.",
+          "score": 0.032772,
+          "created_at": "2026-09-06T09:38:29.312177Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_edbdf033333a7cb5258da74c",
+          "content": "user: The club president is Maya.",
+          "score": 0.032566,
+          "created_at": "2026-09-06T09:38:29.557036Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_60822f7ec1669d3a76d78d0f",
+          "content": "user: The key for the Vega room is kept by Noor Hassan.",
+          "score": 0.032323,
+          "created_at": "2026-09-06T09:38:29.126419Z",
+          "source_id": "key"
+        },
+        {
+          "id": "mem_b57e6ef99bf1442fc278df79",
+          "content": "user: Noor Hassan ordered telescope lenses.",
+          "score": 0.032287,
+          "created_at": "2026-09-06T09:38:30.252137Z",
+          "source_id": "d13"
+        }
+      ]
+    },
+    {
+      "name": "holdout-chinese-parcel-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 19,
+      "expected": [
+        "binder",
+        "courier",
+        "pickup"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_15c86dbe2f5d8ad6631edd5d",
+          "content": "user: 帮我装订毕业作品集的师傅叫沈清。",
+          "score": 0.034655,
+          "created_at": "2026-09-06T09:38:30.594379Z",
+          "source_id": "binder"
+        },
+        {
+          "id": "mem_9cbf0b39fceb23adcda0691a",
+          "content": "user: 沈清寄出成品时使用了远舟快递。",
+          "score": 0.033769,
+          "created_at": "2026-09-06T09:38:30.667491Z",
+          "source_id": "courier"
+        },
+        {
+          "id": "mem_fc783bd9707f5b0430220cca",
+          "content": "user: 毕业作品集使用了灰色封面。",
+          "score": 0.032852,
+          "created_at": "2026-09-06T09:38:31.015274Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_a95be2e0cc912284ea76e2ed",
+          "content": "user: 我的摄影集由李南装订。",
+          "score": 0.032325,
+          "created_at": "2026-09-06T09:38:30.811777Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_c2f723e02380622f932187da",
+          "content": "user: 打印店老板也叫沈清。",
+          "score": 0.032323,
+          "created_at": "2026-09-06T09:38:31.826078Z",
+          "source_id": "d16"
+        }
+      ]
+    },
+    {
+      "name": "holdout-confirmed-volunteers",
+      "category": "list_negation",
+      "candidate_count": 19,
+      "expected": [
+        "ana",
+        "bo",
+        "mina"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_32044b1575aeb2db9145fb49",
+          "content": "user: Ana confirmed she will volunteer at the Solstice cleanup.",
+          "score": 0.034655,
+          "created_at": "2026-09-06T09:38:31.969479Z",
+          "source_id": "ana"
+        },
+        {
+          "id": "mem_6926cebe6748b047f2274ac1",
+          "content": "user: Bo accepted the Solstice cleanup volunteer shift.",
+          "score": 0.033622,
+          "created_at": "2026-09-06T09:38:32.034872Z",
+          "source_id": "bo"
+        },
+        {
+          "id": "mem_4e013cbb1974d3b95e9f1429",
+          "content": "user: My friend Jo confirmed for a different cleanup.",
+          "score": 0.033043,
+          "created_at": "2026-09-06T09:38:32.310484Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_01823aef0a03211a9c2b4964",
+          "content": "user: Mina said yes to volunteering at the Solstice cleanup.",
+          "score": 0.033013,
+          "created_at": "2026-09-06T09:38:32.106233Z",
+          "source_id": "mina"
+        },
+        {
+          "id": "mem_02a5e4c60fdc9c7dd19e2a32",
+          "content": "user: Eli confirmed attendance at the Solstice concert.",
+          "score": 0.03248,
+          "created_at": "2026-09-06T09:38:32.688339Z",
+          "source_id": "d09"
+        }
+      ]
+    },
+    {
+      "name": "holdout-reverse-language-hotel",
+      "category": "cross_lingual_reverse",
+      "candidate_count": 17,
+      "expected": [
+        "booking"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_7c0877da2e1cc0285a291de3",
+          "content": "user: 我收藏了苏州青石酒店，但没有预订。",
+          "score": 0.033535,
+          "created_at": "2026-09-06T09:38:33.329185Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_4ac2b1df5b27fc32888b706d",
+          "content": "user: 我取消了苏州北门旅馆的订单。",
+          "score": 0.03344,
+          "created_at": "2026-09-06T09:38:33.588000Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_ce705a8a7aa4615b6c14060f",
+          "content": "user: I booked Harbor Inn in Shanghai.",
+          "score": 0.03325,
+          "created_at": "2026-09-06T09:38:33.391696Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_070c55d8c85ab644fe6d8919",
+          "content": "user: 我已经确认预订苏州的白鹭民宿。",
+          "score": 0.032852,
+          "created_at": "2026-09-06T09:38:33.254951Z",
+          "source_id": "booking"
+        },
+        {
+          "id": "mem_8d6b7dbdfd8e0e2b27276d81",
+          "content": "user: I considered Stone Hotel but did not book it.",
+          "score": 0.03219,
+          "created_at": "2026-09-06T09:38:34.087398Z",
+          "source_id": "d13"
+        }
+      ]
+    }
+  ]
+}
