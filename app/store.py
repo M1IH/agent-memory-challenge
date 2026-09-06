@@ -29,9 +29,10 @@ _CONCEPT_GROUPS = (
     ("买", "购买", "入手", "添置", "购置", "bought", "buy", "purchase"),
     ("喜欢", "偏爱", "最爱", "首选", "favorite", "prefer"),
     (
-        "避免", "不吃", "讨厌", "不喜欢", "过敏",
-        "avoid", "cannot stand", "dislike", "hate", "allergic", "allergy",
+        "避免", "不吃", "讨厌", "不喜欢",
+        "avoid", "cannot stand", "dislike", "hate",
     ),
+    ("过敏", "allergic", "allergy"),
     ("工作", "职业", "职位", "任职", "job", "career", "work"),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")

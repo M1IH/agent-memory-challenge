@@ -44,6 +44,7 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 - Frozen baseline suite SHA-256: `80fd8be2d82eea1b305ea110af4472b8016428a2bb1504ed521a43c7a08f674b`.
 - Before any tuning on these cases, the default top-5 result was Evidence Hit@5 58.3%, complete-case@5 33.3%, MRR 0.288. Lexical-only complete-case@5 was 16.7%; dense-only was 33.3%; default top-10 complete-case coverage was 83.3%.
 - The failures expose four concrete gaps: list evidence displacement, Chinese entity-chain propagation, cross-lingual embedding quality and scoped current-fact fusion. These cases are now a diagnostic development set; a separate holdout must be authored after fixes before claiming generalization.
+- First diagnosed fix: the old semantic group incorrectly treated dislike/avoidance as equivalent to a medical allergy, letting negated preference distractors dominate. Splitting medical allergy into its own concept group raised confirmation Hit@5 from 58.3% to 66.7%, complete-case@5 from 33.3% to 50.0%, and MRR from 0.288 to 0.304. All 55 tests plus hard and extended fail-on-miss regressions passed.
 
 ## External review and embedding identity iteration (2026-09-06)
 

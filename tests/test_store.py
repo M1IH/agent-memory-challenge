@@ -87,6 +87,12 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertIn("cannot", avoidance_terms)
         self.assertIn("stand", avoidance_terms)
 
+    def test_allergy_expansion_does_not_treat_dislike_as_medical_evidence(self):
+        allergy_terms = semantic_expansion_terms("What food allergy do I have?")
+        self.assertIn("allergic", allergy_terms)
+        self.assertNotIn("avoid", allergy_terms)
+        self.assertNotIn("dislike", allergy_terms)
+
     def test_current_question_prefers_later_updated_memory(self):
         self.add("alice", "req-1", "我现在最喜欢的早餐是豆浆油条", 1704067200000)
         self.add("alice", "req-2", "后来口味变了，早餐首选燕麦酸奶", 1735689600000)
