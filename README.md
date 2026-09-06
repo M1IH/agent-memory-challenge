@@ -148,6 +148,18 @@ python -m benchmarks.run_load_test
 
 该测试启用真实向量模型，模拟每数据集 48 个 Add、每次 20 条消息，以及
 32 个 Search 工作者，用于发现 CPU 延迟和并发瓶颈。
+参数可用于复现更大规模的纯存储/词法基线，例如：
+
+```powershell
+python -m benchmarks.run_load_test --add-requests 500 `
+  --messages-per-request 20 --search-requests 96 `
+  --add-workers 64 --search-workers 32 --top-k 100 `
+  --no-embeddings --json-output benchmarks/load-10k-lexical.json
+```
+
+JSON 报告包含成功写入吞吐、错误类型、Search p50/p95/p99、吞吐和 Top-1
+准确率。`--no-embeddings` 只用于隔离 SQLite、词法评分和并发开销，不代表
+正式提交配置。
 
 ## 数据合规
 
