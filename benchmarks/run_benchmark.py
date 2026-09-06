@@ -30,7 +30,9 @@ def main() -> None:
         action="store_true",
         help="print ranked candidates for cases with evidence outside rank one",
     )
-    parser.add_argument("--suite", choices=("core", "extended", "hard"), default="core")
+    parser.add_argument(
+        "--suite", choices=("core", "extended", "hard", "confirmation"), default="core"
+    )
     parser.add_argument("--fail-on-miss", action="store_true")
     parser.add_argument("--json-output", type=Path)
     parser.add_argument("--quiet", action="store_true")
@@ -47,8 +49,9 @@ def main() -> None:
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     if args.suite == "extended":
         cases.extend(build_extended_cases())
-    elif args.suite == "hard":
-        cases = json.loads(Path(__file__).with_name("hard_cases.json").read_text(encoding="utf-8"))
+    elif args.suite in {"hard", "confirmation"}:
+        filename = "hard_cases.json" if args.suite == "hard" else "confirmation_cases.json"
+        cases = json.loads(Path(__file__).with_name(filename).read_text(encoding="utf-8"))
         for case in cases:
             validate_source_case(case)
     reciprocal_rank_sum = 0.0

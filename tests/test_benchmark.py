@@ -12,6 +12,19 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_confirmation_cases_are_separate_strict_high_distractor_cases(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        confirmation = json.loads((root / "confirmation_cases.json").read_text(encoding="utf-8"))
+        hard = json.loads((root / "hard_cases.json").read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(confirmation), 6)
+        self.assertFalse({case["name"] for case in confirmation} & {case["name"] for case in hard})
+        self.assertEqual(len(confirmation), len({case["name"] for case in confirmation}))
+        for case in confirmation:
+            validate_source_case(case)
+            self.assertGreaterEqual(
+                len(case["memories"]) - len(case["expected_source_ids"]), 15
+            )
+
     def test_hard_cases_have_known_sources_and_more_than_ten_distractors(self):
         cases = json.loads((Path(__file__).resolve().parents[1] / "benchmarks/hard_cases.json").read_text(encoding="utf-8"))
         self.assertEqual(6, len(cases))

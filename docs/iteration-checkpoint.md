@@ -38,6 +38,13 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 ## Remaining priorities
 
+## Independent high-distractor confirmation baseline (2026-09-06)
+
+- Added six source-identity-scored cases that are disjoint from `hard_cases.json`, each with at least 15 distractors. They cover temporal supersession, English and Chinese multi-hop retrieval, negated list distractors, cross-lingual retrieval and temporal negation.
+- Frozen baseline suite SHA-256: `80fd8be2d82eea1b305ea110af4472b8016428a2bb1504ed521a43c7a08f674b`.
+- Before any tuning on these cases, the default top-5 result was Evidence Hit@5 58.3%, complete-case@5 33.3%, MRR 0.288. Lexical-only complete-case@5 was 16.7%; dense-only was 33.3%; default top-10 complete-case coverage was 83.3%.
+- The failures expose four concrete gaps: list evidence displacement, Chinese entity-chain propagation, cross-lingual embedding quality and scoped current-fact fusion. These cases are now a diagnostic development set; a separate holdout must be authored after fixes before claiming generalization.
+
 ## External review and embedding identity iteration (2026-09-06)
 
 - Reviewed the public AML pipeline plus Graphiti, Mem0, HippoRAG and LangMem. Detailed source links and adoption decisions are in `docs/external-memory-systems-review.md`; no third-party code was copied.

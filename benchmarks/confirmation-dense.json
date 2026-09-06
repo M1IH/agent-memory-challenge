@@ -1,0 +1,354 @@
+{
+  "suite": "confirmation",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 12,
+  "hit_at_1": 0.3333333333333333,
+  "hit_at_3": 0.5,
+  "hit_at_5": 0.5833333333333334,
+  "mrr": 0.4375,
+  "categories": {
+    "cross_lingual": 0.0,
+    "list_negation": 0.4375,
+    "multi_hop": 0.5,
+    "multi_hop_zh": 0.16666666666666666,
+    "temporal_negation": 1.0,
+    "temporal_supersession": 1.0
+  },
+  "complete_at_1": 0.3333333333333333,
+  "complete_at_3": 0.3333333333333333,
+  "complete_at_5": 0.3333333333333333,
+  "complete_at_k": 0.3333333333333333,
+  "evaluation_version": 2,
+  "suite_sha256": "80fd8be2d82eea1b305ea110af4472b8016428a2bb1504ed521a43c7a08f674b",
+  "retrieval_config": {
+    "lexical_enabled": false,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": "1200"
+  },
+  "retrieval_code_sha256": "7cf7c5cd6ad55dd2aacb70e3ce2c6954694e433ed97e2c5c0de122b93f8225ad",
+  "case_traces": [
+    {
+      "name": "confirmation-current-vet",
+      "category": "temporal_supersession",
+      "candidate_count": 18,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_524c780212c13f7268939383",
+          "content": "[2024-04-01T00:00:00Z] user: Miso's veterinarian is now Dr. Imani at Cedar Pet Care.",
+          "score": 0.008197,
+          "created_at": "2024-04-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_42e72704a38e422cebe31ce3",
+          "content": "user: Miso's grooming appointment is at Paws and Co.",
+          "score": 0.008065,
+          "created_at": "2026-09-06T04:20:13.167547Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_ef7332f348bb75517471c2f1",
+          "content": "[2024-01-01T00:00:00Z] user: Miso's veterinarian was Harbor Animal Clinic, but we stopped going there.",
+          "score": 0.007937,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_9432b29fe9eed2ebb0fe24b0",
+          "content": "user: My current dentist is beside an animal clinic.",
+          "score": 0.007812,
+          "created_at": "2026-09-06T04:20:13.543650Z",
+          "source_id": "d15"
+        },
+        {
+          "id": "mem_3dccf6e8541b27e5cb66f07b",
+          "content": "user: My dog Luna visits Harbor Animal Clinic.",
+          "score": 0.007692,
+          "created_at": "2026-09-06T04:20:12.898704Z",
+          "source_id": "d03"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-lab-access-chain",
+      "category": "multi_hop",
+      "candidate_count": 19,
+      "expected": [
+        "lab",
+        "contact"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_98c22cece8d35ed34f0707d0",
+          "content": "user: Project Kestrel uses the Orion lab for prototype testing.",
+          "score": 0.008197,
+          "created_at": "2026-09-06T04:20:13.708079Z",
+          "source_id": "lab"
+        },
+        {
+          "id": "mem_af37488547cd38cfca426237",
+          "content": "user: Project Kestrel does not use the Atlas lab.",
+          "score": 0.008065,
+          "created_at": "2026-09-06T04:20:14.582766Z",
+          "source_id": "d15"
+        },
+        {
+          "id": "mem_4460a8b69676af4ce31452af",
+          "content": "user: Project Heron previously used the Orion lab.",
+          "score": 0.007937,
+          "created_at": "2026-09-06T04:20:14.257251Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_63ad9e55b0ff5058496043c0",
+          "content": "user: Project Kestrel's product lead is Victor.",
+          "score": 0.007812,
+          "created_at": "2026-09-06T04:20:13.823310Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_87930fe4826d84f46695db16",
+          "content": "user: Project Kestrel has a Tuesday status meeting.",
+          "score": 0.007692,
+          "created_at": "2026-09-06T04:20:14.084951Z",
+          "source_id": "d06"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-packed-conference-list",
+      "category": "list_negation",
+      "candidate_count": 21,
+      "expected": [
+        "adapter",
+        "badge",
+        "notebook",
+        "medicine"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2,
+        null,
+        4
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_b72a70c331274f27c16b44b6",
+          "content": "user: I put the travel adapter in my bag for the Lumen conference.",
+          "score": 0.008197,
+          "created_at": "2026-09-06T04:20:14.806391Z",
+          "source_id": "adapter"
+        },
+        {
+          "id": "mem_af41e74d02d5ee0e72676753",
+          "content": "user: My Lumen conference badge is packed in the front pocket.",
+          "score": 0.008065,
+          "created_at": "2026-09-06T04:20:14.855958Z",
+          "source_id": "badge"
+        },
+        {
+          "id": "mem_ce6eec3a653d83e723c355a3",
+          "content": "user: I bought an umbrella after arriving at the Lumen conference.",
+          "score": 0.007937,
+          "created_at": "2026-09-06T04:20:15.195044Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_7212008b7b33894d151fadb1",
+          "content": "user: The allergy medicine went into my Lumen conference suitcase.",
+          "score": 0.007812,
+          "created_at": "2026-09-06T04:20:14.962447Z",
+          "source_id": "medicine"
+        },
+        {
+          "id": "mem_bbabc9b424c30edefcc331c0",
+          "content": "user: The Lumen packing list suggested business cards; I did not bring any.",
+          "score": 0.007692,
+          "created_at": "2026-09-06T04:20:15.147174Z",
+          "source_id": "d03"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-chinese-pickup-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 20,
+      "expected": [
+        "repairer",
+        "courier",
+        "locker"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        null,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_1c5bb73a210261ba9b9a44af",
+          "content": "user: 我的黑色薄膜键盘由周越修理。",
+          "score": 0.008197,
+          "created_at": "2026-09-06T04:20:16.195776Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_cc05ed374fbd902cf78f1ba7",
+          "content": "user: 修好我蓝色机械键盘的师傅叫许舟。",
+          "score": 0.008065,
+          "created_at": "2026-09-06T04:20:16.009139Z",
+          "source_id": "repairer"
+        },
+        {
+          "id": "mem_763eb5cd6fc711383c3d240d",
+          "content": "user: 我考虑自己修蓝色键盘，但没有拆开。",
+          "score": 0.007937,
+          "created_at": "2026-09-06T04:20:16.361156Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_caf817beae48c03d5d589b96",
+          "content": "user: 我在西门驿站取过鼠标垫。",
+          "score": 0.007812,
+          "created_at": "2026-09-06T04:20:16.701036Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_0a84021ffd29e1e3d51a00b6",
+          "content": "user: 快递到达时我正在上课。",
+          "score": 0.007692,
+          "created_at": "2026-09-06T04:20:17.063217Z",
+          "source_id": "d16"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-bilingual-booking",
+      "category": "cross_lingual",
+      "candidate_count": 17,
+      "expected": [
+        "booking"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_6d9624d1a7b808af57c35a3b",
+          "content": "user: 京都住宿的预算是每晚一万日元。",
+          "score": 0.008197,
+          "created_at": "2026-09-06T04:20:17.512221Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_bce9e249a20edd85d172a94c",
+          "content": "user: 京都的枫叶季通常很拥挤。",
+          "score": 0.008065,
+          "created_at": "2026-09-06T04:20:18.383400Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_6ac887065377060cc7a4a27d",
+          "content": "user: 朋友推荐了京都月影民宿。",
+          "score": 0.007937,
+          "created_at": "2026-09-06T04:20:17.804381Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_43bf500b90b6f526e623cc2a",
+          "content": "user: 我收藏了京都青松旅馆，但没有预订。",
+          "score": 0.007812,
+          "created_at": "2026-09-06T04:20:17.280874Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_d6cbe0f3a975a2686497d1f8",
+          "content": "user: 京都行程包含岚山。",
+          "score": 0.007692,
+          "created_at": "2026-09-06T04:20:19.312059Z",
+          "source_id": "d16"
+        }
+      ]
+    },
+    {
+      "name": "confirmation-current-allergy",
+      "category": "temporal_negation",
+      "candidate_count": 19,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a35c0514c5066af4434129c0",
+          "content": "[2024-01-01T00:00:00Z] user: My current confirmed food allergy is sesame.",
+          "score": 0.008197,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_4d938eb608206a2eae16e1d2",
+          "content": "user: The cafe labels sesame as an allergen.",
+          "score": 0.008065,
+          "created_at": "2026-09-06T04:20:20.389138Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_55d4945b5e73caea5244c082",
+          "content": "user: The doctor discussed several possible food allergies.",
+          "score": 0.007937,
+          "created_at": "2026-09-06T04:20:21.870404Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_6fca7f05fccd8780e7fbb25d",
+          "content": "user: I currently keep antihistamines in the kitchen.",
+          "score": 0.007812,
+          "created_at": "2026-09-06T04:20:22.038445Z",
+          "source_id": "d14"
+        },
+        {
+          "id": "mem_43774e5477a382ee15ba9a37",
+          "content": "user: My current breakfast is oatmeal.",
+          "score": 0.007692,
+          "created_at": "2026-09-06T04:20:20.672690Z",
+          "source_id": "d05"
+        }
+      ]
+    }
+  ]
+}
