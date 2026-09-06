@@ -10,6 +10,8 @@ from app.store import MemoryStore
 class FakeEmbedder:
     """Tiny deterministic encoder used to test fusion without a model download."""
 
+    index_identity = "fake-v1"
+
     def encode(self, texts):
         vectors = []
         for text in texts:
@@ -27,8 +29,17 @@ class WrongCountEmbedder:
 
 
 class ThreeDimensionalEmbedder:
+    index_identity = "fake-v1"
+
     def encode(self, texts):
         return [np.array([1.0, 0.0, 0.0], dtype=np.float32) for _ in texts]
+
+
+class AlternateSameDimensionEmbedder:
+    index_identity = "alternate-same-dimension-v1"
+
+    def encode(self, texts):
+        return [np.array([0.0, 1.0], dtype=np.float32) for _ in texts]
 
 
 class HybridRetrievalTests(unittest.TestCase):
@@ -97,6 +108,35 @@ class HybridRetrievalTests(unittest.TestCase):
         results = reopened.search("alice", "unique keyword", 1)
         self.assertEqual(1, len(results))
         self.assertIn("unique keyword", results[0]["content"])
+
+    def test_same_dimension_different_embedding_identity_is_rejected(self):
+        self.store.add(
+            "req", "alice", "session", [{"role": "user", "content": "unique keyword"}]
+        )
+        with self.assertRaisesRegex(RuntimeError, "embedding identity"):
+            MemoryStore(
+                Path(self.temp_dir.name) / "hybrid.db",
+                embedder=AlternateSameDimensionEmbedder(),
+            )
+
+    def test_legacy_vectors_without_identity_are_rejected(self):
+        self.store.add(
+            "req", "alice", "session", [{"role": "user", "content": "unique keyword"}]
+        )
+        with self.store._connection() as connection:
+            connection.execute("DELETE FROM store_metadata WHERE key = 'embedding_identity'")
+        with self.assertRaisesRegex(RuntimeError, "no verifiable embedding identity"):
+            MemoryStore(Path(self.temp_dir.name) / "hybrid.db", embedder=FakeEmbedder())
+
+    def test_empty_index_can_adopt_a_new_embedding_identity(self):
+        empty_path = Path(self.temp_dir.name) / "empty.db"
+        MemoryStore(empty_path, embedder=FakeEmbedder())
+        reopened = MemoryStore(empty_path, embedder=AlternateSameDimensionEmbedder())
+        with reopened._connection() as connection:
+            identity = connection.execute(
+                "SELECT value FROM store_metadata WHERE key = 'embedding_identity'"
+            ).fetchone()["value"]
+        self.assertEqual("alternate-same-dimension-v1", identity)
 
 
 if __name__ == "__main__":

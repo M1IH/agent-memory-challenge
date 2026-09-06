@@ -17,6 +17,7 @@ class EmbeddingBackend:
         cache_dir = os.getenv("AML_MODEL_CACHE") or None
         self._model = TextEmbedding(model_name=model_name, cache_dir=cache_dir)
         self._lock = threading.Lock()
+        self.index_identity = f"fastembed:{model_name}:float32:l2-v1"
 
     def encode(self, texts: Iterable[str]) -> list[np.ndarray]:
         values = list(texts)

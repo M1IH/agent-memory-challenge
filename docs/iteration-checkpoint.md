@@ -38,6 +38,15 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 ## Remaining priorities
 
+## External review and embedding identity iteration (2026-09-06)
+
+- Reviewed the public AML pipeline plus Graphiti, Mem0, HippoRAG and LangMem. Detailed source links and adoption decisions are in `docs/external-memory-systems-review.md`; no third-party code was copied.
+- The strongest immediately applicable finding was HippoRAG-style index identity protection. Dimension checks alone cannot detect different embedding spaces with equal dimensions.
+- Added `store_metadata.embedding_identity`. The built-in identity binds FastEmbed model name, float32 storage and L2 normalization version. Custom encoders use explicit `index_identity` or a stable class fallback.
+- Existing vectors with a missing or mismatched identity fail closed with a rebuild message. An empty index may safely adopt a new identity. Embedding-disabled lexical startup remains compatible.
+- Local verification: 53/53 tests passed; the real FastEmbed hard and 125-case extended suites passed with fail-on-miss enabled; local health/auth/synchronous Add/Search smoke and compile checks passed.
+- Next: obtain the Linux Docker gate for the exact pushed commit, then author a separate high-distractor confirmation set before any further graph or fusion changes.
+
 ## List-completeness fusion iteration
 
 - Root cause isolated by ablation: lexical hard retrieval returned all 15/15 required evidence items, while dense-heavy fusion displaced one required item from each list case at top_k=5.

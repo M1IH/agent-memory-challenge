@@ -189,6 +189,14 @@ class MemoryStore:
                 """
             )
             connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS store_metadata (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL
+                )
+                """
+            )
+            connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_memories_user ON memories(user_id)"
             )
             connection.execute(
@@ -207,6 +215,39 @@ class MemoryStore:
             }
             if "embedding" not in columns:
                 connection.execute("ALTER TABLE memories ADD COLUMN embedding BLOB")
+            self._verify_embedding_identity(connection)
+
+    def _verify_embedding_identity(self, connection: sqlite3.Connection) -> None:
+        if self._embedder is None:
+            return
+        identity = getattr(self._embedder, "index_identity", None)
+        if not isinstance(identity, str) or not identity.strip():
+            encoder_type = type(self._embedder)
+            identity = f"python:{encoder_type.__module__}.{encoder_type.__qualname__}:implicit-v1"
+        existing = connection.execute(
+            "SELECT value FROM store_metadata WHERE key = 'embedding_identity'"
+        ).fetchone()
+        has_vectors = connection.execute(
+            "SELECT 1 FROM memories WHERE embedding IS NOT NULL LIMIT 1"
+        ).fetchone() is not None
+        if existing is None:
+            if has_vectors:
+                raise RuntimeError(
+                    "stored embeddings have no verifiable embedding identity; rebuild the index"
+                )
+            connection.execute(
+                "INSERT INTO store_metadata (key, value) VALUES ('embedding_identity', ?)",
+                (identity,),
+            )
+        elif existing["value"] != identity:
+            if has_vectors:
+                raise RuntimeError(
+                    "embedding identity does not match the persisted index; rebuild the index"
+                )
+            connection.execute(
+                "UPDATE store_metadata SET value = ? WHERE key = 'embedding_identity'",
+                (identity,),
+            )
 
     def add(
         self,
