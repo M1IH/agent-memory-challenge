@@ -45,6 +45,31 @@ _CJK_ENTITY_PATTERNS = (
     re.compile(r"(?:使用(?:了)?|通过)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
 )
+_PACKING_QUERY = re.compile(r"\bpack(?:ed|ing)?\b|打包|装了什么|带了什么", re.I)
+_PACKING_SUPPORT = re.compile(
+    r"\bpack(?:ed)?\b|\bput\b.{0,40}\b(?:bag|backpack|suitcase)\b|"
+    r"\bwent into\b.{0,30}\b(?:bag|backpack|suitcase)\b|"
+    r"(?:装进|放进|收进).{0,20}(?:包|背包|行李箱)",
+    re.I,
+)
+_CONFIRM_QUERY = re.compile(r"\bconfirm(?:ed)?\b|已确认|确认参加", re.I)
+_CONFIRM_SUPPORT = re.compile(
+    r"\bconfirm(?:ed)?\b|\baccepted\b|\bsaid yes\b|已确认|接受了?邀请|答应参加",
+    re.I,
+)
+_EVENT_NEGATION = re.compile(
+    r"\b(?:did not|didn't|never|forgot|unpacked|removed|cancelled|declined)\b|"
+    r"\bno reply\b|\bleft\b.{0,30}\bhome\b|\bstayed home\b|"
+    r"\b(?:considered|planned|wanted)\b|,\s*not\b|"
+    r"(?:没有|没带|忘了|取消|拒绝|留在家|并未)",
+    re.I,
+)
+_QUERY_NEGATION = re.compile(r"\b(?:not|never|didn't|did not)\b|(?:没有|没|未)", re.I)
+_OTHER_FIRST_PERSON = re.compile(
+    r"\bmy (?:colleague|coworker|friend|brother|sister|roommate|manager)\b|"
+    r"(?:我的|我)(?:同事|朋友|哥哥|弟弟|姐姐|妹妹|室友|经理)",
+    re.I,
+)
 
 
 def topic_terms(text: str) -> set[str]:
@@ -79,6 +104,26 @@ def has_marker(text: str, markers: tuple[str, ...]) -> bool:
         if marker.isascii() else marker in lowered
         for marker in markers
     )
+
+
+def event_consistency_score(query: str, content: str) -> float:
+    """Score explicit completion evidence for narrow event-list intents."""
+    support_pattern = None
+    if _PACKING_QUERY.search(query):
+        support_pattern = _PACKING_SUPPORT
+    elif _CONFIRM_QUERY.search(query):
+        support_pattern = _CONFIRM_SUPPORT
+    if support_pattern is None or _QUERY_NEGATION.search(query):
+        return 0.0
+    asks_about_self = (
+        re.search(r"\b(?:I|me|my)\b", query, re.I) is not None
+        and _OTHER_FIRST_PERSON.search(query) is None
+    )
+    if _EVENT_NEGATION.search(content) or (
+        asks_about_self and _OTHER_FIRST_PERSON.search(content)
+    ):
+        return -8.0
+    return 8.0 if support_pattern.search(content) else 0.0
 
 
 @dataclass(frozen=True)
@@ -505,6 +550,7 @@ class MemoryStore:
                 score += 2.0
             if any(option.lower() in memory.content.lower() for option in option_texts):
                 score += 0.5
+            score += event_consistency_score(query, memory.content)
             if memory.id in temporal_ids:
                 if newest_timestamp > oldest_timestamp and memory.timestamp_ms is not None:
                     score += 0.4 * (

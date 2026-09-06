@@ -2,10 +2,43 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from app.store import MemoryStore, RetrievalConfig, semantic_expansion_terms, tokenize
+from app.store import (
+    MemoryStore,
+    RetrievalConfig,
+    event_consistency_score,
+    semantic_expansion_terms,
+    tokenize,
+)
 
 
 class MemoryStoreTests(unittest.TestCase):
+    def test_event_consistency_distinguishes_completed_and_rejected_evidence(self):
+        query = "List every item I actually packed for the trip."
+        self.assertGreater(
+            event_consistency_score(query, "user: The medicine went into my suitcase."),
+            0,
+        )
+        self.assertLess(
+            event_consistency_score(query, "user: I planned a tablet but left it at home."),
+            0,
+        )
+        self.assertLess(
+            event_consistency_score(query, "user: My colleague packed a monitor."),
+            0,
+        )
+        self.assertEqual(
+            0, event_consistency_score("What did I not pack?", "user: I did not pack shoes.")
+        )
+        self.assertEqual(
+            0, event_consistency_score("Where is my suitcase?", "user: I forgot it.")
+        )
+        self.assertGreater(
+            event_consistency_score(
+                "What did my manager pack?", "user: My manager packed a projector."
+            ),
+            0,
+        )
+
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.store = MemoryStore(

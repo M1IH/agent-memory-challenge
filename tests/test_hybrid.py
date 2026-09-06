@@ -76,6 +76,31 @@ class HybridRetrievalTests(unittest.TestCase):
         )
         self.assertIn("cilantro", results[0]["content"])
 
+    def test_completed_event_evidence_survives_hybrid_list_fusion(self):
+        memories = [
+            "I put the travel adapter in my bag for the Lumen conference.",
+            "My Lumen conference badge is packed in the front pocket.",
+            "I packed the green notebook for Lumen.",
+            "The allergy medicine went into my Lumen conference suitcase.",
+            "I planned a tablet for Lumen but left it at home.",
+            "The Lumen packing list suggested cards; I did not bring any.",
+            "My colleague packed a monitor for Lumen.",
+            "The Lumen conference badge has a yellow stripe.",
+        ]
+        for index, content in enumerate(memories):
+            self.store.add(
+                f"list-{index}", "alice", "session-1",
+                [{"role": "user", "content": content}],
+            )
+        results = self.store.search(
+            "alice", "List every item I actually packed for the Lumen conference.", 4
+        )
+        contents = "\n".join(result["content"] for result in results)
+        for expected in ("adapter", "badge", "notebook", "medicine"):
+            self.assertIn(expected, contents)
+        self.assertNotIn("colleague", contents)
+        self.assertNotIn("did not", contents)
+
     def test_embeddings_are_persisted_in_sqlite(self):
         self.store.add(
             request_id="req-1",
