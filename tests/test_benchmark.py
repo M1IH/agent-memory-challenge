@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import os
 import tempfile
@@ -15,6 +16,18 @@ class ExtendedBenchmarkTests(unittest.TestCase):
     def test_holdout_is_disjoint_strict_and_high_distractor(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         holdout = json.loads((root / "holdout_cases.json").read_text(encoding="utf-8"))
+        canonical_hash = hashlib.sha256(
+            json.dumps(holdout, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        baseline = json.loads(
+            (root / "holdout-baseline.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            canonical_hash,
+            "9ed70912360b2253c87c767609fdf33520156ed0512169393e082c86468eeeee",
+            "holdout changed; create a development copy instead of tuning it in place",
+        )
+        self.assertEqual(baseline["suite_sha256"], canonical_hash)
         known_names = set()
         for filename in ("hard_cases.json", "confirmation_cases.json"):
             known_names.update(
