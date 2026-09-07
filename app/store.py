@@ -87,6 +87,16 @@ _OTHER_FIRST_PERSON = re.compile(
 _DENSE_BATCH_SIZE = 2048
 
 
+def positive_context_chars(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError("AML_MAX_CONTEXT_CHARS must be a positive integer") from exc
+    if parsed < 1:
+        raise ValueError("AML_MAX_CONTEXT_CHARS must be a positive integer")
+    return parsed
+
+
 def topic_terms(text: str) -> set[str]:
     # Keep Chinese bigrams, discard grammatical single characters and numeric
     # dates. Split Room-101 so explicit room updates can share a topic anchor.
@@ -219,6 +229,9 @@ class MemoryStore:
             self._embedder = None
         else:
             self._embedder = EmbeddingBackend()
+        self._max_context_chars = positive_context_chars(
+            os.getenv("AML_MAX_CONTEXT_CHARS", "1200")
+        )
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
@@ -348,7 +361,6 @@ class MemoryStore:
                 raise RequestConflictError("request_id was already used with a different payload")
             return
         raw_contents = [message["content"].strip() for message in message_values]
-        max_context_chars = int(os.getenv("AML_MAX_CONTEXT_CHARS", "1200"))
         index_contents: list[str] = []
         display_contents: list[str] = []
         for index, (message, content) in enumerate(zip(message_values, raw_contents)):
@@ -366,7 +378,7 @@ class MemoryStore:
                 contextual_index = (
                     f"{previous['role']}: {previous_content}\n{current_index}"
                 )
-                if len(contextual_display) <= max_context_chars:
+                if len(contextual_display) <= self._max_context_chars:
                     current_display = contextual_display
                     current_index = contextual_index
             display_contents.append(current_display)

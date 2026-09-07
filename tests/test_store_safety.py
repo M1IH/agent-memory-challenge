@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 import numpy as np
 
-from app.store import MemoryStore, entity_terms
+from app.store import MemoryStore, entity_terms, positive_context_chars
 
 
 class StoreSafetyTests(unittest.TestCase):
@@ -16,6 +16,19 @@ class StoreSafetyTests(unittest.TestCase):
 
     def tearDown(self):
         self.directory.cleanup()
+
+    def test_context_character_limit_must_be_positive_integer(self):
+        self.assertEqual(1200, positive_context_chars("1200"))
+        for value in ("0", "-1", "invalid"):
+            with self.subTest(value=value), self.assertRaisesRegex(
+                ValueError, "AML_MAX_CONTEXT_CHARS"
+            ):
+                positive_context_chars(value)
+
+    def test_context_character_limit_is_validated_when_store_starts(self):
+        with patch.dict("os.environ", {"AML_MAX_CONTEXT_CHARS": "invalid"}):
+            with self.assertRaisesRegex(ValueError, "AML_MAX_CONTEXT_CHARS"):
+                MemoryStore(self.path, embedder=False)
 
     def test_delimiter_in_identifiers_does_not_drop_another_users_memory(self):
         store = MemoryStore(self.path, embedder=False)
