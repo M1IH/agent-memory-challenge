@@ -499,12 +499,16 @@ class MemoryStore:
         for memory in memories:
             for term in set(memory.terms):
                 document_frequency[term] = document_frequency.get(term, 0) + 1
-        rare_query_identifiers = {
-            term
-            for term in query_terms
-            if _IDENTIFIER_TOKEN.fullmatch(term)
-            and document_frequency.get(term, 0) <= 4
-        }
+        rare_query_identifiers = (
+            {
+                term
+                for term in query_terms
+                if _IDENTIFIER_TOKEN.fullmatch(term)
+                and document_frequency.get(term, 0) <= 4
+            }
+            if config.lexical_enabled
+            else set()
+        )
 
         average_length = sum(len(memory.terms) for memory in memories) / len(memories)
         lexical_scores = []
@@ -736,7 +740,7 @@ class MemoryStore:
                 # Preserve an exact, low-frequency code match without boosting
                 # ordinary words or broad CJK fragments across the whole rank.
                 if (
-                    config.lexical_enabled
+                    rare_query_identifiers
                     and memory_id in lexical_ranks
                     and rare_query_identifiers.intersection(
                         memory_by_id[memory_id].terms

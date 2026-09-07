@@ -242,6 +242,32 @@ class HybridRetrievalTests(unittest.TestCase):
 
         self.assertIn("project-code-81-16", result[0]["content"])
 
+    def test_identifier_guard_does_not_boost_hyphenated_words_without_digits(self):
+        store = MemoryStore(
+            Path(self.temp_dir.name) / "hyphenated-word.db",
+            embedder=AdversarialIdentifierEmbedder(),
+        )
+        store.add(
+            "target",
+            "alice",
+            "session",
+            [{"role": "user", "content": "Project code project-code-alpha-beta."}],
+        )
+        for index in range(20):
+            code = "project-code-81-16" if index == 19 else f"unrelated-code-{index}"
+            store.add(
+                f"distractor-{index}",
+                "alice",
+                "session",
+                [{"role": "user", "content": f"Project code {code}."}],
+            )
+
+        result = store.search(
+            "alice", "Find project code project-code-alpha-beta", 1
+        )
+
+        self.assertNotIn("project-code-alpha-beta", result[0]["content"])
+
 
 if __name__ == "__main__":
     unittest.main()
