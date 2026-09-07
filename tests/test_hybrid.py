@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -162,6 +163,23 @@ class HybridRetrievalTests(unittest.TestCase):
                 "SELECT value FROM store_metadata WHERE key = 'embedding_identity'"
             ).fetchone()["value"]
         self.assertEqual("alternate-same-dimension-v1", identity)
+
+    def test_dense_scoring_uses_bounded_matrix_batches(self):
+        self.store.add(
+            "large-batch",
+            "alice",
+            "session",
+            [
+                {"role": "user", "content": f"bounded vector record {index}"}
+                for index in range(2050)
+            ],
+        )
+
+        with patch("app.store.np.vstack", wraps=np.vstack) as stack:
+            results = self.store.search("alice", "bounded vector record 2049", 1)
+
+        self.assertEqual(1, len(results))
+        self.assertEqual(2, stack.call_count)
 
 
 if __name__ == "__main__":

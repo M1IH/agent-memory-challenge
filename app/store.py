@@ -83,6 +83,7 @@ _OTHER_FIRST_PERSON = re.compile(
     r"(?:我的|我)(?:同事|朋友|哥哥|弟弟|姐姐|妹妹|室友|经理)",
     re.I,
 )
+_DENSE_BATCH_SIZE = 2048
 
 
 def topic_terms(text: str) -> set[str]:
@@ -678,11 +679,17 @@ class MemoryStore:
             ]
             if not compatible_memories:
                 return self._results(lexical_scores, top_k)
+            dense_pairs: list[tuple[float, Memory]] = []
+            for offset in range(0, len(compatible_memories), _DENSE_BATCH_SIZE):
+                batch = compatible_memories[offset : offset + _DENSE_BATCH_SIZE]
+                embedding_matrix = np.vstack([memory.embedding for memory in batch])
+                dense_values = embedding_matrix @ query_vector
+                dense_pairs.extend(
+                    (float(value), memory)
+                    for value, memory in zip(dense_values, batch)
+                )
             dense_scores = sorted(
-                (
-                    (float(np.dot(query_vector, memory.embedding)), memory)
-                    for memory in compatible_memories
-                ),
+                dense_pairs,
                 key=rank_key,
             )
             lexical_ranks = {

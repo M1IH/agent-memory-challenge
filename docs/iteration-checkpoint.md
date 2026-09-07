@@ -6,7 +6,7 @@ Resume from the highest unfinished priority in the competition plan. Each iterat
 
 - Fixed ablation subprocesses inheriting AML_EMBED_ENABLED=false and mislabeling lexical runs as hybrid/dense.
 - Reject non-finite, negative, and zero RRF weights before search. Channel removal uses explicit switches.
-- 65 unit tests pass locally, including concurrent writes across store instances, strict-source benchmark integration, corrupted-vector recovery and embedding-backend failure handling. This does not establish that the entire repository is bug-free.
+- 70 unit tests pass locally, including concurrent writes across store instances, strict-source benchmark integration, corrupted-vector recovery, embedding-backend failure handling and bounded dense-scoring batches. This does not establish that the entire repository is bug-free.
 - Reproduced and fixed ambiguous NUL-delimited memory IDs dropping another user's record. New IDs hash a JSON array; existing rows are not rewritten. Unexpected ID collisions now fail the transaction instead of silently discarding a row.
 - Reproduced and fixed replay requiring a working encoder. Ledger preflight skips encoding for completed replays/conflicts; transactional claiming remains authoritative for concurrent writers.
 - Reproduced and fixed connection leakage on PRAGMA failure.
