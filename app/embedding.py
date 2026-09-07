@@ -7,6 +7,16 @@ from typing import Iterable
 import numpy as np
 
 
+def positive_concurrency(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError("AML_EMBED_CONCURRENCY must be a positive integer") from exc
+    if parsed < 1:
+        raise ValueError("AML_EMBED_CONCURRENCY must be a positive integer")
+    return parsed
+
+
 class EmbeddingBackend:
     """Thread-safe local embedding backend with no runtime API dependency."""
 
@@ -15,8 +25,10 @@ class EmbeddingBackend:
 
         model_name = os.getenv("AML_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
         cache_dir = os.getenv("AML_MODEL_CACHE") or None
+        concurrency = positive_concurrency(os.getenv("AML_EMBED_CONCURRENCY", "2"))
         self._model = TextEmbedding(model_name=model_name, cache_dir=cache_dir)
-        self._lock = threading.Lock()
+        self._lock = threading.BoundedSemaphore(concurrency)
+        self.concurrency = concurrency
         self.index_identity = f"fastembed:{model_name}:float32:l2-v1"
 
     def encode(self, texts: Iterable[str]) -> list[np.ndarray]:

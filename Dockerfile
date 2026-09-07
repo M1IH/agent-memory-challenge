@@ -5,6 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     AML_DB_PATH=/data/memory.db \
     AML_EMBED_ENABLED=true \
     AML_EMBED_MODEL=BAAI/bge-small-en-v1.5 \
+    AML_EMBED_CONCURRENCY=2 \
     AML_MODEL_CACHE=/models
 
 WORKDIR /app

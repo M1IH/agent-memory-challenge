@@ -122,6 +122,9 @@ def main() -> None:
             "search_workers": args.search_workers,
             "top_k": args.top_k,
             "embeddings_enabled": not args.no_embeddings,
+            "embedding_concurrency": (
+                None if store._embedder is None else store._embedder.concurrency
+            ),
             "percentile_method": "nearest-rank",
         },
         "add": {
