@@ -19,6 +19,13 @@ def positive_int(value: str) -> int:
     return parsed
 
 
+def nonnegative_int(value: str) -> int:
+    parsed = int(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be at least 0")
+    return parsed
+
+
 def percentile(values: list[float], fraction: float) -> float:
     if not values:
         raise ValueError("percentile requires at least one value")
@@ -45,6 +52,8 @@ def main() -> None:
     parser.add_argument("--search-requests", type=positive_int, default=96)
     parser.add_argument("--add-workers", type=positive_int, default=64)
     parser.add_argument("--search-workers", type=positive_int, default=32)
+    parser.add_argument("--mixed-add-requests", type=nonnegative_int, default=0)
+    parser.add_argument("--mixed-search-requests", type=nonnegative_int, default=0)
     parser.add_argument("--top-k", type=positive_int, default=100)
     parser.add_argument("--no-embeddings", action="store_true")
     parser.add_argument("--json-output", type=Path)
@@ -111,6 +120,60 @@ def main() -> None:
         search_errors = [error for _, _, error in search_results if error is not None]
         correct = sum(is_correct for _, is_correct, _ in search_results)
 
+        mixed_report = None
+        mixed_add_errors: list[str] = []
+        mixed_search_errors: list[str] = []
+        mixed_correct = 0
+        mixed_total = args.mixed_add_requests + args.mixed_search_requests
+        if mixed_total:
+            mixed_started = time.perf_counter()
+            mixed_workers = min(
+                mixed_total, args.add_workers + args.search_workers
+            )
+            with ThreadPoolExecutor(max_workers=mixed_workers) as executor:
+                mixed_add_futures = [
+                    executor.submit(add, args.add_requests + index)
+                    for index in range(args.mixed_add_requests)
+                ]
+                mixed_search_futures = [
+                    executor.submit(search, index)
+                    for index in range(args.mixed_search_requests)
+                ]
+                mixed_add_results = [future.result() for future in mixed_add_futures]
+                mixed_search_results = [
+                    future.result() for future in mixed_search_futures
+                ]
+            mixed_wall = time.perf_counter() - mixed_started
+            mixed_add_latencies = [latency for latency, _ in mixed_add_results]
+            mixed_add_errors = [
+                error for _, error in mixed_add_results if error is not None
+            ]
+            mixed_search_latencies = [
+                latency for latency, _, _ in mixed_search_results
+            ]
+            mixed_search_errors = [
+                error for _, _, error in mixed_search_results if error is not None
+            ]
+            mixed_correct = sum(
+                is_correct for _, is_correct, _ in mixed_search_results
+            )
+            mixed_report = {
+                "wall_seconds": mixed_wall,
+                "add_requests": args.mixed_add_requests,
+                "search_requests": args.mixed_search_requests,
+                "add_errors": len(mixed_add_errors),
+                "search_errors": len(mixed_search_errors),
+                "search_top_1_correct": mixed_correct,
+                "add_latency": (
+                    latency_summary(mixed_add_latencies)
+                    if mixed_add_latencies else None
+                ),
+                "search_latency": (
+                    latency_summary(mixed_search_latencies)
+                    if mixed_search_latencies else None
+                ),
+            }
+
     memory_count = args.add_requests * args.messages_per_request
     report = {
         "config": {
@@ -120,6 +183,8 @@ def main() -> None:
             "search_requests": args.search_requests,
             "add_workers": args.add_workers,
             "search_workers": args.search_workers,
+            "mixed_add_requests": args.mixed_add_requests,
+            "mixed_search_requests": args.mixed_search_requests,
             "top_k": args.top_k,
             "embeddings_enabled": not args.no_embeddings,
             "embedding_concurrency": (
@@ -144,13 +209,21 @@ def main() -> None:
             "top_1_accuracy": correct / args.search_requests,
             **latency_summary(search_latencies),
         },
+        "mixed": mixed_report,
     }
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.json_output:
         args.json_output.write_text(
             json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
-    if add_errors or search_errors or correct != args.search_requests:
+    if (
+        add_errors
+        or search_errors
+        or mixed_add_errors
+        or mixed_search_errors
+        or correct != args.search_requests
+        or mixed_correct != args.mixed_search_requests
+    ):
         raise SystemExit(1)
 
 

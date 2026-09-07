@@ -1,0 +1,59 @@
+{
+  "config": {
+    "add_requests": 48,
+    "messages_per_request": 20,
+    "memory_count": 960,
+    "search_requests": 32,
+    "add_workers": 64,
+    "search_workers": 32,
+    "mixed_add_requests": 24,
+    "mixed_search_requests": 48,
+    "top_k": 100,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 2,
+    "percentile_method": "nearest-rank"
+  },
+  "add": {
+    "wall_seconds": 22.00088379999943,
+    "successful_messages": 960,
+    "throughput_messages_per_second": 43.634610715048865,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 11.592469568750554,
+    "p50_seconds": 11.285497700002452,
+    "p95_seconds": 21.029714700001932,
+    "p99_seconds": 21.974745999999868
+  },
+  "search": {
+    "wall_seconds": 1.9749219000004814,
+    "throughput_requests_per_second": 16.203172388737094,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 32,
+    "top_1_accuracy": 1.0,
+    "mean_seconds": 1.4240653000010752,
+    "p50_seconds": 1.4887031999969622,
+    "p95_seconds": 1.9455956000019796,
+    "p99_seconds": 1.9595352999967872
+  },
+  "mixed": {
+    "wall_seconds": 12.981564800000342,
+    "add_requests": 24,
+    "search_requests": 48,
+    "add_errors": 0,
+    "search_errors": 0,
+    "search_top_1_correct": 48,
+    "add_latency": {
+      "mean_seconds": 6.464173550000244,
+      "p50_seconds": 6.031583800002409,
+      "p95_seconds": 11.483656299998984,
+      "p99_seconds": 11.56519390000176
+    },
+    "search_latency": {
+      "mean_seconds": 12.231171002083101,
+      "p50_seconds": 12.207717899997078,
+      "p95_seconds": 12.881569599994691,
+      "p99_seconds": 12.934733099995356
+    }
+  }
+}

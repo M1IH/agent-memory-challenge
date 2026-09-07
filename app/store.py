@@ -659,7 +659,14 @@ class MemoryStore:
             scores = lexical_scores
         else:
             try:
-                encoded_query = self._embedder.encode([query])
+                query_encoder = (
+                    self._embedder.encode_query
+                    if getattr(
+                        self._embedder, "supports_query_priority", False
+                    ) is True
+                    else self._embedder.encode
+                )
+                encoded_query = query_encoder([query])
                 query_vector = encoded_query[0]
                 if not np.all(np.isfinite(query_vector)):
                     raise ValueError("embedding backend returned a non-finite query vector")

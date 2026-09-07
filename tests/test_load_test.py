@@ -5,7 +5,13 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from benchmarks.run_load_test import latency_summary, main, percentile, positive_int
+from benchmarks.run_load_test import (
+    latency_summary,
+    main,
+    nonnegative_int,
+    percentile,
+    positive_int,
+)
 
 
 class LoadTestTests(unittest.TestCase):
@@ -13,6 +19,9 @@ class LoadTestTests(unittest.TestCase):
         self.assertEqual(3, positive_int("3"))
         with self.assertRaises(argparse.ArgumentTypeError):
             positive_int("0")
+        self.assertEqual(0, nonnegative_int("0"))
+        with self.assertRaises(argparse.ArgumentTypeError):
+            nonnegative_int("-1")
         with self.assertRaises(ValueError):
             percentile([], 0.5)
         with self.assertRaises(ValueError):
@@ -35,6 +44,8 @@ class LoadTestTests(unittest.TestCase):
                 "--search-requests", "2",
                 "--add-workers", "2",
                 "--search-workers", "2",
+                "--mixed-add-requests", "1",
+                "--mixed-search-requests", "2",
                 "--top-k", "4",
                 "--no-embeddings",
                 "--json-output", str(output),
@@ -49,6 +60,9 @@ class LoadTestTests(unittest.TestCase):
         self.assertEqual(0, report["add"]["errors"])
         self.assertEqual(0, report["search"]["errors"])
         self.assertEqual(1.0, report["search"]["top_1_accuracy"])
+        self.assertEqual(0, report["mixed"]["add_errors"])
+        self.assertEqual(0, report["mixed"]["search_errors"])
+        self.assertEqual(2, report["mixed"]["search_top_1_correct"])
 
 
 if __name__ == "__main__":

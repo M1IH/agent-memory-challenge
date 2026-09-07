@@ -116,6 +116,25 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertEqual(1, len(results))
         self.assertIn("copper moon", results[0]["content"])
 
+    def test_search_prefers_query_specific_encoder_when_available(self):
+        encoder = Mock()
+        encoder.index_identity = "test:query-priority-v1"
+        encoder.supports_query_priority = True
+        encoder.encode.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
+        encoder.encode_query.return_value = [np.array([1.0, 0.0], dtype=np.float32)]
+        store = MemoryStore(self.path, embedder=encoder)
+        store.add(
+            "req",
+            "alice",
+            "session",
+            [{"role": "user", "content": "priority query phrase"}],
+        )
+
+        results = store.search("alice", "priority query phrase", 1)
+
+        self.assertEqual(1, len(results))
+        encoder.encode_query.assert_called_once()
+
     def test_nonfinite_query_vector_falls_back_to_lexical_search(self):
         encoder = Mock()
         encoder.index_identity = "test:query-finite-v1"
