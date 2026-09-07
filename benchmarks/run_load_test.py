@@ -45,6 +45,23 @@ def latency_summary(values: list[float]) -> dict[str, float]:
     }
 
 
+def mixed_schedule(add_requests: int, search_requests: int) -> list[str]:
+    """Spread both operation types across submission order without randomness."""
+    total = add_requests + search_requests
+    if total == 0:
+        return []
+    schedule = []
+    submitted_adds = 0
+    for position in range(total):
+        expected_adds = ((position + 1) * add_requests) // total
+        if expected_adds > submitted_adds:
+            schedule.append("add")
+            submitted_adds += 1
+        else:
+            schedule.append("search")
+    return schedule
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run a configurable local Add/Search load test.")
     parser.add_argument("--add-requests", type=positive_int, default=48)
@@ -98,7 +115,9 @@ def main() -> None:
             args.add_requests - len(add_errors)
         ) * args.messages_per_request
 
-        def search(search_index: int) -> tuple[float, bool, str | None]:
+        def search(
+            search_index: int,
+        ) -> tuple[float, bool, str | None, int, str, str | None]:
             request_index = search_index % args.add_requests
             message_index = search_index % args.messages_per_request
             expected = f"project-code-{request_index}-{message_index}"
@@ -108,22 +127,47 @@ def main() -> None:
                     "load-user", f"Find project code {expected}", top_k=args.top_k
                 )
             except Exception as exc:
-                return time.perf_counter() - started, False, type(exc).__name__
+                return (
+                    time.perf_counter() - started,
+                    False,
+                    type(exc).__name__,
+                    search_index,
+                    expected,
+                    None,
+                )
             latency = time.perf_counter() - started
-            return latency, bool(results and expected in results[0]["content"]), None
+            actual = results[0]["content"] if results else None
+            return (
+                latency,
+                bool(actual and expected in actual),
+                None,
+                search_index,
+                expected,
+                actual,
+            )
 
         search_started = time.perf_counter()
         with ThreadPoolExecutor(max_workers=args.search_workers) as executor:
             search_results = list(executor.map(search, range(args.search_requests)))
         search_wall = time.perf_counter() - search_started
-        search_latencies = [latency for latency, _, _ in search_results]
-        search_errors = [error for _, _, error in search_results if error is not None]
-        correct = sum(is_correct for _, is_correct, _ in search_results)
+        search_latencies = [result[0] for result in search_results]
+        search_errors = [result[2] for result in search_results if result[2] is not None]
+        correct = sum(result[1] for result in search_results)
+        incorrect_searches = [
+            {
+                "search_index": result[3],
+                "expected": result[4],
+                "actual_top_1": result[5],
+            }
+            for result in search_results
+            if result[2] is None and not result[1]
+        ]
 
         mixed_report = None
         mixed_add_errors: list[str] = []
         mixed_search_errors: list[str] = []
         mixed_correct = 0
+        mixed_successful_messages = 0
         mixed_total = args.mixed_add_requests + args.mixed_search_requests
         if mixed_total:
             mixed_started = time.perf_counter()
@@ -131,14 +175,21 @@ def main() -> None:
                 mixed_total, args.add_workers + args.search_workers
             )
             with ThreadPoolExecutor(max_workers=mixed_workers) as executor:
-                mixed_add_futures = [
-                    executor.submit(add, args.add_requests + index)
-                    for index in range(args.mixed_add_requests)
-                ]
-                mixed_search_futures = [
-                    executor.submit(search, index)
-                    for index in range(args.mixed_search_requests)
-                ]
+                mixed_add_futures = []
+                mixed_search_futures = []
+                add_index = 0
+                search_index = 0
+                for operation in mixed_schedule(
+                    args.mixed_add_requests, args.mixed_search_requests
+                ):
+                    if operation == "add":
+                        mixed_add_futures.append(
+                            executor.submit(add, args.add_requests + add_index)
+                        )
+                        add_index += 1
+                    else:
+                        mixed_search_futures.append(executor.submit(search, search_index))
+                        search_index += 1
                 mixed_add_results = [future.result() for future in mixed_add_futures]
                 mixed_search_results = [
                     future.result() for future in mixed_search_futures
@@ -148,15 +199,23 @@ def main() -> None:
             mixed_add_errors = [
                 error for _, error in mixed_add_results if error is not None
             ]
-            mixed_search_latencies = [
-                latency for latency, _, _ in mixed_search_results
-            ]
+            mixed_successful_messages = (
+                args.mixed_add_requests - len(mixed_add_errors)
+            ) * args.messages_per_request
+            mixed_search_latencies = [result[0] for result in mixed_search_results]
             mixed_search_errors = [
-                error for _, _, error in mixed_search_results if error is not None
+                result[2] for result in mixed_search_results if result[2] is not None
             ]
-            mixed_correct = sum(
-                is_correct for _, is_correct, _ in mixed_search_results
-            )
+            mixed_correct = sum(result[1] for result in mixed_search_results)
+            mixed_incorrect_searches = [
+                {
+                    "search_index": result[3],
+                    "expected": result[4],
+                    "actual_top_1": result[5],
+                }
+                for result in mixed_search_results
+                if result[2] is None and not result[1]
+            ]
             mixed_report = {
                 "wall_seconds": mixed_wall,
                 "add_requests": args.mixed_add_requests,
@@ -164,6 +223,14 @@ def main() -> None:
                 "add_errors": len(mixed_add_errors),
                 "search_errors": len(mixed_search_errors),
                 "search_top_1_correct": mixed_correct,
+                "incorrect_searches": mixed_incorrect_searches,
+                "successful_messages": mixed_successful_messages,
+                "add_throughput_messages_per_second": (
+                    mixed_successful_messages / mixed_wall
+                ),
+                "search_throughput_requests_per_second": (
+                    args.mixed_search_requests / mixed_wall
+                ),
                 "add_latency": (
                     latency_summary(mixed_add_latencies)
                     if mixed_add_latencies else None
@@ -180,11 +247,16 @@ def main() -> None:
             "add_requests": args.add_requests,
             "messages_per_request": args.messages_per_request,
             "memory_count": memory_count,
+            "preloaded_memory_count": successful_messages,
+            "expected_final_memory_count": (
+                successful_messages + mixed_successful_messages
+            ),
             "search_requests": args.search_requests,
             "add_workers": args.add_workers,
             "search_workers": args.search_workers,
             "mixed_add_requests": args.mixed_add_requests,
             "mixed_search_requests": args.mixed_search_requests,
+            "mixed_submission_order": "proportional_interleave",
             "top_k": args.top_k,
             "embeddings_enabled": not args.no_embeddings,
             "embedding_concurrency": (
@@ -207,6 +279,7 @@ def main() -> None:
             "error_types": sorted(set(search_errors)),
             "top_1_correct": correct,
             "top_1_accuracy": correct / args.search_requests,
+            "incorrect_searches": incorrect_searches,
             **latency_summary(search_latencies),
         },
         "mixed": mixed_report,

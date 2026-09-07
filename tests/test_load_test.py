@@ -8,6 +8,7 @@ from unittest.mock import patch
 from benchmarks.run_load_test import (
     latency_summary,
     main,
+    mixed_schedule,
     nonnegative_int,
     percentile,
     positive_int,
@@ -15,6 +16,15 @@ from benchmarks.run_load_test import (
 
 
 class LoadTestTests(unittest.TestCase):
+    def test_mixed_schedule_spreads_operations_across_submission_order(self):
+        schedule = mixed_schedule(2, 6)
+
+        self.assertEqual(2, schedule.count("add"))
+        self.assertEqual(6, schedule.count("search"))
+        self.assertEqual(["search", "search", "search", "add"], schedule[:4])
+        self.assertEqual(["search", "search", "search", "add"], schedule[4:])
+        self.assertEqual([], mixed_schedule(0, 0))
+
     def test_positive_int_and_percentile_validation(self):
         self.assertEqual(3, positive_int("3"))
         with self.assertRaises(argparse.ArgumentTypeError):
@@ -55,14 +65,24 @@ class LoadTestTests(unittest.TestCase):
             report = json.loads(output.read_text(encoding="utf-8"))
 
         self.assertEqual(4, report["config"]["memory_count"])
+        self.assertEqual(4, report["config"]["preloaded_memory_count"])
+        self.assertEqual(6, report["config"]["expected_final_memory_count"])
+        self.assertEqual(
+            "proportional_interleave", report["config"]["mixed_submission_order"]
+        )
         self.assertFalse(report["config"]["embeddings_enabled"])
         self.assertEqual("nearest-rank", report["config"]["percentile_method"])
         self.assertEqual(0, report["add"]["errors"])
         self.assertEqual(0, report["search"]["errors"])
         self.assertEqual(1.0, report["search"]["top_1_accuracy"])
+        self.assertEqual([], report["search"]["incorrect_searches"])
         self.assertEqual(0, report["mixed"]["add_errors"])
         self.assertEqual(0, report["mixed"]["search_errors"])
         self.assertEqual(2, report["mixed"]["search_top_1_correct"])
+        self.assertEqual([], report["mixed"]["incorrect_searches"])
+        self.assertEqual(2, report["mixed"]["successful_messages"])
+        self.assertGreater(report["mixed"]["add_throughput_messages_per_second"], 0)
+        self.assertGreater(report["mixed"]["search_throughput_requests_per_second"], 0)
 
 
 if __name__ == "__main__":

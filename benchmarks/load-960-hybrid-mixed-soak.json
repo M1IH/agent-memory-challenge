@@ -1,0 +1,67 @@
+{
+  "config": {
+    "add_requests": 48,
+    "messages_per_request": 20,
+    "memory_count": 960,
+    "preloaded_memory_count": 960,
+    "expected_final_memory_count": 2880,
+    "search_requests": 32,
+    "add_workers": 64,
+    "search_workers": 32,
+    "mixed_add_requests": 96,
+    "mixed_search_requests": 384,
+    "mixed_submission_order": "proportional_interleave",
+    "top_k": 100,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 2,
+    "percentile_method": "nearest-rank"
+  },
+  "add": {
+    "wall_seconds": 20.173527599996305,
+    "successful_messages": 960,
+    "throughput_messages_per_second": 47.587116097641534,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 10.372174812500058,
+    "p50_seconds": 9.913908599999559,
+    "p95_seconds": 19.325991700003215,
+    "p99_seconds": 20.144404999999097
+  },
+  "search": {
+    "wall_seconds": 1.8517722000033245,
+    "throughput_requests_per_second": 17.280743279298907,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 32,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 1.3051617343753605,
+    "p50_seconds": 1.3000937000033446,
+    "p95_seconds": 1.7910908000048948,
+    "p99_seconds": 1.8316597000011825
+  },
+  "mixed": {
+    "wall_seconds": 55.73770279999735,
+    "add_requests": 96,
+    "search_requests": 384,
+    "add_errors": 0,
+    "search_errors": 0,
+    "search_top_1_correct": 384,
+    "incorrect_searches": [],
+    "successful_messages": 1920,
+    "add_throughput_messages_per_second": 34.44706013251933,
+    "search_throughput_requests_per_second": 6.889412026503867,
+    "add_latency": {
+      "mean_seconds": 17.795235675000033,
+      "p50_seconds": 15.630368199999793,
+      "p95_seconds": 39.892947500004084,
+      "p99_seconds": 51.014104300003964
+    },
+    "search_latency": {
+      "mean_seconds": 5.4941882447916255,
+      "p50_seconds": 4.269325499997649,
+      "p95_seconds": 13.922619099997974,
+      "p99_seconds": 25.423719999998866
+    }
+  }
+}
