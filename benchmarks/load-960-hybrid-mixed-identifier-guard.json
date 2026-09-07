@@ -1,0 +1,67 @@
+{
+  "config": {
+    "add_requests": 48,
+    "messages_per_request": 20,
+    "memory_count": 960,
+    "preloaded_memory_count": 960,
+    "expected_final_memory_count": 1920,
+    "search_requests": 32,
+    "add_workers": 64,
+    "search_workers": 32,
+    "mixed_add_requests": 48,
+    "mixed_search_requests": 768,
+    "mixed_submission_order": "proportional_interleave",
+    "top_k": 100,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 2,
+    "percentile_method": "nearest-rank"
+  },
+  "add": {
+    "wall_seconds": 20.083802300010575,
+    "successful_messages": 960,
+    "throughput_messages_per_second": 47.799713702593785,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 10.357921839583469,
+    "p50_seconds": 9.91261499999382,
+    "p95_seconds": 19.253291400003945,
+    "p99_seconds": 20.057828999997582
+  },
+  "search": {
+    "wall_seconds": 1.832755499999621,
+    "throughput_requests_per_second": 17.46004854439483,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 32,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 1.3135916500004896,
+    "p50_seconds": 1.3133591999940109,
+    "p95_seconds": 1.8026752000005217,
+    "p99_seconds": 1.819963200003258
+  },
+  "mixed": {
+    "wall_seconds": 59.956790899988846,
+    "add_requests": 48,
+    "search_requests": 768,
+    "add_errors": 0,
+    "search_errors": 0,
+    "search_top_1_correct": 768,
+    "incorrect_searches": [],
+    "successful_messages": 960,
+    "add_throughput_messages_per_second": 16.01153073054446,
+    "search_throughput_requests_per_second": 12.80922458443557,
+    "add_latency": {
+      "mean_seconds": 1.5041121937498854,
+      "p50_seconds": 1.4422352999972645,
+      "p95_seconds": 2.517510500008939,
+      "p99_seconds": 4.217574700000114
+    },
+    "search_latency": {
+      "mean_seconds": 6.956965650260618,
+      "p50_seconds": 7.054395200000727,
+      "p95_seconds": 12.397110300007625,
+      "p99_seconds": 19.742879900004482
+    }
+  }
+}

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from app.store import MemoryStore
+from app.store import MemoryStore, RetrievalConfig
 
 
 class FakeEmbedder:
@@ -41,6 +41,20 @@ class AlternateSameDimensionEmbedder:
 
     def encode(self, texts):
         return [np.array([0.0, 1.0], dtype=np.float32) for _ in texts]
+
+
+class AdversarialIdentifierEmbedder:
+    index_identity = "adversarial-identifier-v1"
+
+    def encode(self, texts):
+        vectors = []
+        for text in texts:
+            lowered = text.lower()
+            if lowered.startswith("find ") or "project-code-81-16" in lowered:
+                vectors.append(np.array([1.0, 0.0], dtype=np.float32))
+            else:
+                vectors.append(np.array([0.0, 1.0], dtype=np.float32))
+        return vectors
 
 
 class HybridRetrievalTests(unittest.TestCase):
@@ -180,6 +194,53 @@ class HybridRetrievalTests(unittest.TestCase):
 
         self.assertEqual(1, len(results))
         self.assertEqual(2, stack.call_count)
+
+    def test_rare_exact_identifier_survives_adversarial_dense_rank(self):
+        store = MemoryStore(
+            Path(self.temp_dir.name) / "identifier.db",
+            embedder=AdversarialIdentifierEmbedder(),
+        )
+        store.add(
+            "target",
+            "alice",
+            "session",
+            [{"role": "user", "content": "Project code project-code-0-16."}],
+        )
+        for index in range(20):
+            code = "project-code-81-16" if index == 19 else f"project-code-{index + 1}-16"
+            store.add(
+                f"distractor-{index}",
+                "alice",
+                "session",
+                [{"role": "user", "content": f"Project code {code}."}],
+            )
+
+        result = store.search("alice", "Find project code project-code-0-16", 1)
+
+        self.assertIn("project-code-0-16", result[0]["content"])
+
+    def test_identifier_guard_does_not_leak_into_dense_only_ablation(self):
+        store = MemoryStore(
+            Path(self.temp_dir.name) / "identifier-dense-only.db",
+            embedder=AdversarialIdentifierEmbedder(),
+            retrieval_config=RetrievalConfig(lexical_enabled=False),
+        )
+        store.add(
+            "target",
+            "alice",
+            "session",
+            [{"role": "user", "content": "Project code project-code-0-16."}],
+        )
+        store.add(
+            "dense",
+            "alice",
+            "session",
+            [{"role": "user", "content": "Project code project-code-81-16."}],
+        )
+
+        result = store.search("alice", "Find project code project-code-0-16", 1)
+
+        self.assertIn("project-code-81-16", result[0]["content"])
 
 
 if __name__ == "__main__":

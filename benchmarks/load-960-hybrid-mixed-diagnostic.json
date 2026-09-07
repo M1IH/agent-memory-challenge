@@ -1,0 +1,73 @@
+{
+  "config": {
+    "add_requests": 48,
+    "messages_per_request": 20,
+    "memory_count": 960,
+    "preloaded_memory_count": 960,
+    "expected_final_memory_count": 1920,
+    "search_requests": 32,
+    "add_workers": 64,
+    "search_workers": 32,
+    "mixed_add_requests": 48,
+    "mixed_search_requests": 768,
+    "mixed_submission_order": "proportional_interleave",
+    "top_k": 100,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 2,
+    "percentile_method": "nearest-rank"
+  },
+  "add": {
+    "wall_seconds": 19.309831300008227,
+    "successful_messages": 960,
+    "throughput_messages_per_second": 49.715607820954446,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 10.071885135416172,
+    "p50_seconds": 9.67642619999242,
+    "p95_seconds": 18.48031849999097,
+    "p99_seconds": 19.292290800003684
+  },
+  "search": {
+    "wall_seconds": 1.7441103000019211,
+    "throughput_requests_per_second": 18.34746346028961,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 32,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 1.2505202125003052,
+    "p50_seconds": 1.2897684999916237,
+    "p95_seconds": 1.6963883999997051,
+    "p99_seconds": 1.735663300001761
+  },
+  "mixed": {
+    "wall_seconds": 55.57392109998909,
+    "add_requests": 48,
+    "search_requests": 768,
+    "add_errors": 0,
+    "search_errors": 0,
+    "search_top_1_correct": 767,
+    "incorrect_searches": [
+      {
+        "search_index": 576,
+        "expected": "project-code-0-16",
+        "actual_top_1": "[2024-01-01T02:15:00.015000Z] assistant: Project code project-code-81-15 belongs to test record 81.\n[2024-01-01T02:15:00.016000Z] user: Project code project-code-81-16 belongs to test record 81."
+      }
+    ],
+    "successful_messages": 960,
+    "add_throughput_messages_per_second": 17.274289468845637,
+    "search_throughput_requests_per_second": 13.81943157507651,
+    "add_latency": {
+      "mean_seconds": 1.4102879645815847,
+      "p50_seconds": 1.3718176999973366,
+      "p95_seconds": 2.1641884999989998,
+      "p99_seconds": 3.6325038999930257
+    },
+    "search_latency": {
+      "mean_seconds": 6.472560641015491,
+      "p50_seconds": 6.596062800002983,
+      "p95_seconds": 11.376872000008007,
+      "p99_seconds": 17.128567299994756
+    }
+  }
+}

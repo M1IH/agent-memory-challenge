@@ -78,6 +78,7 @@ _EVENT_NEGATION = re.compile(
     re.I,
 )
 _QUERY_NEGATION = re.compile(r"\b(?:not|never|didn't|did not)\b|(?:没有|没|未)", re.I)
+_IDENTIFIER_TOKEN = re.compile(r"(?=.*\d)[a-z0-9]+(?:[-_][a-z0-9]+)+", re.I)
 _OTHER_FIRST_PERSON = re.compile(
     r"\bmy (?:colleague|coworker|friend|brother|sister|roommate|manager)\b|"
     r"(?:我的|我)(?:同事|朋友|哥哥|弟弟|姐姐|妹妹|室友|经理)",
@@ -498,6 +499,12 @@ class MemoryStore:
         for memory in memories:
             for term in set(memory.terms):
                 document_frequency[term] = document_frequency.get(term, 0) + 1
+        rare_query_identifiers = {
+            term
+            for term in query_terms
+            if _IDENTIFIER_TOKEN.fullmatch(term)
+            and document_frequency.get(term, 0) <= 4
+        }
 
         average_length = sum(len(memory.terms) for memory in memories) / len(memories)
         lexical_scores = []
@@ -602,7 +609,8 @@ class MemoryStore:
             # corpus on this common direct-retrieval path.
             if not seed_entities and not _CJK_RUN.search(query):
                 return self._finish_search(
-                    query, memories, lexical_scores, rank_key, config, top_k
+                    query, memories, lexical_scores, rank_key, config, top_k,
+                    rare_query_identifiers,
                 )
             entity_frequency: dict[str, int] = {}
             entities_by_id = {memory.id: entity_terms(memory.content) for memory in memories}
@@ -644,7 +652,10 @@ class MemoryStore:
                 lexical_scores = linked_ranking(
                     lexical_scores, [memory for _, memory in lexical_scores[:10]]
                 )
-        return self._finish_search(query, memories, lexical_scores, rank_key, config, top_k)
+        return self._finish_search(
+            query, memories, lexical_scores, rank_key, config, top_k,
+            rare_query_identifiers,
+        )
 
     def _finish_search(
         self,
@@ -654,6 +665,7 @@ class MemoryStore:
         rank_key: Callable[[tuple[float, Memory]], tuple[float, int, str]],
         config: RetrievalConfig,
         top_k: int,
+        rare_query_identifiers: set[str],
     ) -> list[dict]:
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
@@ -720,6 +732,17 @@ class MemoryStore:
                 # lexical channel without letting raw BM25 scale dominate fusion.
                 if config.lexical_weight > 0 and lexical_raw.get(memory_id, 0.0) >= 8.0:
                     score += 0.002
+                # Dense models are intentionally weak at opaque identifiers.
+                # Preserve an exact, low-frequency code match without boosting
+                # ordinary words or broad CJK fragments across the whole rank.
+                if (
+                    config.lexical_enabled
+                    and memory_id in lexical_ranks
+                    and rare_query_identifiers.intersection(
+                        memory_by_id[memory_id].terms
+                    )
+                ):
+                    score += 0.01
                 fused.append((score, memory_by_id[memory_id]))
             fused.sort(key=rank_key)
             scores = fused
