@@ -71,6 +71,7 @@ class LoadTestTests(unittest.TestCase):
             "proportional_interleave", report["config"]["mixed_submission_order"]
         )
         self.assertFalse(report["config"]["embeddings_enabled"])
+        self.assertEqual(0, report["config"]["memory_cache_users"])
         self.assertEqual("nearest-rank", report["config"]["percentile_method"])
         self.assertEqual(0, report["add"]["errors"])
         self.assertEqual(0, report["search"]["errors"])

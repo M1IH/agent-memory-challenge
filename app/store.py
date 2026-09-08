@@ -8,6 +8,7 @@ import os
 import re
 import sqlite3
 import threading
+from collections import OrderedDict
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -94,6 +95,16 @@ def positive_context_chars(value: str) -> int:
         raise ValueError("AML_MAX_CONTEXT_CHARS must be a positive integer") from exc
     if parsed < 1:
         raise ValueError("AML_MAX_CONTEXT_CHARS must be a positive integer")
+    return parsed
+
+
+def nonnegative_cache_users(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError("AML_MEMORY_CACHE_USERS must be a non-negative integer") from exc
+    if parsed < 0:
+        raise ValueError("AML_MEMORY_CACHE_USERS must be a non-negative integer")
     return parsed
 
 
@@ -232,6 +243,12 @@ class MemoryStore:
         self._max_context_chars = positive_context_chars(
             os.getenv("AML_MAX_CONTEXT_CHARS", "1200")
         )
+        self.memory_cache_users = nonnegative_cache_users(
+            os.getenv("AML_MEMORY_CACHE_USERS", "0")
+        )
+        self._cache_lock = threading.Lock()
+        self._memory_cache: OrderedDict[str, tuple[int, list[Memory]]] = OrderedDict()
+        self._cache_loads: dict[str, threading.Event] = {}
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
@@ -290,6 +307,14 @@ class MemoryStore:
                     request_id TEXT NOT NULL,
                     payload_hash TEXT NOT NULL,
                     PRIMARY KEY (user_id, request_id)
+                )
+                """
+            )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS memory_generations (
+                    user_id TEXT PRIMARY KEY,
+                    generation INTEGER NOT NULL CHECK (generation >= 0)
                 )
                 """
             )
@@ -457,6 +482,81 @@ class MemoryStore:
                 """,
                 rows,
             )
+            connection.execute(
+                """
+                INSERT INTO memory_generations (user_id, generation) VALUES (?, 1)
+                ON CONFLICT(user_id) DO UPDATE SET generation = generation + 1
+                """,
+                (user_id,),
+            )
+        self._invalidate_memory_cache(user_id)
+
+    def _invalidate_memory_cache(self, user_id: str) -> None:
+        if not self.memory_cache_users:
+            return
+        with self._cache_lock:
+            self._memory_cache.pop(user_id, None)
+
+    def _load_user_memories(self, user_id: str) -> list[Memory]:
+        generation = 0
+        owns_load = False
+        if self.memory_cache_users:
+            while True:
+                with self._connection() as connection:
+                    row = connection.execute(
+                        "SELECT generation FROM memory_generations WHERE user_id = ?",
+                        (user_id,),
+                    ).fetchone()
+                generation = 0 if row is None else row["generation"]
+                with self._cache_lock:
+                    cached = self._memory_cache.get(user_id)
+                    if cached is not None and cached[0] == generation:
+                        self._memory_cache.move_to_end(user_id)
+                        return cached[1]
+                    pending = self._cache_loads.get(user_id)
+                    if pending is None:
+                        self._cache_loads[user_id] = threading.Event()
+                        owns_load = True
+                        break
+                pending.wait()
+
+        try:
+            with self._connection() as connection:
+                db_rows = connection.execute(
+                    """
+                    SELECT id, content, timestamp_ms, created_at, terms, embedding
+                    FROM memories WHERE user_id = ?
+                    """,
+                    (user_id,),
+                ).fetchall()
+
+            memories = []
+            for row in db_rows:
+                embedding = None
+                if row["embedding"] is not None:
+                    try:
+                        embedding = np.frombuffer(row["embedding"], dtype=np.float32)
+                    except ValueError:
+                        embedding = None
+                    if embedding is not None and not np.all(np.isfinite(embedding)):
+                        embedding = None
+                memories.append(Memory(
+                    id=row["id"], content=row["content"],
+                    timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
+                    terms=row["terms"].split(), embedding=embedding,
+                ))
+            if self.memory_cache_users:
+                with self._cache_lock:
+                    self._memory_cache[user_id] = (generation, memories)
+                    self._memory_cache.move_to_end(user_id)
+                    while len(self._memory_cache) > self.memory_cache_users:
+                        self._memory_cache.popitem(last=False)
+            return memories
+        finally:
+            if owns_load:
+                with self._cache_lock:
+                    completed = self._cache_loads.pop(user_id)
+                    completed.set()
 
     def search(
         self,
@@ -477,36 +577,9 @@ class MemoryStore:
         if not query_terms:
             return []
 
-        with self._connection() as connection:
-            db_rows = connection.execute(
-                """
-                SELECT id, content, timestamp_ms, created_at, terms, embedding
-                FROM memories WHERE user_id = ?
-                """,
-                (user_id,),
-            ).fetchall()
-        if not db_rows:
+        memories = self._load_user_memories(user_id)
+        if not memories:
             return []
-
-        memories = []
-        for row in db_rows:
-            embedding = None
-            if row["embedding"] is not None:
-                try:
-                    embedding = np.frombuffer(row["embedding"], dtype=np.float32)
-                except ValueError:
-                    embedding = None
-                if embedding is not None and not np.all(np.isfinite(embedding)):
-                    # Embeddings are a rebuildable index. A partially corrupted
-                    # vector must not poison ranking or JSON serialization; keep
-                    # the durable text available through lexical retrieval.
-                    embedding = None
-            memories.append(Memory(
-                id=row["id"], content=row["content"],
-                timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
-                terms=row["terms"].split(),
-                embedding=embedding,
-            ))
         document_frequency: dict[str, int] = {}
         for memory in memories:
             for term in set(memory.terms):

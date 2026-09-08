@@ -1,12 +1,20 @@
 import sqlite3
 import tempfile
+import threading
 import unittest
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 import numpy as np
 
-from app.store import MemoryStore, entity_terms, positive_context_chars
+from app.store import (
+    MemoryStore,
+    entity_terms,
+    nonnegative_cache_users,
+    positive_context_chars,
+)
 
 
 class StoreSafetyTests(unittest.TestCase):
@@ -29,6 +37,135 @@ class StoreSafetyTests(unittest.TestCase):
         with patch.dict("os.environ", {"AML_MAX_CONTEXT_CHARS": "invalid"}):
             with self.assertRaisesRegex(ValueError, "AML_MAX_CONTEXT_CHARS"):
                 MemoryStore(self.path, embedder=False)
+
+    def test_memory_cache_user_limit_must_be_non_negative_integer(self):
+        self.assertEqual(0, nonnegative_cache_users("0"))
+        self.assertEqual(2, nonnegative_cache_users("2"))
+        for value in ("-1", "invalid"):
+            with self.subTest(value=value), self.assertRaisesRegex(
+                ValueError, "AML_MEMORY_CACHE_USERS"
+            ):
+                nonnegative_cache_users(value)
+
+    def test_memory_cache_is_reused_then_invalidated_by_add(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):
+            store = MemoryStore(self.path, embedder=False)
+        store.add("one", "alice", "session", [{"role": "user", "content": "tea"}])
+
+        first = store._load_user_memories("alice")
+        second = store._load_user_memories("alice")
+        store.add("two", "alice", "session", [{"role": "user", "content": "coffee"}])
+        third = store._load_user_memories("alice")
+
+        self.assertIs(first, second)
+        self.assertIsNot(second, third)
+        self.assertEqual(2, len(third))
+
+    def test_memory_cache_detects_add_from_another_store_instance(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):
+            first_store = MemoryStore(self.path, embedder=False)
+            second_store = MemoryStore(self.path, embedder=False)
+        first_store.add(
+            "one", "alice", "session", [{"role": "user", "content": "tea"}]
+        )
+        cached = first_store._load_user_memories("alice")
+
+        second_store.add(
+            "two", "alice", "session", [{"role": "user", "content": "coffee"}]
+        )
+        refreshed = first_store._load_user_memories("alice")
+
+        self.assertIsNot(cached, refreshed)
+        self.assertEqual(2, len(refreshed))
+
+    def test_memory_cache_evicts_least_recently_used_user(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):
+            store = MemoryStore(self.path, embedder=False)
+        for user_id in ("alice", "bob", "carol"):
+            store.add(
+                f"add-{user_id}",
+                user_id,
+                "session",
+                [{"role": "user", "content": user_id}],
+            )
+
+        alice = store._load_user_memories("alice")
+        store._load_user_memories("bob")
+        self.assertIs(alice, store._load_user_memories("alice"))
+        store._load_user_memories("carol")
+
+        self.assertEqual(["alice", "carol"], list(store._memory_cache))
+        self.assertNotIn("bob", store._memory_cache)
+
+    def test_concurrent_cache_miss_uses_one_loaded_snapshot(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "1"}):
+            store = MemoryStore(self.path, embedder=False)
+        store.add(
+            "batch",
+            "alice",
+            "session",
+            [
+                {"role": "user", "content": f"record {index}"}
+                for index in range(200)
+            ],
+        )
+        barrier = threading.Barrier(16)
+
+        def load(_: int) -> list:
+            barrier.wait(timeout=5)
+            return store._load_user_memories("alice")
+
+        with ThreadPoolExecutor(max_workers=16) as executor:
+            snapshots = list(executor.map(load, range(16)))
+
+        self.assertEqual(1, len({id(snapshot) for snapshot in snapshots}))
+
+    def test_failed_cache_load_wakes_waiter_and_allows_retry(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "1"}):
+            store = MemoryStore(self.path, embedder=False)
+        store.add("one", "alice", "session", [{"role": "user", "content": "tea"}])
+        original_connection = store._connection
+        connection_count = 0
+        count_lock = threading.Lock()
+        failed_load_started = threading.Event()
+        waiter_checked_generation = threading.Event()
+
+        @contextmanager
+        def controlled_connection():
+            nonlocal connection_count
+            with count_lock:
+                connection_count += 1
+                call_number = connection_count
+            if call_number == 2:
+                failed_load_started.set()
+                if not waiter_checked_generation.wait(timeout=5):
+                    raise AssertionError("waiting loader did not reach generation check")
+                raise sqlite3.OperationalError("simulated load failure")
+            with original_connection() as connection:
+                yield connection
+            if call_number == 3:
+                waiter_checked_generation.set()
+
+        def load() -> list:
+            return store._load_user_memories("alice")
+
+        with patch.object(store, "_connection", controlled_connection):
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                futures = [executor.submit(load)]
+                self.assertTrue(failed_load_started.wait(timeout=5))
+                futures.append(executor.submit(load))
+                outcomes = []
+                for future in futures:
+                    try:
+                        outcomes.append(future.result(timeout=10))
+                    except sqlite3.OperationalError:
+                        outcomes.append("failed")
+
+        self.assertEqual(1, outcomes.count("failed"))
+        successful = next(result for result in outcomes if result != "failed")
+        self.assertEqual(1, len(successful))
+        self.assertIs(successful, store._load_user_memories("alice"))
+        self.assertEqual({}, store._cache_loads)
 
     def test_delimiter_in_identifiers_does_not_drop_another_users_memory(self):
         store = MemoryStore(self.path, embedder=False)

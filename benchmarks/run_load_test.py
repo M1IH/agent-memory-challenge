@@ -262,6 +262,7 @@ def main() -> None:
             "embedding_concurrency": (
                 None if store._embedder is None else store._embedder.concurrency
             ),
+            "memory_cache_users": store.memory_cache_users,
             "percentile_method": "nearest-rank",
         },
         "add": {
