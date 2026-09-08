@@ -1,0 +1,336 @@
+{
+  "method": "direct_fts5_or_terms",
+  "reports": [
+    {
+      "suite": "hard",
+      "candidate_limit": 1000,
+      "cases": 6,
+      "expected_evidence": 15,
+      "covered_evidence": 14,
+      "evidence_coverage": 0.9333333333333333,
+      "mean_candidate_ratio": 0.9761904761904762,
+      "complete_cases": 5,
+      "traces": [
+        {
+          "name": "manager-review-chain",
+          "category": "multi_hop",
+          "memory_count": 14,
+          "candidate_count": 12,
+          "candidate_ratio": 0.8571428571428571,
+          "expected_source_ids": [
+            "manager",
+            "schedule"
+          ],
+          "covered_source_ids": [
+            "manager"
+          ],
+          "missing_source_ids": [
+            "schedule"
+          ]
+        },
+        {
+          "name": "project-room-key-chain",
+          "category": "multi_hop",
+          "memory_count": 14,
+          "candidate_count": 14,
+          "candidate_ratio": 1.0,
+          "expected_source_ids": [
+            "room",
+            "key"
+          ],
+          "covered_source_ids": [
+            "room",
+            "key"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "chinese-delivery-chain",
+          "category": "multi_hop_zh",
+          "memory_count": 15,
+          "candidate_count": 15,
+          "candidate_ratio": 1.0,
+          "expected_source_ids": [
+            "teacher",
+            "parcel",
+            "pickup"
+          ],
+          "covered_source_ids": [
+            "teacher",
+            "parcel",
+            "pickup"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "camping-packed-list",
+          "category": "list",
+          "memory_count": 16,
+          "candidate_count": 16,
+          "candidate_ratio": 1.0,
+          "expected_source_ids": [
+            "tent",
+            "stove",
+            "filter",
+            "lamp"
+          ],
+          "covered_source_ids": [
+            "tent",
+            "stove",
+            "filter",
+            "lamp"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "approved-speakers-list",
+          "category": "list",
+          "memory_count": 15,
+          "candidate_count": 15,
+          "candidate_ratio": 1.0,
+          "expected_source_ids": [
+            "nora",
+            "sam",
+            "yuki"
+          ],
+          "covered_source_ids": [
+            "nora",
+            "sam",
+            "yuki"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "unrelated-updates",
+          "category": "temporal_distractors",
+          "memory_count": 13,
+          "candidate_count": 13,
+          "candidate_ratio": 1.0,
+          "expected_source_ids": [
+            "desk"
+          ],
+          "covered_source_ids": [
+            "desk"
+          ],
+          "missing_source_ids": []
+        }
+      ]
+    },
+    {
+      "suite": "confirmation",
+      "candidate_limit": 1000,
+      "cases": 6,
+      "expected_evidence": 12,
+      "covered_evidence": 12,
+      "evidence_coverage": 1.0,
+      "mean_candidate_ratio": 0.8369625042999655,
+      "complete_cases": 6,
+      "traces": [
+        {
+          "name": "confirmation-current-vet",
+          "category": "temporal_supersession",
+          "memory_count": 18,
+          "candidate_count": 12,
+          "candidate_ratio": 0.6666666666666666,
+          "expected_source_ids": [
+            "current"
+          ],
+          "covered_source_ids": [
+            "current"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "confirmation-lab-access-chain",
+          "category": "multi_hop",
+          "memory_count": 19,
+          "candidate_count": 18,
+          "candidate_ratio": 0.9473684210526315,
+          "expected_source_ids": [
+            "lab",
+            "contact"
+          ],
+          "covered_source_ids": [
+            "lab",
+            "contact"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "confirmation-packed-conference-list",
+          "category": "list_negation",
+          "memory_count": 21,
+          "candidate_count": 21,
+          "candidate_ratio": 1.0,
+          "expected_source_ids": [
+            "adapter",
+            "badge",
+            "notebook",
+            "medicine"
+          ],
+          "covered_source_ids": [
+            "adapter",
+            "badge",
+            "notebook",
+            "medicine"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "confirmation-chinese-pickup-chain",
+          "category": "multi_hop_zh",
+          "memory_count": 20,
+          "candidate_count": 18,
+          "candidate_ratio": 0.9,
+          "expected_source_ids": [
+            "repairer",
+            "courier",
+            "locker"
+          ],
+          "covered_source_ids": [
+            "repairer",
+            "courier",
+            "locker"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "confirmation-bilingual-booking",
+          "category": "cross_lingual",
+          "memory_count": 17,
+          "candidate_count": 14,
+          "candidate_ratio": 0.8235294117647058,
+          "expected_source_ids": [
+            "booking"
+          ],
+          "covered_source_ids": [
+            "booking"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "confirmation-current-allergy",
+          "category": "temporal_negation",
+          "memory_count": 19,
+          "candidate_count": 13,
+          "candidate_ratio": 0.6842105263157895,
+          "expected_source_ids": [
+            "current"
+          ],
+          "covered_source_ids": [
+            "current"
+          ],
+          "missing_source_ids": []
+        }
+      ]
+    },
+    {
+      "suite": "holdout",
+      "candidate_limit": 1000,
+      "cases": 6,
+      "expected_evidence": 12,
+      "covered_evidence": 10,
+      "evidence_coverage": 0.8333333333333334,
+      "mean_candidate_ratio": 0.6722566219470244,
+      "complete_cases": 5,
+      "traces": [
+        {
+          "name": "holdout-adviser-office-hours",
+          "category": "cross_lingual",
+          "memory_count": 18,
+          "candidate_count": 4,
+          "candidate_ratio": 0.2222222222222222,
+          "expected_source_ids": [
+            "identity",
+            "schedule"
+          ],
+          "covered_source_ids": [],
+          "missing_source_ids": [
+            "identity",
+            "schedule"
+          ]
+        },
+        {
+          "name": "holdout-current-dentist",
+          "category": "temporal_supersession",
+          "memory_count": 17,
+          "candidate_count": 6,
+          "candidate_ratio": 0.35294117647058826,
+          "expected_source_ids": [
+            "current"
+          ],
+          "covered_source_ids": [
+            "current"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "holdout-club-storage-contact",
+          "category": "multi_hop",
+          "memory_count": 18,
+          "candidate_count": 17,
+          "candidate_ratio": 0.9444444444444444,
+          "expected_source_ids": [
+            "room",
+            "key"
+          ],
+          "covered_source_ids": [
+            "room",
+            "key"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "holdout-chinese-parcel-chain",
+          "category": "multi_hop_zh",
+          "memory_count": 19,
+          "candidate_count": 15,
+          "candidate_ratio": 0.7894736842105263,
+          "expected_source_ids": [
+            "binder",
+            "courier",
+            "pickup"
+          ],
+          "covered_source_ids": [
+            "binder",
+            "courier",
+            "pickup"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "holdout-confirmed-volunteers",
+          "category": "list_negation",
+          "memory_count": 19,
+          "candidate_count": 16,
+          "candidate_ratio": 0.8421052631578947,
+          "expected_source_ids": [
+            "ana",
+            "bo",
+            "mina"
+          ],
+          "covered_source_ids": [
+            "ana",
+            "bo",
+            "mina"
+          ],
+          "missing_source_ids": []
+        },
+        {
+          "name": "holdout-reverse-language-hotel",
+          "category": "cross_lingual_reverse",
+          "memory_count": 17,
+          "candidate_count": 15,
+          "candidate_ratio": 0.8823529411764706,
+          "expected_source_ids": [
+            "booking"
+          ],
+          "covered_source_ids": [
+            "booking"
+          ],
+          "missing_source_ids": []
+        }
+      ]
+    }
+  ]
+}
