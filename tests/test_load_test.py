@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from benchmarks.run_load_test import (
+    current_rss_bytes,
     latency_summary,
     main,
     mixed_schedule,
@@ -16,6 +17,10 @@ from benchmarks.run_load_test import (
 
 
 class LoadTestTests(unittest.TestCase):
+    def test_current_rss_is_positive_when_supported(self):
+        rss = current_rss_bytes()
+        self.assertTrue(rss is None or rss > 0)
+
     def test_mixed_schedule_spreads_operations_across_submission_order(self):
         schedule = mixed_schedule(2, 6)
 
@@ -73,6 +78,12 @@ class LoadTestTests(unittest.TestCase):
         self.assertFalse(report["config"]["embeddings_enabled"])
         self.assertEqual(0, report["config"]["memory_cache_users"])
         self.assertEqual("nearest-rank", report["config"]["percentile_method"])
+        self.assertEqual(
+            "current_process_resident_set", report["memory"]["measurement"]
+        )
+        self.assertIn("rss_after_add_bytes", report["memory"])
+        self.assertIn("rss_after_search_bytes", report["memory"])
+        self.assertIn("rss_search_delta_bytes", report["memory"])
         self.assertEqual(0, report["add"]["errors"])
         self.assertEqual(0, report["search"]["errors"])
         self.assertEqual(1.0, report["search"]["top_1_accuracy"])

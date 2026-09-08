@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
+import gc
 import json
 import math
+import os
 import statistics
 import tempfile
 import time
@@ -10,6 +13,48 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from app.store import MemoryStore
+
+
+def current_rss_bytes() -> int | None:
+    """Return current resident memory, or None when the platform cannot report it."""
+    if os.name == "nt":
+        class ProcessMemoryCounters(ctypes.Structure):
+            _fields_ = [
+                ("cb", ctypes.c_ulong),
+                ("page_fault_count", ctypes.c_ulong),
+                ("peak_working_set_size", ctypes.c_size_t),
+                ("working_set_size", ctypes.c_size_t),
+                ("quota_peak_paged_pool_usage", ctypes.c_size_t),
+                ("quota_paged_pool_usage", ctypes.c_size_t),
+                ("quota_peak_non_paged_pool_usage", ctypes.c_size_t),
+                ("quota_non_paged_pool_usage", ctypes.c_size_t),
+                ("pagefile_usage", ctypes.c_size_t),
+                ("peak_pagefile_usage", ctypes.c_size_t),
+            ]
+
+        counters = ProcessMemoryCounters()
+        counters.cb = ctypes.sizeof(counters)
+        get_current_process = ctypes.windll.kernel32.GetCurrentProcess
+        get_current_process.argtypes = []
+        get_current_process.restype = ctypes.c_void_p
+        get_process_memory_info = ctypes.windll.psapi.GetProcessMemoryInfo
+        get_process_memory_info.argtypes = [
+            ctypes.c_void_p,
+            ctypes.POINTER(ProcessMemoryCounters),
+            ctypes.c_ulong,
+        ]
+        get_process_memory_info.restype = ctypes.c_int
+        succeeded = get_process_memory_info(
+            get_current_process(),
+            ctypes.byref(counters),
+            counters.cb,
+        )
+        return int(counters.working_set_size) if succeeded else None
+    try:
+        resident_pages = int(Path("/proc/self/statm").read_text().split()[1])
+        return resident_pages * os.sysconf("SC_PAGE_SIZE")
+    except (AttributeError, IndexError, OSError, ValueError):
+        return None
 
 
 def positive_int(value: str) -> int:
@@ -81,6 +126,7 @@ def main() -> None:
             Path(temp_dir) / "load-test.db",
             embedder=False if args.no_embeddings else None,
         )
+        rss_after_store_init = current_rss_bytes()
 
         def add(request_index: int) -> tuple[float, str | None]:
             started = time.perf_counter()
@@ -114,6 +160,8 @@ def main() -> None:
         successful_messages = (
             args.add_requests - len(add_errors)
         ) * args.messages_per_request
+        gc.collect()
+        rss_after_add = current_rss_bytes()
 
         def search(
             search_index: int,
@@ -162,6 +210,8 @@ def main() -> None:
             for result in search_results
             if result[2] is None and not result[1]
         ]
+        gc.collect()
+        rss_after_search = current_rss_bytes()
 
         mixed_report = None
         mixed_add_errors: list[str] = []
@@ -264,6 +314,17 @@ def main() -> None:
             ),
             "memory_cache_users": store.memory_cache_users,
             "percentile_method": "nearest-rank",
+        },
+        "memory": {
+            "measurement": "current_process_resident_set",
+            "rss_after_store_init_bytes": rss_after_store_init,
+            "rss_after_add_bytes": rss_after_add,
+            "rss_after_search_bytes": rss_after_search,
+            "rss_search_delta_bytes": (
+                None
+                if rss_after_add is None or rss_after_search is None
+                else rss_after_search - rss_after_add
+            ),
         },
         "add": {
             "wall_seconds": add_wall,
