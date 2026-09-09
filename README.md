@@ -27,10 +27,14 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```powershell
 docker build -t agent-memory-challenge:local .
 docker run --rm -p 8000:8000 `
+  --memory 512m --memory-swap 512m `
   -e AML_API_KEY=replace-with-a-long-random-secret `
   -v agent-memory-data:/data `
   agent-memory-challenge:local
 ```
+
+`512m` 是当前 CI 覆盖的最低容器上限，不是公式容量承诺；更大语料、更多用户
+或更高并发必须重新压测。如果启用 `AML_MEMORY_CACHE_USERS`，应保留同样的内存上限。
 
 验证服务：
 

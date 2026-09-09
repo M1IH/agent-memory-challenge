@@ -32,9 +32,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: docker build -t agent-memory-challenge:ci .
-      - name: Verify baked model without runtime network
+      - name: Verify baked model under offline memory limit
         run: |
-          docker run -d --name aml-ci --network none -e AML_API_KEY=ci-secret agent-memory-challenge:ci
+          docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
+            --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \
+            agent-memory-challenge:ci
+          test "$(docker inspect -f '{{.HostConfig.Memory}}' aml-ci)" = "536870912"
           for attempt in $(seq 1 30); do
             docker exec aml-ci python -c "import urllib.request; assert urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200" && break
             sleep 2
@@ -52,10 +55,24 @@ jobs:
               with urllib.request.urlopen(request) as response:
                   return json.load(response)
 
+          messages = [
+              {"role": "user", "content": f"Record {index} has project code ci-code-{index}."}
+              for index in range(250)
+          ]
+          messages.append({"role": "user", "content": "My emergency contact is Jordan."})
           post("/add", {
               "request_id": "ci-offline", "user_id": "alice", "session_id": "session",
-              "messages": [{"role": "user", "content": "My emergency contact is Jordan."}],
+              "messages": messages,
           })
-          result = post("/search", {"query": "emergency contact", "user_id": "alice", "top_k": 10})
-          assert "Jordan" in result["data"][0]["content"]
+          from concurrent.futures import ThreadPoolExecutor
+          with ThreadPoolExecutor(max_workers=8) as executor:
+              results = list(executor.map(
+                  lambda _: post("/search", {
+                      "query": "emergency contact", "user_id": "alice", "top_k": 10,
+                  }),
+                  range(16),
+              ))
+          assert all("Jordan" in result["data"][0]["content"] for result in results)
           PY
+          test "$(docker inspect -f '{{.State.OOMKilled}}' aml-ci)" = "false"
+          docker stats --no-stream aml-ci
