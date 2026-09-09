@@ -75,4 +75,28 @@ jobs:
           assert all("Jordan" in result["data"][0]["content"] for result in results)
           PY
           test "$(docker inspect -f '{{.State.OOMKilled}}' aml-ci)" = "false"
+          docker exec aml-ci python - <<'PY'
+          import json
+          from pathlib import Path
+
+          cgroup = Path("/sys/fs/cgroup")
+          if (cgroup / "memory.current").exists():
+              current = int((cgroup / "memory.current").read_text())
+              peak = int((cgroup / "memory.peak").read_text())
+              limit = int((cgroup / "memory.max").read_text())
+              events = dict(
+                  line.split() for line in (cgroup / "memory.events").read_text().splitlines()
+              )
+              oom_kills = int(events["oom_kill"])
+          else:
+              memory = cgroup / "memory"
+              current = int((memory / "memory.usage_in_bytes").read_text())
+              peak = int((memory / "memory.max_usage_in_bytes").read_text())
+              limit = int((memory / "memory.limit_in_bytes").read_text())
+              oom_kills = int((memory / "memory.failcnt").read_text())
+          print(json.dumps({"current": current, "peak": peak, "limit": limit, "oom_kills": oom_kills}))
+          assert limit == 512 * 1024 * 1024
+          assert current < limit * 0.95
+          assert oom_kills == 0
+          PY
           docker stats --no-stream aml-ci
