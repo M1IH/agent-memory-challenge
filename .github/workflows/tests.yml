@@ -75,7 +75,7 @@ jobs:
           assert all("Jordan" in result["data"][0]["content"] for result in results)
           PY
           test "$(docker inspect -f '{{.State.OOMKilled}}' aml-ci)" = "false"
-          docker exec aml-ci python - <<'PY'
+          docker exec -i aml-ci python - <<'PY'
           import json
           from pathlib import Path
 
