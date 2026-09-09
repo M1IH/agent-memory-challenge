@@ -77,6 +77,9 @@ class LoadTestTests(unittest.TestCase):
         )
         self.assertFalse(report["config"]["embeddings_enabled"])
         self.assertEqual(0, report["config"]["memory_cache_users"])
+        self.assertEqual(
+            64 * 1024 * 1024, report["config"]["memory_cache_max_bytes"]
+        )
         self.assertEqual("nearest-rank", report["config"]["percentile_method"])
         self.assertEqual(
             "current_process_resident_set", report["memory"]["measurement"]
@@ -84,6 +87,7 @@ class LoadTestTests(unittest.TestCase):
         self.assertIn("rss_after_add_bytes", report["memory"])
         self.assertIn("rss_after_search_bytes", report["memory"])
         self.assertIn("rss_search_delta_bytes", report["memory"])
+        self.assertEqual(0, report["memory"]["estimated_cached_snapshot_bytes"])
         self.assertEqual(0, report["add"]["errors"])
         self.assertEqual(0, report["search"]["errors"])
         self.assertEqual(1.0, report["search"]["top_1_accuracy"])

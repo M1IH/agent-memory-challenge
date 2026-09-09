@@ -313,6 +313,7 @@ def main() -> None:
                 None if store._embedder is None else store._embedder.concurrency
             ),
             "memory_cache_users": store.memory_cache_users,
+            "memory_cache_max_bytes": store.memory_cache_max_bytes,
             "percentile_method": "nearest-rank",
         },
         "memory": {
@@ -325,6 +326,7 @@ def main() -> None:
                 if rss_after_add is None or rss_after_search is None
                 else rss_after_search - rss_after_add
             ),
+            "estimated_cached_snapshot_bytes": store._memory_cache_bytes,
         },
         "add": {
             "wall_seconds": add_wall,

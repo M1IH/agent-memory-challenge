@@ -7,6 +7,7 @@ import math
 import os
 import re
 import sqlite3
+import sys
 import threading
 from collections import OrderedDict
 from contextlib import contextmanager
@@ -106,6 +107,32 @@ def nonnegative_cache_users(value: str) -> int:
     if parsed < 0:
         raise ValueError("AML_MEMORY_CACHE_USERS must be a non-negative integer")
     return parsed
+
+
+def positive_cache_bytes(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError("AML_MEMORY_CACHE_MAX_BYTES must be a positive integer") from exc
+    if parsed < 1:
+        raise ValueError("AML_MEMORY_CACHE_MAX_BYTES must be a positive integer")
+    return parsed
+
+
+def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
+    """Estimate retained Python and vector-buffer bytes for cache admission."""
+    total = sys.getsizeof(memories)
+    for memory in memories:
+        total += sys.getsizeof(memory)
+        total += sys.getsizeof(memory.id)
+        total += sys.getsizeof(memory.content)
+        total += sys.getsizeof(memory.created_at)
+        total += sys.getsizeof(memory.timestamp_ms)
+        total += sys.getsizeof(memory.terms)
+        total += sum(sys.getsizeof(term) for term in memory.terms)
+        if memory.embedding is not None:
+            total += sys.getsizeof(memory.embedding) + memory.embedding.nbytes
+    return total
 
 
 def topic_terms(text: str) -> set[str]:
@@ -246,8 +273,14 @@ class MemoryStore:
         self.memory_cache_users = nonnegative_cache_users(
             os.getenv("AML_MEMORY_CACHE_USERS", "0")
         )
+        self.memory_cache_max_bytes = positive_cache_bytes(
+            os.getenv("AML_MEMORY_CACHE_MAX_BYTES", str(64 * 1024 * 1024))
+        )
         self._cache_lock = threading.Lock()
-        self._memory_cache: OrderedDict[str, tuple[int, list[Memory]]] = OrderedDict()
+        self._memory_cache: OrderedDict[
+            str, tuple[int, int, list[Memory]]
+        ] = OrderedDict()
+        self._memory_cache_bytes = 0
         self._cache_loads: dict[str, threading.Event] = {}
         self._initialize()
 
@@ -495,7 +528,9 @@ class MemoryStore:
         if not self.memory_cache_users:
             return
         with self._cache_lock:
-            self._memory_cache.pop(user_id, None)
+            cached = self._memory_cache.pop(user_id, None)
+            if cached is not None:
+                self._memory_cache_bytes -= cached[1]
 
     def _load_user_memories(self, user_id: str) -> list[Memory]:
         generation = 0
@@ -512,7 +547,7 @@ class MemoryStore:
                     cached = self._memory_cache.get(user_id)
                     if cached is not None and cached[0] == generation:
                         self._memory_cache.move_to_end(user_id)
-                        return cached[1]
+                        return cached[2]
                     pending = self._cache_loads.get(user_id)
                     if pending is None:
                         self._cache_loads[user_id] = threading.Event()
@@ -546,11 +581,22 @@ class MemoryStore:
                     terms=row["terms"].split(), embedding=embedding,
                 ))
             if self.memory_cache_users:
+                snapshot_bytes = memory_snapshot_size_bytes(memories)
                 with self._cache_lock:
-                    self._memory_cache[user_id] = (generation, memories)
-                    self._memory_cache.move_to_end(user_id)
-                    while len(self._memory_cache) > self.memory_cache_users:
-                        self._memory_cache.popitem(last=False)
+                    replaced = self._memory_cache.pop(user_id, None)
+                    if replaced is not None:
+                        self._memory_cache_bytes -= replaced[1]
+                    if snapshot_bytes <= self.memory_cache_max_bytes:
+                        self._memory_cache[user_id] = (
+                            generation, snapshot_bytes, memories
+                        )
+                        self._memory_cache_bytes += snapshot_bytes
+                        while (
+                            len(self._memory_cache) > self.memory_cache_users
+                            or self._memory_cache_bytes > self.memory_cache_max_bytes
+                        ):
+                            _, evicted = self._memory_cache.popitem(last=False)
+                            self._memory_cache_bytes -= evicted[1]
             return memories
         finally:
             if owns_load:

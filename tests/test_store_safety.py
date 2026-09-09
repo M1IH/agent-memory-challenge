@@ -12,7 +12,9 @@ import numpy as np
 from app.store import (
     MemoryStore,
     entity_terms,
+    memory_snapshot_size_bytes,
     nonnegative_cache_users,
+    positive_cache_bytes,
     positive_context_chars,
 )
 
@@ -46,6 +48,46 @@ class StoreSafetyTests(unittest.TestCase):
                 ValueError, "AML_MEMORY_CACHE_USERS"
             ):
                 nonnegative_cache_users(value)
+
+    def test_memory_cache_byte_limit_must_be_positive_integer(self):
+        self.assertEqual(1, positive_cache_bytes("1"))
+        for value in ("0", "-1", "invalid"):
+            with self.subTest(value=value), self.assertRaisesRegex(
+                ValueError, "AML_MEMORY_CACHE_MAX_BYTES"
+            ):
+                positive_cache_bytes(value)
+
+    def test_oversized_snapshot_is_not_cached(self):
+        with patch.dict(
+            "os.environ",
+            {"AML_MEMORY_CACHE_USERS": "2", "AML_MEMORY_CACHE_MAX_BYTES": "1"},
+        ):
+            store = MemoryStore(self.path, embedder=False)
+        store.add("one", "alice", "session", [{"role": "user", "content": "tea"}])
+
+        memories = store._load_user_memories("alice")
+
+        self.assertGreater(memory_snapshot_size_bytes(memories), 1)
+        self.assertEqual({}, store._memory_cache)
+        self.assertEqual(0, store._memory_cache_bytes)
+
+    def test_memory_cache_evicts_users_to_stay_within_byte_budget(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "3"}):
+            store = MemoryStore(self.path, embedder=False)
+        for user_id in ("alice", "bob"):
+            store.add(
+                f"add-{user_id}", user_id, "session",
+                [{"role": "user", "content": user_id}],
+            )
+        store._load_user_memories("alice")
+        alice_bytes = store._memory_cache["alice"][1]
+        store.memory_cache_max_bytes = alice_bytes
+
+        store._load_user_memories("bob")
+
+        self.assertNotIn("alice", store._memory_cache)
+        self.assertIn("bob", store._memory_cache)
+        self.assertLessEqual(store._memory_cache_bytes, store.memory_cache_max_bytes)
 
     def test_memory_cache_is_reused_then_invalidated_by_add(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):
