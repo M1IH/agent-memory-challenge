@@ -478,22 +478,20 @@ class MemoryStore:
                     current_index = contextual_index
             display_contents.append(current_display)
             index_contents.append(current_index)
-        embeddings = (
-            self._embedder.encode(index_contents)
-            if self._embedder is not None
-            else [None] * len(raw_contents)
-        )
-        if len(embeddings) != len(message_values):
-            raise RuntimeError(
-                "embedding backend returned a different number of vectors than messages"
-            )
-        try:
-            normalized_embeddings = [
-                None if embedding is None else embedding_vector(embedding)
-                for embedding in embeddings
-            ]
-        except (TypeError, ValueError) as exc:
-            raise RuntimeError("embedding backend returned an invalid vector") from exc
+        if self._embedder is None:
+            normalized_embeddings = [None] * len(raw_contents)
+        else:
+            embeddings = self._embedder.encode(index_contents)
+            if len(embeddings) != len(message_values):
+                raise RuntimeError(
+                    "embedding backend returned a different number of vectors than messages"
+                )
+            try:
+                normalized_embeddings = [
+                    embedding_vector(embedding) for embedding in embeddings
+                ]
+            except (TypeError, ValueError) as exc:
+                raise RuntimeError("embedding backend returned an invalid vector") from exc
         vector_shapes = {
             embedding.shape
             for embedding in normalized_embeddings

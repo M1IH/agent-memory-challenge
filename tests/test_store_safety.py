@@ -476,6 +476,22 @@ class StoreSafetyTests(unittest.TestCase):
             self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
             self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
 
+    def test_missing_add_embedding_does_not_silently_create_lexical_only_row(self):
+        encoder = Mock()
+        encoder.index_identity = "test:add-missing-vector-v1"
+        encoder.encode.return_value = [None]
+        store = MemoryStore(self.path, embedder=encoder)
+
+        with self.assertRaisesRegex(RuntimeError, "invalid vector"):
+            store.add(
+                "req", "alice", "session",
+                [{"role": "user", "content": "missing vector"}],
+            )
+
+        with store._connection() as connection:
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+
     def test_inconsistent_add_embedding_dimensions_are_rejected_atomically(self):
         encoder = Mock()
         encoder.index_identity = "test:add-vector-dimensions-v1"
