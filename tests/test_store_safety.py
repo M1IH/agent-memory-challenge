@@ -445,6 +445,59 @@ class StoreSafetyTests(unittest.TestCase):
         store.add("req", "alice", "session", payload)
         self.assertEqual(1, len(store.search("alice", "retry recovery", 10)))
 
+    def test_float64_add_embeddings_are_stored_as_float32_vectors(self):
+        encoder = Mock()
+        encoder.index_identity = "test:dtype-v1"
+        encoder.encode.return_value = [np.array([0.25, 0.75], dtype=np.float64)]
+        store = MemoryStore(self.path, embedder=encoder)
+
+        store.add(
+            "req", "alice", "session",
+            [{"role": "user", "content": "vector dtype boundary"}],
+        )
+
+        [memory] = store._load_user_memories("alice")
+        self.assertEqual(np.dtype(np.float32), memory.embedding.dtype)
+        np.testing.assert_allclose([0.25, 0.75], memory.embedding)
+
+    def test_invalid_add_embedding_does_not_claim_request_id(self):
+        encoder = Mock()
+        encoder.index_identity = "test:add-vector-validation-v1"
+        encoder.encode.return_value = [np.array([np.nan], dtype=np.float32)]
+        store = MemoryStore(self.path, embedder=encoder)
+
+        with self.assertRaisesRegex(RuntimeError, "invalid vector"):
+            store.add(
+                "req", "alice", "session",
+                [{"role": "user", "content": "reject invalid vector"}],
+            )
+
+        with store._connection() as connection:
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+
+    def test_inconsistent_add_embedding_dimensions_are_rejected_atomically(self):
+        encoder = Mock()
+        encoder.index_identity = "test:add-vector-dimensions-v1"
+        encoder.encode.return_value = [
+            np.array([1.0], dtype=np.float32),
+            np.array([1.0, 0.0], dtype=np.float32),
+        ]
+        store = MemoryStore(self.path, embedder=encoder)
+
+        with self.assertRaisesRegex(RuntimeError, "inconsistent vector dimensions"):
+            store.add(
+                "req", "alice", "session",
+                [
+                    {"role": "user", "content": "first vector"},
+                    {"role": "assistant", "content": "second vector"},
+                ],
+            )
+
+        with store._connection() as connection:
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+
     def test_direct_retrieval_skips_corpus_wide_entity_extraction(self):
         store = MemoryStore(self.path, embedder=False)
         for index in range(40):

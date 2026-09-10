@@ -145,6 +145,14 @@ def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
     return total
 
 
+def embedding_vector(value: object) -> np.ndarray:
+    """Return one finite, contiguous float32 vector for durable storage/scoring."""
+    vector = np.asarray(value, dtype=np.float32)
+    if vector.ndim != 1 or vector.size == 0 or not np.all(np.isfinite(vector)):
+        raise ValueError("embedding backend returned an invalid vector")
+    return np.ascontiguousarray(vector)
+
+
 def topic_terms(text: str) -> set[str]:
     # Keep Chinese bigrams, discard grammatical single characters and numeric
     # dates. Split Room-101 so explicit room updates can share a topic anchor.
@@ -479,6 +487,20 @@ class MemoryStore:
             raise RuntimeError(
                 "embedding backend returned a different number of vectors than messages"
             )
+        try:
+            normalized_embeddings = [
+                None if embedding is None else embedding_vector(embedding)
+                for embedding in embeddings
+            ]
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError("embedding backend returned an invalid vector") from exc
+        vector_shapes = {
+            embedding.shape
+            for embedding in normalized_embeddings
+            if embedding is not None
+        }
+        if len(vector_shapes) > 1:
+            raise RuntimeError("embedding backend returned inconsistent vector dimensions")
         rows = []
         now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         for index, (message, content, display_content, index_content, embedding) in enumerate(
@@ -487,7 +509,7 @@ class MemoryStore:
                 raw_contents,
                 display_contents,
                 index_contents,
-                embeddings,
+                normalized_embeddings,
             )
         ):
             role = message["role"]
@@ -851,9 +873,7 @@ class MemoryStore:
                     else self._embedder.encode
                 )
                 encoded_query = query_encoder([query])
-                query_vector = encoded_query[0]
-                if not np.all(np.isfinite(query_vector)):
-                    raise ValueError("embedding backend returned a non-finite query vector")
+                query_vector = embedding_vector(encoded_query[0])
             except Exception:
                 # Search remains useful when the rebuildable semantic channel is
                 # temporarily unavailable. The durable lexical index is already
