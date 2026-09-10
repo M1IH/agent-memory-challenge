@@ -11,7 +11,7 @@ import sys
 import threading
 from collections import OrderedDict
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Iterable, Protocol
@@ -238,6 +238,13 @@ class Memory:
     embedding: np.ndarray | None
 
 
+@dataclass
+class _MemoryLoad:
+    generation: int
+    event: threading.Event = field(default_factory=threading.Event)
+    memories: list[Memory] | None = None
+
+
 class Encoder(Protocol):
     def encode(self, texts: Iterable[str]) -> list[np.ndarray]: ...
 
@@ -281,7 +288,7 @@ class MemoryStore:
             str, tuple[int, int, list[Memory]]
         ] = OrderedDict()
         self._memory_cache_bytes = 0
-        self._cache_loads: dict[str, threading.Event] = {}
+        self._cache_loads: dict[str, _MemoryLoad] = {}
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
@@ -550,11 +557,14 @@ class MemoryStore:
                         return cached[2]
                     pending = self._cache_loads.get(user_id)
                     if pending is None:
-                        self._cache_loads[user_id] = threading.Event()
+                        self._cache_loads[user_id] = _MemoryLoad(generation)
                         owns_load = True
                         break
-                pending.wait()
+                pending.event.wait()
+                if pending.generation == generation and pending.memories is not None:
+                    return pending.memories
 
+        memories: list[Memory] | None = None
         try:
             with self._connection() as connection:
                 db_rows = connection.execute(
@@ -602,7 +612,8 @@ class MemoryStore:
             if owns_load:
                 with self._cache_lock:
                     completed = self._cache_loads.pop(user_id)
-                    completed.set()
+                    completed.memories = memories
+                    completed.event.set()
 
     def search(
         self,

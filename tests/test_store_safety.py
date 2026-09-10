@@ -71,6 +71,52 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertEqual({}, store._memory_cache)
         self.assertEqual(0, store._memory_cache_bytes)
 
+    def test_concurrent_oversized_snapshot_is_loaded_once_for_waiters(self):
+        with patch.dict(
+            "os.environ",
+            {"AML_MEMORY_CACHE_USERS": "1", "AML_MEMORY_CACHE_MAX_BYTES": "1"},
+        ):
+            store = MemoryStore(self.path, embedder=False)
+        store.add("one", "alice", "session", [{"role": "user", "content": "tea"}])
+        original_connection = store._connection
+        original_estimate = memory_snapshot_size_bytes
+        connection_count = 0
+        count_lock = threading.Lock()
+        estimate_started = threading.Event()
+        waiter_checked_generation = threading.Event()
+
+        @contextmanager
+        def controlled_connection():
+            nonlocal connection_count
+            with count_lock:
+                connection_count += 1
+                call_number = connection_count
+            with original_connection() as connection:
+                yield connection
+            if call_number == 3:
+                waiter_checked_generation.set()
+
+        def controlled_estimate(memories):
+            estimate_started.set()
+            if not waiter_checked_generation.wait(timeout=5):
+                raise AssertionError("waiting loader did not reach generation check")
+            return original_estimate(memories)
+
+        with (
+            patch.object(store, "_connection", controlled_connection),
+            patch("app.store.memory_snapshot_size_bytes", controlled_estimate),
+            ThreadPoolExecutor(max_workers=2) as executor,
+        ):
+            first = executor.submit(store._load_user_memories, "alice")
+            self.assertTrue(estimate_started.wait(timeout=5))
+            second = executor.submit(store._load_user_memories, "alice")
+            snapshots = [first.result(timeout=10), second.result(timeout=10)]
+
+        self.assertIs(snapshots[0], snapshots[1])
+        self.assertEqual(3, connection_count)
+        self.assertEqual({}, store._memory_cache)
+        self.assertEqual({}, store._cache_loads)
+
     def test_memory_cache_evicts_users_to_stay_within_byte_budget(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "3"}):
             store = MemoryStore(self.path, embedder=False)
