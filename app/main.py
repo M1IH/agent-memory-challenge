@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
-from .store import MemoryStore, RequestConflictError
+from .store import MemoryStore, PayloadTooLargeError, RequestConflictError
 
 
 class Message(BaseModel):
@@ -101,6 +101,8 @@ def add_memory(request: AddRequest) -> AddResponse:
         )
     except RequestConflictError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except PayloadTooLargeError as exc:
+        raise HTTPException(status_code=413, detail=str(exc)) from exc
     return AddResponse(
         success=True,
         request_id=request.request_id,
@@ -111,11 +113,14 @@ def add_memory(request: AddRequest) -> AddResponse:
 
 @app.post("/search", response_model=SearchResponse, dependencies=[Depends(require_api_key)])
 def search_memory(request: SearchRequest) -> SearchResponse:
-    return SearchResponse(
-        data=store.search(
-            user_id=request.user_id,
-            query=request.query,
-            options=request.options,
-            top_k=request.top_k,
+    try:
+        return SearchResponse(
+            data=store.search(
+                user_id=request.user_id,
+                query=request.query,
+                options=request.options,
+                top_k=request.top_k,
+            )
         )
-    )
+    except PayloadTooLargeError as exc:
+        raise HTTPException(status_code=413, detail=str(exc)) from exc

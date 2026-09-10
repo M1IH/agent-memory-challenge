@@ -97,6 +97,43 @@ class ApiContractTests(unittest.TestCase):
         )
         self.assertEqual(422, response.status_code)
 
+    def test_aggregate_add_and_search_limits_return_413(self):
+        self.store_patch.stop()
+        limited_store = MemoryStore(
+            Path(self.temp_dir.name) / "limited-api.db", embedder=False
+        )
+        limited_store.max_add_chars = 5
+        limited_store.max_search_chars = 5
+        self.store_patch = patch("app.main.store", limited_store)
+        self.store_patch.start()
+
+        add_response = self.client.post(
+            "/add",
+            json={
+                "request_id": "too-large",
+                "user_id": "alice",
+                "session_id": "session",
+                "messages": [
+                    {"role": "user", "content": "abc"},
+                    {"role": "assistant", "content": "def"},
+                ],
+            },
+        )
+        search_response = self.client.post(
+            "/search",
+            json={
+                "query": "abc",
+                "options": ["def"],
+                "user_id": "alice",
+                "top_k": 100,
+            },
+        )
+
+        self.assertEqual(413, add_response.status_code)
+        self.assertEqual(413, search_response.status_code)
+        self.assertIn("character limit", add_response.json()["detail"])
+        self.assertIn("character limit", search_response.json()["detail"])
+
     def test_blank_content_and_unrepresentable_timestamp_are_rejected(self):
         base = {
             "request_id": "req-invalid",

@@ -14,8 +14,10 @@ from app.store import (
     entity_terms,
     memory_snapshot_size_bytes,
     nonnegative_cache_users,
+    PayloadTooLargeError,
     positive_cache_bytes,
     positive_context_chars,
+    positive_payload_chars,
 )
 
 
@@ -39,6 +41,39 @@ class StoreSafetyTests(unittest.TestCase):
         with patch.dict("os.environ", {"AML_MAX_CONTEXT_CHARS": "invalid"}):
             with self.assertRaisesRegex(ValueError, "AML_MAX_CONTEXT_CHARS"):
                 MemoryStore(self.path, embedder=False)
+
+    def test_payload_character_limits_must_be_positive_integers(self):
+        self.assertEqual(200000, positive_payload_chars("200000", "LIMIT"))
+        for value in ("0", "-1", "invalid"):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "LIMIT"):
+                positive_payload_chars(value, "LIMIT")
+
+    def test_oversized_add_is_rejected_before_embedding(self):
+        encoder = Mock()
+        encoder.encode.return_value = [np.array([1.0], dtype=np.float32)]
+        store = MemoryStore(self.path, embedder=encoder)
+        store.max_add_chars = 3
+
+        with self.assertRaises(PayloadTooLargeError):
+            store.add(
+                "large", "alice", "session",
+                [{"role": "user", "content": "four"}],
+            )
+
+        encoder.encode.assert_not_called()
+        with store._connection() as connection:
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+
+        store.add(
+            "large", "alice", "session",
+            [{"role": "user", "content": "ok"}],
+        )
+
+        encoder.encode.assert_called_once()
+        with store._connection() as connection:
+            self.assertEqual(1, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+            self.assertEqual(1, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
 
     def test_memory_cache_user_limit_must_be_non_negative_integer(self):
         self.assertEqual(0, nonnegative_cache_users("0"))

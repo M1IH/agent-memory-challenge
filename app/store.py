@@ -119,6 +119,16 @@ def positive_cache_bytes(value: str) -> int:
     return parsed
 
 
+def positive_payload_chars(value: str, variable: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError(f"{variable} must be a positive integer") from exc
+    if parsed < 1:
+        raise ValueError(f"{variable} must be a positive integer")
+    return parsed
+
+
 def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
     """Estimate retained Python and vector-buffer bytes for cache admission."""
     total = sys.getsizeof(memories)
@@ -253,6 +263,10 @@ class RequestConflictError(ValueError):
     """An existing request ID was reused with different input."""
 
 
+class PayloadTooLargeError(ValueError):
+    """A validly shaped request exceeds the configured processing budget."""
+
+
 class MemoryStore:
     def __init__(
         self,
@@ -276,6 +290,12 @@ class MemoryStore:
             self._embedder = EmbeddingBackend()
         self._max_context_chars = positive_context_chars(
             os.getenv("AML_MAX_CONTEXT_CHARS", "1200")
+        )
+        self.max_add_chars = positive_payload_chars(
+            os.getenv("AML_MAX_ADD_CHARS", "200000"), "AML_MAX_ADD_CHARS"
+        )
+        self.max_search_chars = positive_payload_chars(
+            os.getenv("AML_MAX_SEARCH_CHARS", "200000"), "AML_MAX_SEARCH_CHARS"
         )
         self.memory_cache_users = nonnegative_cache_users(
             os.getenv("AML_MEMORY_CACHE_USERS", "0")
@@ -406,6 +426,8 @@ class MemoryStore:
         messages: Iterable[dict],
     ) -> None:
         message_values = list(messages)
+        if sum(len(message["content"]) for message in message_values) > self.max_add_chars:
+            raise PayloadTooLargeError("Add content exceeds the configured character limit")
         payload_hash = hashlib.sha256(
             json.dumps(
                 {"session_id": session_id, "messages": message_values},
@@ -622,6 +644,10 @@ class MemoryStore:
         top_k: int,
         options: list[str] | None = None,
     ) -> list[dict]:
+        if len(query) + sum(len(option) for option in (options or [])) > self.max_search_chars:
+            raise PayloadTooLargeError(
+                "Search query and options exceed the configured character limit"
+            )
         query_terms = tokenize(query)
         config = self._retrieval
         expansion_terms = semantic_expansion_terms(query) if config.expansion_enabled else []
