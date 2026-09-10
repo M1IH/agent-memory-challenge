@@ -1,7 +1,15 @@
 import threading
 import unittest
+from unittest.mock import Mock, patch
 
-from app.embedding import _PriorityCapacity, positive_concurrency
+import numpy as np
+
+from app.embedding import (
+    EmbeddingBackend,
+    _PriorityCapacity,
+    positive_batch_size,
+    positive_concurrency,
+)
 
 
 class EmbeddingConfigurationTests(unittest.TestCase):
@@ -12,6 +20,29 @@ class EmbeddingConfigurationTests(unittest.TestCase):
                 ValueError, "positive integer"
             ):
                 positive_concurrency(value)
+
+    def test_embedding_batch_size_must_be_positive_integer(self):
+        self.assertEqual(64, positive_batch_size("64"))
+        for value in ("0", "-1", "many"):
+            with self.subTest(value=value), self.assertRaisesRegex(
+                ValueError, "AML_EMBED_BATCH_SIZE"
+            ):
+                positive_batch_size(value)
+
+    def test_configured_batch_size_is_forwarded_to_fastembed(self):
+        model = Mock()
+        model.embed.return_value = [np.array([3.0, 4.0], dtype=np.float32)]
+        with (
+            patch("fastembed.TextEmbedding", return_value=model),
+            patch.dict("os.environ", {"AML_EMBED_BATCH_SIZE": "17"}),
+        ):
+            backend = EmbeddingBackend()
+
+        vectors = backend.encode(["hello"])
+
+        model.embed.assert_called_once_with(["hello"], batch_size=17)
+        self.assertEqual(17, backend.batch_size)
+        np.testing.assert_allclose([0.6, 0.8], vectors[0])
 
     def test_waiting_query_runs_before_queued_add(self):
         capacity = _PriorityCapacity(1)

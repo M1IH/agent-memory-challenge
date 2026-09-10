@@ -1,0 +1,55 @@
+{
+  "config": {
+    "add_requests": 1,
+    "messages_per_request": 1000,
+    "memory_count": 1000,
+    "preloaded_memory_count": 1000,
+    "expected_final_memory_count": 1000,
+    "search_requests": 1,
+    "add_workers": 1,
+    "search_workers": 1,
+    "mixed_add_requests": 0,
+    "mixed_search_requests": 0,
+    "mixed_submission_order": "proportional_interleave",
+    "top_k": 100,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64,
+    "memory_cache_users": 0,
+    "memory_cache_max_bytes": 67108864,
+    "percentile_method": "nearest-rank"
+  },
+  "memory": {
+    "measurement": "current_process_resident_set",
+    "rss_after_store_init_bytes": 195731456,
+    "rss_after_add_bytes": 327766016,
+    "rss_after_search_bytes": 334348288,
+    "rss_search_delta_bytes": 6582272,
+    "estimated_cached_snapshot_bytes": 0
+  },
+  "add": {
+    "wall_seconds": 38.76618909998797,
+    "successful_messages": 1000,
+    "throughput_messages_per_second": 25.79567461275966,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 38.76529939996544,
+    "p50_seconds": 38.76529939996544,
+    "p95_seconds": 38.76529939996544,
+    "p99_seconds": 38.76529939996544
+  },
+  "search": {
+    "wall_seconds": 0.07124140002997592,
+    "throughput_requests_per_second": 14.036781977603395,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 1,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 0.07042389997513965,
+    "p50_seconds": 0.07042389997513965,
+    "p95_seconds": 0.07042389997513965,
+    "p99_seconds": 0.07042389997513965
+  },
+  "mixed": null
+}

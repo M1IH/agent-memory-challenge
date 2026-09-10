@@ -312,6 +312,9 @@ def main() -> None:
             "embedding_concurrency": (
                 None if store._embedder is None else store._embedder.concurrency
             ),
+            "embedding_batch_size": (
+                None if store._embedder is None else store._embedder.batch_size
+            ),
             "memory_cache_users": store.memory_cache_users,
             "memory_cache_max_bytes": store.memory_cache_max_bytes,
             "percentile_method": "nearest-rank",

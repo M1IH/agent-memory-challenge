@@ -18,6 +18,16 @@ def positive_concurrency(value: str) -> int:
     return parsed
 
 
+def positive_batch_size(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError("AML_EMBED_BATCH_SIZE must be a positive integer") from exc
+    if parsed < 1:
+        raise ValueError("AML_EMBED_BATCH_SIZE must be a positive integer")
+    return parsed
+
+
 class _PriorityCapacity:
     """Bound inference concurrency while allowing latency-sensitive queries first."""
 
@@ -92,9 +102,11 @@ class EmbeddingBackend:
         model_name = os.getenv("AML_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
         cache_dir = os.getenv("AML_MODEL_CACHE") or None
         concurrency = positive_concurrency(os.getenv("AML_EMBED_CONCURRENCY", "2"))
+        batch_size = positive_batch_size(os.getenv("AML_EMBED_BATCH_SIZE", "64"))
         self._model = TextEmbedding(model_name=model_name, cache_dir=cache_dir)
         self._capacity = _PriorityCapacity(concurrency)
         self.concurrency = concurrency
+        self.batch_size = batch_size
         self.index_identity = f"fastembed:{model_name}:float32:l2-v1"
 
     def encode(self, texts: Iterable[str]) -> list[np.ndarray]:
@@ -108,7 +120,7 @@ class EmbeddingBackend:
         if not values:
             return []
         with self._capacity.slot(query=query):
-            vectors = list(self._model.embed(values))
+            vectors = list(self._model.embed(values, batch_size=self.batch_size))
         return [self._normalize(np.asarray(vector, dtype=np.float32)) for vector in vectors]
 
     @staticmethod

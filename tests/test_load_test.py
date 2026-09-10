@@ -76,6 +76,7 @@ class LoadTestTests(unittest.TestCase):
             "proportional_interleave", report["config"]["mixed_submission_order"]
         )
         self.assertFalse(report["config"]["embeddings_enabled"])
+        self.assertIsNone(report["config"]["embedding_batch_size"])
         self.assertEqual(0, report["config"]["memory_cache_users"])
         self.assertEqual(
             64 * 1024 * 1024, report["config"]["memory_cache_max_bytes"]
