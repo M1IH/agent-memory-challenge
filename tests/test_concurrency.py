@@ -1,9 +1,27 @@
+import multiprocessing
 import tempfile
 import unittest
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 
 from app.store import MemoryStore
+
+
+def add_from_fresh_process(database_path: str, index: int) -> int:
+    store = MemoryStore(database_path, embedder=False)
+    store.add(
+        request_id=f"process-request-{index}",
+        user_id="alice",
+        session_id=f"process-session-{index // 4}",
+        messages=[
+            {
+                "role": "user",
+                "content": f"process-memory-token-{index}",
+                "timestamp": 1704067200000 + index,
+            }
+        ],
+    )
+    return index
 
 
 class ConcurrencyTests(unittest.TestCase):
@@ -75,6 +93,32 @@ class ConcurrencyTests(unittest.TestCase):
 
         results = stores[0].search("alice", "only once", 10)
         self.assertEqual(1, len(results))
+
+    def test_fresh_processes_can_initialize_and_write_one_database(self):
+        path = Path(self.temp_dir.name) / "multi-process.db"
+        context = multiprocessing.get_context("spawn")
+
+        with ProcessPoolExecutor(max_workers=8, mp_context=context) as executor:
+            completed = list(
+                executor.map(
+                    add_from_fresh_process,
+                    [str(path)] * 16,
+                    range(16),
+                )
+            )
+
+        self.assertEqual(list(range(16)), completed)
+        reopened = MemoryStore(path, embedder=False)
+        for index in range(16):
+            results = reopened.search("alice", f"process-memory-token-{index}", 1)
+            self.assertEqual(1, len(results))
+            self.assertIn(f"process-memory-token-{index}", results[0]["content"])
+        with reopened._connection() as connection:
+            generation = connection.execute(
+                "SELECT generation FROM memory_generations WHERE user_id = ?",
+                ("alice",),
+            ).fetchone()["generation"]
+            self.assertEqual(16, generation)
 
 
 if __name__ == "__main__":
