@@ -394,6 +394,10 @@ class MemoryStore:
                 connection.execute("ALTER TABLE memories ADD COLUMN embedding BLOB")
             self._verify_embedding_identity(connection)
 
+    def check_health(self) -> None:
+        with self._connection() as connection:
+            connection.execute("SELECT 1 FROM memories LIMIT 1").fetchone()
+
     def _verify_embedding_identity(self, connection: sqlite3.Connection) -> None:
         if self._embedder is None:
             return

@@ -73,5 +73,6 @@ Top-1；因此 Hit@3、Hit@5 和 MRR 比单独的 Evidence Hit@1 更能反映多
 - 向量持久化格式固定为 float32；启用嵌入时，Add 现在会先把每条编码器输出归一化为有限、非空、一维、连续的 float32 向量，并在向量缺失或同批维度不一致时整批失败。这样避免 float64 原始字节被按 float32 错读、静默生成纯词法行，也避免无效向量和 request ledger 部分写入。
 - 新增有界多进程恢复测试：8 个独立 spawn 进程向同一新 SQLite 文件完成 16 次 Add，重开 store 后 16 条均可检索且 generation 为 16。它验证该规模下的并发初始化、事务台账与重启可见性，不代表多 worker 容量上限。
 - 新增事务故障注入测试：在 generation 写入处用 SQLite trigger 强制中止，验证此前执行的 request ledger 和 memory 插入会一起回滚；移除故障后，相同 request_id 可成功重试，最终三项状态严格一致。
+- 运行期 SQLite 异常现在由统一 API 边界转换为不含内部细节的 HTTP 503 JSON，服务端只记录异常类名，不记录可能包含路径或请求正文的异常消息。`/health` 不再无条件报健康，而会轻量读取 memories 表。测试覆盖 health/Add 的 OperationalError、Search 的 DatabaseError，以及真实损坏数据库在启动时保持原文件并明确失败。
 
 本文件只记录公开信息，不包含评测数据、保留题目、标准答案、私有运行轨迹或凭据。

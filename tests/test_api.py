@@ -1,4 +1,5 @@
 import os
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
@@ -96,6 +97,63 @@ class ApiContractTests(unittest.TestCase):
             json={"query": "茶", "user_id": "alice", "top_k": 0},
         )
         self.assertEqual(422, response.status_code)
+
+    def test_storage_errors_return_safe_503_without_logging_sensitive_details(self):
+        sensitive_error = "unable to write C:/private/customer.db payload-secret"
+        safe_client = TestClient(app, raise_server_exceptions=False)
+
+        with (
+            patch(
+                "app.main.store.add",
+                side_effect=sqlite3.OperationalError(sensitive_error),
+            ),
+            patch(
+                "app.main.store.search",
+                side_effect=sqlite3.DatabaseError(sensitive_error),
+            ),
+            self.assertLogs("app.main", level="ERROR") as captured,
+        ):
+            add_response = safe_client.post(
+                "/add",
+                json={
+                    "request_id": "storage-error",
+                    "user_id": "alice",
+                    "session_id": "session",
+                    "messages": [{"role": "user", "content": "payload-secret"}],
+                },
+            )
+            search_response = safe_client.post(
+                "/search",
+                json={
+                    "query": "payload-secret",
+                    "user_id": "alice",
+                    "top_k": 10,
+                },
+            )
+
+        for response in (add_response, search_response):
+            self.assertEqual(503, response.status_code)
+            self.assertEqual({"detail": "Storage temporarily unavailable"}, response.json())
+        combined_logs = "\n".join(captured.output)
+        self.assertIn("OperationalError", combined_logs)
+        self.assertIn("DatabaseError", combined_logs)
+        self.assertNotIn("customer.db", combined_logs)
+        self.assertNotIn("payload-secret", combined_logs)
+
+    def test_health_returns_safe_503_when_storage_is_unavailable(self):
+        safe_client = TestClient(app, raise_server_exceptions=False)
+        with (
+            patch(
+                "app.main.store.check_health",
+                side_effect=sqlite3.OperationalError("C:/private/customer.db"),
+            ),
+            self.assertLogs("app.main", level="ERROR") as captured,
+        ):
+            response = safe_client.get("/health")
+
+        self.assertEqual(503, response.status_code)
+        self.assertEqual({"detail": "Storage temporarily unavailable"}, response.json())
+        self.assertNotIn("customer.db", "\n".join(captured.output))
 
     def test_aggregate_add_and_search_limits_return_413(self):
         self.store_patch.stop()

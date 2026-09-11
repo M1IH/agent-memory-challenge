@@ -318,6 +318,14 @@ class StoreSafetyTests(unittest.TestCase):
                 store._connect()
         connection.close.assert_called_once()
 
+    def test_corrupt_database_fails_closed_at_startup(self):
+        self.path.write_bytes(b"not a sqlite database")
+
+        with self.assertRaises(sqlite3.DatabaseError):
+            MemoryStore(self.path, embedder=False)
+
+        self.assertEqual(b"not a sqlite database", self.path.read_bytes())
+
     def test_legacy_request_without_ledger_is_not_duplicated(self):
         store = MemoryStore(self.path, embedder=False)
         messages = [{"role": "user", "content": "tea"}]

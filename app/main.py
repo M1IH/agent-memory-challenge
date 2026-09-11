@@ -1,12 +1,18 @@
 from __future__ import annotations
 
+import logging
 import os
 import secrets
+import sqlite3
 from datetime import datetime, timezone
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
 
 from .store import MemoryStore, PayloadTooLargeError, RequestConflictError
+
+
+logger = logging.getLogger(__name__)
 
 
 class Message(BaseModel):
@@ -85,8 +91,18 @@ app = FastAPI(title="AML Memory Entry", version="0.1.0")
 store = MemoryStore(os.getenv("AML_DB_PATH", "data/memory.db"))
 
 
+@app.exception_handler(sqlite3.Error)
+async def storage_error_response(_request: Request, exc: sqlite3.Error) -> JSONResponse:
+    logger.error("storage operation failed (%s)", type(exc).__name__)
+    return JSONResponse(
+        status_code=503,
+        content={"detail": "Storage temporarily unavailable"},
+    )
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
+    store.check_health()
     return {"status": "ok"}
 
 
