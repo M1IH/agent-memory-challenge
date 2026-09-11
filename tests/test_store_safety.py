@@ -445,6 +445,47 @@ class StoreSafetyTests(unittest.TestCase):
         store.add("req", "alice", "session", payload)
         self.assertEqual(1, len(store.search("alice", "retry recovery", 10)))
 
+    def test_generation_failure_rolls_back_add_and_allows_same_request_retry(self):
+        store = MemoryStore(self.path, embedder=False)
+        payload = [{"role": "user", "content": "retry atomic transaction"}]
+        with store._connection() as connection:
+            connection.execute(
+                """
+                CREATE TRIGGER fail_generation BEFORE INSERT ON memory_generations
+                BEGIN
+                    SELECT RAISE(ABORT, 'forced generation failure');
+                END
+                """
+            )
+
+        with self.assertRaisesRegex(sqlite3.IntegrityError, "forced generation failure"):
+            store.add("atomic-request", "alice", "session", payload)
+
+        with store._connection() as connection:
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+            self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+            self.assertEqual(
+                0,
+                connection.execute("SELECT COUNT(*) FROM memory_generations").fetchone()[0],
+            )
+            connection.execute("DROP TRIGGER fail_generation")
+
+        store.add("atomic-request", "alice", "session", payload)
+        self.assertIn(
+            "retry atomic transaction",
+            store.search("alice", "atomic transaction", 1)[0]["content"],
+        )
+        with store._connection() as connection:
+            self.assertEqual(1, connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0])
+            self.assertEqual(1, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0])
+            self.assertEqual(
+                1,
+                connection.execute(
+                    "SELECT generation FROM memory_generations WHERE user_id = ?",
+                    ("alice",),
+                ).fetchone()["generation"],
+            )
+
     def test_float64_add_embeddings_are_stored_as_float32_vectors(self):
         encoder = Mock()
         encoder.index_identity = "test:dtype-v1"

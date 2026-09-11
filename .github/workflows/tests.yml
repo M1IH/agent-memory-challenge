@@ -34,8 +34,10 @@ jobs:
       - run: docker build -t agent-memory-challenge:ci .
       - name: Verify baked model under offline memory limit
         run: |
+          docker volume create aml-ci-data
           docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
             --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \
+            -v aml-ci-data:/app/data \
             agent-memory-challenge:ci
           test "$(docker inspect -f '{{.HostConfig.Memory}}' aml-ci)" = "536870912"
           for attempt in $(seq 1 30); do
@@ -73,6 +75,44 @@ jobs:
                   range(16),
               ))
           assert all("Jordan" in result["data"][0]["content"] for result in results)
+          PY
+          docker stop aml-ci
+          docker rm aml-ci
+          docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
+            --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \
+            -v aml-ci-data:/app/data \
+            agent-memory-challenge:ci
+          for attempt in $(seq 1 30); do
+            docker exec aml-ci python -c "import urllib.request; assert urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200" && break
+            sleep 2
+          done
+          docker exec -i aml-ci python - <<'PY'
+          import json
+          import urllib.request
+
+          def post(path, payload):
+              request = urllib.request.Request(
+                  "http://127.0.0.1:8000" + path,
+                  data=json.dumps(payload).encode(),
+                  headers={"Authorization": "Bearer ci-secret", "Content-Type": "application/json"},
+              )
+              with urllib.request.urlopen(request) as response:
+                  return json.load(response)
+
+          messages = [
+              {"role": "user", "content": f"Record {index} has project code ci-code-{index}."}
+              for index in range(250)
+          ]
+          messages.append({"role": "user", "content": "My emergency contact is Jordan."})
+          replay = post("/add", {
+              "request_id": "ci-offline", "user_id": "alice", "session_id": "session",
+              "messages": messages,
+          })
+          assert replay["success"] is True
+          result = post("/search", {
+              "query": "emergency contact", "user_id": "alice", "top_k": 10,
+          })
+          assert "Jordan" in result["data"][0]["content"]
           PY
           test "$(docker inspect -f '{{.State.OOMKilled}}' aml-ci)" = "false"
           docker exec -i aml-ci python - <<'PY'
