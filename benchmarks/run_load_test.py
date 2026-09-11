@@ -151,6 +151,7 @@ def main() -> None:
     parser.add_argument("--search-requests", type=positive_int, default=96)
     parser.add_argument("--add-workers", type=positive_int, default=64)
     parser.add_argument("--search-workers", type=positive_int, default=32)
+    parser.add_argument("--users", type=positive_int, default=1)
     parser.add_argument("--mixed-add-requests", type=nonnegative_int, default=0)
     parser.add_argument("--mixed-search-requests", type=nonnegative_int, default=0)
     parser.add_argument("--soak-seconds", type=nonnegative_float, default=0)
@@ -161,6 +162,8 @@ def main() -> None:
     parser.add_argument("--no-embeddings", action="store_true")
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args()
+    if args.users > args.add_requests:
+        parser.error("--users cannot exceed --add-requests")
 
     with tempfile.TemporaryDirectory() as temp_dir:
         database_path = Path(temp_dir) / "load-test.db"
@@ -170,12 +173,15 @@ def main() -> None:
         )
         rss_after_store_init = current_rss_bytes()
 
+        def user_id_for_request(request_index: int) -> str:
+            return f"load-user-{request_index % args.users}"
+
         def add(request_index: int) -> tuple[float, str | None]:
             started = time.perf_counter()
             try:
                 store.add(
                     request_id=f"load-request-{request_index}",
-                    user_id="load-user",
+                    user_id=user_id_for_request(request_index),
                     session_id=f"load-session-{request_index}",
                     messages=[
                         {
@@ -211,10 +217,11 @@ def main() -> None:
             request_index = search_index % args.add_requests
             message_index = search_index % args.messages_per_request
             expected = f"project-code-{request_index}-{message_index}"
+            user_id = user_id_for_request(request_index)
             started = time.perf_counter()
             try:
                 results = store.search(
-                    "load-user", f"Find project code {expected}", top_k=args.top_k
+                    user_id, f"Find project code {expected}", top_k=args.top_k
                 )
             except Exception as exc:
                 return (
@@ -437,10 +444,44 @@ def main() -> None:
                 ),
             }
 
+        isolation_checks = 0
+        isolation_errors: list[str] = []
+        isolation_leaks: list[dict[str, str]] = []
+        if args.users > 1:
+            for user_index in range(args.users):
+                foreign_request_index = (user_index + 1) % args.users
+                foreign_code = f"project-code-{foreign_request_index}-0"
+                isolation_checks += 1
+                try:
+                    results = store.search(
+                        f"load-user-{user_index}",
+                        f"Find project code {foreign_code}",
+                        top_k=args.top_k,
+                    )
+                except Exception as exc:
+                    isolation_errors.append(type(exc).__name__)
+                    continue
+                if any(foreign_code in result["content"] for result in results):
+                    isolation_leaks.append(
+                        {"user_id": f"load-user-{user_index}", "foreign_code": foreign_code}
+                    )
+
         with store._connection() as connection:
             actual_final_memory_count = connection.execute(
                 "SELECT COUNT(*) FROM memories"
             ).fetchone()[0]
+            memories_by_user = {
+                row["user_id"]: row["count"]
+                for row in connection.execute(
+                    "SELECT user_id, COUNT(*) AS count FROM memories GROUP BY user_id"
+                )
+            }
+            generations_by_user = {
+                row["user_id"]: row["generation"]
+                for row in connection.execute(
+                    "SELECT user_id, generation FROM memory_generations"
+                )
+            }
         rss_at_completion, peak_rss_bytes = process_rss_bytes()
 
     rss_limit_passed = (
@@ -463,6 +504,7 @@ def main() -> None:
             "search_requests": args.search_requests,
             "add_workers": args.add_workers,
             "search_workers": args.search_workers,
+            "users": args.users,
             "mixed_add_requests": args.mixed_add_requests,
             "mixed_search_requests": args.mixed_search_requests,
             "mixed_submission_order": "proportional_interleave",
@@ -517,6 +559,13 @@ def main() -> None:
         },
         "mixed": mixed_report,
         "soak": soak_report,
+        "multi_user": {
+            "memories_by_user": memories_by_user,
+            "generations_by_user": generations_by_user,
+            "isolation_checks": isolation_checks,
+            "isolation_errors": sorted(set(isolation_errors)),
+            "isolation_leaks": isolation_leaks,
+        },
     }
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.json_output:
@@ -530,6 +579,8 @@ def main() -> None:
         or mixed_search_errors
         or soak_add_errors
         or soak_search_errors
+        or isolation_errors
+        or isolation_leaks
         or correct != args.search_requests
         or mixed_correct != args.mixed_search_requests
         or (

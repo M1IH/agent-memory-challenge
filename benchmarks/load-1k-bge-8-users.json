@@ -1,0 +1,90 @@
+{
+  "config": {
+    "add_requests": 50,
+    "messages_per_request": 20,
+    "memory_count": 1000,
+    "preloaded_memory_count": 1000,
+    "expected_final_memory_count": 1000,
+    "actual_final_memory_count": 1000,
+    "search_requests": 96,
+    "add_workers": 8,
+    "search_workers": 32,
+    "users": 8,
+    "mixed_add_requests": 0,
+    "mixed_search_requests": 0,
+    "mixed_submission_order": "proportional_interleave",
+    "soak_seconds": 0,
+    "soak_add_workers": 2,
+    "soak_search_workers": 4,
+    "top_k": 100,
+    "max_rss_bytes": 1073741824,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64,
+    "memory_cache_users": 4,
+    "memory_cache_max_bytes": 67108864,
+    "percentile_method": "nearest-rank"
+  },
+  "memory": {
+    "measurement": "current_and_lifetime_peak_process_resident_set",
+    "rss_after_store_init_bytes": 196186112,
+    "rss_after_add_bytes": 277958656,
+    "rss_after_search_bytes": 341471232,
+    "rss_search_delta_bytes": 63512576,
+    "rss_at_completion_bytes": 335511552,
+    "peak_rss_bytes": 351969280,
+    "rss_limit_passed": true,
+    "estimated_cached_snapshot_bytes": 1508352
+  },
+  "add": {
+    "wall_seconds": 20.363521899969783,
+    "successful_messages": 1000,
+    "throughput_messages_per_second": 49.107418889140384,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 3.0557443380041516,
+    "p50_seconds": 2.387574299995322,
+    "p95_seconds": 7.178773500025272,
+    "p99_seconds": 9.89654960000189
+  },
+  "search": {
+    "wall_seconds": 2.8032185999909416,
+    "throughput_requests_per_second": 34.246348108674155,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 96,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 0.7851066416654552,
+    "p50_seconds": 0.5926767000346445,
+    "p95_seconds": 1.9947284999652766,
+    "p99_seconds": 2.5617365000071004
+  },
+  "mixed": null,
+  "soak": null,
+  "multi_user": {
+    "memories_by_user": {
+      "load-user-0": 140,
+      "load-user-1": 140,
+      "load-user-2": 120,
+      "load-user-3": 120,
+      "load-user-4": 120,
+      "load-user-5": 120,
+      "load-user-6": 120,
+      "load-user-7": 120
+    },
+    "generations_by_user": {
+      "load-user-0": 7,
+      "load-user-2": 6,
+      "load-user-6": 6,
+      "load-user-3": 6,
+      "load-user-5": 6,
+      "load-user-1": 7,
+      "load-user-4": 6,
+      "load-user-7": 6
+    },
+    "isolation_checks": 8,
+    "isolation_errors": [],
+    "isolation_leaks": []
+  }
+}

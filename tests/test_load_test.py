@@ -171,6 +171,25 @@ class LoadTestTests(unittest.TestCase):
         self.assertGreater(report["memory"]["peak_rss_bytes"], 1)
         self.assertFalse(report["memory"]["rss_limit_passed"])
 
+    def test_multiple_users_report_generations_and_reject_foreign_memory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "multi-user.json"
+            argv = [
+                "load-test", "--add-requests", "4", "--messages-per-request", "1",
+                "--search-requests", "4", "--add-workers", "2", "--search-workers", "2",
+                "--users", "2", "--no-embeddings", "--json-output", str(output),
+            ]
+            with patch("sys.argv", argv):
+                main()
+            report = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(2, report["config"]["users"])
+        self.assertEqual({"load-user-0": 2, "load-user-1": 2}, report["multi_user"]["memories_by_user"])
+        self.assertEqual({"load-user-0": 2, "load-user-1": 2}, report["multi_user"]["generations_by_user"])
+        self.assertEqual(2, report["multi_user"]["isolation_checks"])
+        self.assertEqual([], report["multi_user"]["isolation_errors"])
+        self.assertEqual([], report["multi_user"]["isolation_leaks"])
+
 
 if __name__ == "__main__":
     unittest.main()
