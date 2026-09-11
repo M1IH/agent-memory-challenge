@@ -74,5 +74,6 @@ Top-1；因此 Hit@3、Hit@5 和 MRR 比单独的 Evidence Hit@1 更能反映多
 - 新增有界多进程恢复测试：8 个独立 spawn 进程向同一新 SQLite 文件完成 16 次 Add，重开 store 后 16 条均可检索且 generation 为 16。它验证该规模下的并发初始化、事务台账与重启可见性，不代表多 worker 容量上限。
 - 新增事务故障注入测试：在 generation 写入处用 SQLite trigger 强制中止，验证此前执行的 request ledger 和 memory 插入会一起回滚；移除故障后，相同 request_id 可成功重试，最终三项状态严格一致。
 - 运行期 SQLite 异常现在由统一 API 边界转换为不含内部细节的 HTTP 503 JSON，服务端只记录异常类名，不记录可能包含路径或请求正文的异常消息。`/health` 不再无条件报健康，而会轻量读取 memories 表。测试覆盖 health/Add 的 OperationalError、Search 的 DatabaseError，以及真实损坏数据库在启动时保持原文件并明确失败。
+- 新增按截止时间并行运行 Add/Search 的持续 mixed-soak 模式。2026-09-11 的 10 秒纯词法工具基线中，2 个 Add worker 各完成 135/137 次请求，4 个 Search worker 各完成 179/172/176/180 次；共新增 2,720 条记忆、完成 707 次检索，Add/Search 均零错误且检索 Top-1 为 707/707。Add 吞吐为 268.74 条/秒，p95/p99 为 0.163/0.225 秒；Search 吞吐为 69.85 请求/秒，p95/p99 为 0.128/0.152 秒。最终数据库计数 2,820 与预期一致，进程 RSS 快照约 54.05 MB，SQLite 主文件/WAL/SHM 合计约 1.55 MB。这只验证工具和短时纯词法稳定性，不能作为持续容量、真实 BGE 或部署上限证明。
 
 本文件只记录公开信息，不包含评测数据、保留题目、标准答案、私有运行轨迹或凭据。

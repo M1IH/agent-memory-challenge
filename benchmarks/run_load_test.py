@@ -8,6 +8,7 @@ import math
 import os
 import statistics
 import tempfile
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -71,6 +72,21 @@ def nonnegative_int(value: str) -> int:
     return parsed
 
 
+def nonnegative_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed) or parsed < 0:
+        raise argparse.ArgumentTypeError("must be a finite number at least 0")
+    return parsed
+
+
+def database_storage_bytes(path: Path) -> int:
+    return sum(
+        candidate.stat().st_size
+        for candidate in (path, Path(f"{path}-wal"), Path(f"{path}-shm"))
+        if candidate.exists()
+    )
+
+
 def percentile(values: list[float], fraction: float) -> float:
     if not values:
         raise ValueError("percentile requires at least one value")
@@ -88,6 +104,10 @@ def latency_summary(values: list[float]) -> dict[str, float]:
         "p95_seconds": percentile(values, 0.95),
         "p99_seconds": percentile(values, 0.99),
     }
+
+
+def optional_latency_summary(values: list[float]) -> dict[str, float] | None:
+    return latency_summary(values) if values else None
 
 
 def mixed_schedule(add_requests: int, search_requests: int) -> list[str]:
@@ -116,14 +136,18 @@ def main() -> None:
     parser.add_argument("--search-workers", type=positive_int, default=32)
     parser.add_argument("--mixed-add-requests", type=nonnegative_int, default=0)
     parser.add_argument("--mixed-search-requests", type=nonnegative_int, default=0)
+    parser.add_argument("--soak-seconds", type=nonnegative_float, default=0)
+    parser.add_argument("--soak-add-workers", type=positive_int, default=2)
+    parser.add_argument("--soak-search-workers", type=positive_int, default=4)
     parser.add_argument("--top-k", type=positive_int, default=100)
     parser.add_argument("--no-embeddings", action="store_true")
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args()
 
     with tempfile.TemporaryDirectory() as temp_dir:
+        database_path = Path(temp_dir) / "load-test.db"
         store = MemoryStore(
-            Path(temp_dir) / "load-test.db",
+            database_path,
             embedder=False if args.no_embeddings else None,
         )
         rss_after_store_init = current_rss_bytes()
@@ -291,6 +315,115 @@ def main() -> None:
                 ),
             }
 
+        soak_report = None
+        soak_add_errors: list[str] = []
+        soak_search_errors: list[str] = []
+        soak_successful_messages = 0
+        if args.soak_seconds:
+            soak_started = time.perf_counter()
+            soak_deadline = soak_started + args.soak_seconds
+            next_add_index = args.add_requests + args.mixed_add_requests
+            index_lock = threading.Lock()
+
+            def soak_add_worker() -> list[tuple[float, str | None]]:
+                nonlocal next_add_index
+                results = []
+                while time.perf_counter() < soak_deadline:
+                    with index_lock:
+                        request_index = next_add_index
+                        next_add_index += 1
+                    results.append(add(request_index))
+                return results
+
+            def soak_search_worker() -> list[tuple[float, bool, str | None, int, str, str | None]]:
+                results = []
+                search_index = 0
+                while time.perf_counter() < soak_deadline:
+                    results.append(search(search_index))
+                    search_index += 1
+                return results
+
+            with ThreadPoolExecutor(
+                max_workers=args.soak_add_workers + args.soak_search_workers
+            ) as executor:
+                add_futures = [
+                    executor.submit(soak_add_worker)
+                    for _ in range(args.soak_add_workers)
+                ]
+                search_futures = [
+                    executor.submit(soak_search_worker)
+                    for _ in range(args.soak_search_workers)
+                ]
+                soak_add_results_by_worker = [future.result() for future in add_futures]
+                soak_search_results_by_worker = [
+                    future.result() for future in search_futures
+                ]
+            soak_wall = time.perf_counter() - soak_started
+            soak_add_results = [
+                result for worker_results in soak_add_results_by_worker
+                for result in worker_results
+            ]
+            soak_search_results = [
+                result for worker_results in soak_search_results_by_worker
+                for result in worker_results
+            ]
+            soak_add_errors = [
+                error for _, error in soak_add_results if error is not None
+            ]
+            soak_search_errors = [
+                result[2] for result in soak_search_results if result[2] is not None
+            ]
+            soak_correct = sum(result[1] for result in soak_search_results)
+            soak_successful_messages = (
+                len(soak_add_results) - len(soak_add_errors)
+            ) * args.messages_per_request
+            soak_incorrect_searches = [
+                {
+                    "search_index": result[3],
+                    "expected": result[4],
+                    "actual_top_1": result[5],
+                }
+                for result in soak_search_results
+                if result[2] is None and not result[1]
+            ]
+            gc.collect()
+            soak_report = {
+                "requested_seconds": args.soak_seconds,
+                "wall_seconds": soak_wall,
+                "add_operations": len(soak_add_results),
+                "search_operations": len(soak_search_results),
+                "add_operations_by_worker": [
+                    len(results) for results in soak_add_results_by_worker
+                ],
+                "search_operations_by_worker": [
+                    len(results) for results in soak_search_results_by_worker
+                ],
+                "successful_messages": soak_successful_messages,
+                "add_throughput_messages_per_second": soak_successful_messages / soak_wall,
+                "search_throughput_requests_per_second": (
+                    len(soak_search_results) / soak_wall
+                ),
+                "add_errors": len(soak_add_errors),
+                "add_error_types": sorted(set(soak_add_errors)),
+                "search_errors": len(soak_search_errors),
+                "search_error_types": sorted(set(soak_search_errors)),
+                "search_top_1_correct": soak_correct,
+                "incorrect_searches": soak_incorrect_searches,
+                "rss_after_soak_bytes": current_rss_bytes(),
+                "database_storage_bytes": database_storage_bytes(database_path),
+                "add_latency": optional_latency_summary(
+                    [result[0] for result in soak_add_results]
+                ),
+                "search_latency": optional_latency_summary(
+                    [result[0] for result in soak_search_results]
+                ),
+            }
+
+        with store._connection() as connection:
+            actual_final_memory_count = connection.execute(
+                "SELECT COUNT(*) FROM memories"
+            ).fetchone()[0]
+
     memory_count = args.add_requests * args.messages_per_request
     report = {
         "config": {
@@ -300,13 +433,18 @@ def main() -> None:
             "preloaded_memory_count": successful_messages,
             "expected_final_memory_count": (
                 successful_messages + mixed_successful_messages
+                + soak_successful_messages
             ),
+            "actual_final_memory_count": actual_final_memory_count,
             "search_requests": args.search_requests,
             "add_workers": args.add_workers,
             "search_workers": args.search_workers,
             "mixed_add_requests": args.mixed_add_requests,
             "mixed_search_requests": args.mixed_search_requests,
             "mixed_submission_order": "proportional_interleave",
+            "soak_seconds": args.soak_seconds,
+            "soak_add_workers": args.soak_add_workers,
+            "soak_search_workers": args.soak_search_workers,
             "top_k": args.top_k,
             "embeddings_enabled": not args.no_embeddings,
             "embedding_concurrency": (
@@ -350,6 +488,7 @@ def main() -> None:
             **latency_summary(search_latencies),
         },
         "mixed": mixed_report,
+        "soak": soak_report,
     }
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.json_output:
@@ -361,8 +500,19 @@ def main() -> None:
         or search_errors
         or mixed_add_errors
         or mixed_search_errors
+        or soak_add_errors
+        or soak_search_errors
         or correct != args.search_requests
         or mixed_correct != args.mixed_search_requests
+        or (
+            soak_report is not None
+            and (
+                soak_report["search_top_1_correct"] != soak_report["search_operations"]
+                or any(count == 0 for count in soak_report["add_operations_by_worker"])
+                or any(count == 0 for count in soak_report["search_operations_by_worker"])
+            )
+        )
+        or actual_final_memory_count != report["config"]["expected_final_memory_count"]
     ):
         raise SystemExit(1)
 

@@ -123,6 +123,10 @@ Evidence Hit@5 漏召回直接使命令失败。扩展案例只用于回归测�
 所谓混合测试退化为先 Add 后 Search。JSON 报告区分预载与预计最终记忆数，记录
 两类吞吐、延迟、错误和 Top-1 失败样本，便于复现偶发排序波动。
 
+用 `--soak-seconds 600 --soak-add-workers 2 --soak-search-workers 4` 可按时间持续
+运行混合负载。soak 报告另外记录每个 worker 的前进量、p50/p95/p99、错误类型、
+RSS，以及 SQLite 主文件、WAL 和 SHM 的总占用；持续时间为 0 时保持原有限批次行为。
+
 运行 `python -m benchmarks.run_fts_probe` 可复现直接用 SQLite FTS5 过滤候选的
 召回风险。该脚本是只读设计探针，不会切换正式 Search；当前证据表明直接过滤会
 漏掉零词面重叠和跨语种证据，因此没有启用这一方案。
