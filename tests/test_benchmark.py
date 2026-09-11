@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from benchmarks.extended_cases import build_extended_cases
-from benchmarks.run_benchmark import main, positive_int
+from benchmarks.run_benchmark import evaluation_code_manifest, main, positive_int
 from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
@@ -95,6 +95,22 @@ class ExtendedBenchmarkTests(unittest.TestCase):
         self.assertIsNone(report["embedding_model"])
         self.assertEqual(6, len(report["case_traces"]))
         self.assertEqual(64, len(report["suite_sha256"]))
+        self.assertEqual(3, report["evaluation_version"])
+        self.assertIsNone(report["embedding_identity"])
+        self.assertEqual(
+            {
+                "app/store.py",
+                "app/embedding.py",
+                "benchmarks/run_benchmark.py",
+                "benchmarks/evidence.py",
+                "benchmarks/extended_cases.py",
+            },
+            set(report["evaluation_code"]["files"]),
+        )
+        self.assertEqual(64, len(report["evaluation_code"]["sha256"]))
+        self.assertEqual(1200, report["runtime"]["max_context_chars"])
+        self.assertEqual(200000, report["runtime"]["max_add_chars"])
+        self.assertEqual(200000, report["runtime"]["max_search_chars"])
         self.assertEqual(report["complete_at_1"], report["complete_at_k"])
         for trace in report["case_traces"]:
             self.assertEqual("source_id", trace["matching"])
@@ -105,6 +121,26 @@ class ExtendedBenchmarkTests(unittest.TestCase):
         self.assertEqual(3, positive_int("3"))
         with self.assertRaises(argparse.ArgumentTypeError):
             positive_int("0")
+
+    def test_evaluation_manifest_changes_when_scoring_code_changes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative_path in (
+                "app/store.py", "app/embedding.py", "benchmarks/run_benchmark.py",
+                "benchmarks/evidence.py", "benchmarks/extended_cases.py",
+            ):
+                path = root / relative_path
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(relative_path, encoding="utf-8")
+            before = evaluation_code_manifest(root)
+            (root / "benchmarks/evidence.py").write_text("changed", encoding="utf-8")
+            after = evaluation_code_manifest(root)
+
+        self.assertNotEqual(before["sha256"], after["sha256"])
+        self.assertNotEqual(
+            before["files"]["benchmarks/evidence.py"],
+            after["files"]["benchmarks/evidence.py"],
+        )
 
     def test_extended_suite_has_110_unique_well_formed_cases(self):
         cases = build_extended_cases()

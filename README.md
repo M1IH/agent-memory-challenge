@@ -109,7 +109,9 @@ python -m benchmarks.run_benchmark
 脚本输出 Hit@1、MRR 和各题型得分，用于确保检索增强不是只凭感觉调参。
 使用 `--suite extended` 会在 15 个核心案例之外运行 110 个确定性合成案例；
 `--json-output result.json` 可保存机器可读指标，`--fail-on-miss` 可让任何
-Evidence Hit@5 漏召回直接使命令失败。扩展案例只用于回归测试，不含官方评测数据。
+Evidence Hit@5 漏召回直接使命令失败。报告还绑定套件、实际 embedding identity、
+关键运行参数，以及检索与评分源码的逐文件/组合 SHA-256。扩展案例只用于回归测试，
+不含官方评测数据。
 
 `--suite hard` 单独运行 6 个高干扰诊断场景（每题 12 条干扰记录），包含
 多跳、列表、中文关联和无关更新。该套件按真实返回记录对应的来源 ID 评分，

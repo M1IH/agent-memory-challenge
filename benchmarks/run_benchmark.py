@@ -23,6 +23,27 @@ def positive_int(value: str) -> int:
     return parsed
 
 
+def evaluation_code_manifest(root: Path) -> dict[str, object]:
+    relative_paths = (
+        "app/store.py",
+        "app/embedding.py",
+        "benchmarks/run_benchmark.py",
+        "benchmarks/evidence.py",
+        "benchmarks/extended_cases.py",
+    )
+    files = {
+        relative_path: hashlib.sha256((root / relative_path).read_bytes()).hexdigest()
+        for relative_path in relative_paths
+    }
+    combined = hashlib.sha256(
+        b"\0".join(
+            relative_path.encode() + b"\0" + files[relative_path].encode()
+            for relative_path in relative_paths
+        )
+    ).hexdigest()
+    return {"sha256": combined, "files": files}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the local retrieval benchmark.")
     parser.add_argument(
@@ -84,6 +105,10 @@ def main() -> None:
             retrieval_config=config,
         )
         backend_name = None if store._embedder is None else os.getenv("AML_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
+        embedding_identity = (
+            None if store._embedder is None
+            else getattr(store._embedder, "index_identity", None)
+        )
         for case_index, case in enumerate(cases):
             user_id = f"benchmark-user-{case_index}"
             source_by_request = {}
@@ -176,18 +201,24 @@ def main() -> None:
         "complete_at_3": complete_counts[3] / len(cases),
         "complete_at_5": complete_counts[5] / len(cases),
         "complete_at_k": complete_counts[args.top_k] / len(cases),
-        "evaluation_version": 2,
+        "evaluation_version": 3,
         "suite_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
         "retrieval_config": asdict(config), "embedding_model": backend_name,
+        "embedding_identity": embedding_identity,
         "runtime": {
             "python": platform.python_version(),
             "numpy": version("numpy"), "fastembed": version("fastembed"),
-            "max_context_chars": os.getenv("AML_MAX_CONTEXT_CHARS", "1200"),
+            "max_context_chars": store._max_context_chars,
+            "max_add_chars": store.max_add_chars,
+            "max_search_chars": store.max_search_chars,
+            "embedding_concurrency": (
+                None if store._embedder is None else store._embedder.concurrency
+            ),
+            "embedding_batch_size": (
+                None if store._embedder is None else store._embedder.batch_size
+            ),
         },
-        "retrieval_code_sha256": hashlib.sha256(b"\0".join(
-            (Path(__file__).resolve().parents[1] / "app" / name).read_bytes()
-            for name in ("store.py", "embedding.py")
-        )).hexdigest(),
+        "evaluation_code": evaluation_code_manifest(Path(__file__).resolve().parents[1]),
         "case_traces": traces,
     }
     if not args.quiet:
