@@ -15,6 +15,7 @@ from benchmarks.run_load_test import (
     optional_latency_summary,
     percentile,
     positive_int,
+    process_rss_bytes,
 )
 
 
@@ -22,6 +23,9 @@ class LoadTestTests(unittest.TestCase):
     def test_current_rss_is_positive_when_supported(self):
         rss = current_rss_bytes()
         self.assertTrue(rss is None or rss > 0)
+        current, peak = process_rss_bytes()
+        self.assertTrue(current is None or current > 0)
+        self.assertTrue(peak is None or peak >= current)
 
     def test_mixed_schedule_spreads_operations_across_submission_order(self):
         schedule = mixed_schedule(2, 6)
@@ -92,11 +96,14 @@ class LoadTestTests(unittest.TestCase):
         )
         self.assertEqual("nearest-rank", report["config"]["percentile_method"])
         self.assertEqual(
-            "current_process_resident_set", report["memory"]["measurement"]
+            "current_and_lifetime_peak_process_resident_set",
+            report["memory"]["measurement"],
         )
         self.assertIn("rss_after_add_bytes", report["memory"])
         self.assertIn("rss_after_search_bytes", report["memory"])
         self.assertIn("rss_search_delta_bytes", report["memory"])
+        self.assertIn("peak_rss_bytes", report["memory"])
+        self.assertTrue(report["memory"]["rss_limit_passed"])
         self.assertEqual(0, report["memory"]["estimated_cached_snapshot_bytes"])
         self.assertEqual(0, report["add"]["errors"])
         self.assertEqual(0, report["search"]["errors"])
@@ -147,6 +154,22 @@ class LoadTestTests(unittest.TestCase):
         self.assertGreater(soak["database_storage_bytes"], 0)
         self.assertIn("p99_seconds", soak["add_latency"])
         self.assertIn("p99_seconds", soak["search_latency"])
+
+    def test_rss_ceiling_fails_run_but_preserves_report(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "rss-limit.json"
+            argv = [
+                "load-test", "--add-requests", "1", "--messages-per-request", "1",
+                "--search-requests", "1", "--add-workers", "1", "--search-workers", "1",
+                "--max-rss-bytes", "1", "--no-embeddings", "--json-output", str(output),
+            ]
+            with patch("sys.argv", argv), self.assertRaises(SystemExit):
+                main()
+            report = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(1, report["config"]["max_rss_bytes"])
+        self.assertGreater(report["memory"]["peak_rss_bytes"], 1)
+        self.assertFalse(report["memory"]["rss_limit_passed"])
 
 
 if __name__ == "__main__":

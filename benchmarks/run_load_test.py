@@ -16,8 +16,8 @@ from pathlib import Path
 from app.store import MemoryStore
 
 
-def current_rss_bytes() -> int | None:
-    """Return current resident memory, or None when the platform cannot report it."""
+def process_rss_bytes() -> tuple[int | None, int | None]:
+    """Return current and lifetime-peak resident memory when supported."""
     if os.name == "nt":
         class ProcessMemoryCounters(ctypes.Structure):
             _fields_ = [
@@ -50,12 +50,29 @@ def current_rss_bytes() -> int | None:
             ctypes.byref(counters),
             counters.cb,
         )
-        return int(counters.working_set_size) if succeeded else None
+        if not succeeded:
+            return None, None
+        return int(counters.working_set_size), int(counters.peak_working_set_size)
+    current = None
+    peak = None
     try:
         resident_pages = int(Path("/proc/self/statm").read_text().split()[1])
-        return resident_pages * os.sysconf("SC_PAGE_SIZE")
+        current = resident_pages * os.sysconf("SC_PAGE_SIZE")
     except (AttributeError, IndexError, OSError, ValueError):
-        return None
+        pass
+    try:
+        peak = next(
+            int(line.split()[1]) * 1024
+            for line in Path("/proc/self/status").read_text().splitlines()
+            if line.startswith("VmHWM:")
+        )
+    except (IndexError, OSError, StopIteration, ValueError):
+        pass
+    return current, peak
+
+
+def current_rss_bytes() -> int | None:
+    return process_rss_bytes()[0]
 
 
 def positive_int(value: str) -> int:
@@ -140,6 +157,7 @@ def main() -> None:
     parser.add_argument("--soak-add-workers", type=positive_int, default=2)
     parser.add_argument("--soak-search-workers", type=positive_int, default=4)
     parser.add_argument("--top-k", type=positive_int, default=100)
+    parser.add_argument("--max-rss-bytes", type=positive_int)
     parser.add_argument("--no-embeddings", action="store_true")
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args()
@@ -423,6 +441,12 @@ def main() -> None:
             actual_final_memory_count = connection.execute(
                 "SELECT COUNT(*) FROM memories"
             ).fetchone()[0]
+        rss_at_completion, peak_rss_bytes = process_rss_bytes()
+
+    rss_limit_passed = (
+        args.max_rss_bytes is None
+        or (peak_rss_bytes is not None and peak_rss_bytes <= args.max_rss_bytes)
+    )
 
     memory_count = args.add_requests * args.messages_per_request
     report = {
@@ -446,6 +470,7 @@ def main() -> None:
             "soak_add_workers": args.soak_add_workers,
             "soak_search_workers": args.soak_search_workers,
             "top_k": args.top_k,
+            "max_rss_bytes": args.max_rss_bytes,
             "embeddings_enabled": not args.no_embeddings,
             "embedding_concurrency": (
                 None if store._embedder is None else store._embedder.concurrency
@@ -458,7 +483,7 @@ def main() -> None:
             "percentile_method": "nearest-rank",
         },
         "memory": {
-            "measurement": "current_process_resident_set",
+            "measurement": "current_and_lifetime_peak_process_resident_set",
             "rss_after_store_init_bytes": rss_after_store_init,
             "rss_after_add_bytes": rss_after_add,
             "rss_after_search_bytes": rss_after_search,
@@ -467,6 +492,9 @@ def main() -> None:
                 if rss_after_add is None or rss_after_search is None
                 else rss_after_search - rss_after_add
             ),
+            "rss_at_completion_bytes": rss_at_completion,
+            "peak_rss_bytes": peak_rss_bytes,
+            "rss_limit_passed": rss_limit_passed,
             "estimated_cached_snapshot_bytes": store._memory_cache_bytes,
         },
         "add": {
@@ -513,6 +541,7 @@ def main() -> None:
             )
         )
         or actual_final_memory_count != report["config"]["expected_final_memory_count"]
+        or not rss_limit_passed
     ):
         raise SystemExit(1)
 
