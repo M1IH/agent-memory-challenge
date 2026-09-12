@@ -127,6 +127,11 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertIn("guesthouse", terms)
         self.assertEqual([], semantic_expansion_terms("Which project is winning?"))
 
+    def test_semantic_expansion_bridges_pharmacy_languages(self):
+        terms = semantic_expansion_terms("我去哪里取处方药？")
+        self.assertIn("pharmacy", terms)
+        self.assertIn("prescription", terms)
+
     def test_allergy_expansion_does_not_treat_dislike_as_medical_evidence(self):
         allergy_terms = semantic_expansion_terms("What food allergy do I have?")
         self.assertIn("allergic", allergy_terms)

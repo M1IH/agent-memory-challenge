@@ -79,5 +79,6 @@ Top-1；因此 Hit@3、Hit@5 和 MRR 比单独的 Evidence Hit@1 更能反映多
 - 同配置再将 1,000 条分布到 8 个用户、LRU 最多缓存 4 个用户：每用户记忆数合计 1,000，generation 合计 50，96/96 本用户查询 Top-1 正确；8 次相邻用户精确编号探针未发现越界结果。峰值 RSS 351.97 MB，Search p95/p99 1.99/2.56 秒。该结果覆盖有限的多用户隔离与缓存换入换出，不代表所有攻击路径或生产容量。
 - 评测报告升级到 v3：旧代码哈希遗漏运行器与 source-ID 评分逻辑，评分变化可能被误认成同一版本。新清单逐文件并组合绑定 store、embedding、runner、evidence 和 extended-case 生成代码，同时记录实际 embedding identity、字符限制、嵌入并发与 batch size。冻结 holdout 未改动，重跑仍为 Hit@5 8/12、complete@5 3/6、MRR 0.340；该结果用于验证证据可复现性，不作为性能提升。
 - 第二套全新高干扰盲测在首次运行前冻结，SHA-256 为 `239f934b2769154c094f067cfadd47bff3ea0275631beceee16978dc14ac6386`。首次真实 BGE 结果为 Hit@1 4/11、Hit@3 6/11、Hit@5 9/11、complete@5 4/6、MRR 0.503；缺失集中在中文三跳链的一段和中文查询到英文药房证据。本轮没有据此调参，案例与基线保持不可变，后续只能复制为开发集后分析。
+- 后续消融确认两处缺失在 lexical-only、dense-only、关闭 linkage、关闭 expansion 以及 top-10 下仍存在，排除简单 RRF 权重问题。新增窄范围的“药房/取药/处方药 ↔ pharmacy/prescription”桥和带 role 前缀的中文“某人在某维修店/药房”实体模式；过度贪婪的初版正则被回归测试发现并收紧。开发复跑达到 Hit@5 11/11、complete@5 6/6、MRR 0.552，hard、extended、confirmation、原 holdout 均未回退。冻结 baseline 未改，但 blind2 从此属于已参与开发的诊断集。
 
 本文件只记录公开信息，不包含评测数据、保留题目、标准答案、私有运行轨迹或凭据。

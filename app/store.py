@@ -49,6 +49,10 @@ _CONCEPT_GROUPS = (
         "住宿", "旅馆", "酒店", "民宿",
         "accommodation", "hotel", "hostel", "guesthouse", "inn", "lodging",
     ),
+    (
+        "药房", "取药", "处方药",
+        "pharmacy", "prescription", "prescriptions",
+    ),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
@@ -59,6 +63,12 @@ _CJK_ENTITY_PATTERNS = (
     re.compile(r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})(?=寄|负责|管理|保管|持有)"),
     re.compile(r"(?:使用(?:了)?|通过)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
+    re.compile(
+        r"(?:^|:\s)(?!(?:今天|昨天|明天|现在|目前|后来))"
+        r"([\u3400-\u9fff]{2,4})(?<![我你他她它您们])"
+        r"(?=在[\u3400-\u9fff]{2,8}(?:维修店|药房))"
+    ),
+    re.compile(r"(?:^|在|:\s)((?:(?!在)[\u3400-\u9fff]){2,6}(?:维修店|药房))"),
 )
 _PACKING_QUERY = re.compile(r"\bpack(?:ed|ing)?\b|打包|装了什么|带了什么", re.I)
 _PACKING_SUPPORT = re.compile(
