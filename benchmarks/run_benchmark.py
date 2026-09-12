@@ -53,7 +53,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--suite",
-        choices=("core", "extended", "hard", "confirmation", "holdout"),
+        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2"),
         default="core",
     )
     parser.add_argument("--fail-on-miss", action="store_true")
@@ -72,11 +72,12 @@ def main() -> None:
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     if args.suite == "extended":
         cases.extend(build_extended_cases())
-    elif args.suite in {"hard", "confirmation", "holdout"}:
+    elif args.suite in {"hard", "confirmation", "holdout", "blind2"}:
         filename = {
             "hard": "hard_cases.json",
             "confirmation": "confirmation_cases.json",
             "holdout": "holdout_cases.json",
+            "blind2": "blind2_cases.json",
         }[args.suite]
         cases = json.loads(Path(__file__).with_name(filename).read_text(encoding="utf-8"))
         for case in cases:
