@@ -106,7 +106,9 @@ class LoadTestTests(unittest.TestCase):
         self.assertTrue(report["memory"]["rss_limit_passed"])
         self.assertEqual(0, report["memory"]["estimated_cached_snapshot_bytes"])
         self.assertEqual(0, report["add"]["errors"])
+        self.assertTrue(report["add"]["p95_limit_passed"])
         self.assertEqual(0, report["search"]["errors"])
+        self.assertTrue(report["search"]["p95_limit_passed"])
         self.assertEqual(1.0, report["search"]["top_1_accuracy"])
         self.assertEqual([], report["search"]["incorrect_searches"])
         self.assertEqual(0, report["mixed"]["add_errors"])
@@ -188,6 +190,8 @@ class LoadTestTests(unittest.TestCase):
         self.assertEqual(0, report["config"]["max_search_p95_seconds"])
         self.assertGreater(report["add"]["p95_seconds"], 0)
         self.assertGreater(report["search"]["p95_seconds"], 0)
+        self.assertFalse(report["add"]["p95_limit_passed"])
+        self.assertFalse(report["search"]["p95_limit_passed"])
 
     def test_multiple_users_report_generations_and_reject_foreign_memory(self):
         with tempfile.TemporaryDirectory() as directory:

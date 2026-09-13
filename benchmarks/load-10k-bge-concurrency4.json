@@ -1,0 +1,78 @@
+{
+  "config": {
+    "add_requests": 500,
+    "messages_per_request": 20,
+    "memory_count": 10000,
+    "preloaded_memory_count": 10000,
+    "expected_final_memory_count": 10000,
+    "actual_final_memory_count": 10000,
+    "search_requests": 96,
+    "add_workers": 8,
+    "search_workers": 32,
+    "users": 1,
+    "mixed_add_requests": 0,
+    "mixed_search_requests": 0,
+    "mixed_submission_order": "proportional_interleave",
+    "soak_seconds": 0,
+    "soak_add_workers": 2,
+    "soak_search_workers": 4,
+    "top_k": 10,
+    "max_rss_bytes": 1073741824,
+    "max_add_p95_seconds": 45.0,
+    "max_search_p95_seconds": 15.0,
+    "embeddings_enabled": true,
+    "embedding_concurrency": 4,
+    "embedding_batch_size": 64,
+    "memory_cache_users": 1,
+    "memory_cache_max_bytes": 67108864,
+    "percentile_method": "nearest-rank"
+  },
+  "memory": {
+    "measurement": "current_and_lifetime_peak_process_resident_set",
+    "rss_after_store_init_bytes": 195706880,
+    "rss_after_add_bytes": 353587200,
+    "rss_after_search_bytes": 498597888,
+    "rss_search_delta_bytes": 145010688,
+    "rss_at_completion_bytes": 498696192,
+    "peak_rss_bytes": 561438720,
+    "rss_limit_passed": true,
+    "estimated_cached_snapshot_bytes": 31493016
+  },
+  "add": {
+    "wall_seconds": 346.86535480001476,
+    "successful_messages": 10000,
+    "throughput_messages_per_second": 28.82963046501286,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 5.521395620398922,
+    "p50_seconds": 5.709298999980092,
+    "p95_seconds": 8.396407900028862,
+    "p99_seconds": 9.239324899972416
+  },
+  "search": {
+    "wall_seconds": 46.960997999995016,
+    "throughput_requests_per_second": 2.044249570675866,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 96,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 14.131802010420264,
+    "p50_seconds": 13.908532000030391,
+    "p95_seconds": 22.03619599994272,
+    "p99_seconds": 25.462870899937116
+  },
+  "mixed": null,
+  "soak": null,
+  "multi_user": {
+    "memories_by_user": {
+      "load-user-0": 10000
+    },
+    "generations_by_user": {
+      "load-user-0": 500
+    },
+    "isolation_checks": 0,
+    "isolation_errors": [],
+    "isolation_leaks": []
+  }
+}

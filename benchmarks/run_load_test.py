@@ -490,6 +490,16 @@ def main() -> None:
         args.max_rss_bytes is None
         or (peak_rss_bytes is not None and peak_rss_bytes <= args.max_rss_bytes)
     )
+    add_latency = latency_summary(add_latencies)
+    search_latency = latency_summary(search_latencies)
+    add_p95_limit_passed = (
+        args.max_add_p95_seconds is None
+        or add_latency["p95_seconds"] <= args.max_add_p95_seconds
+    )
+    search_p95_limit_passed = (
+        args.max_search_p95_seconds is None
+        or search_latency["p95_seconds"] <= args.max_search_p95_seconds
+    )
 
     memory_count = args.add_requests * args.messages_per_request
     report = {
@@ -549,7 +559,8 @@ def main() -> None:
             "throughput_messages_per_second": successful_messages / add_wall,
             "errors": len(add_errors),
             "error_types": sorted(set(add_errors)),
-            **latency_summary(add_latencies),
+            "p95_limit_passed": add_p95_limit_passed,
+            **add_latency,
         },
         "search": {
             "wall_seconds": search_wall,
@@ -559,7 +570,8 @@ def main() -> None:
             "top_1_correct": correct,
             "top_1_accuracy": correct / args.search_requests,
             "incorrect_searches": incorrect_searches,
-            **latency_summary(search_latencies),
+            "p95_limit_passed": search_p95_limit_passed,
+            **search_latency,
         },
         "mixed": mixed_report,
         "soak": soak_report,
@@ -597,14 +609,8 @@ def main() -> None:
         )
         or actual_final_memory_count != report["config"]["expected_final_memory_count"]
         or not rss_limit_passed
-        or (
-            args.max_add_p95_seconds is not None
-            and report["add"]["p95_seconds"] > args.max_add_p95_seconds
-        )
-        or (
-            args.max_search_p95_seconds is not None
-            and report["search"]["p95_seconds"] > args.max_search_p95_seconds
-        )
+        or not add_p95_limit_passed
+        or not search_p95_limit_passed
     ):
         raise SystemExit(1)
 
