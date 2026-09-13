@@ -171,6 +171,24 @@ class LoadTestTests(unittest.TestCase):
         self.assertGreater(report["memory"]["peak_rss_bytes"], 1)
         self.assertFalse(report["memory"]["rss_limit_passed"])
 
+    def test_latency_ceiling_fails_run_but_preserves_report(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "latency-limit.json"
+            argv = [
+                "load-test", "--add-requests", "1", "--messages-per-request", "1",
+                "--search-requests", "1", "--add-workers", "1", "--search-workers", "1",
+                "--max-add-p95-seconds", "0", "--max-search-p95-seconds", "0",
+                "--no-embeddings", "--json-output", str(output),
+            ]
+            with patch("sys.argv", argv), self.assertRaises(SystemExit):
+                main()
+            report = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(0, report["config"]["max_add_p95_seconds"])
+        self.assertEqual(0, report["config"]["max_search_p95_seconds"])
+        self.assertGreater(report["add"]["p95_seconds"], 0)
+        self.assertGreater(report["search"]["p95_seconds"], 0)
+
     def test_multiple_users_report_generations_and_reject_foreign_memory(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "multi-user.json"

@@ -159,6 +159,8 @@ def main() -> None:
     parser.add_argument("--soak-search-workers", type=positive_int, default=4)
     parser.add_argument("--top-k", type=positive_int, default=100)
     parser.add_argument("--max-rss-bytes", type=positive_int)
+    parser.add_argument("--max-add-p95-seconds", type=nonnegative_float)
+    parser.add_argument("--max-search-p95-seconds", type=nonnegative_float)
     parser.add_argument("--no-embeddings", action="store_true")
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args()
@@ -513,6 +515,8 @@ def main() -> None:
             "soak_search_workers": args.soak_search_workers,
             "top_k": args.top_k,
             "max_rss_bytes": args.max_rss_bytes,
+            "max_add_p95_seconds": args.max_add_p95_seconds,
+            "max_search_p95_seconds": args.max_search_p95_seconds,
             "embeddings_enabled": not args.no_embeddings,
             "embedding_concurrency": (
                 None if store._embedder is None else store._embedder.concurrency
@@ -593,6 +597,14 @@ def main() -> None:
         )
         or actual_final_memory_count != report["config"]["expected_final_memory_count"]
         or not rss_limit_passed
+        or (
+            args.max_add_p95_seconds is not None
+            and report["add"]["p95_seconds"] > args.max_add_p95_seconds
+        )
+        or (
+            args.max_search_p95_seconds is not None
+            and report["search"]["p95_seconds"] > args.max_search_p95_seconds
+        )
     ):
         raise SystemExit(1)
 
