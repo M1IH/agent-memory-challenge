@@ -24,6 +24,8 @@ class ExtendedBenchmarkTests(unittest.TestCase):
             canonical_hash,
             "blind3 changed; create a development copy instead of tuning it in place",
         )
+        baseline = json.loads((root / "blind3-baseline.json").read_text(encoding="utf-8"))
+        self.assertEqual(canonical_hash, baseline["suite_sha256"])
         known_names = set()
         for filename in (
             "hard_cases.json", "confirmation_cases.json", "holdout_cases.json",
