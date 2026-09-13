@@ -13,6 +13,7 @@ from benchmarks.run_load_test import (
     nonnegative_float,
     nonnegative_int,
     optional_latency_summary,
+    p95_limit_passed,
     percentile,
     positive_int,
     process_rss_bytes,
@@ -51,6 +52,9 @@ class LoadTestTests(unittest.TestCase):
             percentile([], 0.5)
         self.assertIsNone(optional_latency_summary([]))
         self.assertEqual(1.0, optional_latency_summary([1.0])["p99_seconds"])
+        self.assertTrue(p95_limit_passed(None, 0))
+        self.assertTrue(p95_limit_passed({"p95_seconds": 1.0}, None))
+        self.assertFalse(p95_limit_passed({"p95_seconds": 1.0}, 0.5))
         with self.assertRaises(ValueError):
             percentile([1.0], 1.1)
         self.assertEqual(1.0, percentile([1.0, 2.0, 3.0, 4.0], 0.25))
@@ -116,6 +120,8 @@ class LoadTestTests(unittest.TestCase):
         self.assertEqual(2, report["mixed"]["search_top_1_correct"])
         self.assertEqual([], report["mixed"]["incorrect_searches"])
         self.assertEqual(2, report["mixed"]["successful_messages"])
+        self.assertTrue(report["mixed"]["add_p95_limit_passed"])
+        self.assertTrue(report["mixed"]["search_p95_limit_passed"])
         self.assertGreater(report["mixed"]["add_throughput_messages_per_second"], 0)
         self.assertGreater(report["mixed"]["search_throughput_requests_per_second"], 0)
 
@@ -150,6 +156,8 @@ class LoadTestTests(unittest.TestCase):
         )
         self.assertGreater(soak["add_throughput_messages_per_second"], 0)
         self.assertGreater(soak["search_throughput_requests_per_second"], 0)
+        self.assertTrue(soak["add_p95_limit_passed"])
+        self.assertTrue(soak["search_p95_limit_passed"])
         self.assertEqual([], soak["add_error_types"])
         self.assertEqual([], soak["search_error_types"])
         self.assertEqual([], soak["incorrect_searches"])
@@ -192,6 +200,23 @@ class LoadTestTests(unittest.TestCase):
         self.assertGreater(report["search"]["p95_seconds"], 0)
         self.assertFalse(report["add"]["p95_limit_passed"])
         self.assertFalse(report["search"]["p95_limit_passed"])
+
+    def test_soak_latency_ceiling_fails_run_and_marks_soak_phase(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "soak-latency-limit.json"
+            argv = [
+                "load-test", "--add-requests", "1", "--messages-per-request", "1",
+                "--search-requests", "1", "--add-workers", "1", "--search-workers", "1",
+                "--soak-seconds", "0.1", "--soak-add-workers", "1",
+                "--soak-search-workers", "1", "--max-search-p95-seconds", "0",
+                "--no-embeddings", "--json-output", str(output),
+            ]
+            with patch("sys.argv", argv), self.assertRaises(SystemExit):
+                main()
+            report = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertTrue(report["soak"]["add_p95_limit_passed"])
+        self.assertFalse(report["soak"]["search_p95_limit_passed"])
 
     def test_multiple_users_report_generations_and_reject_foreign_memory(self):
         with tempfile.TemporaryDirectory() as directory:

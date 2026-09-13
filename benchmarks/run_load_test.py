@@ -127,6 +127,10 @@ def optional_latency_summary(values: list[float]) -> dict[str, float] | None:
     return latency_summary(values) if values else None
 
 
+def p95_limit_passed(summary: dict[str, float] | None, limit: float | None) -> bool:
+    return summary is None or limit is None or summary["p95_seconds"] <= limit
+
+
 def mixed_schedule(add_requests: int, search_requests: int) -> list[str]:
     """Spread both operation types across submission order without randomness."""
     total = add_requests + search_requests
@@ -317,6 +321,8 @@ def main() -> None:
                 for result in mixed_search_results
                 if result[2] is None and not result[1]
             ]
+            mixed_add_latency = optional_latency_summary(mixed_add_latencies)
+            mixed_search_latency = optional_latency_summary(mixed_search_latencies)
             mixed_report = {
                 "wall_seconds": mixed_wall,
                 "add_requests": args.mixed_add_requests,
@@ -332,13 +338,13 @@ def main() -> None:
                 "search_throughput_requests_per_second": (
                     args.mixed_search_requests / mixed_wall
                 ),
-                "add_latency": (
-                    latency_summary(mixed_add_latencies)
-                    if mixed_add_latencies else None
+                "add_latency": mixed_add_latency,
+                "search_latency": mixed_search_latency,
+                "add_p95_limit_passed": p95_limit_passed(
+                    mixed_add_latency, args.max_add_p95_seconds
                 ),
-                "search_latency": (
-                    latency_summary(mixed_search_latencies)
-                    if mixed_search_latencies else None
+                "search_p95_limit_passed": p95_limit_passed(
+                    mixed_search_latency, args.max_search_p95_seconds
                 ),
             }
 
@@ -414,6 +420,12 @@ def main() -> None:
                 if result[2] is None and not result[1]
             ]
             gc.collect()
+            soak_add_latency = optional_latency_summary(
+                [result[0] for result in soak_add_results]
+            )
+            soak_search_latency = optional_latency_summary(
+                [result[0] for result in soak_search_results]
+            )
             soak_report = {
                 "requested_seconds": args.soak_seconds,
                 "wall_seconds": soak_wall,
@@ -438,11 +450,13 @@ def main() -> None:
                 "incorrect_searches": soak_incorrect_searches,
                 "rss_after_soak_bytes": current_rss_bytes(),
                 "database_storage_bytes": database_storage_bytes(database_path),
-                "add_latency": optional_latency_summary(
-                    [result[0] for result in soak_add_results]
+                "add_latency": soak_add_latency,
+                "search_latency": soak_search_latency,
+                "add_p95_limit_passed": p95_limit_passed(
+                    soak_add_latency, args.max_add_p95_seconds
                 ),
-                "search_latency": optional_latency_summary(
-                    [result[0] for result in soak_search_results]
+                "search_p95_limit_passed": p95_limit_passed(
+                    soak_search_latency, args.max_search_p95_seconds
                 ),
             }
 
@@ -611,6 +625,20 @@ def main() -> None:
         or not rss_limit_passed
         or not add_p95_limit_passed
         or not search_p95_limit_passed
+        or (
+            mixed_report is not None
+            and (
+                not mixed_report["add_p95_limit_passed"]
+                or not mixed_report["search_p95_limit_passed"]
+            )
+        )
+        or (
+            soak_report is not None
+            and (
+                not soak_report["add_p95_limit_passed"]
+                or not soak_report["search_p95_limit_passed"]
+            )
+        )
     ):
         raise SystemExit(1)
 

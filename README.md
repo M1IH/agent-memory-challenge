@@ -136,7 +136,7 @@ RSS，以及 SQLite 主文件、WAL 和 SHM 的总占用；持续时间为 0 时
 容量门禁还可用 `--max-rss-bytes`、`--max-add-p95-seconds` 和
 `--max-search-p95-seconds` 设置峰值内存及基础 Add/Search p95 上限；超过任一上限时
 报告仍会写出，但命令以失败退出。阈值必须来自明确部署目标，不应事后迁就结果。
-报告的 Add/Search 段分别保存 `p95_limit_passed`，便于区分是哪项延迟门禁失败。
+基础、mixed 与 soak 阶段都保存各自的 p95 门禁结果，避免持续阶段绕过延迟上限。
 
 运行 `python -m benchmarks.run_fts_probe` 可复现直接用 SQLite FTS5 过滤候选的
 召回风险。该脚本是只读设计探针，不会切换正式 Search；当前证据表明直接过滤会
