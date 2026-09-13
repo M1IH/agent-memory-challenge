@@ -155,6 +155,7 @@ def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
         total += sys.getsizeof(memory.timestamp_ms)
         total += sys.getsizeof(memory.terms)
         total += sum(sys.getsizeof(term) for term in memory.terms)
+        total += sys.getsizeof(memory.term_counts)
         if memory.embedding is not None:
             total += sys.getsizeof(memory.embedding) + memory.embedding.nbytes
     return total
@@ -268,6 +269,7 @@ class Memory:
     created_at: str
     timestamp_ms: int | None
     terms: list[str]
+    term_counts: dict[str, int]
     embedding: np.ndarray | None
 
 
@@ -646,10 +648,14 @@ class MemoryStore:
                         embedding = None
                     if embedding is not None and not np.all(np.isfinite(embedding)):
                         embedding = None
+                terms = row["terms"].split()
+                term_counts: dict[str, int] = {}
+                for term in terms:
+                    term_counts[term] = term_counts.get(term, 0) + 1
                 memories.append(Memory(
                     id=row["id"], content=row["content"],
                     timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
-                    terms=row["terms"].split(), embedding=embedding,
+                    terms=terms, term_counts=term_counts, embedding=embedding,
                 ))
             if self.memory_cache_users:
                 snapshot_bytes = memory_snapshot_size_bytes(memories)
@@ -704,7 +710,7 @@ class MemoryStore:
             return []
         document_frequency: dict[str, int] = {}
         for memory in memories:
-            for term in set(memory.terms):
+            for term in memory.term_counts:
                 document_frequency[term] = document_frequency.get(term, 0) + 1
         rare_query_identifiers = (
             {
@@ -758,8 +764,8 @@ class MemoryStore:
 
         for memory in memories:
             score = self._bm25(
-                query_terms, memory.terms, document_frequency,
-                len(memories), average_length,
+                query_terms, memory.term_counts, len(memory.terms),
+                document_frequency, len(memories), average_length,
             )
             # Options are supporting evidence, not extra query text. Scoring each
             # option separately prevents a long option list from overwhelming the
@@ -767,8 +773,8 @@ class MemoryStore:
             option_score = max(
                 (
                     self._bm25(
-                        terms, memory.terms, document_frequency,
-                        len(memories), average_length,
+                        terms, memory.term_counts, len(memory.terms),
+                        document_frequency, len(memories), average_length,
                     )
                     for terms in option_terms if terms
                 ),
@@ -777,8 +783,8 @@ class MemoryStore:
             score += 0.35 * option_score
             if expansion_terms:
                 score += 6.5 * self._bm25(
-                    expansion_terms, memory.terms, document_frequency,
-                    len(memories), average_length,
+                    expansion_terms, memory.term_counts, len(memory.terms),
+                    document_frequency, len(memories), average_length,
                 )
 
             unique_query_terms = set(query_terms)
@@ -971,23 +977,20 @@ class MemoryStore:
 
     @staticmethod
     def _bm25(
-        query_terms: list[str], document_terms: list[str],
+        query_terms: list[str], term_counts: dict[str, int], document_length: int,
         document_frequency: dict[str, int], document_count: int,
         average_length: float,
     ) -> float:
-        frequencies: dict[str, int] = {}
-        for term in document_terms:
-            frequencies[term] = frequencies.get(term, 0) + 1
         k1, b = 1.5, 0.75
         score = 0.0
         for term in sorted(set(query_terms)):
-            frequency = frequencies.get(term, 0)
+            frequency = term_counts.get(term, 0)
             if not frequency:
                 continue
             df = document_frequency.get(term, 0)
             inverse_document_frequency = math.log(1 + (document_count - df + 0.5) / (df + 0.5))
             denominator = frequency + k1 * (
-                1 - b + b * len(document_terms) / max(average_length, 1)
+                1 - b + b * document_length / max(average_length, 1)
             )
             score += inverse_document_frequency * frequency * (k1 + 1) / denominator
         return score

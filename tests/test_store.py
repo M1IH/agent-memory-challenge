@@ -138,6 +138,15 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertIn("storage", terms)
         self.assertEqual([], semantic_expansion_terms("我长期租用的公寓在哪里？"))
 
+    def test_loaded_memory_precomputes_term_frequencies(self):
+        self.store.add(
+            "frequency", "alice", "session",
+            [{"role": "user", "content": "alpha alpha beta"}],
+        )
+        memory = self.store._load_user_memories("alice")[0]
+        self.assertEqual(2, memory.term_counts["alpha"])
+        self.assertEqual(1, memory.term_counts["beta"])
+
     def test_allergy_expansion_does_not_treat_dislike_as_medical_evidence(self):
         allergy_terms = semantic_expansion_terms("What food allergy do I have?")
         self.assertIn("allergic", allergy_terms)
