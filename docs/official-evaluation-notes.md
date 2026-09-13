@@ -81,5 +81,6 @@ Top-1；因此 Hit@3、Hit@5 和 MRR 比单独的 Evidence Hit@1 更能反映多
 - 第二套全新高干扰盲测在首次运行前冻结，SHA-256 为 `239f934b2769154c094f067cfadd47bff3ea0275631beceee16978dc14ac6386`。首次真实 BGE 结果为 Hit@1 4/11、Hit@3 6/11、Hit@5 9/11、complete@5 4/6、MRR 0.503；缺失集中在中文三跳链的一段和中文查询到英文药房证据。本轮没有据此调参，案例与基线保持不可变，后续只能复制为开发集后分析。
 - 后续消融确认两处缺失在 lexical-only、dense-only、关闭 linkage、关闭 expansion 以及 top-10 下仍存在，排除简单 RRF 权重问题。新增窄范围的“药房/取药/处方药 ↔ pharmacy/prescription”桥和带 role 前缀的中文“某人在某维修店/药房”实体模式；过度贪婪的初版正则被回归测试发现并收紧。开发复跑达到 Hit@5 11/11、complete@5 6/6、MRR 0.552，hard、extended、confirmation、原 holdout 均未回退。冻结 baseline 未改，但 blind2 从此属于已参与开发的诊断集。
 - 第三套高干扰套件先以 SHA-256 `b3b0d7f798d45ebe344b7adaada946b2fc2385b79f696ee09c0cefa56ad16840` 提交并通过精确 SHA CI，之后才首次运行。真实 BGE 基线为 Hit@1 5/11、Hit@3 9/11、Hit@5 9/11、complete@5 4/6、MRR 0.636；遗漏为一条第 6 名的确认名单证据及一条未进 Top-10 的中英储物柜证据。基线和案例从此不可改写。
+- Blind3 开发修复增加窄范围的“储物柜/寄存柜 ↔ locker/storage unit”桥，并将 `definite yes` 识别为明确确认；过宽的“长期租用”触发被负面公寓查询回归排除。开发复跑达到 Hit@3 10/11、Hit@5 11/11、complete@5 6/6、MRR 0.689；冻结案例与首次基线未改写。
 
 本文件只记录公开信息，不包含评测数据、保留题目、标准答案、私有运行轨迹或凭据。

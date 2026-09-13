@@ -53,6 +53,10 @@ _CONCEPT_GROUPS = (
         "药房", "取药", "处方药",
         "pharmacy", "prescription", "prescriptions",
     ),
+    (
+        "储物柜", "寄存柜", "寄存",
+        "locker", "lockers", "storage locker", "storage unit",
+    ),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
@@ -79,7 +83,8 @@ _PACKING_SUPPORT = re.compile(
 )
 _CONFIRM_QUERY = re.compile(r"\bconfirm(?:ed)?\b|已确认|确认参加", re.I)
 _CONFIRM_SUPPORT = re.compile(
-    r"\bconfirm(?:ed)?\b|\baccepted\b|\bsaid yes\b|已确认|接受了?邀请|答应参加",
+    r"\bconfirm(?:ed)?\b|\baccepted\b|\bsaid yes\b|\bdefinite(?:ly)? yes\b|"
+    r"已确认|接受了?邀请|答应参加",
     re.I,
 )
 _EVENT_NEGATION = re.compile(

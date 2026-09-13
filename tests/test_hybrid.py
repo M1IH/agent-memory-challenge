@@ -116,6 +116,20 @@ class HybridRetrievalTests(unittest.TestCase):
         self.assertNotIn("colleague", contents)
         self.assertNotIn("did not", contents)
 
+    def test_definite_yes_is_confirmation_evidence(self):
+        self.store.add(
+            "confirmation", "alice", "session-1",
+            [{"role": "user", "content": "Rui gave a definite yes for the workshop."}],
+        )
+        self.store.add(
+            "noise", "alice", "session-1",
+            [{"role": "user", "content": "Mina discussed the workshop schedule."}],
+        )
+        results = self.store.search(
+            "alice", "Who confirmed attendance at the workshop?", 1
+        )
+        self.assertIn("definite yes", results[0]["content"])
+
     def test_embeddings_are_persisted_in_sqlite(self):
         self.store.add(
             request_id="req-1",
