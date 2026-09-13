@@ -1,0 +1,114 @@
+{
+  "config": {
+    "add_requests": 10,
+    "messages_per_request": 10,
+    "memory_count": 100,
+    "preloaded_memory_count": 100,
+    "expected_final_memory_count": 19770,
+    "actual_final_memory_count": 19770,
+    "search_requests": 16,
+    "add_workers": 2,
+    "search_workers": 4,
+    "users": 1,
+    "mixed_add_requests": 0,
+    "mixed_search_requests": 0,
+    "mixed_submission_order": "proportional_interleave",
+    "soak_seconds": 60.0,
+    "soak_add_workers": 2,
+    "soak_search_workers": 4,
+    "top_k": 100,
+    "max_rss_bytes": null,
+    "embeddings_enabled": false,
+    "embedding_concurrency": null,
+    "embedding_batch_size": null,
+    "memory_cache_users": 0,
+    "memory_cache_max_bytes": 67108864,
+    "percentile_method": "nearest-rank"
+  },
+  "memory": {
+    "measurement": "current_and_lifetime_peak_process_resident_set",
+    "rss_after_store_init_bytes": 38412288,
+    "rss_after_add_bytes": 38932480,
+    "rss_after_search_bytes": 39157760,
+    "rss_search_delta_bytes": 225280,
+    "rss_at_completion_bytes": 123162624,
+    "peak_rss_bytes": 145018880,
+    "rss_limit_passed": true,
+    "estimated_cached_snapshot_bytes": 0
+  },
+  "add": {
+    "wall_seconds": 0.09939999994821846,
+    "successful_messages": 100,
+    "throughput_messages_per_second": 1006.0362178279084,
+    "errors": 0,
+    "error_types": [],
+    "mean_seconds": 0.019297590001951904,
+    "p50_seconds": 0.018062800052575767,
+    "p95_seconds": 0.035366900032386184,
+    "p99_seconds": 0.035366900032386184
+  },
+  "search": {
+    "wall_seconds": 0.02953709999565035,
+    "throughput_requests_per_second": 541.6916353452494,
+    "errors": 0,
+    "error_types": [],
+    "top_1_correct": 16,
+    "top_1_accuracy": 1.0,
+    "incorrect_searches": [],
+    "mean_seconds": 0.006372906238539144,
+    "p50_seconds": 0.005931199993938208,
+    "p95_seconds": 0.011943999910727143,
+    "p99_seconds": 0.011943999910727143
+  },
+  "mixed": null,
+  "soak": {
+    "requested_seconds": 60.0,
+    "wall_seconds": 61.0162400000263,
+    "add_operations": 1967,
+    "search_operations": 579,
+    "add_operations_by_worker": [
+      983,
+      984
+    ],
+    "search_operations_by_worker": [
+      143,
+      145,
+      145,
+      146
+    ],
+    "successful_messages": 19670,
+    "add_throughput_messages_per_second": 322.3731911371714,
+    "search_throughput_requests_per_second": 9.489276953148055,
+    "add_errors": 0,
+    "add_error_types": [],
+    "search_errors": 0,
+    "search_error_types": [],
+    "search_top_1_correct": 579,
+    "incorrect_searches": [],
+    "rss_after_soak_bytes": 122920960,
+    "database_storage_bytes": 10682368,
+    "add_latency": {
+      "mean_seconds": 0.061187627046164476,
+      "p50_seconds": 0.02222100005019456,
+      "p95_seconds": 0.22140979999676347,
+      "p99_seconds": 0.4109724999871105
+    },
+    "search_latency": {
+      "mean_seconds": 0.41867337927273723,
+      "p50_seconds": 0.2920037000440061,
+      "p95_seconds": 1.1439967000624165,
+      "p99_seconds": 1.2113209000090137
+    }
+  },
+  "multi_user": {
+    "memories_by_user": {
+      "load-user-0": 19770
+    },
+    "generations_by_user": {
+      "load-user-0": 1977
+    },
+    "isolation_checks": 0,
+    "isolation_errors": [],
+    "isolation_leaks": []
+  }
+}
