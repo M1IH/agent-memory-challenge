@@ -566,6 +566,7 @@ def main() -> None:
             "peak_rss_bytes": peak_rss_bytes,
             "rss_limit_passed": rss_limit_passed,
             "estimated_cached_snapshot_bytes": store._memory_cache_bytes,
+            "cache": store.memory_cache_stats(),
         },
         "add": {
             "wall_seconds": add_wall,

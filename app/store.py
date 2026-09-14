@@ -334,6 +334,14 @@ class MemoryStore:
         ] = OrderedDict()
         self._memory_cache_bytes = 0
         self._cache_loads: dict[str, _MemoryLoad] = {}
+        self._memory_cache_stats = {
+            "hits": 0,
+            "waiter_reuses": 0,
+            "loads": 0,
+            "evictions": 0,
+            "invalidations": 0,
+            "oversized_rejections": 0,
+        }
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
@@ -601,6 +609,16 @@ class MemoryStore:
             cached = self._memory_cache.pop(user_id, None)
             if cached is not None:
                 self._memory_cache_bytes -= cached[1]
+                self._memory_cache_stats["invalidations"] += 1
+
+    def memory_cache_stats(self) -> dict[str, int]:
+        with self._cache_lock:
+            return {
+                **self._memory_cache_stats,
+                "resident_users": len(self._memory_cache),
+                "estimated_resident_bytes": self._memory_cache_bytes,
+                "inflight_loads": len(self._cache_loads),
+            }
 
     def _load_user_memories(self, user_id: str) -> list[Memory]:
         generation = 0
@@ -617,6 +635,7 @@ class MemoryStore:
                     cached = self._memory_cache.get(user_id)
                     if cached is not None and cached[0] == generation:
                         self._memory_cache.move_to_end(user_id)
+                        self._memory_cache_stats["hits"] += 1
                         return cached[2]
                     pending = self._cache_loads.get(user_id)
                     if pending is None:
@@ -625,6 +644,8 @@ class MemoryStore:
                         break
                 pending.event.wait()
                 if pending.generation == generation and pending.memories is not None:
+                    with self._cache_lock:
+                        self._memory_cache_stats["waiter_reuses"] += 1
                     return pending.memories
 
         memories: list[Memory] | None = None
@@ -660,6 +681,7 @@ class MemoryStore:
             if self.memory_cache_users:
                 snapshot_bytes = memory_snapshot_size_bytes(memories)
                 with self._cache_lock:
+                    self._memory_cache_stats["loads"] += 1
                     replaced = self._memory_cache.pop(user_id, None)
                     if replaced is not None:
                         self._memory_cache_bytes -= replaced[1]
@@ -674,6 +696,9 @@ class MemoryStore:
                         ):
                             _, evicted = self._memory_cache.popitem(last=False)
                             self._memory_cache_bytes -= evicted[1]
+                            self._memory_cache_stats["evictions"] += 1
+                    else:
+                        self._memory_cache_stats["oversized_rejections"] += 1
             return memories
         finally:
             if owns_load:

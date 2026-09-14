@@ -105,6 +105,8 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertGreater(memory_snapshot_size_bytes(memories), 1)
         self.assertEqual({}, store._memory_cache)
         self.assertEqual(0, store._memory_cache_bytes)
+        self.assertEqual(1, store.memory_cache_stats()["loads"])
+        self.assertEqual(1, store.memory_cache_stats()["oversized_rejections"])
 
     def test_concurrent_oversized_snapshot_is_loaded_once_for_waiters(self):
         with patch.dict(
@@ -169,6 +171,7 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertNotIn("alice", store._memory_cache)
         self.assertIn("bob", store._memory_cache)
         self.assertLessEqual(store._memory_cache_bytes, store.memory_cache_max_bytes)
+        self.assertEqual(1, store.memory_cache_stats()["evictions"])
 
     def test_memory_cache_is_reused_then_invalidated_by_add(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):
@@ -183,6 +186,9 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertIs(first, second)
         self.assertIsNot(second, third)
         self.assertEqual(2, len(third))
+        self.assertEqual(1, store.memory_cache_stats()["hits"])
+        self.assertEqual(1, store.memory_cache_stats()["invalidations"])
+        self.assertEqual(2, store.memory_cache_stats()["loads"])
 
     def test_memory_cache_detects_add_from_another_store_instance(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):
@@ -219,6 +225,10 @@ class StoreSafetyTests(unittest.TestCase):
 
         self.assertEqual(["alice", "carol"], list(store._memory_cache))
         self.assertNotIn("bob", store._memory_cache)
+        stats = store.memory_cache_stats()
+        self.assertEqual(1, stats["hits"])
+        self.assertEqual(1, stats["evictions"])
+        self.assertEqual(2, stats["resident_users"])
 
     def test_concurrent_cache_miss_uses_one_loaded_snapshot(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "1"}):

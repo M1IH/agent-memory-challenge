@@ -109,6 +109,8 @@ class LoadTestTests(unittest.TestCase):
         self.assertIn("peak_rss_bytes", report["memory"])
         self.assertTrue(report["memory"]["rss_limit_passed"])
         self.assertEqual(0, report["memory"]["estimated_cached_snapshot_bytes"])
+        self.assertEqual(0, report["memory"]["cache"]["resident_users"])
+        self.assertEqual(0, report["memory"]["cache"]["loads"])
         self.assertEqual(0, report["add"]["errors"])
         self.assertTrue(report["add"]["p95_limit_passed"])
         self.assertEqual(0, report["search"]["errors"])
@@ -226,7 +228,10 @@ class LoadTestTests(unittest.TestCase):
                 "--search-requests", "4", "--add-workers", "2", "--search-workers", "2",
                 "--users", "2", "--no-embeddings", "--json-output", str(output),
             ]
-            with patch("sys.argv", argv):
+            with (
+                patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "1"}),
+                patch("sys.argv", argv),
+            ):
                 main()
             report = json.loads(output.read_text(encoding="utf-8"))
 
@@ -236,6 +241,10 @@ class LoadTestTests(unittest.TestCase):
         self.assertEqual(2, report["multi_user"]["isolation_checks"])
         self.assertEqual([], report["multi_user"]["isolation_errors"])
         self.assertEqual([], report["multi_user"]["isolation_leaks"])
+        self.assertGreater(report["memory"]["cache"]["loads"], 0)
+        self.assertGreater(report["memory"]["cache"]["evictions"], 0)
+        self.assertEqual(1, report["memory"]["cache"]["resident_users"])
+        self.assertEqual(0, report["memory"]["cache"]["inflight_loads"])
 
 
 if __name__ == "__main__":
