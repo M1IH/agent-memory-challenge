@@ -25,13 +25,17 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 镜像会在构建时下载并固化本地嵌入模型，容器启动和检索阶段不需要联网：
 
 ```powershell
-docker build -t agent-memory-challenge:local .
+docker build --build-arg "VCS_REF=$(git rev-parse HEAD)" -t agent-memory-challenge:local .
 docker run --rm -p 8000:8000 `
   --memory 1g --memory-swap 1g `
   -e AML_API_KEY=replace-with-a-long-random-secret `
   -v agent-memory-data:/data `
   agent-memory-challenge:local
 ```
+
+构建参数会把当前 Git SHA 写入 OCI `org.opencontainers.image.revision` 标签。提交前用
+`docker image inspect -f '{{.Id}} {{index .Config.Labels "org.opencontainers.image.revision"}}' agent-memory-challenge:local`
+同时记录不可变镜像 ID 与代码版本；CI 会拒绝 revision 与当前提交不一致的镜像。
 
 CI 会在 `512m` 内跑有界 Smoke；嵌入批大小降为 64 后，已观测到稳态约
 `328 MiB`、峰值约 `335 MiB`。本地示例仍保留 `1g` 上限；这不是公式容量承诺，

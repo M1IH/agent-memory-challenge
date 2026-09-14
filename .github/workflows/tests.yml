@@ -32,7 +32,15 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
-      - run: docker build -t agent-memory-challenge:ci .
+      - name: Build image for the exact commit
+        run: docker build --build-arg VCS_REF="$GITHUB_SHA" -t agent-memory-challenge:ci .
+      - name: Verify immutable image identity
+        run: |
+          IMAGE_ID="$(docker image inspect -f '{{.Id}}' agent-memory-challenge:ci)"
+          IMAGE_REVISION="$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.revision"}}' agent-memory-challenge:ci)"
+          test "$IMAGE_REVISION" = "$GITHUB_SHA"
+          echo "image_id=$IMAGE_ID"
+          echo "image_revision=$IMAGE_REVISION"
       - name: Verify baked model under offline memory limit
         run: |
           docker volume create aml-ci-data

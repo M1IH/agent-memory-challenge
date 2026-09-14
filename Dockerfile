@@ -1,5 +1,9 @@
 FROM python:3.12-slim
 
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.source="https://github.com/M1IH/agent-memory-challenge" \
+      org.opencontainers.image.revision="$VCS_REF"
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     AML_DB_PATH=/data/memory.db \
