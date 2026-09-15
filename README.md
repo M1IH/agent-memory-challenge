@@ -33,6 +33,11 @@ docker run --rm -p 8000:8000 `
   agent-memory-challenge:local
 ```
 
+Docker 和 Linux CI 使用 `requirements.lock` 中的完整传递依赖版本；基础 Python
+镜像也固定到内容摘要。因此同一提交不会因上游标签或间接依赖漂移而悄悄改变。
+`requirements.txt` 保留直接依赖，便于 Windows 本地开发；升级依赖时必须同步更新
+锁文件，并重新通过完整 Docker 离线 Smoke。
+
 构建参数会把当前 Git SHA 写入 OCI `org.opencontainers.image.revision` 标签。提交前用
 `docker image inspect -f '{{.Id}} {{index .Config.Labels "org.opencontainers.image.revision"}}' agent-memory-challenge:local`
 同时记录不可变镜像 ID 与代码版本；CI 会拒绝 revision 与当前提交不一致的镜像。

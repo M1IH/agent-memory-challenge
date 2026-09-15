@@ -27,6 +27,7 @@ class ReleaseManifestTests(unittest.TestCase):
         hashes = critical_file_hashes(root)
 
         self.assertEqual(hashlib.sha256((root / "Dockerfile").read_bytes()).hexdigest(), hashes["Dockerfile"])
+        self.assertIn("requirements.lock", hashes)
         self.assertIn("app/store.py", hashes)
         self.assertIn(".github/workflows/tests.yml", hashes)
         self.assertIn("scripts/release_manifest.py", hashes)
@@ -57,6 +58,29 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn("-v agent-memory-data:/data", readme)
         self.assertEqual(2, workflow.count("-v aml-ci-data:/data"))
         self.assertNotIn(":/app/data", readme + workflow)
+
+    def test_docker_build_inputs_are_immutable(self):
+        root = Path(__file__).resolve().parents[1]
+        dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
+        direct = {
+            line.strip().lower()
+            for line in (root / "requirements.txt").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+        locked = {
+            line.strip().lower()
+            for line in (root / "requirements.lock").read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+
+        self.assertRegex(dockerfile.splitlines()[0], r"^FROM python:3\.12-slim@sha256:[0-9a-f]{64}$")
+        self.assertIn("pip install --no-cache-dir -r requirements.lock", dockerfile)
+        for requirement in direct:
+            package = requirement.split("[", 1)[0].split("==", 1)[0]
+            self.assertTrue(
+                any(item.split("==", 1)[0].split("[", 1)[0] == package for item in locked),
+                f"direct dependency is absent from requirements.lock: {package}",
+            )
 
 
 if __name__ == "__main__":

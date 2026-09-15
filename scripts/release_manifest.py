@@ -12,6 +12,7 @@ from pathlib import Path
 CRITICAL_FILES = (
     ".github/workflows/tests.yml",
     "Dockerfile",
+    "requirements.lock",
     "requirements.txt",
     "app/__init__.py",
     "app/embedding.py",
