@@ -1,9 +1,5 @@
 FROM python:3.12-slim
 
-ARG VCS_REF=unknown
-LABEL org.opencontainers.image.source="https://github.com/M1IH/agent-memory-challenge" \
-      org.opencontainers.image.revision="$VCS_REF"
-
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     AML_DB_PATH=/data/memory.db \
@@ -20,6 +16,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /models && python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/models')"
 COPY app ./app
+
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.source="https://github.com/M1IH/agent-memory-challenge" \
+      org.opencontainers.image.revision="$VCS_REF"
 
 RUN mkdir -p /data
 EXPOSE 8000

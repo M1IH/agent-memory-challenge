@@ -41,6 +41,23 @@ class ReleaseManifestTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "sha256"):
             validate_image_identity(git_sha, "latest", git_sha)
 
+    def test_revision_label_does_not_invalidate_dependency_layers(self):
+        dockerfile = (Path(__file__).resolve().parents[1] / "Dockerfile").read_text()
+
+        self.assertGreater(dockerfile.index("ARG VCS_REF"), dockerfile.index("COPY app ./app"))
+        self.assertGreater(dockerfile.index("LABEL org.opencontainers"), dockerfile.index("ARG VCS_REF"))
+
+    def test_documented_and_ci_volumes_mount_the_database_directory(self):
+        root = Path(__file__).resolve().parents[1]
+        dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
+        readme = (root / "README.md").read_text(encoding="utf-8")
+        workflow = (root / ".github/workflows/tests.yml").read_text(encoding="utf-8")
+
+        self.assertIn("AML_DB_PATH=/data/memory.db", dockerfile)
+        self.assertIn("-v agent-memory-data:/data", readme)
+        self.assertEqual(2, workflow.count("-v aml-ci-data:/data"))
+        self.assertNotIn(":/app/data", readme + workflow)
+
 
 if __name__ == "__main__":
     unittest.main()

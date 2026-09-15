@@ -53,7 +53,7 @@ jobs:
           docker volume create aml-ci-data
           docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
             --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \
-            -v aml-ci-data:/app/data \
+            -v aml-ci-data:/data \
             agent-memory-challenge:ci
           test "$(docker inspect -f '{{.HostConfig.Memory}}' aml-ci)" = "536870912"
           for attempt in $(seq 1 30); do
@@ -96,7 +96,7 @@ jobs:
           docker rm aml-ci
           docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
             --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \
-            -v aml-ci-data:/app/data \
+            -v aml-ci-data:/data \
             agent-memory-challenge:ci
           for attempt in $(seq 1 30); do
             docker exec aml-ci python -c "import urllib.request; assert urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200" && break
@@ -115,6 +115,11 @@ jobs:
               with urllib.request.urlopen(request) as response:
                   return json.load(response)
 
+          result = post("/search", {
+              "query": "emergency contact", "user_id": "alice", "top_k": 10,
+          })
+          assert "Jordan" in result["data"][0]["content"]
+
           messages = [
               {"role": "user", "content": f"Record {index} has project code ci-code-{index}."}
               for index in range(250)
@@ -125,10 +130,11 @@ jobs:
               "messages": messages,
           })
           assert replay["success"] is True
-          result = post("/search", {
-              "query": "emergency contact", "user_id": "alice", "top_k": 10,
-          })
-          assert "Jordan" in result["data"][0]["content"]
+
+          import sqlite3
+          with sqlite3.connect("/data/memory.db") as connection:
+              assert connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0] == 251
+              assert connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0] == 1
           PY
           test "$(docker inspect -f '{{.State.OOMKilled}}' aml-ci)" = "false"
           docker exec -i aml-ci python - <<'PY'
