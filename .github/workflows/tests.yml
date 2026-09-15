@@ -41,6 +41,13 @@ jobs:
           python scripts/release_manifest.py --image-id "$IMAGE_ID" \
             --image-revision "$IMAGE_REVISION" --output release-manifest.json
           cat release-manifest.json
+      - name: Preserve release manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-manifest-${{ github.sha }}
+          path: release-manifest.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Verify baked model under offline memory limit
         run: |
           docker volume create aml-ci-data

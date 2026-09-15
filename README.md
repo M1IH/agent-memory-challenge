@@ -38,6 +38,8 @@ docker run --rm -p 8000:8000 `
 同时记录不可变镜像 ID 与代码版本；CI 会拒绝 revision 与当前提交不一致的镜像。
 `python scripts/release_manifest.py` 会在工作区不干净、关键发布文件缺失，或镜像
 ID/revision 不匹配时失败；CI 会输出包含关键文件哈希的 JSON 发布清单。
+清单还会以 `release-manifest-<Git SHA>` 名称作为 Actions artifact 保存 30 天；
+artifact 缺失会直接让 Docker job 失败。
 
 CI 会在 `512m` 内跑有界 Smoke；嵌入批大小降为 64 后，已观测到稳态约
 `328 MiB`、峰值约 `335 MiB`。本地示例仍保留 `1g` 上限；这不是公式容量承诺，
