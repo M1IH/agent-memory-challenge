@@ -43,7 +43,7 @@ jobs:
             --image-revision "$IMAGE_REVISION" --output release-manifest.json
           cat release-manifest.json
       - name: Preserve release manifest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-manifest-${{ github.sha }}
           path: release-manifest.json
