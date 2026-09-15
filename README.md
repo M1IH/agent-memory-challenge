@@ -178,9 +178,12 @@ RSS，以及 SQLite 主文件、WAL 和 SHM 的总占用；持续时间为 0 时
 对于最多出现在 4 条记忆中的数字型复合标识符（例如项目编号），融合阶段会保留
 精确词法匹配，避免对数字不敏感的密集排名反超正确记录；该保护不进入 dense-only
 消融，也不会提升普通词或中文片段。
-持久化向量会绑定到 `AML_EMBED_MODEL`、float32 编码和归一化版本；存在向量时
-若身份不一致，服务拒绝打开旧索引并要求重建，避免同维度的不同模型静默混用。
-自定义编码器应提供稳定的 `index_identity` 字符串。
+持久化向量会绑定到 `AML_EMBED_MODEL`、模型 revision、模型与 tokenizer SHA256、
+float32 编码和归一化版本；存在向量时若身份不一致，服务拒绝打开旧索引并要求重建，
+避免同维度的不同模型静默混用。Docker 构建还会核对固化文件的 revision 和哈希，
+上游同名模型漂移时直接构建失败。覆盖 `AML_EMBED_MODEL` 时也必须同时提供该模型的
+`AML_EMBED_MODEL_REVISION`、`AML_EMBED_MODEL_SHA256` 和
+`AML_EMBED_TOKENIZER_SHA256`。自定义编码器应提供稳定的 `index_identity` 字符串。
 `AML_MAX_CONTEXT_CHARS` 控制相邻消息拼接后的最大字符数，默认 `1200`，必须是
 正整数；服务会在启动时拒绝非法配置，而不是等到 Add 请求时才失败。
 `AML_MEMORY_CACHE_USERS` 可缓存最近使用的用户语料快照，`0` 表示关闭且为默认值。

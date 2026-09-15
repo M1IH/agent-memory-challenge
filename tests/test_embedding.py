@@ -5,14 +5,40 @@ from unittest.mock import Mock, patch
 import numpy as np
 
 from app.embedding import (
+    DEFAULT_MODEL_REVISION,
+    DEFAULT_MODEL_SHA256,
+    DEFAULT_TOKENIZER_SHA256,
     EmbeddingBackend,
     _PriorityCapacity,
+    model_identity_components,
     positive_batch_size,
     positive_concurrency,
 )
 
 
 class EmbeddingConfigurationTests(unittest.TestCase):
+    def test_default_model_identity_is_content_bound(self):
+        with patch.dict("os.environ", {}, clear=True):
+            self.assertEqual(
+                (DEFAULT_MODEL_REVISION, DEFAULT_MODEL_SHA256, DEFAULT_TOKENIZER_SHA256),
+                model_identity_components("BAAI/bge-small-en-v1.5"),
+            )
+
+    def test_custom_model_requires_its_own_content_identity(self):
+        with patch.dict("os.environ", {"AML_EMBED_MODEL": "custom/model"}, clear=True):
+            with self.assertRaisesRegex(ValueError, "custom AML_EMBED_MODEL"):
+                model_identity_components("custom/model")
+
+    def test_docker_model_identity_matches_runtime_defaults(self):
+        from pathlib import Path
+
+        dockerfile = (Path(__file__).resolve().parents[1] / "Dockerfile").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(f"AML_EMBED_MODEL_REVISION={DEFAULT_MODEL_REVISION}", dockerfile)
+        self.assertIn(f"AML_EMBED_MODEL_SHA256={DEFAULT_MODEL_SHA256}", dockerfile)
+        self.assertIn(f"AML_EMBED_TOKENIZER_SHA256={DEFAULT_TOKENIZER_SHA256}", dockerfile)
+
     def test_embedding_concurrency_must_be_positive_integer(self):
         self.assertEqual(2, positive_concurrency("2"))
         for value in ("0", "-1", "many"):

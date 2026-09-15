@@ -1,11 +1,51 @@
 from __future__ import annotations
 
 import os
+import re
 import threading
 from contextlib import contextmanager
 from typing import Iterable, Iterator
 
 import numpy as np
+
+
+DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
+DEFAULT_MODEL_REVISION = "52398278842ec682c6f32300af41344b1c0b0bb2"
+DEFAULT_MODEL_SHA256 = "51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431"
+DEFAULT_TOKENIZER_SHA256 = "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+_REVISION_PATTERN = re.compile(r"[0-9a-f]{40}")
+_SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
+
+
+def model_identity_components(model_name: str) -> tuple[str, str, str]:
+    defaults = (
+        DEFAULT_MODEL_REVISION,
+        DEFAULT_MODEL_SHA256,
+        DEFAULT_TOKENIZER_SHA256,
+    )
+    values = (
+        os.getenv("AML_EMBED_MODEL_REVISION"),
+        os.getenv("AML_EMBED_MODEL_SHA256"),
+        os.getenv("AML_EMBED_TOKENIZER_SHA256"),
+    )
+    if model_name == DEFAULT_MODEL:
+        revision, model_sha, tokenizer_sha = tuple(
+            value or default for value, default in zip(values, defaults)
+        )
+    else:
+        if any(value is None for value in values) or values == defaults:
+            raise ValueError(
+                "custom AML_EMBED_MODEL requires its own revision, model SHA256, "
+                "and tokenizer SHA256 identity"
+            )
+        revision, model_sha, tokenizer_sha = values
+    if not _REVISION_PATTERN.fullmatch(revision or ""):
+        raise ValueError("AML_EMBED_MODEL_REVISION must be a lowercase 40-character hexadecimal value")
+    if not _SHA256_PATTERN.fullmatch(model_sha or ""):
+        raise ValueError("AML_EMBED_MODEL_SHA256 must be a lowercase 64-character hexadecimal value")
+    if not _SHA256_PATTERN.fullmatch(tokenizer_sha or ""):
+        raise ValueError("AML_EMBED_TOKENIZER_SHA256 must be a lowercase 64-character hexadecimal value")
+    return revision, model_sha, tokenizer_sha
 
 
 def positive_concurrency(value: str) -> int:
@@ -99,7 +139,8 @@ class EmbeddingBackend:
     def __init__(self) -> None:
         from fastembed import TextEmbedding
 
-        model_name = os.getenv("AML_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
+        model_name = os.getenv("AML_EMBED_MODEL", DEFAULT_MODEL)
+        model_revision, model_sha, tokenizer_sha = model_identity_components(model_name)
         cache_dir = os.getenv("AML_MODEL_CACHE") or None
         concurrency = positive_concurrency(os.getenv("AML_EMBED_CONCURRENCY", "2"))
         batch_size = positive_batch_size(os.getenv("AML_EMBED_BATCH_SIZE", "64"))
@@ -107,7 +148,9 @@ class EmbeddingBackend:
         self._capacity = _PriorityCapacity(concurrency)
         self.concurrency = concurrency
         self.batch_size = batch_size
-        self.index_identity = f"fastembed:{model_name}:float32:l2-v1"
+        self.index_identity = (
+            f"fastembed:{model_name}:{model_revision}:{model_sha}:{tokenizer_sha}:float32:l2-v1"
+        )
 
     def encode(self, texts: Iterable[str]) -> list[np.ndarray]:
         return self._encode(texts, query=False)

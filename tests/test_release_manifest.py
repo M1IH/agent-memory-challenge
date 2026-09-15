@@ -47,6 +47,14 @@ class ReleaseManifestTests(unittest.TestCase):
 
         self.assertGreater(dockerfile.index("ARG VCS_REF"), dockerfile.index("COPY app ./app"))
         self.assertGreater(dockerfile.index("LABEL org.opencontainers"), dockerfile.index("ARG VCS_REF"))
+        self.assertGreater(
+            dockerfile.index("ENV PYTHONDONTWRITEBYTECODE"),
+            dockerfile.index("model_optimized.onnx"),
+        )
+        self.assertGreater(
+            dockerfile.index("ARG AML_EMBED_MODEL_SHA256"),
+            dockerfile.index("TextEmbedding('BAAI/bge-small-en-v1.5'"),
+        )
 
     def test_documented_and_ci_volumes_mount_the_database_directory(self):
         root = Path(__file__).resolve().parents[1]
@@ -62,6 +70,7 @@ class ReleaseManifestTests(unittest.TestCase):
     def test_docker_build_inputs_are_immutable(self):
         root = Path(__file__).resolve().parents[1]
         dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
+        workflow = (root / ".github/workflows/tests.yml").read_text(encoding="utf-8")
         direct = {
             line.strip().lower()
             for line in (root / "requirements.txt").read_text(encoding="utf-8").splitlines()
@@ -75,6 +84,7 @@ class ReleaseManifestTests(unittest.TestCase):
 
         self.assertRegex(dockerfile.splitlines()[0], r"^FROM python:3\.12-slim@sha256:[0-9a-f]{64}$")
         self.assertIn("pip install --no-cache-dir -r requirements.lock", dockerfile)
+        self.assertIn("cache-dependency-path: requirements.lock", workflow)
         for requirement in direct:
             package = requirement.split("[", 1)[0].split("==", 1)[0]
             self.assertTrue(
