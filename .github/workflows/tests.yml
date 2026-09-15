@@ -38,9 +38,9 @@ jobs:
         run: |
           IMAGE_ID="$(docker image inspect -f '{{.Id}}' agent-memory-challenge:ci)"
           IMAGE_REVISION="$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.revision"}}' agent-memory-challenge:ci)"
-          test "$IMAGE_REVISION" = "$GITHUB_SHA"
-          echo "image_id=$IMAGE_ID"
-          echo "image_revision=$IMAGE_REVISION"
+          python scripts/release_manifest.py --image-id "$IMAGE_ID" \
+            --image-revision "$IMAGE_REVISION" --output release-manifest.json
+          cat release-manifest.json
       - name: Verify baked model under offline memory limit
         run: |
           docker volume create aml-ci-data
