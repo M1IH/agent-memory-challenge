@@ -1,0 +1,366 @@
+{
+  "suite": "blind2",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 11,
+  "hit_at_1": 0.36363636363636365,
+  "hit_at_3": 0.6363636363636364,
+  "hit_at_5": 1.0,
+  "mrr": 0.5515151515151515,
+  "categories": {
+    "cross_lingual": 0.25,
+    "list_negation": 0.5277777777777778,
+    "multi_hop": 0.75,
+    "multi_hop_zh": 0.5111111111111111,
+    "rules_privacy": 1.0,
+    "temporal_supersession": 0.2
+  },
+  "complete_at_1": 0.16666666666666666,
+  "complete_at_3": 0.3333333333333333,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "evaluation_version": 3,
+  "suite_sha256": "239f934b2769154c094f067cfadd47bff3ea0275631beceee16978dc14ac6386",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "embedding_identity": "fastembed:BAAI/bge-small-en-v1.5:52398278842ec682c6f32300af41344b1c0b0bb2:51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431:d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66:float32:l2-v1",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64
+  },
+  "evaluation_code": {
+    "sha256": "fcdce32b50ddd41c78670ed25699240dd88f660d4e6163db5287e8eeccb24b6b",
+    "files": {
+      "app/store.py": "fb1569d142b151f3f6ee6f4a7c9b2d07d0ec1d263703cf619fcc9a1b61d58942",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "a991f723e11996774a40381cb0788863427b5573e1100fc76a3c9c22df9520a2",
+      "benchmarks/evidence.py": "c431954f9b471f9ab3268f1f3fa7d3bb91003774114ee62d49c1ab519cbb2cc4",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "case_traces": [
+    {
+      "name": "blind2-current-language-tutor",
+      "category": "temporal_supersession",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        5
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_669a9a9e17fa7772513600d4",
+          "content": "user: My current piano tutor is Nora.",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:35.184775Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_828a3af8d473daf37c8f39ad",
+          "content": "user: The Spanish exam is in May.",
+          "score": 0.031874,
+          "created_at": "2026-09-16T03:59:35.700772Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_7d651b9af1e8f24810650b1d",
+          "content": "user: A tutor corrected my essay.",
+          "score": 0.03144,
+          "created_at": "2026-09-16T03:59:35.600488Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_115bc628acc98e4ca5dcf1c1",
+          "content": "user: My brother studies Spanish with Luis.",
+          "score": 0.03113,
+          "created_at": "2026-09-16T03:59:35.391866Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_e01ca155dcab76a0d1680db1",
+          "content": "[2024-08-01T00:00:00Z] user: I now take Spanish lessons from Irene Valdez.",
+          "score": 0.030664,
+          "created_at": "2024-08-01T00:00:00Z",
+          "source_id": "current"
+        }
+      ]
+    },
+    {
+      "name": "blind2-observatory-badge-chain",
+      "category": "multi_hop",
+      "candidate_count": 17,
+      "expected": [
+        "room",
+        "badge"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_140f7933c98ca272f42cf221",
+          "content": "user: Project Halley was assigned the Meridian observatory room.",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:35.914761Z",
+          "source_id": "room"
+        },
+        {
+          "id": "mem_d747ff0f6e228a2ce6e6abc6",
+          "content": "user: Priya Nair keeps the access badge for the Meridian room.",
+          "score": 0.034258,
+          "created_at": "2026-09-16T03:59:35.974777Z",
+          "source_id": "badge"
+        },
+        {
+          "id": "mem_995ba5797d88bfe4e2889d94",
+          "content": "user: The Atlas room belongs to Project Nova.",
+          "score": 0.0309,
+          "created_at": "2026-09-16T03:59:36.461415Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_801f23d8d0368ed9571eab9a",
+          "content": "user: The Meridian lecture room has no badge.",
+          "score": 0.030566,
+          "created_at": "2026-09-16T03:59:36.255311Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_d5d818ea2d79d51b746b7049",
+          "content": "user: Omar keeps the Zenith badge.",
+          "score": 0.03043,
+          "created_at": "2026-09-16T03:59:36.085425Z",
+          "source_id": "d02"
+        }
+      ]
+    },
+    {
+      "name": "blind2-chinese-repair-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 18,
+      "expected": [
+        "repairer",
+        "shop",
+        "locker"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        5,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_c785c54ad68c30bcafe7f07b",
+          "content": "user: 帮我修复旧相机的技师叫顾言。",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:36.908841Z",
+          "source_id": "repairer"
+        },
+        {
+          "id": "mem_4b7f891db8eab9c230b5686d",
+          "content": "user: 旧相机使用黑色背带。",
+          "score": 0.033141,
+          "created_at": "2026-09-16T03:59:37.330391Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_4847dd629e2f86868eacf006",
+          "content": "user: 星桥维修店把取件单统一放在北门三号柜。",
+          "score": 0.03295,
+          "created_at": "2026-09-16T03:59:37.043553Z",
+          "source_id": "locker"
+        },
+        {
+          "id": "mem_a347bb05789bfd251e185fac",
+          "content": "user: 青禾的单据放在东门柜。",
+          "score": 0.032684,
+          "created_at": "2026-09-16T03:59:37.268181Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_47592e1fa9328e4ebb012877",
+          "content": "user: 顾言在星桥维修店完成了这次维修。",
+          "score": 0.032659,
+          "created_at": "2026-09-16T03:59:36.973602Z",
+          "source_id": "shop"
+        }
+      ]
+    },
+    {
+      "name": "blind2-confirmed-rehearsal-list",
+      "category": "list_negation",
+      "candidate_count": 18,
+      "expected": [
+        "jia",
+        "leo",
+        "sara"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b56380a0836fbe50ccdef0e8",
+          "content": "user: Jia confirmed she will attend the Aurora rehearsal.",
+          "score": 0.042787,
+          "created_at": "2026-09-16T03:59:38.011627Z",
+          "source_id": "jia"
+        },
+        {
+          "id": "mem_5a96f5d058f47ff4da2d3098",
+          "content": "user: Noah confirmed for the Aurora lecture.",
+          "score": 0.041769,
+          "created_at": "2026-09-16T03:59:38.446589Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_45215480b3bf610db1158df6",
+          "content": "user: Leo accepted his place at the Aurora rehearsal.",
+          "score": 0.041746,
+          "created_at": "2026-09-16T03:59:38.070726Z",
+          "source_id": "leo"
+        },
+        {
+          "id": "mem_9167d96e815c9dcc01a42b9e",
+          "content": "user: Sara said yes to attending the Aurora rehearsal.",
+          "score": 0.041502,
+          "created_at": "2026-09-16T03:59:38.121083Z",
+          "source_id": "sara"
+        },
+        {
+          "id": "mem_324203e172297b8282eba33f",
+          "content": "user: Mina confirmed another rehearsal.",
+          "score": 0.040769,
+          "created_at": "2026-09-16T03:59:38.853495Z",
+          "source_id": "d14"
+        }
+      ]
+    },
+    {
+      "name": "blind2-cross-language-pharmacy",
+      "category": "cross_lingual",
+      "candidate_count": 16,
+      "expected": [
+        "pharmacy"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f9d36bb9963184bc4789161f",
+          "content": "user: 我以前在松林药房取药。",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:39.112398Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_4e3128b03ce373e58f791d6b",
+          "content": "user: 松林药房搬到了新地址。",
+          "score": 0.033385,
+          "created_at": "2026-09-16T03:59:39.380143Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_04f4fc099f18d5ef714e7200",
+          "content": "user: 处方药需要提前预约。",
+          "score": 0.033013,
+          "created_at": "2026-09-16T03:59:39.485355Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_0f4f8f556d2915d00973e743",
+          "content": "user: I now collect my prescriptions at Cedar Pharmacy every month.",
+          "score": 0.032772,
+          "created_at": "2026-09-16T03:59:39.040392Z",
+          "source_id": "pharmacy"
+        },
+        {
+          "id": "mem_8d2e2d26d7316c810a72148a",
+          "content": "user: My prescription was renewed yesterday.",
+          "score": 0.03248,
+          "created_at": "2026-09-16T03:59:39.218906Z",
+          "source_id": "d03"
+        }
+      ]
+    },
+    {
+      "name": "blind2-private-contact-rule",
+      "category": "rules_privacy",
+      "candidate_count": 16,
+      "expected": [
+        "rule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_6d7220f87f52499c95a0de6e",
+          "content": "user: My rule is: never share Rowan's private phone number without Rowan's explicit permission.",
+          "score": 0.034403,
+          "created_at": "2026-09-16T03:59:39.999073Z",
+          "source_id": "rule"
+        },
+        {
+          "id": "mem_85f6b1403cf109eb1c1ac47a",
+          "content": "user: A new club member asked for contact details.",
+          "score": 0.03239,
+          "created_at": "2026-09-16T03:59:40.116155Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_e6ba2eb2eb7edd588748c469",
+          "content": "user: I shared my own number with the treasurer.",
+          "score": 0.031502,
+          "created_at": "2026-09-16T03:59:40.691027Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_a753b9cd21cd28a38451f975",
+          "content": "user: Rowan gave me a phone number last year.",
+          "score": 0.031141,
+          "created_at": "2026-09-16T03:59:40.214732Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_fe755eea34a0534c81fb1b38",
+          "content": "user: I may share the public meeting schedule.",
+          "score": 0.0309,
+          "created_at": "2026-09-16T03:59:40.167936Z",
+          "source_id": "d03"
+        }
+      ]
+    }
+  ]
+}

@@ -972,6 +972,16 @@ class MemoryStore:
                 # lexical channel without letting raw BM25 scale dominate fusion.
                 if config.lexical_weight > 0 and lexical_raw.get(memory_id, 0.0) >= 8.0:
                     score += 0.002
+                # RRF intentionally discards raw-score magnitude, but for the
+                # narrow packing/confirmation intents above that would also
+                # discard explicit completed-versus-negated evidence. Preserve
+                # the same bounded signal after fusion so a semantically similar
+                # "left it at home" or "no reply" record cannot displace an
+                # actual list member solely through its dense rank.
+                if config.lexical_weight > 0:
+                    score += 0.001 * event_consistency_score(
+                        query, memory_by_id[memory_id].content
+                    )
                 # Dense models are intentionally weak at opaque identifiers.
                 # Preserve an exact, low-frequency code match without boosting
                 # ordinary words or broad CJK fragments across the whole rank.

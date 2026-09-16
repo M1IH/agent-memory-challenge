@@ -1,0 +1,4089 @@
+{
+  "suite": "extended",
+  "top_k": 10,
+  "cases": 125,
+  "evidence": 169,
+  "hit_at_1": 0.8047337278106509,
+  "hit_at_3": 1.0,
+  "hit_at_5": 1.0,
+  "mrr": 0.8915187376725839,
+  "categories": {
+    "cross_language": 1.0,
+    "direct_fact": 1.0,
+    "list_recall": 0.611111111111111,
+    "multi_hop": 0.75,
+    "multi_turn": 1.0,
+    "multiple_choice": 1.0,
+    "noise_resistance": 1.0,
+    "paraphrase": 1.0,
+    "personalization": 1.0,
+    "rules_privacy": 1.0,
+    "temporal_update": 1.0
+  },
+  "complete_at_1": 0.824,
+  "complete_at_3": 1.0,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "evaluation_version": 3,
+  "suite_sha256": "0107183d5beebb672ef0659f91b5917d276551e42a838392127d66003d558233",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "embedding_identity": "fastembed:BAAI/bge-small-en-v1.5:52398278842ec682c6f32300af41344b1c0b0bb2:51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431:d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66:float32:l2-v1",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64
+  },
+  "evaluation_code": {
+    "sha256": "fcdce32b50ddd41c78670ed25699240dd88f660d4e6163db5287e8eeccb24b6b",
+    "files": {
+      "app/store.py": "fb1569d142b151f3f6ee6f4a7c9b2d07d0ec1d263703cf619fcc9a1b61d58942",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "a991f723e11996774a40381cb0788863427b5573e1100fc76a3c9c22df9520a2",
+      "benchmarks/evidence.py": "c431954f9b471f9ab3268f1f3fa7d3bb91003774114ee62d49c1ab519cbb2cc4",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "case_traces": [
+    {
+      "name": "direct_fact_zh",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "乌龙茶"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_208dd06b6c07b8f978ca7325",
+          "content": "[2024-01-01T00:00:00Z] user: 我最喜欢喝乌龙茶",
+          "score": 0.034787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c37175c36bc7837f22edc298",
+          "content": "[2024-01-02T00:00:00Z] user: 我周末经常去爬山",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "direct_fact_en",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Jordan Lee"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e4903e8c9438abba7ef12511",
+          "content": "[2024-01-01T00:00:00Z] user: My emergency contact is Jordan Lee.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d9d0869d5dc7258fe8123089",
+          "content": "[2024-01-02T00:00:00Z] user: I ordered a mechanical keyboard yesterday.",
+          "score": 0.008065,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "option_distractors",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "豆包"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_d56c1adf78b93c0df7d8e268",
+          "content": "[2024-01-01T00:00:00Z] user: 我的宠物名字叫豆包",
+          "score": 0.034787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_11d91d0272c3a5c739cbc0d9",
+          "content": "[2024-01-02T00:00:00Z] user: 雪球、咖啡、北京和蓝色是会议中的候选词",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "latest_preference",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "燕麦酸奶"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_323f1550e5554f372d6620f3",
+          "content": "[2025-01-01T00:00:00Z] user: 后来口味变了，早餐首选燕麦酸奶",
+          "score": 0.034655,
+          "created_at": "2025-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_0e5bac0d457857862e708d72",
+          "content": "[2024-01-01T00:00:00Z] user: 我现在最喜欢的早餐是豆浆油条",
+          "score": 0.03439,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "paraphrase_residence",
+      "category": "paraphrase",
+      "candidate_count": 2,
+      "expected": [
+        "成都"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_9bd98f7848ac50132fc69ee0",
+          "content": "[2024-01-01T00:00:00Z] user: 毕业以后我定居在成都",
+          "score": 0.034655,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_4864f8939c9c1810874efe74",
+          "content": "[2024-01-02T00:00:00Z] user: 武汉是一座生活节奏很鲜明的城市",
+          "score": 0.03239,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "paraphrase_purchase",
+      "category": "paraphrase",
+      "candidate_count": 2,
+      "expected": [
+        "空气炸锅"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_208b14df68b1fe628a62140a",
+          "content": "[2024-01-01T00:00:00Z] user: 上周入手了一台白色的空气炸锅",
+          "score": 0.034787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ca7dc7c38ea7c44d95dd230d",
+          "content": "[2024-01-02T00:00:00Z] user: 厨房里的厨具清单需要重新整理",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "session_context",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "滨江图书馆"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b4a8f8e1ee7763a4a0fed83d",
+          "content": "[2024-01-01T00:00:00Z] user: 周六上午我要去滨江图书馆还书",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_607159de89d267e7cfb5a386",
+          "content": "[2024-01-02T00:00:00Z] user: 周日下午和小林在东湖公园跑步",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "negative_noise",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "蓝鲸"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_fa68783a36b3d020ea250bfd",
+          "content": "[2024-01-01T00:00:00Z] user: 代码仓库的访问口令提示词是蓝鲸",
+          "score": 0.034787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_07ea9a3c0bd63df91db34e62",
+          "content": "[2024-01-03T00:00:00Z] user: 蓝色的文件夹已经归档",
+          "score": 0.032258,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_774ce828476d4095b1010fc7",
+          "content": "[2024-01-02T00:00:00Z] user: 今天看了一篇介绍鲸鱼迁徙的文章",
+          "score": 0.031746,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "english_residence_paraphrase",
+      "category": "paraphrase",
+      "candidate_count": 2,
+      "expected": [
+        "Seattle"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_6f0973bb77cd8f34da9a5213",
+          "content": "[2024-01-01T00:00:00Z] user: After graduation, I relocated to Seattle.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ab33a0707b2a2c75b34f4832",
+          "content": "[2024-01-02T00:00:00Z] user: Boston is a city with several famous universities.",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "implicit_food_preference",
+      "category": "personalization",
+      "candidate_count": 2,
+      "expected": [
+        "cilantro"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a67e16efff0fb8493b3005ba",
+          "content": "[2024-01-01T00:00:00Z] user: I cannot stand cilantro in any dish.",
+          "score": 0.034655,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_9c3947feeb309422dfffb50f",
+          "content": "[2024-01-02T00:00:00Z] user: The restaurant also serves dishes with basil and mint.",
+          "score": 0.03239,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "two_hop_family_location",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "brother's name is Noah",
+        "Noah moved to Lisbon"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4f49f997d693f977230e6dfb",
+          "content": "[2024-01-02T00:00:00Z] user: Noah moved to Lisbon for a new job.",
+          "score": 0.034655,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_3bad3b45c84f246c5c189415",
+          "content": "[2024-01-01T00:00:00Z] user: My brother's name is Noah.",
+          "score": 0.03239,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_39f3b571f199517f225dbb1c",
+          "content": "[2024-01-03T00:00:00Z] user: My cousin Maya visited Madrid last summer.",
+          "score": 0.031746,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "complete_activity_list",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "pottery class",
+        "indoor climbing",
+        "animal shelter"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b83770181cb6c4cd4ecfc22e",
+          "content": "[2024-01-02T00:00:00Z] user: I also started indoor climbing on Fridays.",
+          "score": 0.032787,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_7e387e1b3b831c9f119c72fd",
+          "content": "[2024-01-01T00:00:00Z] user: I joined a pottery class on Tuesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_be8fb4c91beda49190d93251",
+          "content": "[2024-01-03T00:00:00Z] user: On Sunday mornings I volunteer at the animal shelter.",
+          "score": 0.031622,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5b861a03fc7f8cae834e8831",
+          "content": "[2024-01-04T00:00:00Z] user: My colleague spends weekends playing tennis.",
+          "score": 0.007937,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "privacy_process_rule",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove customer email addresses"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_858801e85794ef7d6138e92b",
+          "content": "[2024-01-01T00:00:00Z] user: Before sharing a report externally, always remove customer email addresses.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_012e25770345b246c96f09c7",
+          "content": "[2024-01-02T00:00:00Z] user: Reports use the blue presentation template.",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "english_latest_status",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "cycling"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bc8aa81dacc17aa44685b0ca",
+          "content": "[2025-01-01T00:00:00Z] user: After buying a bicycle, I switched to cycling to work.",
+          "score": 0.032655,
+          "created_at": "2025-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_25c91b977a4d72093e7b6ae0",
+          "content": "[2024-01-01T00:00:00Z] user: I currently commute by bus.",
+          "score": 0.03239,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "conversation_coreference",
+      "category": "multi_turn",
+      "candidate_count": 3,
+      "expected": [
+        "My new manager is Priya",
+        "weekly review to Thursday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_31e86e683dd458bcdb53d933",
+          "content": "[2024-01-01T00:00:00Z] user: My new manager is Priya.\n[2024-01-01T00:01:00Z] assistant: She moved the weekly review to Thursday.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:01:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_8d0ec91bf3ebd1baaea309c3",
+          "content": "[2024-01-01T00:01:00Z] assistant: She moved the weekly review to Thursday.\n[2024-01-01T00:02:00Z] user: Thanks, I will update my calendar.",
+          "score": 0.03213,
+          "created_at": "2024-01-01T00:02:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_90131ead67c6821157a18c2b",
+          "content": "[2024-01-01T00:00:00Z] user: My new manager is Priya.",
+          "score": 0.031874,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_0",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Avery"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_7036e1d4c8d24de78c27bc49",
+          "content": "[2024-01-01T00:00:00Z] user: My project mentor is Avery.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_65b8bc1d048cb8e5afea4ebc",
+          "content": "[2024-01-01T00:00:00.001000Z] user: I read an article about Oslo.",
+          "score": 0.008065,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_0",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "紫砂壶"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_04a11e3339d1d7465d9975d0",
+          "content": "[2024-01-01T00:00:00Z] user: 我新买的东西是紫砂壶",
+          "score": 0.034787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_957851c9ffac4439e2a95575",
+          "content": "[2024-01-01T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_0",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "mango"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_da07bdd4531e09592e2f2dbe",
+          "content": "[2024-01-01T00:00:00Z] user: The locker code word is mango.",
+          "score": 0.034787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_70538c6adbf02f5602afc4a3",
+          "content": "[2024-01-01T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_0",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Lisbon"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_560d0f2e7d68b4b4633c5668",
+          "content": "[2024-01-01T00:01:40Z] user: I later moved and now live in Lisbon.",
+          "score": 0.032655,
+          "created_at": "2024-01-01T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c860a0dfc377b1ff65181ce0",
+          "content": "[2024-01-01T00:00:00Z] user: I currently live in Oslo.",
+          "score": 0.03239,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_0",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is mango"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a9823609cdd8ebb0f5fc3fcb",
+          "content": "[2024-01-01T00:00:00Z] user: My allergy alert ingredient is mango.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c7d94b3472c034a1ece7fdfb",
+          "content": "[2024-01-01T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-01T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_7b976db46cd289414681f7e0",
+          "content": "[2024-01-01T00:00:00.001000Z] user: A market display mentioned mango colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_0",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Avery",
+        "Avery relocated to Lisbon"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_05e78b2c85de0e58269a11b2",
+          "content": "[2024-01-01T00:00:00.001000Z] user: Avery relocated to Lisbon.",
+          "score": 0.034527,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5b2bab3724f273e9c5e05492",
+          "content": "[2024-01-01T00:00:00Z] user: My teammate is Avery.",
+          "score": 0.03239,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_afef1a72e579ac21088ae574",
+          "content": "[2024-01-01T00:00:00.002000Z] user: Another team visited Oslo.",
+          "score": 0.008065,
+          "created_at": "2024-01-01T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_0",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 0",
+        "chess club 0",
+        "shelter 0"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_ca99407ae9a279b2df964a13",
+          "content": "[2024-01-01T00:00:00.002000Z] user: I volunteer at shelter 0 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-01T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_fd3cb38bf7f47a5297f54b92",
+          "content": "[2024-01-01T00:00:00.001000Z] user: I joined chess club 0 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_79830b8ebd45a7444282b97a",
+          "content": "[2024-01-01T00:00:00Z] user: I started yoga group 0 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_753bbfbb6e50a40e95f9c139",
+          "content": "[2024-01-01T00:00:00.003000Z] user: My neighbor plays tennis team 0.",
+          "score": 0.007812,
+          "created_at": "2024-01-01T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_0",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_31e2fd137fe39d99bb5f6b8f",
+          "content": "[2024-01-01T00:00:00Z] user: Before publishing report 0, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_a440b4e9a4b2c602ca43ca3c",
+          "content": "[2024-01-01T00:00:00.001000Z] user: Report 0 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_0",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Avery",
+        "checkpoint 0 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_28ac371ef1f002f3a7780d30",
+          "content": "[2024-01-01T00:00:00Z] user: My coordinator is Avery.\n[2024-01-01T00:00:00.001000Z] assistant: They scheduled checkpoint 0 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_3ac037e4aa1bf05530316bf5",
+          "content": "[2024-01-01T00:00:00Z] user: My coordinator is Avery.",
+          "score": 0.032258,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_0",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Lisbon"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_44f7f856722c80d2dae8b548",
+          "content": "[2024-01-01T00:00:00Z] user: My preferred travel city is Lisbon.",
+          "score": 0.008197,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e19d504207b66fc55443b8de",
+          "content": "[2024-01-01T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-01T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_0",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-200"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_8ebf69f0bd5ca21f003a506e",
+          "content": "[2024-01-01T00:01:40Z] user: Later, it changed to Room-200.",
+          "score": 0.034655,
+          "created_at": "2024-01-01T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_7b9dd0d261b5fe668a60331f",
+          "content": "[2024-01-01T00:00:00Z] user: My current desk location is Room-100.",
+          "score": 0.03239,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_1",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Blake"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f70478809f9cb99277e4a119",
+          "content": "[2024-01-02T00:00:00Z] user: My project mentor is Blake.",
+          "score": 0.032787,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_afcceb7a9a2d22cc696909ce",
+          "content": "[2024-01-02T00:00:00.001000Z] user: I read an article about Kyoto.",
+          "score": 0.008065,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_1",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "折叠伞"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bdab00d83c137e7e3ee64789",
+          "content": "[2024-01-02T00:00:00Z] user: 我新买的东西是折叠伞",
+          "score": 0.034787,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_a7667338a9913a8125951878",
+          "content": "[2024-01-02T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_1",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "olive"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_85bb1a737ba4cd4e35d09426",
+          "content": "[2024-01-02T00:00:00Z] user: The locker code word is olive.",
+          "score": 0.034787,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b5b705947ddc1a90d93dedbb",
+          "content": "[2024-01-02T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_1",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Oslo"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_6d6f7afccf4d4fb77479ea46",
+          "content": "[2024-01-02T00:01:40Z] user: I later moved and now live in Oslo.",
+          "score": 0.032655,
+          "created_at": "2024-01-02T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5512409cfe0387a93676d5fe",
+          "content": "[2024-01-02T00:00:00Z] user: I currently live in Kyoto.",
+          "score": 0.03239,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_1",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is olive"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_46803db8de4f5b27d243f778",
+          "content": "[2024-01-02T00:00:00Z] user: My allergy alert ingredient is olive.",
+          "score": 0.032787,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_02cd593c4c8f4d1633387c31",
+          "content": "[2024-01-02T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-02T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_bd6edd917a7f07d5cc7836d6",
+          "content": "[2024-01-02T00:00:00.001000Z] user: A market display mentioned olive colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_1",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Blake",
+        "Blake relocated to Oslo"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_ef7c86645357c1dce7f1ddda",
+          "content": "[2024-01-02T00:00:00.001000Z] user: Blake relocated to Oslo.",
+          "score": 0.034527,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_7aa4bab213b269c2ce5a127f",
+          "content": "[2024-01-02T00:00:00Z] user: My teammate is Blake.",
+          "score": 0.03239,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d2bc52526cccc4eae35511ca",
+          "content": "[2024-01-02T00:00:00.002000Z] user: Another team visited Kyoto.",
+          "score": 0.008065,
+          "created_at": "2024-01-02T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_1",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 1",
+        "chess club 1",
+        "shelter 1"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_fb73d6617246ed9d915512ff",
+          "content": "[2024-01-02T00:00:00.002000Z] user: I volunteer at shelter 1 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-02T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_6313a591090e6b7275e039e3",
+          "content": "[2024-01-02T00:00:00.001000Z] user: I joined chess club 1 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e534f2c2339b81b5ec730826",
+          "content": "[2024-01-02T00:00:00Z] user: I started yoga group 1 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_bc276652ceeb7d36e1c2a7dc",
+          "content": "[2024-01-02T00:00:00.003000Z] user: My neighbor plays tennis team 1.",
+          "score": 0.007812,
+          "created_at": "2024-01-02T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_1",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_32f65e6afbab9ca4b5e71112",
+          "content": "[2024-01-02T00:00:00Z] user: Before publishing report 1, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5a2cd55eb088071a50919c96",
+          "content": "[2024-01-02T00:00:00.001000Z] user: Report 1 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_1",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Blake",
+        "checkpoint 1 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_3ba7105581a87d6479538d9f",
+          "content": "[2024-01-02T00:00:00Z] user: My coordinator is Blake.\n[2024-01-02T00:00:00.001000Z] assistant: They scheduled checkpoint 1 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_2b3382e9b0f6838974527e5b",
+          "content": "[2024-01-02T00:00:00Z] user: My coordinator is Blake.",
+          "score": 0.032258,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_1",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Oslo"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_91914d5d92254f1dfe2cc31f",
+          "content": "[2024-01-02T00:00:00Z] user: My preferred travel city is Oslo.",
+          "score": 0.008197,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5431e8193ef5ba86d12b5361",
+          "content": "[2024-01-02T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-02T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_1",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-201"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b11ac6b9b735a27a16755913",
+          "content": "[2024-01-02T00:01:40Z] user: Later, it changed to Room-201.",
+          "score": 0.034655,
+          "created_at": "2024-01-02T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b4db773025daf0eeb8d013e4",
+          "content": "[2024-01-02T00:00:00Z] user: My current desk location is Room-101.",
+          "score": 0.03239,
+          "created_at": "2024-01-02T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_2",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Casey"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_85400577b1d14ac62ae25a2d",
+          "content": "[2024-01-03T00:00:00Z] user: My project mentor is Casey.",
+          "score": 0.032787,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_6968cf481c810778e2609dde",
+          "content": "[2024-01-03T00:00:00.001000Z] user: I read an article about Lima.",
+          "score": 0.008065,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_2",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "咖啡磨豆机"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_342ca22edfa6a59807ce225d",
+          "content": "[2024-01-03T00:00:00Z] user: 我新买的东西是咖啡磨豆机",
+          "score": 0.034787,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_dd0163c09e34e83c8de66bfd",
+          "content": "[2024-01-03T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_2",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "ginger"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_6b854b621923b0bd12dcd760",
+          "content": "[2024-01-03T00:00:00Z] user: The locker code word is ginger.",
+          "score": 0.034787,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d9fcfd93c977480c601fe4f5",
+          "content": "[2024-01-03T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_2",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Kyoto"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4b993d949c42800f2fead998",
+          "content": "[2024-01-03T00:01:40Z] user: I later moved and now live in Kyoto.",
+          "score": 0.032655,
+          "created_at": "2024-01-03T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e7aba1371f3538a8752b8c23",
+          "content": "[2024-01-03T00:00:00Z] user: I currently live in Lima.",
+          "score": 0.03239,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_2",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is ginger"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_0d51bc8999bcac327603a124",
+          "content": "[2024-01-03T00:00:00Z] user: My allergy alert ingredient is ginger.",
+          "score": 0.032787,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_2b875326abe40f8aeff7cba2",
+          "content": "[2024-01-03T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-03T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b25975c5e24a568b745c3773",
+          "content": "[2024-01-03T00:00:00.001000Z] user: A market display mentioned ginger colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_2",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Casey",
+        "Casey relocated to Kyoto"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e75fcd95128d43bd03c72ee9",
+          "content": "[2024-01-03T00:00:00.001000Z] user: Casey relocated to Kyoto.",
+          "score": 0.034527,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e4f64dc77d3f7d5671426b9a",
+          "content": "[2024-01-03T00:00:00Z] user: My teammate is Casey.",
+          "score": 0.03239,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_6783d82541ea30e04121db2c",
+          "content": "[2024-01-03T00:00:00.002000Z] user: Another team visited Lima.",
+          "score": 0.008065,
+          "created_at": "2024-01-03T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_2",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 2",
+        "chess club 2",
+        "shelter 2"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_d5d1faded8a14d6035cd5019",
+          "content": "[2024-01-03T00:00:00.002000Z] user: I volunteer at shelter 2 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-03T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_faf0295eaa79cb8d0fb26c30",
+          "content": "[2024-01-03T00:00:00.001000Z] user: I joined chess club 2 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5b74fa329f772a16f0418c32",
+          "content": "[2024-01-03T00:00:00Z] user: I started yoga group 2 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_1a4fc725b288f2f5e42ce0e2",
+          "content": "[2024-01-03T00:00:00.003000Z] user: My neighbor plays tennis team 2.",
+          "score": 0.007812,
+          "created_at": "2024-01-03T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_2",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_251828d9a06f0453c72349d8",
+          "content": "[2024-01-03T00:00:00Z] user: Before publishing report 2, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c8032e7eb7349d70e8f513dd",
+          "content": "[2024-01-03T00:00:00.001000Z] user: Report 2 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_2",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Casey",
+        "checkpoint 2 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_6c0e7f89680d7047b3bac604",
+          "content": "[2024-01-03T00:00:00Z] user: My coordinator is Casey.\n[2024-01-03T00:00:00.001000Z] assistant: They scheduled checkpoint 2 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c249df817545f82cc1976b6f",
+          "content": "[2024-01-03T00:00:00Z] user: My coordinator is Casey.",
+          "score": 0.032258,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_2",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Kyoto"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4d2cf1da8fb8b913ddc06959",
+          "content": "[2024-01-03T00:00:00Z] user: My preferred travel city is Kyoto.",
+          "score": 0.008197,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_f7491e736cb52738a9fbba25",
+          "content": "[2024-01-03T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-03T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_2",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-202"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_c3ab8ea7738349cc3e15754c",
+          "content": "[2024-01-03T00:01:40Z] user: Later, it changed to Room-202.",
+          "score": 0.034655,
+          "created_at": "2024-01-03T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_152460ba2e16690ec82e15e3",
+          "content": "[2024-01-03T00:00:00Z] user: My current desk location is Room-102.",
+          "score": 0.03239,
+          "created_at": "2024-01-03T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_3",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Devon"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_fe16e1039fef6a37d4b63e21",
+          "content": "[2024-01-04T00:00:00Z] user: My project mentor is Devon.",
+          "score": 0.032787,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c96a5e23d4047f99129bcd7b",
+          "content": "[2024-01-04T00:00:00.001000Z] user: I read an article about Accra.",
+          "score": 0.008065,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_3",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "登山杖"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_2efeb6f438f307604d4c0e3f",
+          "content": "[2024-01-04T00:00:00Z] user: 我新买的东西是登山杖",
+          "score": 0.034787,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_21c2daac15ad33001ff3e882",
+          "content": "[2024-01-04T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_3",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "papaya"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_5b3df624ec7dbf87efe46e0d",
+          "content": "[2024-01-04T00:00:00Z] user: The locker code word is papaya.",
+          "score": 0.034787,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c8b79718ec406b82222cfe8d",
+          "content": "[2024-01-04T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_3",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Lima"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bb1bf93dc77785ae4f51c5a5",
+          "content": "[2024-01-04T00:01:40Z] user: I later moved and now live in Lima.",
+          "score": 0.032787,
+          "created_at": "2024-01-04T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_18928c0ed26ce139636392da",
+          "content": "[2024-01-04T00:00:00Z] user: I currently live in Accra.",
+          "score": 0.032258,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_3",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is papaya"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_09d43cf60679a7f1d6e79eb1",
+          "content": "[2024-01-04T00:00:00Z] user: My allergy alert ingredient is papaya.",
+          "score": 0.032787,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_344f5014fc2c5cb3d6ab5775",
+          "content": "[2024-01-04T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-04T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ae23dc601c46d161c265a20a",
+          "content": "[2024-01-04T00:00:00.001000Z] user: A market display mentioned papaya colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_3",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Devon",
+        "Devon relocated to Lima"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_7d1c96d42f1b262ab57e1026",
+          "content": "[2024-01-04T00:00:00.001000Z] user: Devon relocated to Lima.",
+          "score": 0.034527,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_8e6c265549e4a1b3b1da2cb4",
+          "content": "[2024-01-04T00:00:00Z] user: My teammate is Devon.",
+          "score": 0.03239,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_236182ea27279509df8a487a",
+          "content": "[2024-01-04T00:00:00.002000Z] user: Another team visited Accra.",
+          "score": 0.008065,
+          "created_at": "2024-01-04T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_3",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 3",
+        "chess club 3",
+        "shelter 3"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a7f624ffaa72993dbcd39f05",
+          "content": "[2024-01-04T00:00:00.002000Z] user: I volunteer at shelter 3 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-04T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_faeb71dcf0eb6cee6403307c",
+          "content": "[2024-01-04T00:00:00.001000Z] user: I joined chess club 3 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_543f649b72a34e02fe5c9ac4",
+          "content": "[2024-01-04T00:00:00Z] user: I started yoga group 3 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d48c37ac3d8a0709d2b81e99",
+          "content": "[2024-01-04T00:00:00.003000Z] user: My neighbor plays tennis team 3.",
+          "score": 0.007812,
+          "created_at": "2024-01-04T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_3",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_065c4c10c39939a000911eb4",
+          "content": "[2024-01-04T00:00:00Z] user: Before publishing report 3, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_03ab5ef8c31490f98c09340d",
+          "content": "[2024-01-04T00:00:00.001000Z] user: Report 3 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_3",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Devon",
+        "checkpoint 3 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_6e16ddec869fab5e915f15e1",
+          "content": "[2024-01-04T00:00:00Z] user: My coordinator is Devon.\n[2024-01-04T00:00:00.001000Z] assistant: They scheduled checkpoint 3 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_4862a9021b8713e819265c84",
+          "content": "[2024-01-04T00:00:00Z] user: My coordinator is Devon.",
+          "score": 0.032258,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_3",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Lima"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f8e64e3aa58c0fddf80f9c5f",
+          "content": "[2024-01-04T00:00:00Z] user: My preferred travel city is Lima.",
+          "score": 0.008197,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d37c65b1fd7df640af0c8d30",
+          "content": "[2024-01-04T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-04T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_3",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-203"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f9a55f3724deb0373ab2bbc0",
+          "content": "[2024-01-04T00:01:40Z] user: Later, it changed to Room-203.",
+          "score": 0.034655,
+          "created_at": "2024-01-04T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_82e62e5df9cca60c8e3f21f4",
+          "content": "[2024-01-04T00:00:00Z] user: My current desk location is Room-103.",
+          "score": 0.03239,
+          "created_at": "2024-01-04T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_4",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Emery"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_7dbbaddcaa315fa7920c7118",
+          "content": "[2024-01-05T00:00:00Z] user: My project mentor is Emery.",
+          "score": 0.032787,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c8bf81ff7a54fcbb106b8a23",
+          "content": "[2024-01-05T00:00:00.001000Z] user: I read an article about Tallinn.",
+          "score": 0.008065,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_4",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "蓝牙音箱"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_2d0670a41b2b5a2a5efc6ced",
+          "content": "[2024-01-05T00:00:00Z] user: 我新买的东西是蓝牙音箱",
+          "score": 0.034787,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_1be97ea6c9478785cf7cde10",
+          "content": "[2024-01-05T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_4",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "walnut"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_3713e44fabcbcc29c369b6e5",
+          "content": "[2024-01-05T00:00:00Z] user: The locker code word is walnut.",
+          "score": 0.034787,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_cc4e51ef1159d82df1c325eb",
+          "content": "[2024-01-05T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_4",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Accra"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_9adc93a1859bcda615cadba8",
+          "content": "[2024-01-05T00:01:40Z] user: I later moved and now live in Accra.",
+          "score": 0.032655,
+          "created_at": "2024-01-05T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c8bb66c2e3b9b4dbed3f3ea0",
+          "content": "[2024-01-05T00:00:00Z] user: I currently live in Tallinn.",
+          "score": 0.03239,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_4",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is walnut"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_52f645e2c9df62276edaf443",
+          "content": "[2024-01-05T00:00:00Z] user: My allergy alert ingredient is walnut.",
+          "score": 0.032787,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5c79f70942aee90f2467c92a",
+          "content": "[2024-01-05T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-05T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e89ad771c7839d1561f9b6a4",
+          "content": "[2024-01-05T00:00:00.001000Z] user: A market display mentioned walnut colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_4",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Emery",
+        "Emery relocated to Accra"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_52bb63983680c95389b2bf34",
+          "content": "[2024-01-05T00:00:00.001000Z] user: Emery relocated to Accra.",
+          "score": 0.034527,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d41241a581bbb112d7ef3ff8",
+          "content": "[2024-01-05T00:00:00Z] user: My teammate is Emery.",
+          "score": 0.03239,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_a81f7e37d1f8d8f87c7179ca",
+          "content": "[2024-01-05T00:00:00.002000Z] user: Another team visited Tallinn.",
+          "score": 0.008065,
+          "created_at": "2024-01-05T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_4",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 4",
+        "chess club 4",
+        "shelter 4"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_60959e031dc4d3c8557c54e8",
+          "content": "[2024-01-05T00:00:00.002000Z] user: I volunteer at shelter 4 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-05T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_238c15a49cf476fa7d571dce",
+          "content": "[2024-01-05T00:00:00.001000Z] user: I joined chess club 4 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5c2f243b1c15ff676e98f6d4",
+          "content": "[2024-01-05T00:00:00Z] user: I started yoga group 4 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_acfd4e1dd36518a394babfa5",
+          "content": "[2024-01-05T00:00:00.003000Z] user: My neighbor plays tennis team 4.",
+          "score": 0.007812,
+          "created_at": "2024-01-05T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_4",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_877ade7a6b5420785fa4fb5a",
+          "content": "[2024-01-05T00:00:00Z] user: Before publishing report 4, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_8d729b90f8e5cf81f9a8205c",
+          "content": "[2024-01-05T00:00:00.001000Z] user: Report 4 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_4",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Emery",
+        "checkpoint 4 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_ef28a5586b872cf96f1ce57b",
+          "content": "[2024-01-05T00:00:00Z] user: My coordinator is Emery.\n[2024-01-05T00:00:00.001000Z] assistant: They scheduled checkpoint 4 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d15dd0a40be0fc4ebf9f4020",
+          "content": "[2024-01-05T00:00:00Z] user: My coordinator is Emery.",
+          "score": 0.032258,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_4",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Accra"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_8d8fcdf7db6de0860db38806",
+          "content": "[2024-01-05T00:00:00Z] user: My preferred travel city is Accra.",
+          "score": 0.008197,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d15e52b8ad4af21ceb292a08",
+          "content": "[2024-01-05T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-05T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_4",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-204"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_1f9c11773e3505b9190d337d",
+          "content": "[2024-01-05T00:01:40Z] user: Later, it changed to Room-204.",
+          "score": 0.034655,
+          "created_at": "2024-01-05T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_4654a927f30383ca0e251804",
+          "content": "[2024-01-05T00:00:00Z] user: My current desk location is Room-104.",
+          "score": 0.03239,
+          "created_at": "2024-01-05T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_5",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Finley"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_0a53f283c6e6b802ecd936b4",
+          "content": "[2024-01-06T00:00:00Z] user: My project mentor is Finley.",
+          "score": 0.032787,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ead63ec5a8b662cde4615d84",
+          "content": "[2024-01-06T00:00:00.001000Z] user: I read an article about Perth.",
+          "score": 0.008065,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_5",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "机械键盘"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4f2de00a7eac0013e7fccc62",
+          "content": "[2024-01-06T00:00:00Z] user: 我新买的东西是机械键盘",
+          "score": 0.034787,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_7e4a0331a507588b60df8a46",
+          "content": "[2024-01-06T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_5",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "radish"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_9953b6f9c1ce98354cc156dd",
+          "content": "[2024-01-06T00:00:00Z] user: The locker code word is radish.",
+          "score": 0.034787,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e2636c3b45a090051f60a34e",
+          "content": "[2024-01-06T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_5",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Tallinn"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4f1832a64b1c24bf160be757",
+          "content": "[2024-01-06T00:01:40Z] user: I later moved and now live in Tallinn.",
+          "score": 0.032655,
+          "created_at": "2024-01-06T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_30db51c8be11f4a001e0bb9a",
+          "content": "[2024-01-06T00:00:00Z] user: I currently live in Perth.",
+          "score": 0.03239,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_5",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is radish"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bf500686b24d111b659afdad",
+          "content": "[2024-01-06T00:00:00Z] user: My allergy alert ingredient is radish.",
+          "score": 0.032787,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_49ea26021a9f9f317852c1af",
+          "content": "[2024-01-06T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-06T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_39e1fe824af550c41b7f1505",
+          "content": "[2024-01-06T00:00:00.001000Z] user: A market display mentioned radish colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_5",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Finley",
+        "Finley relocated to Tallinn"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_829f8ec1b6056e776bee1181",
+          "content": "[2024-01-06T00:00:00.001000Z] user: Finley relocated to Tallinn.",
+          "score": 0.034527,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_29abe72348a3529587c0ebf0",
+          "content": "[2024-01-06T00:00:00Z] user: My teammate is Finley.",
+          "score": 0.03239,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_68f29be6f244d54372dcf8ae",
+          "content": "[2024-01-06T00:00:00.002000Z] user: Another team visited Perth.",
+          "score": 0.008065,
+          "created_at": "2024-01-06T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_5",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 5",
+        "chess club 5",
+        "shelter 5"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_3b49e49b0b0aacb2b11a6e01",
+          "content": "[2024-01-06T00:00:00.002000Z] user: I volunteer at shelter 5 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-06T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_667a6c23e9cbeabecda55507",
+          "content": "[2024-01-06T00:00:00.001000Z] user: I joined chess club 5 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_3b498763b7432d0cb81340c7",
+          "content": "[2024-01-06T00:00:00Z] user: I started yoga group 5 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ddaa19af26785c28cbfb74e4",
+          "content": "[2024-01-06T00:00:00.003000Z] user: My neighbor plays tennis team 5.",
+          "score": 0.007812,
+          "created_at": "2024-01-06T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_5",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_9ec48acbab056a3e9204112b",
+          "content": "[2024-01-06T00:00:00Z] user: Before publishing report 5, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_611dc5a7ac13e5b3321d9644",
+          "content": "[2024-01-06T00:00:00.001000Z] user: Report 5 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_5",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Finley",
+        "checkpoint 5 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e8d073220f8f59f1696f2dfe",
+          "content": "[2024-01-06T00:00:00Z] user: My coordinator is Finley.\n[2024-01-06T00:00:00.001000Z] assistant: They scheduled checkpoint 5 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ad22b1e004a92628ef4a3d1e",
+          "content": "[2024-01-06T00:00:00Z] user: My coordinator is Finley.",
+          "score": 0.032258,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_5",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Tallinn"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_faf8a209a42674d953d6390c",
+          "content": "[2024-01-06T00:00:00Z] user: My preferred travel city is Tallinn.",
+          "score": 0.008197,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_81a829c03e5d088ff83dd679",
+          "content": "[2024-01-06T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-06T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_5",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-205"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_8be886ee9a2309a2695756b4",
+          "content": "[2024-01-06T00:01:40Z] user: Later, it changed to Room-205.",
+          "score": 0.034655,
+          "created_at": "2024-01-06T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_59bb216b1ccf2cdf6b150fee",
+          "content": "[2024-01-06T00:00:00Z] user: My current desk location is Room-105.",
+          "score": 0.03239,
+          "created_at": "2024-01-06T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_6",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Gray"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_79ca16d074f28d51d25d3e5e",
+          "content": "[2024-01-07T00:00:00Z] user: My project mentor is Gray.",
+          "score": 0.032787,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ce08d1902fd2bec9b59fb708",
+          "content": "[2024-01-07T00:00:00.001000Z] user: I read an article about Quito.",
+          "score": 0.008065,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_6",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "空气炸锅"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_0567a4bd338994134e1f1cd9",
+          "content": "[2024-01-07T00:00:00Z] user: 我新买的东西是空气炸锅",
+          "score": 0.034787,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_0306463506d0dd4b7f87cc3a",
+          "content": "[2024-01-07T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_6",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "lentil"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_369a386bfdac88fc77eb4405",
+          "content": "[2024-01-07T00:00:00Z] user: The locker code word is lentil.",
+          "score": 0.034787,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c35a420e6b0b44871a0971e5",
+          "content": "[2024-01-07T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_6",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Perth"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b59ec0b6ee099151fd8f477d",
+          "content": "[2024-01-07T00:01:40Z] user: I later moved and now live in Perth.",
+          "score": 0.032787,
+          "created_at": "2024-01-07T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_441f3b7d3b4721283b242e2a",
+          "content": "[2024-01-07T00:00:00Z] user: I currently live in Quito.",
+          "score": 0.032258,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_6",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is lentil"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_84987a2e18233e91beb95a5f",
+          "content": "[2024-01-07T00:00:00Z] user: My allergy alert ingredient is lentil.",
+          "score": 0.032787,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_efd167b637d4b2ad7443eff6",
+          "content": "[2024-01-07T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-07T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_0a2e6e2b50ed2a46d5bc10ef",
+          "content": "[2024-01-07T00:00:00.001000Z] user: A market display mentioned lentil colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_6",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Gray",
+        "Gray relocated to Perth"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_ebdea6799bedc1340160b90d",
+          "content": "[2024-01-07T00:00:00.001000Z] user: Gray relocated to Perth.",
+          "score": 0.034527,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5763253f76151d730677ca8e",
+          "content": "[2024-01-07T00:00:00Z] user: My teammate is Gray.",
+          "score": 0.03239,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_172f8d32f056c7e08c3980a3",
+          "content": "[2024-01-07T00:00:00.002000Z] user: Another team visited Quito.",
+          "score": 0.008065,
+          "created_at": "2024-01-07T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_6",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 6",
+        "chess club 6",
+        "shelter 6"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a1fc4bc16c31188ba226e364",
+          "content": "[2024-01-07T00:00:00.002000Z] user: I volunteer at shelter 6 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-07T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_32772e1d13bc44bc9404140c",
+          "content": "[2024-01-07T00:00:00.001000Z] user: I joined chess club 6 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_eaf85bc1bb34b22ec91c2294",
+          "content": "[2024-01-07T00:00:00Z] user: I started yoga group 6 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_5305ed46a0df01a2bb41874b",
+          "content": "[2024-01-07T00:00:00.003000Z] user: My neighbor plays tennis team 6.",
+          "score": 0.007812,
+          "created_at": "2024-01-07T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_6",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_30db0ddd00bc5c34b4086563",
+          "content": "[2024-01-07T00:00:00Z] user: Before publishing report 6, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_ab332d2e5e9d125e1143d006",
+          "content": "[2024-01-07T00:00:00.001000Z] user: Report 6 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_6",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Gray",
+        "checkpoint 6 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e90b71d9fff3f921e05b6beb",
+          "content": "[2024-01-07T00:00:00Z] user: My coordinator is Gray.\n[2024-01-07T00:00:00.001000Z] assistant: They scheduled checkpoint 6 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b96adff5c64943c4ccc7ff75",
+          "content": "[2024-01-07T00:00:00Z] user: My coordinator is Gray.",
+          "score": 0.032258,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_6",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Perth"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f2cabf399c8df10ff22e3696",
+          "content": "[2024-01-07T00:00:00Z] user: My preferred travel city is Perth.",
+          "score": 0.008197,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_1dbb5792de4d8ead82c265ca",
+          "content": "[2024-01-07T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-07T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_6",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-206"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_217cfb0b761c1cb5a9c912b4",
+          "content": "[2024-01-07T00:01:40Z] user: Later, it changed to Room-206.",
+          "score": 0.034655,
+          "created_at": "2024-01-07T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_bd79ed46f2c94ba3e0c53b73",
+          "content": "[2024-01-07T00:00:00Z] user: My current desk location is Room-106.",
+          "score": 0.03239,
+          "created_at": "2024-01-07T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_7",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Harper"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_379aa7dbac5d634a93f36129",
+          "content": "[2024-01-08T00:00:00Z] user: My project mentor is Harper.",
+          "score": 0.032787,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c757518262cd675867a3e553",
+          "content": "[2024-01-08T00:00:00.001000Z] user: I read an article about Riga.",
+          "score": 0.008065,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_7",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "保温杯"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_c144c40024e135dc74181fb2",
+          "content": "[2024-01-08T00:00:00Z] user: 我新买的东西是保温杯",
+          "score": 0.034787,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_79493afa7b546aebcb208762",
+          "content": "[2024-01-08T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_7",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "peach"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_0147f66c7bde0f1b7d0055ce",
+          "content": "[2024-01-08T00:00:00Z] user: The locker code word is peach.",
+          "score": 0.034787,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_9cfb13eee7c9ebfc17e478cd",
+          "content": "[2024-01-08T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_7",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Quito"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b67ae657c098e49dbd6c23ad",
+          "content": "[2024-01-08T00:01:40Z] user: I later moved and now live in Quito.",
+          "score": 0.032787,
+          "created_at": "2024-01-08T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_e74843711f4ee7b4886c5726",
+          "content": "[2024-01-08T00:00:00Z] user: I currently live in Riga.",
+          "score": 0.032258,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_7",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is peach"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a44be4a7b60919a1031d318c",
+          "content": "[2024-01-08T00:00:00Z] user: My allergy alert ingredient is peach.",
+          "score": 0.032787,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_2484565662e50a3130b6aca3",
+          "content": "[2024-01-08T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-08T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_1cfaec5427e5abb8b871d8d8",
+          "content": "[2024-01-08T00:00:00.001000Z] user: A market display mentioned peach colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_7",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Harper",
+        "Harper relocated to Quito"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_763e75ffb1dc7599f75a996c",
+          "content": "[2024-01-08T00:00:00.001000Z] user: Harper relocated to Quito.",
+          "score": 0.034527,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_16ed335c5823e8d8417d0997",
+          "content": "[2024-01-08T00:00:00Z] user: My teammate is Harper.",
+          "score": 0.03239,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_dc55e7d2fd311e2d9662f752",
+          "content": "[2024-01-08T00:00:00.002000Z] user: Another team visited Riga.",
+          "score": 0.008065,
+          "created_at": "2024-01-08T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_7",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 7",
+        "chess club 7",
+        "shelter 7"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_1da69134f60f6fe952d9b3dc",
+          "content": "[2024-01-08T00:00:00.002000Z] user: I volunteer at shelter 7 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-08T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_23924daba1ada67b7af11dee",
+          "content": "[2024-01-08T00:00:00.001000Z] user: I joined chess club 7 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_30b2713ce69d0115f370617e",
+          "content": "[2024-01-08T00:00:00Z] user: I started yoga group 7 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_98f3ac70bb5d1b87b6aba916",
+          "content": "[2024-01-08T00:00:00.003000Z] user: My neighbor plays tennis team 7.",
+          "score": 0.007812,
+          "created_at": "2024-01-08T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_7",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_5f64eb5dc0c6dda37295c1b7",
+          "content": "[2024-01-08T00:00:00Z] user: Before publishing report 7, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_9b26d778ba489fd763d486e3",
+          "content": "[2024-01-08T00:00:00.001000Z] user: Report 7 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_7",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Harper",
+        "checkpoint 7 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a5287a7849ea34b8d06f0d9f",
+          "content": "[2024-01-08T00:00:00Z] user: My coordinator is Harper.\n[2024-01-08T00:00:00.001000Z] assistant: They scheduled checkpoint 7 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_9c6fbe96edddd008f6067f03",
+          "content": "[2024-01-08T00:00:00Z] user: My coordinator is Harper.",
+          "score": 0.032258,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_7",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Quito"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a84a17ed9c786d8712048a97",
+          "content": "[2024-01-08T00:00:00Z] user: My preferred travel city is Quito.",
+          "score": 0.008197,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_f20f94f3a5cee118ed4e2297",
+          "content": "[2024-01-08T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-08T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_7",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-207"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_eca52ce9d8d2ffacec300d86",
+          "content": "[2024-01-08T00:01:40Z] user: Later, it changed to Room-207.",
+          "score": 0.034655,
+          "created_at": "2024-01-08T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_6fd3f88dfb865680fee78ac7",
+          "content": "[2024-01-08T00:00:00Z] user: My current desk location is Room-107.",
+          "score": 0.03239,
+          "created_at": "2024-01-08T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_8",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Indigo"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f90bce0f999f3832aac3d0f2",
+          "content": "[2024-01-09T00:00:00Z] user: My project mentor is Indigo.",
+          "score": 0.032787,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_21d1ea5b26edd7d64b84dbc4",
+          "content": "[2024-01-09T00:00:00.001000Z] user: I read an article about Busan.",
+          "score": 0.008065,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_8",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "露营灯"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_1973f7a7e817f87d6712be22",
+          "content": "[2024-01-09T00:00:00Z] user: 我新买的东西是露营灯",
+          "score": 0.034787,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d554e188d86b5b8218d62c05",
+          "content": "[2024-01-09T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_8",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "barley"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bf2ce47823c9aa1dd40751e6",
+          "content": "[2024-01-09T00:00:00Z] user: The locker code word is barley.",
+          "score": 0.034787,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_d97a4458a462260a390d95fa",
+          "content": "[2024-01-09T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_8",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Riga"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_acf7762fc93037def1f7062a",
+          "content": "[2024-01-09T00:01:40Z] user: I later moved and now live in Riga.",
+          "score": 0.032655,
+          "created_at": "2024-01-09T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_f2eefb503b5daa08e35024d6",
+          "content": "[2024-01-09T00:00:00Z] user: I currently live in Busan.",
+          "score": 0.03239,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_8",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is barley"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_8413e778d4cdff3073fae4c0",
+          "content": "[2024-01-09T00:00:00Z] user: My allergy alert ingredient is barley.",
+          "score": 0.032787,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_721267f22355ea68445b94e3",
+          "content": "[2024-01-09T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-09T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_59017ec4fa64af2d03c2a1d0",
+          "content": "[2024-01-09T00:00:00.001000Z] user: A market display mentioned barley colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_8",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Indigo",
+        "Indigo relocated to Riga"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4bd3e2c06ccd5b295cab9487",
+          "content": "[2024-01-09T00:00:00.001000Z] user: Indigo relocated to Riga.",
+          "score": 0.034527,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_f129871cdda98bc2d8dfb6e6",
+          "content": "[2024-01-09T00:00:00Z] user: My teammate is Indigo.",
+          "score": 0.03239,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_bd9faa6be23a09d405efd75c",
+          "content": "[2024-01-09T00:00:00.002000Z] user: Another team visited Busan.",
+          "score": 0.008065,
+          "created_at": "2024-01-09T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_8",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 8",
+        "chess club 8",
+        "shelter 8"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_cd7056538ead56f9f480999e",
+          "content": "[2024-01-09T00:00:00.002000Z] user: I volunteer at shelter 8 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-09T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_c943d2d633fbb07697baaeb0",
+          "content": "[2024-01-09T00:00:00.001000Z] user: I joined chess club 8 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_17306add18fe42c6e07fdde4",
+          "content": "[2024-01-09T00:00:00Z] user: I started yoga group 8 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_a9cc24700ca1a9bf1dd47896",
+          "content": "[2024-01-09T00:00:00.003000Z] user: My neighbor plays tennis team 8.",
+          "score": 0.007812,
+          "created_at": "2024-01-09T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_8",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_c1c1bc025bd42f3cd468672d",
+          "content": "[2024-01-09T00:00:00Z] user: Before publishing report 8, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b2d4a380b3f2235b824d06b6",
+          "content": "[2024-01-09T00:00:00.001000Z] user: Report 8 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_8",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Indigo",
+        "checkpoint 8 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_9f8c88fec408889cff22e615",
+          "content": "[2024-01-09T00:00:00Z] user: My coordinator is Indigo.\n[2024-01-09T00:00:00.001000Z] assistant: They scheduled checkpoint 8 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_613ac5187950fafdd8b8787f",
+          "content": "[2024-01-09T00:00:00Z] user: My coordinator is Indigo.",
+          "score": 0.032258,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_8",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Riga"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e949690a006070aae9515346",
+          "content": "[2024-01-09T00:00:00Z] user: My preferred travel city is Riga.",
+          "score": 0.008197,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_9676ff58a3ee0e34ce17caeb",
+          "content": "[2024-01-09T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-09T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_8",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-208"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_962b099b7689e470980a8f2f",
+          "content": "[2024-01-09T00:01:40Z] user: Later, it changed to Room-208.",
+          "score": 0.034655,
+          "created_at": "2024-01-09T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_238431ccb5edbdd06dd8b512",
+          "content": "[2024-01-09T00:00:00Z] user: My current desk location is Room-108.",
+          "score": 0.03239,
+          "created_at": "2024-01-09T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_en_9",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "Jules"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_1f57baafc782035ced8b6e6b",
+          "content": "[2024-01-10T00:00:00Z] user: My project mentor is Jules.",
+          "score": 0.032787,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b27f9eba73487a2469729249",
+          "content": "[2024-01-10T00:00:00.001000Z] user: I read an article about Lisbon.",
+          "score": 0.008065,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_direct_zh_9",
+      "category": "direct_fact",
+      "candidate_count": 2,
+      "expected": [
+        "拍立得"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_d98319b50e2ecc62459017d3",
+          "content": "[2024-01-10T00:00:00Z] user: 我新买的东西是拍立得",
+          "score": 0.034787,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_b924d777ff22808f5bda12a6",
+          "content": "[2024-01-10T00:00:00.001000Z] user: 周末需要整理储物柜",
+          "score": 0.008065,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_options_9",
+      "category": "multiple_choice",
+      "candidate_count": 2,
+      "expected": [
+        "fig"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f5da2b9ed1e7e4ab65d5cf50",
+          "content": "[2024-01-10T00:00:00Z] user: The locker code word is fig.",
+          "score": 0.034787,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_3c45d513b276687f8f2cb347",
+          "content": "[2024-01-10T00:00:00.001000Z] user: The cafeteria menu changes weekly.",
+          "score": 0.032258,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_temporal_9",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Busan"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b94a7f2104db1999d4859a07",
+          "content": "[2024-01-10T00:01:40Z] user: I later moved and now live in Busan.",
+          "score": 0.032655,
+          "created_at": "2024-01-10T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_bdfdf2878e074685e72a40f2",
+          "content": "[2024-01-10T00:00:00Z] user: I currently live in Lisbon.",
+          "score": 0.03239,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_noise_9",
+      "category": "noise_resistance",
+      "candidate_count": 3,
+      "expected": [
+        "ingredient is fig"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_ac16f5f8840a4c12cc2764cd",
+          "content": "[2024-01-10T00:00:00Z] user: My allergy alert ingredient is fig.",
+          "score": 0.032787,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_194b9e8c99093f98bc1fb420",
+          "content": "[2024-01-10T00:00:00.002000Z] user: The travel checklist is stored in a blue folder.",
+          "score": 0.03213,
+          "created_at": "2024-01-10T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_a73e8e2ab69f01d08a0ece68",
+          "content": "[2024-01-10T00:00:00.001000Z] user: A market display mentioned fig colored labels.",
+          "score": 0.008065,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_multi_hop_9",
+      "category": "multi_hop",
+      "candidate_count": 3,
+      "expected": [
+        "teammate is Jules",
+        "Jules relocated to Busan"
+      ],
+      "matching": "substring",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_99ab2ddba8d3cf448c50df70",
+          "content": "[2024-01-10T00:00:00.001000Z] user: Jules relocated to Busan.",
+          "score": 0.034527,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_8f609ed00428430e8b4179ed",
+          "content": "[2024-01-10T00:00:00Z] user: My teammate is Jules.",
+          "score": 0.03239,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_261eaefb4c53d56d36e254d2",
+          "content": "[2024-01-10T00:00:00.002000Z] user: Another team visited Lisbon.",
+          "score": 0.008065,
+          "created_at": "2024-01-10T00:00:00.002000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_list_9",
+      "category": "list_recall",
+      "candidate_count": 4,
+      "expected": [
+        "yoga group 9",
+        "chess club 9",
+        "shelter 9"
+      ],
+      "matching": "substring",
+      "ranks": [
+        3,
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_27dd204cb800c97b6734acb1",
+          "content": "[2024-01-10T00:00:00.002000Z] user: I volunteer at shelter 9 on Saturdays.",
+          "score": 0.032527,
+          "created_at": "2024-01-10T00:00:00.002000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_4076786f2f9100a24a7c0e0a",
+          "content": "[2024-01-10T00:00:00.001000Z] user: I joined chess club 9 on Wednesdays.",
+          "score": 0.032258,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_a835eb3cc87e54de847a77dd",
+          "content": "[2024-01-10T00:00:00Z] user: I started yoga group 9 on Mondays.",
+          "score": 0.032006,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_2f93f1c617ff10e34715658b",
+          "content": "[2024-01-10T00:00:00.003000Z] user: My neighbor plays tennis team 9.",
+          "score": 0.007812,
+          "created_at": "2024-01-10T00:00:00.003000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_privacy_9",
+      "category": "rules_privacy",
+      "candidate_count": 2,
+      "expected": [
+        "remove all phone numbers"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a8f0510f3af49a3eb0356099",
+          "content": "[2024-01-10T00:00:00Z] user: Before publishing report 9, remove all phone numbers.",
+          "score": 0.032787,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_11d195d17b48665ed22baa0d",
+          "content": "[2024-01-10T00:00:00.001000Z] user: Report 9 uses the green cover template.",
+          "score": 0.032258,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_coreference_9",
+      "category": "multi_turn",
+      "candidate_count": 2,
+      "expected": [
+        "coordinator is Jules",
+        "checkpoint 9 for Friday"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_250de95e5e9193c063b31d7c",
+          "content": "[2024-01-10T00:00:00Z] user: My coordinator is Jules.\n[2024-01-10T00:00:00.001000Z] assistant: They scheduled checkpoint 9 for Friday.",
+          "score": 0.032787,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_57ce0885aa9b8e0da0b1d6f2",
+          "content": "[2024-01-10T00:00:00Z] user: My coordinator is Jules.",
+          "score": 0.032258,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_cross_language_9",
+      "category": "cross_language",
+      "candidate_count": 2,
+      "expected": [
+        "Busan"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_c65a3690e45c3c978cf6590c",
+          "content": "[2024-01-10T00:00:00Z] user: My preferred travel city is Busan.",
+          "score": 0.008197,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_355f6b5994b72b9482926d5d",
+          "content": "[2024-01-10T00:00:00.001000Z] user: I keep old tickets in a drawer.",
+          "score": 0.008065,
+          "created_at": "2024-01-10T00:00:00.001000Z",
+          "source_id": null
+        }
+      ]
+    },
+    {
+      "name": "extended_hard_temporal_9",
+      "category": "temporal_update",
+      "candidate_count": 2,
+      "expected": [
+        "Room-209"
+      ],
+      "matching": "substring",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_749b196f10334af5ecef5a2a",
+          "content": "[2024-01-10T00:01:40Z] user: Later, it changed to Room-209.",
+          "score": 0.034655,
+          "created_at": "2024-01-10T00:01:40Z",
+          "source_id": null
+        },
+        {
+          "id": "mem_9aa1f99f5575dfdd758b25f4",
+          "content": "[2024-01-10T00:00:00Z] user: My current desk location is Room-109.",
+          "score": 0.03239,
+          "created_at": "2024-01-10T00:00:00Z",
+          "source_id": null
+        }
+      ]
+    }
+  ]
+}

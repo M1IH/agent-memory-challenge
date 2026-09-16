@@ -57,6 +57,21 @@ class AdversarialIdentifierEmbedder:
         return vectors
 
 
+class AdversarialEventEmbedder:
+    index_identity = "adversarial-event-v1"
+
+    def encode(self, texts):
+        vectors = []
+        for text in texts:
+            lowered = text.lower()
+            is_query = "list every item" in lowered
+            is_negative = "left it at home" in lowered
+            vectors.append(
+                np.array([1.0, 0.0] if is_query or is_negative else [0.0, 1.0])
+            )
+        return vectors
+
+
 class HybridRetrievalTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
@@ -115,6 +130,35 @@ class HybridRetrievalTests(unittest.TestCase):
             self.assertIn(expected, contents)
         self.assertNotIn("colleague", contents)
         self.assertNotIn("did not", contents)
+
+    def test_explicitly_completed_items_survive_adversarial_dense_fusion(self):
+        store = MemoryStore(
+            Path(self.temp_dir.name) / "event-fusion.db",
+            embedder=AdversarialEventEmbedder(),
+        )
+        completed = (
+            "I packed a tent for Lake Rowan.",
+            "The stove went into my bag for Lake Rowan.",
+            "I put a water filter in my backpack for Lake Rowan.",
+            "My headlamp is packed for Lake Rowan.",
+        )
+        negatives = tuple(
+            f"I considered item {index} for Lake Rowan, but left it at home."
+            for index in range(6)
+        )
+        for index, content in enumerate((*completed, *negatives)):
+            store.add(
+                f"adversarial-event-{index}", "alice", "session-1",
+                [{"role": "user", "content": content}],
+            )
+
+        results = store.search(
+            "alice", "List every item I packed for the Lake Rowan trip.", 4
+        )
+
+        self.assertEqual(set(completed), {
+            result["content"].removeprefix("user: ") for result in results
+        })
 
     def test_definite_yes_is_confirmation_evidence(self):
         self.store.add(

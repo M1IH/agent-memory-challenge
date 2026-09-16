@@ -1,0 +1,366 @@
+{
+  "suite": "blind3",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 11,
+  "hit_at_1": 0.45454545454545453,
+  "hit_at_3": 0.9090909090909091,
+  "hit_at_5": 1.0,
+  "mrr": 0.6893939393939393,
+  "categories": {
+    "cross_lingual": 0.5,
+    "list_negation": 0.5833333333333334,
+    "multi_hop": 0.75,
+    "multi_hop_zh": 0.611111111111111,
+    "rules_privacy": 1.0,
+    "temporal_negation": 1.0
+  },
+  "complete_at_1": 0.3333333333333333,
+  "complete_at_3": 0.8333333333333334,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "evaluation_version": 3,
+  "suite_sha256": "b3b0d7f798d45ebe344b7adaada946b2fc2385b79f696ee09c0cefa56ad16840",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "embedding_identity": "fastembed:BAAI/bge-small-en-v1.5:52398278842ec682c6f32300af41344b1c0b0bb2:51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431:d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66:float32:l2-v1",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64
+  },
+  "evaluation_code": {
+    "sha256": "fcdce32b50ddd41c78670ed25699240dd88f660d4e6163db5287e8eeccb24b6b",
+    "files": {
+      "app/store.py": "fb1569d142b151f3f6ee6f4a7c9b2d07d0ec1d263703cf619fcc9a1b61d58942",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "a991f723e11996774a40381cb0788863427b5573e1100fc76a3c9c22df9520a2",
+      "benchmarks/evidence.py": "c431954f9b471f9ab3268f1f3fa7d3bb91003774114ee62d49c1ab519cbb2cc4",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "case_traces": [
+    {
+      "name": "blind3-current-running-shoes",
+      "category": "temporal_negation",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_8a6201856090ecc2eb014f61",
+          "content": "[2024-11-01T00:00:00Z] user: I stopped using the Falcon X; my long-distance training shoes are now the Riverstone 4.",
+          "score": 0.034527,
+          "created_at": "2024-11-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_537d0aa4a2075bfca7f34e02",
+          "content": "[2023-06-01T00:00:00Z] user: I used the Falcon X shoes for long-distance training last year.",
+          "score": 0.03239,
+          "created_at": "2023-06-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_1c33267ddad7ffc7ba1c4864",
+          "content": "user: I use sandals after long-distance races.",
+          "score": 0.031874,
+          "created_at": "2026-09-16T03:59:42.463492Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_6a21ad686f855934694aeea3",
+          "content": "user: I wear Falcon X shoes for gardening.",
+          "score": 0.03079,
+          "created_at": "2026-09-16T03:59:41.937523Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_8d4997fbdb1c33bb1ce16ba6",
+          "content": "user: Riverstone 4 laces are blue.",
+          "score": 0.029577,
+          "created_at": "2026-09-16T03:59:42.144988Z",
+          "source_id": "d06"
+        }
+      ]
+    },
+    {
+      "name": "blind3-archive-key-chain",
+      "category": "multi_hop",
+      "candidate_count": 17,
+      "expected": [
+        "assignment",
+        "holder"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_d66c69cc13c8e70f8710c6f2",
+          "content": "user: The Atlas history project was assigned the Copper archive room.",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:42.733684Z",
+          "source_id": "assignment"
+        },
+        {
+          "id": "mem_8ab29269f4bce32f9226f624",
+          "content": "user: Elena Park holds the key for the Copper room.",
+          "score": 0.031656,
+          "created_at": "2026-09-16T03:59:42.791316Z",
+          "source_id": "holder"
+        },
+        {
+          "id": "mem_e83629d2c7bcfecb7df5378b",
+          "content": "user: The history project received new scanners.",
+          "score": 0.031013,
+          "created_at": "2026-09-16T03:59:43.285135Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_3a2fca99c28d329d2fc9a011",
+          "content": "user: The Gold room belongs to Project Cedar.",
+          "score": 0.030952,
+          "created_at": "2026-09-16T03:59:43.562841Z",
+          "source_id": "d14"
+        },
+        {
+          "id": "mem_6d6819e668b1c8ec6790b48f",
+          "content": "user: The Atlas science project uses the Silver lab.",
+          "score": 0.03054,
+          "created_at": "2026-09-16T03:59:42.848723Z",
+          "source_id": "d01"
+        }
+      ]
+    },
+    {
+      "name": "blind3-chinese-library-chain",
+      "category": "multi_hop_zh",
+      "candidate_count": 18,
+      "expected": [
+        "restorer",
+        "studio",
+        "desk"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3,
+        2
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_c7ad79216df5299a67af43b5",
+          "content": "user: 负责修复我那本旧地图的师傅叫沈岚。",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:43.744020Z",
+          "source_id": "restorer"
+        },
+        {
+          "id": "mem_46cdc3c9fdbd3548ddea457d",
+          "content": "user: 墨河修复室把完成品统一交到图书馆二楼东侧服务台。",
+          "score": 0.033546,
+          "created_at": "2026-09-16T03:59:43.880701Z",
+          "source_id": "desk"
+        },
+        {
+          "id": "mem_a03873c16befa188ba2ac972",
+          "content": "user: 沈岚在墨河修复室完成了地图修复。",
+          "score": 0.033502,
+          "created_at": "2026-09-16T03:59:43.808950Z",
+          "source_id": "studio"
+        },
+        {
+          "id": "mem_9812a893491fa0aa611df05e",
+          "content": "user: 图书馆服务台可以借雨伞。",
+          "score": 0.033056,
+          "created_at": "2026-09-16T03:59:44.390521Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_910836322cbf27bc4c9bc26b",
+          "content": "user: 旧地图描绘的是海岸线。",
+          "score": 0.032653,
+          "created_at": "2026-09-16T03:59:44.155881Z",
+          "source_id": "d05"
+        }
+      ]
+    },
+    {
+      "name": "blind3-confirmed-workshop-list",
+      "category": "list_negation",
+      "candidate_count": 18,
+      "expected": [
+        "mina",
+        "owen",
+        "rui"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_e23a94d0c13253f00b8788d6",
+          "content": "user: Mina confirmed that she will attend the Harbor safety workshop.",
+          "score": 0.042655,
+          "created_at": "2026-09-16T03:59:44.873408Z",
+          "source_id": "mina"
+        },
+        {
+          "id": "mem_db13418a53ebc403c1fab2c7",
+          "content": "user: Owen accepted his seat at the Harbor safety workshop.",
+          "score": 0.041746,
+          "created_at": "2026-09-16T03:59:44.924094Z",
+          "source_id": "owen"
+        },
+        {
+          "id": "mem_f839ea7d2ffd9a65de86f1fe",
+          "content": "user: Mina confirmed the catering order.",
+          "score": 0.041656,
+          "created_at": "2026-09-16T03:59:45.134665Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_47b6b9b35e074c8c871e73a6",
+          "content": "user: Rui gave a definite yes for the Harbor safety workshop.",
+          "score": 0.041634,
+          "created_at": "2026-09-16T03:59:44.976903Z",
+          "source_id": "rui"
+        },
+        {
+          "id": "mem_56ded27b93987587178782cd",
+          "content": "user: Ivo confirmed, then withdrew yesterday.",
+          "score": 0.04022,
+          "created_at": "2026-09-16T03:59:45.082070Z",
+          "source_id": "d02"
+        }
+      ]
+    },
+    {
+      "name": "blind3-cross-language-locker",
+      "category": "cross_lingual",
+      "candidate_count": 16,
+      "expected": [
+        "locker"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bf75d3928364decc71ffed06",
+          "content": "user: 我在北门寄存过一个背包。",
+          "score": 0.03439,
+          "created_at": "2026-09-16T03:59:46.153663Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_7e17f7fcb53b20f276f07698",
+          "content": "user: My current long-term storage locker is unit Juniper-42 at Northgate Storage.",
+          "score": 0.033257,
+          "created_at": "2026-09-16T03:59:45.885578Z",
+          "source_id": "locker"
+        },
+        {
+          "id": "mem_4b6df667d99a7d30a51d047d",
+          "content": "user: 我以前租用南站的17号储物柜。",
+          "score": 0.032792,
+          "created_at": "2026-09-16T03:59:45.940351Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_674965774eb22ee5fad9f0ff",
+          "content": "user: My sister rents a unit at Northgate Storage.",
+          "score": 0.032754,
+          "created_at": "2026-09-16T03:59:46.099091Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_44c22314c4c298ff493f2eb2",
+          "content": "user: 储物柜钥匙放在蓝色盒子里。",
+          "score": 0.032325,
+          "created_at": "2026-09-16T03:59:46.273749Z",
+          "source_id": "d07"
+        }
+      ]
+    },
+    {
+      "name": "blind3-consent-photo-rule",
+      "category": "rules_privacy",
+      "candidate_count": 16,
+      "expected": [
+        "rule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_9669da778e24226531409f39",
+          "content": "user: My consent rule says I must get Mira's explicit approval before posting any private event photo publicly.",
+          "score": 0.034787,
+          "created_at": "2026-09-16T03:59:46.835050Z",
+          "source_id": "rule"
+        },
+        {
+          "id": "mem_7fb742999a8000c5d7157664",
+          "content": "user: I posted my own landscape photo.",
+          "score": 0.031546,
+          "created_at": "2026-09-16T03:59:46.985869Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_57a8b568d8efd7b31b0dd7ea",
+          "content": "user: Event tickets were sold publicly.",
+          "score": 0.030754,
+          "created_at": "2026-09-16T03:59:47.302240Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_c3d56e17b8e5dd57d4ec5471",
+          "content": "user: Mira's public profile picture is online.",
+          "score": 0.030664,
+          "created_at": "2026-09-16T03:59:47.040207Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_53090bfecdf2d1235f754d0e",
+          "content": "user: The private event took place on Friday.",
+          "score": 0.03022,
+          "created_at": "2026-09-16T03:59:46.937254Z",
+          "source_id": "d02"
+        }
+      ]
+    }
+  ]
+}
