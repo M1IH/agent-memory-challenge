@@ -9,6 +9,8 @@ from pathlib import Path
 
 import httpx
 
+from smoke_remote import run_smoke
+
 
 BASE_URL = "http://127.0.0.1:8765"
 API_KEY = "local-smoke-secret"
@@ -58,47 +60,12 @@ def main() -> None:
         try:
             with httpx.Client(timeout=30) as client:
                 wait_until_ready(client, process)
-                denied = client.post(
-                    f"{BASE_URL}/search",
-                    json={"query": "contact", "user_id": "alice", "top_k": 100},
+                run_smoke(
+                    client,
+                    base_url=BASE_URL,
+                    api_key=API_KEY,
+                    probe_id="local-smoke",
                 )
-                assert denied.status_code == 401, denied.text
-
-                add_response = client.post(
-                    f"{BASE_URL}/add",
-                    headers={"Authorization": f"Bearer {API_KEY}"},
-                    json={
-                        "request_id": "smoke-request-1",
-                        "messages": [
-                            {
-                                "role": "user",
-                                "timestamp": 1704067200000,
-                                "content": "My emergency contact is Jordan Lee.",
-                            }
-                        ],
-                        "user_id": "alice",
-                        "session_id": "smoke-session-1",
-                    },
-                )
-                add_response.raise_for_status()
-                assert add_response.json()["request_id"] == "smoke-request-1"
-
-                for headers in (
-                    {"Authorization": f"Bearer {API_KEY}"},
-                    {"Authorization": f"Token {API_KEY}"},
-                    {"X-Api-Key": API_KEY},
-                ):
-                    search_response = client.post(
-                        f"{BASE_URL}/search",
-                        headers=headers,
-                        json={
-                            "query": "Who is my emergency contact?",
-                            "user_id": "alice",
-                            "top_k": 100,
-                        },
-                    )
-                    search_response.raise_for_status()
-                    assert "Jordan Lee" in search_response.json()["data"][0]["content"]
             print("PASS: health, auth, synchronous add, and search")
         finally:
             process.terminate()

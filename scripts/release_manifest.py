@@ -19,6 +19,8 @@ CRITICAL_FILES = (
     "app/main.py",
     "app/store.py",
     "scripts/release_manifest.py",
+    "scripts/smoke_local.py",
+    "scripts/smoke_remote.py",
 )
 SHA_PATTERN = re.compile(r"[0-9a-f]{40}")
 IMAGE_ID_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")

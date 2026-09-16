@@ -31,6 +31,8 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn("app/store.py", hashes)
         self.assertIn(".github/workflows/tests.yml", hashes)
         self.assertIn("scripts/release_manifest.py", hashes)
+        self.assertIn("scripts/smoke_local.py", hashes)
+        self.assertIn("scripts/smoke_remote.py", hashes)
 
     def test_image_identity_must_match_exact_git_sha(self):
         git_sha = "a" * 40

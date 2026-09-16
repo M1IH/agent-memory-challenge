@@ -216,6 +216,20 @@ python scripts\smoke_local.py
 GitHub Actions 还会构建完整 Docker 镜像，并在容器无网络的情况下执行 Add/Search
 冒烟测试，以确认嵌入模型确实已固化进镜像。
 
+公网或临时 HTTPS 部署完成后，用环境变量传入地址和密钥，避免密钥出现在命令行
+历史或进程参数中：
+
+```powershell
+$env:AML_BASE_URL = "https://memory.example.com"
+$env:AML_API_KEY = "replace-with-the-deployment-secret"
+python scripts\smoke_remote.py
+```
+
+远程 Smoke 默认拒绝明文 HTTP、URL 内嵌凭据、query 和 fragment，并验证健康检查、
+未鉴权 Search 必须返回 401、Add 精确回显、三种鉴权方式和新写入证据立即 Top-1
+可检索。它会写入一条带随机标记的合成记忆，因此只应对明确用于评测的部署运行；
+评测结束时应随数据库一起删除。隔离的本机演练可显式添加 `--allow-http`。
+
 ## 本地负载测试
 
 ```powershell
