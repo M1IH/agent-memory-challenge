@@ -66,7 +66,10 @@ def main() -> None:
                     api_key=API_KEY,
                     probe_id="local-smoke",
                 )
-            print("PASS: health, auth, synchronous add, and search")
+            print(
+                "PASS: health, auth, synchronous/idempotent add, "
+                "search, and user isolation"
+            )
         finally:
             process.terminate()
             try:

@@ -48,6 +48,7 @@ class RemoteSmokeTests(unittest.TestCase):
     def test_remote_smoke_verifies_auth_add_echo_and_immediate_search(self):
         marker = "aml-remote-smoke-fixed-probe"
         seen_auth_headers = []
+        add_requests = []
 
         def handler(request: httpx.Request) -> httpx.Response:
             if request.url.path == "/api/health":
@@ -55,6 +56,7 @@ class RemoteSmokeTests(unittest.TestCase):
             if request.url.path == "/api/add":
                 self.assertEqual("Bearer secret", request.headers["Authorization"])
                 payload = json.loads(request.content)
+                add_requests.append(payload)
                 return httpx.Response(
                     200,
                     json={
@@ -65,10 +67,13 @@ class RemoteSmokeTests(unittest.TestCase):
                     },
                 )
             if request.url.path == "/api/search":
+                payload = json.loads(request.content)
                 authorization = request.headers.get("Authorization")
                 api_key = request.headers.get("X-Api-Key")
                 if authorization is None and api_key is None:
                     return httpx.Response(401, json={"detail": "Invalid API key"})
+                if payload["user_id"].startswith("foreign-"):
+                    return httpx.Response(200, json={"data": []})
                 seen_auth_headers.append(authorization or f"X-Api-Key {api_key}")
                 return httpx.Response(
                     200,
@@ -86,10 +91,85 @@ class RemoteSmokeTests(unittest.TestCase):
             )
 
         self.assertEqual("smoke-request-fixed-probe", identifiers["request_id"])
+        self.assertEqual(2, len(add_requests))
+        self.assertEqual(add_requests[0], add_requests[1])
         self.assertEqual(
             ["Bearer secret", "Token secret", "X-Api-Key secret"],
             seen_auth_headers,
         )
+
+    def test_remote_smoke_rejects_cross_user_probe_leakage(self):
+        marker = "aml-remote-smoke-leak-probe"
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/health":
+                return httpx.Response(200, json={"status": "ok"})
+            if request.url.path == "/add":
+                payload = json.loads(request.content)
+                return httpx.Response(
+                    200,
+                    json={
+                        "success": True,
+                        "request_id": payload["request_id"],
+                        "user_id": payload["user_id"],
+                        "session_id": payload["session_id"],
+                    },
+                )
+            if request.url.path == "/search":
+                if (
+                    request.headers.get("Authorization") is None
+                    and request.headers.get("X-Api-Key") is None
+                ):
+                    return httpx.Response(401, json={"detail": "Invalid API key"})
+                return httpx.Response(200, json={"data": [{"content": marker}]})
+            return httpx.Response(404)
+
+        with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+            with self.assertRaisesRegex(RuntimeError, "leaked probe evidence"):
+                run_smoke(
+                    client,
+                    base_url="https://memory.example",
+                    api_key="secret",
+                    probe_id="leak-probe",
+                )
+
+    def test_remote_smoke_rejects_duplicate_probe_after_replay(self):
+        marker = "aml-remote-smoke-duplicate-probe"
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/health":
+                return httpx.Response(200, json={"status": "ok"})
+            if request.url.path == "/add":
+                payload = json.loads(request.content)
+                return httpx.Response(
+                    200,
+                    json={
+                        "success": True,
+                        "request_id": payload["request_id"],
+                        "user_id": payload["user_id"],
+                        "session_id": payload["session_id"],
+                    },
+                )
+            if request.url.path == "/search":
+                if (
+                    request.headers.get("Authorization") is None
+                    and request.headers.get("X-Api-Key") is None
+                ):
+                    return httpx.Response(401, json={"detail": "Invalid API key"})
+                return httpx.Response(
+                    200,
+                    json={"data": [{"content": marker}, {"content": marker}]},
+                )
+            return httpx.Response(404)
+
+        with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+            with self.assertRaisesRegex(RuntimeError, "exactly one searchable probe"):
+                run_smoke(
+                    client,
+                    base_url="https://memory.example",
+                    api_key="secret",
+                    probe_id="duplicate-probe",
+                )
 
     def test_remote_smoke_rejects_an_open_unauthenticated_search(self):
         def handler(request: httpx.Request) -> httpx.Response:

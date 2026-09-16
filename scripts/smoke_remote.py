@@ -83,6 +83,25 @@ def run_smoke(
     if add_payload != expected_echo:
         raise RuntimeError("Add response did not exactly echo the request identifiers")
 
+    replay = client.post(
+        f"{base_url}/add",
+        headers={"Authorization": f"Bearer {api_key}"},
+        json={
+            "request_id": request_id,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": f"Synthetic deployment probe marker: {marker}",
+                }
+            ],
+            "user_id": user_id,
+            "session_id": session_id,
+        },
+    )
+    replay.raise_for_status()
+    if replay.json() != expected_echo:
+        raise RuntimeError("idempotent Add replay did not preserve the response contract")
+
     auth_headers = (
         {"Authorization": f"Bearer {api_key}"},
         {"Authorization": f"Token {api_key}"},
@@ -101,10 +120,43 @@ def run_smoke(
         data = search_payload.get("data")
         if not isinstance(data, list) or not data:
             raise RuntimeError("Search response did not contain any memory evidence")
+        marker_matches = [
+            result
+            for result in data
+            if isinstance(result, dict)
+            and isinstance(result.get("content"), str)
+            and marker in result["content"]
+        ]
+        if len(marker_matches) != 1:
+            raise RuntimeError(
+                "idempotent Add replay did not leave exactly one searchable probe"
+            )
         first = data[0]
         content = first.get("content") if isinstance(first, dict) else None
         if not isinstance(content, str) or marker not in content:
             raise RuntimeError("the newly added probe was not the first Search result")
+
+    foreign_search = client.post(
+        f"{base_url}/search",
+        headers={"Authorization": f"Bearer {api_key}"},
+        json={
+            "query": marker,
+            "user_id": f"foreign-{user_id}",
+            "top_k": 100,
+        },
+    )
+    foreign_search.raise_for_status()
+    foreign_payload = foreign_search.json()
+    foreign_data = foreign_payload.get("data") if isinstance(foreign_payload, dict) else None
+    if not isinstance(foreign_data, list):
+        raise RuntimeError("foreign-user Search response did not contain a data list")
+    if any(
+        isinstance(result, dict)
+        and isinstance(result.get("content"), str)
+        and marker in result["content"]
+        for result in foreign_data
+    ):
+        raise RuntimeError("the deployment leaked probe evidence across user boundaries")
 
     return {
         "request_id": request_id,
@@ -144,7 +196,7 @@ def main() -> None:
         parser.exit(1, f"REMOTE SMOKE FAILED: {exc}\n")
 
     print(
-        "REMOTE SMOKE PASS: HTTPS/auth/Add/Search contract verified; "
+        "REMOTE SMOKE PASS: HTTPS/auth/idempotent Add/Search/isolation verified; "
         f"request_id={identifiers['request_id']}"
     )
 
