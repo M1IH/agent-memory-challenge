@@ -38,6 +38,13 @@ class Message(BaseModel):
     content: str = Field(min_length=1, max_length=100_000)
     timestamp: int | None = None
 
+    @field_validator("role")
+    @classmethod
+    def role_must_not_be_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("role must not be blank")
+        return value
+
     @field_validator("content")
     @classmethod
     def content_must_not_be_blank(cls, value: str) -> str:
@@ -63,6 +70,13 @@ class AddRequest(BaseModel):
     user_id: str = Field(min_length=1, max_length=512)
     session_id: str = Field(min_length=1, max_length=512)
 
+    @field_validator("request_id", "user_id", "session_id")
+    @classmethod
+    def identifiers_must_not_be_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("identifier must not be blank")
+        return value
+
 
 class AddResponse(BaseModel):
     success: bool
@@ -76,6 +90,22 @@ class SearchRequest(BaseModel):
     options: list[str] | None = Field(default=None, max_length=1000)
     user_id: str = Field(min_length=1, max_length=512)
     top_k: int = Field(ge=1, le=1000)
+
+    @field_validator("query", "user_id")
+    @classmethod
+    def required_text_must_not_be_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("value must not be blank")
+        return value
+
+    @field_validator("options")
+    @classmethod
+    def options_must_not_contain_blank_values(
+        cls, value: list[str] | None
+    ) -> list[str] | None:
+        if value is not None and any(not option.strip() for option in value):
+            raise ValueError("options must not contain blank values")
+        return value
 
 
 class SearchResult(BaseModel):

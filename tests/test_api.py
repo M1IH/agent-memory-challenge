@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 from unittest.mock import patch
 
@@ -163,6 +164,50 @@ class ApiContractTests(unittest.TestCase):
             json={"query": "茶", "user_id": "alice", "top_k": 0},
         )
         self.assertEqual(422, response.status_code)
+
+    def test_whitespace_only_required_strings_are_rejected_before_storage(self):
+        valid_add = {
+            "request_id": "request",
+            "user_id": "user",
+            "session_id": "session",
+            "messages": [{"role": "user", "content": "valid content"}],
+        }
+        invalid_adds = (
+            {**valid_add, "request_id": "   "},
+            {**valid_add, "user_id": "   "},
+            {**valid_add, "session_id": "   "},
+            {**valid_add, "messages": [{"role": "   ", "content": "valid"}]},
+        )
+        for payload in invalid_adds:
+            with self.subTest(payload=payload):
+                response = self.client.post("/add", json=payload)
+                self.assertEqual(422, response.status_code)
+
+        invalid_searches = (
+            {"query": "   ", "user_id": "user", "top_k": 10},
+            {"query": "valid", "user_id": "   ", "top_k": 10},
+            {
+                "query": "valid",
+                "user_id": "user",
+                "options": ["   "],
+                "top_k": 10,
+            },
+        )
+        for payload in invalid_searches:
+            with self.subTest(payload=payload):
+                response = self.client.post("/search", json=payload)
+                self.assertEqual(422, response.status_code)
+
+        with closing(
+            sqlite3.connect(Path(self.temp_dir.name) / "api-test.db")
+        ) as connection:
+            self.assertEqual(
+                0, connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
+            )
+            self.assertEqual(
+                0,
+                connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0],
+            )
 
     def test_storage_errors_return_safe_503_without_logging_sensitive_details(self):
         sensitive_error = "unable to write C:/private/customer.db payload-secret"
