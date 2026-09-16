@@ -57,7 +57,9 @@ CI 会在 `512m` 内跑有界 Smoke；嵌入批大小降为 64 后，已观测�
 Invoke-RestMethod http://127.0.0.1:8000/health
 ```
 
-生产或公开评测环境必须设置 `AML_API_KEY`，并通过
+Docker 镜像默认设置 `AML_LOCKDOWN=true`，因此缺少 `AML_API_KEY` 或兼容的
+`API_KEY` 时会在启动阶段失败，而不会意外暴露无鉴权的 Add/Search。仅在明确隔离的
+本地开发环境中，才可显式设置 `AML_LOCKDOWN=false`。生产或公开评测环境通过
 `Authorization: Bearer <key>`、`Authorization: Token <key>` 或
 `X-Api-Key: <key>` 发送。命名卷 `agent-memory-data` 用于在容器重启后保留
 SQLite 数据。

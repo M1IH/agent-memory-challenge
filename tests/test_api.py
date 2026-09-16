@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -7,11 +9,56 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import app, validate_api_key_configuration
 from app.store import MemoryStore
 
 
 class ApiContractTests(unittest.TestCase):
+    def test_required_api_key_fails_closed_during_startup(self):
+        with patch.dict(
+            os.environ,
+            {"AML_LOCKDOWN": "true"},
+            clear=True,
+        ):
+            with self.assertRaisesRegex(ValueError, "AML_API_KEY or API_KEY must be set"):
+                validate_api_key_configuration()
+
+        with patch.dict(
+            os.environ,
+            {"AML_LOCKDOWN": "true", "AML_API_KEY": "secret"},
+            clear=True,
+        ):
+            validate_api_key_configuration()
+
+        environment = os.environ.copy()
+        environment.pop("AML_API_KEY", None)
+        environment.pop("API_KEY", None)
+        environment.update(
+            {
+                "AML_LOCKDOWN": "true",
+                "AML_EMBED_ENABLED": "false",
+            }
+        )
+        completed = subprocess.run(
+            [sys.executable, "-c", "import app.main"],
+            cwd=Path(__file__).resolve().parents[1],
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertNotEqual(0, completed.returncode)
+        self.assertIn("AML_API_KEY or API_KEY must be set", completed.stderr)
+
+    def test_api_key_requirement_rejects_ambiguous_values(self):
+        with patch.dict(
+            os.environ,
+            {"AML_LOCKDOWN": "yes", "AML_API_KEY": "secret"},
+            clear=True,
+        ):
+            with self.assertRaisesRegex(ValueError, "must be true or false"):
+                validate_api_key_configuration()
+
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.store_patch = patch(

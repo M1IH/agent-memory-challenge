@@ -399,13 +399,17 @@ class StoreSafetyTests(unittest.TestCase):
             "session",
             [{"role": "user", "content": "My fallback phrase is copper moon."}],
         )
-        encoder.encode.side_effect = RuntimeError("encoder unavailable")
+        secret = "private-query-token-9417"
+        encoder.encode.side_effect = RuntimeError(f"encoder rejected {secret}")
 
-        with self.assertLogs("app.store", level="WARNING"):
+        with self.assertLogs("app.store", level="WARNING") as captured:
             results = store.search("alice", "fallback phrase copper moon", 1)
 
         self.assertEqual(1, len(results))
         self.assertIn("copper moon", results[0]["content"])
+        rendered_logs = "\n".join(captured.output)
+        self.assertIn("RuntimeError", rendered_logs)
+        self.assertNotIn(secret, rendered_logs)
 
     def test_search_prefers_query_specific_encoder_when_available(self):
         encoder = Mock()

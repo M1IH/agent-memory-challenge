@@ -922,13 +922,13 @@ class MemoryStore:
                 )
                 encoded_query = query_encoder([query])
                 query_vector = embedding_vector(encoded_query[0])
-            except Exception:
+            except Exception as exc:
                 # Search remains useful when the rebuildable semantic channel is
                 # temporarily unavailable. The durable lexical index is already
                 # loaded and provides a deterministic degraded response.
                 logger.warning(
-                    "query embedding failed; falling back to lexical retrieval",
-                    exc_info=True,
+                    "query embedding failed (%s); falling back to lexical retrieval",
+                    type(exc).__name__,
                 )
                 return self._results(lexical_scores, top_k)
             compatible_memories = [

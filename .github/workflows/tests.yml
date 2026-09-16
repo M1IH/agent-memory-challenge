@@ -51,6 +51,11 @@ jobs:
           retention-days: 30
       - name: Verify baked model under offline memory limit
         run: |
+          if docker run --rm --network none agent-memory-challenge:ci > missing-key.log 2>&1; then
+            echo "container unexpectedly started without an API key"
+            exit 1
+          fi
+          grep -q "AML_API_KEY or API_KEY must be set" missing-key.log
           docker volume create aml-ci-data
           docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
             --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \

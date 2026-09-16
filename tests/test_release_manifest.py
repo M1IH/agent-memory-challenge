@@ -67,6 +67,14 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertEqual(2, workflow.count("-v aml-ci-data:/data"))
         self.assertNotIn(":/app/data", readme + workflow)
 
+    def test_docker_deployment_fails_closed_without_an_api_key(self):
+        root = Path(__file__).resolve().parents[1]
+        dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
+        readme = (root / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("AML_LOCKDOWN=true", dockerfile)
+        self.assertIn("AML_LOCKDOWN=true", readme)
+
     def test_docker_build_inputs_are_immutable(self):
         root = Path(__file__).resolve().parents[1]
         dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")

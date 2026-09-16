@@ -15,6 +15,20 @@ from .store import MemoryStore, PayloadTooLargeError, RequestConflictError
 logger = logging.getLogger(__name__)
 
 
+def configured_api_key() -> str | None:
+    return os.getenv("AML_API_KEY") or os.getenv("API_KEY")
+
+
+def validate_api_key_configuration() -> None:
+    raw_required = os.getenv("AML_LOCKDOWN", "false").strip().lower()
+    if raw_required not in {"true", "false"}:
+        raise ValueError("AML_LOCKDOWN must be true or false")
+    if raw_required == "true" and configured_api_key() is None:
+        raise ValueError(
+            "AML_API_KEY or API_KEY must be set when AML_LOCKDOWN=true"
+        )
+
+
 class Message(BaseModel):
     role: str = Field(min_length=1, max_length=32)
     content: str = Field(min_length=1, max_length=100_000)
@@ -75,7 +89,7 @@ def require_api_key(
     authorization: str | None = Header(default=None),
     x_api_key: str | None = Header(default=None, alias="X-Api-Key"),
 ) -> None:
-    expected = os.getenv("AML_API_KEY") or os.getenv("API_KEY")
+    expected = configured_api_key()
     if not expected:
         return
     candidates = [x_api_key or ""]
@@ -87,6 +101,7 @@ def require_api_key(
         raise HTTPException(status_code=401, detail="Invalid API key")
 
 
+validate_api_key_configuration()
 app = FastAPI(title="AML Memory Entry", version="0.1.0")
 store = MemoryStore(os.getenv("AML_DB_PATH", "data/memory.db"))
 
