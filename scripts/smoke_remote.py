@@ -30,6 +30,14 @@ def configured_api_key() -> str:
     raise ValueError("set AML_API_KEY or API_KEY before running remote smoke")
 
 
+def success_summary(base_url: str, request_id: str) -> str:
+    scheme = urlsplit(base_url).scheme.upper()
+    return (
+        f"REMOTE SMOKE PASS: {scheme}/auth/idempotent Add/Search/isolation verified; "
+        f"request_id={request_id}"
+    )
+
+
 def run_smoke(
     client: httpx.Client,
     *,
@@ -195,10 +203,7 @@ def main() -> None:
     except (ValueError, RuntimeError, httpx.HTTPError) as exc:
         parser.exit(1, f"REMOTE SMOKE FAILED: {exc}\n")
 
-    print(
-        "REMOTE SMOKE PASS: HTTPS/auth/idempotent Add/Search/isolation verified; "
-        f"request_id={identifiers['request_id']}"
-    )
+    print(success_summary(base_url, identifiers["request_id"]))
 
 
 if __name__ == "__main__":

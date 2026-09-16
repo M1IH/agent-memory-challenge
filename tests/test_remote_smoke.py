@@ -8,11 +8,22 @@ import httpx
 from scripts.smoke_remote import (
     configured_api_key,
     run_smoke,
+    success_summary,
     validated_base_url,
 )
 
 
 class RemoteSmokeTests(unittest.TestCase):
+    def test_success_summary_reports_the_actual_transport(self):
+        self.assertIn(
+            "HTTPS/auth",
+            success_summary("https://memory.example", "request-1"),
+        )
+        self.assertIn(
+            "HTTP/auth",
+            success_summary("http://127.0.0.1:8000", "request-1"),
+        )
+
     def test_https_is_required_unless_http_is_explicitly_allowed(self):
         self.assertEqual(
             "https://memory.example/api",
