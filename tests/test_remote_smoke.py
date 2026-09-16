@@ -36,6 +36,12 @@ class RemoteSmokeTests(unittest.TestCase):
         with patch.dict(os.environ, {"AML_API_KEY": "   "}, clear=True):
             with self.assertRaisesRegex(ValueError, "set AML_API_KEY"):
                 configured_api_key()
+        with patch.dict(
+            os.environ,
+            {"AML_API_KEY": "   ", "API_KEY": "fallback-secret"},
+            clear=True,
+        ):
+            self.assertEqual("fallback-secret", configured_api_key())
         with patch.dict(os.environ, {"AML_API_KEY": "secret"}, clear=True):
             self.assertEqual("secret", configured_api_key())
 

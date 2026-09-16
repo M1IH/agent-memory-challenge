@@ -30,6 +30,25 @@ class ApiContractTests(unittest.TestCase):
         ):
             validate_api_key_configuration()
 
+        with patch.dict(
+            os.environ,
+            {"AML_LOCKDOWN": "true", "AML_API_KEY": "   "},
+            clear=True,
+        ):
+            with self.assertRaisesRegex(ValueError, "AML_API_KEY or API_KEY must be set"):
+                validate_api_key_configuration()
+
+        with patch.dict(
+            os.environ,
+            {
+                "AML_LOCKDOWN": "true",
+                "AML_API_KEY": "   ",
+                "API_KEY": "fallback-secret",
+            },
+            clear=True,
+        ):
+            validate_api_key_configuration()
+
         environment = os.environ.copy()
         environment.pop("AML_API_KEY", None)
         environment.pop("API_KEY", None)

@@ -57,6 +57,11 @@ jobs:
             exit 1
           fi
           grep -q "AML_API_KEY or API_KEY must be set" missing-key.log
+          if docker run --rm --network none -e AML_API_KEY='   ' agent-memory-challenge:ci > blank-key.log 2>&1; then
+            echo "container unexpectedly started with a blank API key"
+            exit 1
+          fi
+          grep -q "AML_API_KEY or API_KEY must be set" blank-key.log
           docker volume create aml-ci-data
           docker run -d --name aml-ci --network none --memory 512m --memory-swap 512m \
             --pids-limit 256 -e AML_API_KEY=ci-secret -e AML_MEMORY_CACHE_USERS=1 \

@@ -16,7 +16,11 @@ logger = logging.getLogger(__name__)
 
 
 def configured_api_key() -> str | None:
-    return os.getenv("AML_API_KEY") or os.getenv("API_KEY")
+    for variable in ("AML_API_KEY", "API_KEY"):
+        value = os.getenv(variable)
+        if value is not None and value.strip():
+            return value
+    return None
 
 
 def validate_api_key_configuration() -> None:

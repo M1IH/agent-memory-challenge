@@ -23,10 +23,11 @@ def validated_base_url(value: str, *, allow_http: bool) -> str:
 
 
 def configured_api_key() -> str:
-    api_key = os.getenv("AML_API_KEY") or os.getenv("API_KEY")
-    if not api_key or not api_key.strip():
-        raise ValueError("set AML_API_KEY or API_KEY before running remote smoke")
-    return api_key
+    for variable in ("AML_API_KEY", "API_KEY"):
+        api_key = os.getenv(variable)
+        if api_key is not None and api_key.strip():
+            return api_key
+    raise ValueError("set AML_API_KEY or API_KEY before running remote smoke")
 
 
 def run_smoke(
