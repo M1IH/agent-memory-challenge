@@ -33,6 +33,10 @@ docker run --rm -p 8000:8000 `
   agent-memory-challenge:local
 ```
 
+镜像内服务以固定的非 root 用户 `10001:10001` 运行；命名卷首次创建时会继承
+`/data` 的写权限。若改用宿主机 bind mount，部署前必须把挂载目录授权给该 UID/GID，
+否则服务会安全地因数据库不可写而拒绝启动。
+
 Docker 和 Linux CI 使用 `requirements.lock` 中的完整传递依赖版本；基础 Python
 镜像也固定到内容摘要。因此同一提交不会因上游标签或间接依赖漂移而悄悄改变。
 `requirements.txt` 保留直接依赖，便于 Windows 本地开发；升级依赖时必须同步更新

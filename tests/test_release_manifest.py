@@ -77,6 +77,32 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn("AML_LOCKDOWN=true", dockerfile)
         self.assertIn("AML_LOCKDOWN=true", readme)
 
+    def test_docker_runs_as_a_fixed_unprivileged_user(self):
+        dockerfile = (
+            Path(__file__).resolve().parents[1] / "Dockerfile"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("useradd --system --uid 10001", dockerfile)
+        self.assertIn("install -d -o aml -g aml /data", dockerfile)
+        self.assertIn("USER 10001:10001", dockerfile)
+        self.assertLess(
+            dockerfile.index("USER 10001:10001"),
+            dockerfile.index('CMD ["uvicorn"'),
+        )
+
+    def test_ci_actions_are_pinned_to_full_commit_shas(self):
+        workflow = (
+            Path(__file__).resolve().parents[1] / ".github/workflows/tests.yml"
+        ).read_text(encoding="utf-8")
+        action_lines = [line.strip() for line in workflow.splitlines() if "uses:" in line]
+
+        self.assertGreaterEqual(len(action_lines), 4)
+        for line in action_lines:
+            self.assertRegex(
+                line,
+                r"^(?:- )?uses: actions/[a-z-]+@[0-9a-f]{40}(?: # v\d+)?$",
+            )
+
     def test_docker_build_inputs_are_immutable(self):
         root = Path(__file__).resolve().parents[1]
         dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")

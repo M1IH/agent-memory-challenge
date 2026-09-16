@@ -15,8 +15,8 @@ jobs:
     env:
       AML_EMBED_ENABLED: "false"
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
           cache: pip
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Build image for the exact commit
         run: docker build --build-arg VCS_REF="$GITHUB_SHA" -t agent-memory-challenge:ci .
       - name: Verify immutable image identity
@@ -44,7 +44,7 @@ jobs:
             --image-revision "$IMAGE_REVISION" --output release-manifest.json
           cat release-manifest.json
       - name: Preserve release manifest
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: release-manifest-${{ github.sha }}
           path: release-manifest.json
@@ -68,6 +68,8 @@ jobs:
             -v aml-ci-data:/data \
             agent-memory-challenge:ci
           test "$(docker inspect -f '{{.HostConfig.Memory}}' aml-ci)" = "536870912"
+          test "$(docker inspect -f '{{.Config.User}}' aml-ci)" = "10001:10001"
+          test "$(docker exec aml-ci id -u)" = "10001"
           for attempt in $(seq 1 30); do
             docker exec aml-ci python -c "import urllib.request; assert urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200" && break
             sleep 2

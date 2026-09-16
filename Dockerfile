@@ -13,6 +13,10 @@ RUN test "$(cat /models/models--qdrant--bge-small-en-v1.5-onnx-q/refs/main)" = "
     && echo "$AML_EMBED_TOKENIZER_SHA256  /models/models--qdrant--bge-small-en-v1.5-onnx-q/snapshots/$AML_EMBED_MODEL_REVISION/tokenizer.json" | sha256sum -c -
 COPY app ./app
 
+RUN groupadd --system --gid 10001 aml \
+    && useradd --system --uid 10001 --gid aml --no-create-home \
+        --home-dir /nonexistent --shell /usr/sbin/nologin aml
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     AML_DB_PATH=/data/memory.db \
@@ -32,6 +36,7 @@ ARG VCS_REF=unknown
 LABEL org.opencontainers.image.source="https://github.com/M1IH/agent-memory-challenge" \
       org.opencontainers.image.revision="$VCS_REF"
 
-RUN mkdir -p /data
+RUN install -d -o aml -g aml /data
 EXPOSE 8000
+USER 10001:10001
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
