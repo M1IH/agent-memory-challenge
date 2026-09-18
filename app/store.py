@@ -300,6 +300,11 @@ class MemoryStore:
         retrieval_config: RetrievalConfig | None = None,
     ):
         self.path = str(path)
+        if self.path == ":memory:":
+            raise ValueError(
+                "AML_DB_PATH=:memory: is unsupported because the store uses "
+                "short-lived SQLite connections; use a filesystem path"
+            )
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._retrieval = retrieval_config or RetrievalConfig()
@@ -643,7 +648,16 @@ class MemoryStore:
                         owns_load = True
                         break
                 pending.event.wait()
-                if pending.generation == generation and pending.memories is not None:
+                with self._connection() as connection:
+                    row = connection.execute(
+                        "SELECT generation FROM memory_generations WHERE user_id = ?",
+                        (user_id,),
+                    ).fetchone()
+                current_generation = 0 if row is None else row["generation"]
+                if (
+                    pending.generation == current_generation
+                    and pending.memories is not None
+                ):
                     with self._cache_lock:
                         self._memory_cache_stats["waiter_reuses"] += 1
                     return pending.memories
@@ -727,7 +741,7 @@ class MemoryStore:
             if option.strip()
         ]
         option_terms = [tokenize(option) for option in option_texts]
-        if not query_terms:
+        if not query_terms and self._embedder is None:
             return []
 
         memories = self._load_user_memories(user_id)

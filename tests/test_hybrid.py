@@ -106,6 +106,25 @@ class HybridRetrievalTests(unittest.TestCase):
         )
         self.assertIn("cilantro", results[0]["content"])
 
+    def test_dense_channel_accepts_query_without_latin_or_cjk_tokens(self):
+        self.store.add(
+            request_id="req-non-latin",
+            user_id="alice",
+            session_id="session-non-latin",
+            messages=[{"role": "user", "content": "I avoid cilantro."}],
+        )
+        self.store.add(
+            request_id="req-non-latin-2",
+            user_id="alice",
+            session_id="session-non-latin",
+            messages=[{"role": "user", "content": "The restaurant serves basil."}],
+        )
+
+        results = self.store.search("alice", "클로버", 10)
+
+        self.assertTrue(results)
+        self.assertIn("basil", results[0]["content"])
+
     def test_completed_event_evidence_survives_hybrid_list_fusion(self):
         memories = [
             "I put the travel adapter in my bag for the Lumen conference.",

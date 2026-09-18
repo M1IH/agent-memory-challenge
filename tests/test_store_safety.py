@@ -42,6 +42,10 @@ class StoreSafetyTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "AML_MAX_CONTEXT_CHARS"):
                 MemoryStore(self.path, embedder=False)
 
+    def test_in_memory_database_path_is_rejected_explicitly(self):
+        with self.assertRaisesRegex(ValueError, "filesystem path"):
+            MemoryStore(":memory:", embedder=False)
+
     def test_payload_character_limits_must_be_positive_integers(self):
         self.assertEqual(200000, positive_payload_chars("200000", "LIMIT"))
         for value in ("0", "-1", "invalid"):
@@ -150,7 +154,7 @@ class StoreSafetyTests(unittest.TestCase):
             snapshots = [first.result(timeout=10), second.result(timeout=10)]
 
         self.assertIs(snapshots[0], snapshots[1])
-        self.assertEqual(3, connection_count)
+        self.assertEqual(4, connection_count)
         self.assertEqual({}, store._memory_cache)
         self.assertEqual({}, store._cache_loads)
 
@@ -206,6 +210,57 @@ class StoreSafetyTests(unittest.TestCase):
 
         self.assertIsNot(cached, refreshed)
         self.assertEqual(2, len(refreshed))
+
+    def test_cache_waiter_rechecks_generation_after_concurrent_add(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "1"}):
+            store = MemoryStore(self.path, embedder=False)
+            writer = MemoryStore(self.path, embedder=False)
+        store.add("one", "alice", "session", [{"role": "user", "content": "tea"}])
+
+        original_connection = store._connection
+        original_estimate = memory_snapshot_size_bytes
+        connection_count = 0
+        count_lock = threading.Lock()
+        owner_loaded_old_snapshot = threading.Event()
+        waiter_checked_old_generation = threading.Event()
+        release_owner = threading.Event()
+
+        @contextmanager
+        def controlled_connection():
+            nonlocal connection_count
+            with count_lock:
+                connection_count += 1
+                call_number = connection_count
+            with original_connection() as connection:
+                yield connection
+            if call_number == 3:
+                waiter_checked_old_generation.set()
+
+        def controlled_estimate(memories):
+            owner_loaded_old_snapshot.set()
+            if not release_owner.wait(timeout=5):
+                raise AssertionError("cache owner was not released")
+            return original_estimate(memories)
+
+        with (
+            patch.object(store, "_connection", controlled_connection),
+            patch("app.store.memory_snapshot_size_bytes", controlled_estimate),
+            ThreadPoolExecutor(max_workers=2) as executor,
+        ):
+            owner = executor.submit(store._load_user_memories, "alice")
+            self.assertTrue(owner_loaded_old_snapshot.wait(timeout=5))
+            waiter = executor.submit(store._load_user_memories, "alice")
+            self.assertTrue(waiter_checked_old_generation.wait(timeout=5))
+            writer.add(
+                "two", "alice", "session", [{"role": "user", "content": "coffee"}]
+            )
+            release_owner.set()
+
+            self.assertEqual(1, len(owner.result(timeout=10)))
+            refreshed = waiter.result(timeout=10)
+
+        self.assertEqual(2, len(refreshed))
+        self.assertTrue(any("coffee" in memory.content for memory in refreshed))
 
     def test_memory_cache_evicts_least_recently_used_user(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "2"}):

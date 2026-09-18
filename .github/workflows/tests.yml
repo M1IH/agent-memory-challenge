@@ -176,3 +176,8 @@ jobs:
           assert oom_kills == 0
           PY
           docker stats --no-stream aml-ci
+      - name: Clean up Docker smoke resources
+        if: always()
+        run: |
+          docker rm -f aml-ci 2>/dev/null || true
+          docker volume rm aml-ci-data 2>/dev/null || true
