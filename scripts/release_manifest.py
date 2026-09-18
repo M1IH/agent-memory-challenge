@@ -12,6 +12,8 @@ from pathlib import Path
 CRITICAL_FILES = (
     ".github/workflows/tests.yml",
     "Dockerfile",
+    "README.md",
+    "docs/cycle-2-deployment.md",
     "requirements.lock",
     "requirements.txt",
     "app/__init__.py",

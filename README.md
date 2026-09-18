@@ -4,6 +4,9 @@
 
 本项目采用 [MIT License](LICENSE)。
 
+第二期要求参赛者自托管公网 HTTPS Add/Search API。部署前请完整执行
+[第二期自托管部署清单](docs/cycle-2-deployment.md)，不要只提交仓库等待平台代部署。
+
 当前版本实现官方同步 `Add / Search` 协议，使用 SQLite 持久化，并通过
 `user_id` 严格隔离不同用户。检索融合 BM25 风格词项匹配、本地 BGE
 英文向量、选择题选项通道和时间更新加权。模型在 Docker 构建时固化，

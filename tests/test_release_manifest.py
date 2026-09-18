@@ -30,6 +30,8 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn("requirements.lock", hashes)
         self.assertIn("app/store.py", hashes)
         self.assertIn(".github/workflows/tests.yml", hashes)
+        self.assertIn("README.md", hashes)
+        self.assertIn("docs/cycle-2-deployment.md", hashes)
         self.assertIn("scripts/release_manifest.py", hashes)
         self.assertIn("scripts/smoke_local.py", hashes)
         self.assertIn("scripts/smoke_remote.py", hashes)
@@ -76,6 +78,17 @@ class ReleaseManifestTests(unittest.TestCase):
 
         self.assertIn("AML_LOCKDOWN=true", dockerfile)
         self.assertIn("AML_LOCKDOWN=true", readme)
+
+    def test_cycle_two_deployment_preserves_storage_auth_and_single_writer(self):
+        root = Path(__file__).resolve().parents[1]
+        guide = (root / "docs/cycle-2-deployment.md").read_text(encoding="utf-8")
+
+        self.assertIn("AML_DB_PATH=/data/memory.db", guide)
+        self.assertIn("AML_LOCKDOWN=true", guide)
+        self.assertIn("RAILWAY_RUN_UID=0", guide)
+        self.assertIn("PORT=8000", guide)
+        self.assertIn("只运行一个副本", guide)
+        self.assertIn("python scripts\\smoke_remote.py", guide)
 
     def test_docker_runs_as_a_fixed_unprivileged_user(self):
         dockerfile = (
