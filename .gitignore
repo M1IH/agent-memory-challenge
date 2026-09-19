@@ -7,3 +7,4 @@ data/
 .env
 .gstack/
 node_modules/
+.idea/
