@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sqlite3
 import subprocess
@@ -10,11 +11,24 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from app.main import app, validate_api_key_configuration
+from app.main import (
+    RequestBodyLimitMiddleware,
+    app,
+    configured_max_request_bytes,
+    validate_api_key_configuration,
+)
 from app.store import MemoryStore
 
 
 class ApiContractTests(unittest.TestCase):
+    def test_request_byte_limit_configuration_fails_closed(self):
+        for value in ("0", "-1", "invalid"):
+            with self.subTest(value=value), patch.dict(
+                os.environ, {"AML_MAX_REQUEST_BYTES": value}
+            ):
+                with self.assertRaisesRegex(ValueError, "positive integer"):
+                    configured_max_request_bytes()
+
     def test_required_api_key_fails_closed_during_startup(self):
         with patch.dict(
             os.environ,
@@ -302,6 +316,55 @@ class ApiContractTests(unittest.TestCase):
         self.assertEqual(413, search_response.status_code)
         self.assertIn("character limit", add_response.json()["detail"])
         self.assertIn("character limit", search_response.json()["detail"])
+
+    def test_raw_request_body_limit_rejects_content_length_before_json_parsing(self):
+        response = self.client.post(
+            "/search",
+            content=b"x" * 2_000_001,
+            headers={"Content-Type": "application/json"},
+        )
+
+        self.assertEqual(413, response.status_code)
+        self.assertIn("byte limit", response.json()["detail"])
+
+    def test_raw_request_body_limit_counts_streamed_chunks_without_content_length(self):
+        downstream_called = False
+        sent: list[dict] = []
+        chunks = iter(
+            (
+                {"type": "http.request", "body": b"1234", "more_body": True},
+                {"type": "http.request", "body": b"5678", "more_body": False},
+            )
+        )
+
+        async def downstream(scope, receive, send):
+            nonlocal downstream_called
+            downstream_called = True
+            while (await receive()).get("more_body", False):
+                pass
+
+        async def receive():
+            return next(chunks)
+
+        async def send(message):
+            sent.append(message)
+
+        middleware = RequestBodyLimitMiddleware(downstream, max_bytes=7)
+        asyncio.run(
+            middleware(
+                {
+                    "type": "http",
+                    "method": "POST",
+                    "path": "/add",
+                    "headers": [],
+                },
+                receive,
+                send,
+            )
+        )
+
+        self.assertTrue(downstream_called)
+        self.assertEqual(413, sent[0]["status"])
 
     def test_blank_content_and_unrepresentable_timestamp_are_rejected(self):
         base = {

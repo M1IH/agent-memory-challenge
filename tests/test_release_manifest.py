@@ -105,6 +105,7 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn('replicas: { "sfo": 1 }', config)
         self.assertIn('volumeMounts: { "/data": apiVolume }', config)
         self.assertIn("AML_API_KEY: preserve()", config)
+        self.assertIn("AML_MAX_REQUEST_BYTES: preserve()", config)
         self.assertIn('"railway": "3.11.0"', package)
 
     def test_docker_runs_as_a_fixed_unprivileged_user(self):
@@ -114,6 +115,7 @@ class ReleaseManifestTests(unittest.TestCase):
 
         self.assertIn("useradd --system --uid 10001", dockerfile)
         self.assertIn("install -d -o aml -g aml /data", dockerfile)
+        self.assertIn("AML_MAX_REQUEST_BYTES=2000000", dockerfile)
         self.assertIn("USER 10001:10001", dockerfile)
         self.assertLess(
             dockerfile.index("USER 10001:10001"),

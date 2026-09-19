@@ -23,6 +23,7 @@ export default defineRailway(() => {
       AML_DB_PATH: preserve(),
       AML_EMBED_ENABLED: preserve(),
       AML_LOCKDOWN: preserve(),
+      AML_MAX_REQUEST_BYTES: preserve(),
       AML_MEMORY_CACHE_USERS: preserve(),
       PORT: preserve(),
       RAILWAY_RUN_UID: preserve(),

@@ -5,6 +5,7 @@ import os
 import secrets
 import sqlite3
 from datetime import datetime, timezone
+from typing import Any, Awaitable, Callable
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
@@ -13,6 +14,87 @@ from .store import MemoryStore, PayloadTooLargeError, RequestConflictError
 
 
 logger = logging.getLogger(__name__)
+
+
+class _RequestBodyTooLarge(Exception):
+    pass
+
+
+class RequestBodyLimitMiddleware:
+    """Reject oversized API payloads before JSON parsing allocates more memory."""
+
+    def __init__(self, app: Any, max_bytes: int) -> None:
+        if max_bytes <= 0:
+            raise ValueError("AML_MAX_REQUEST_BYTES must be a positive integer")
+        self.app = app
+        self.max_bytes = max_bytes
+
+    async def __call__(
+        self,
+        scope: dict[str, Any],
+        receive: Callable[[], Awaitable[dict[str, Any]]],
+        send: Callable[[dict[str, Any]], Awaitable[None]],
+    ) -> None:
+        if (
+            scope.get("type") != "http"
+            or scope.get("method") != "POST"
+            or scope.get("path") not in {"/add", "/search"}
+        ):
+            await self.app(scope, receive, send)
+            return
+
+        headers = dict(scope.get("headers", ()))
+        raw_content_length = headers.get(b"content-length")
+        if raw_content_length is not None:
+            try:
+                content_length = int(raw_content_length)
+            except ValueError:
+                content_length = None
+            if content_length is not None and content_length > self.max_bytes:
+                await self._send_too_large(scope, send)
+                return
+
+        received_bytes = 0
+
+        async def limited_receive() -> dict[str, Any]:
+            nonlocal received_bytes
+            message = await receive()
+            if message.get("type") == "http.request":
+                received_bytes += len(message.get("body", b""))
+                if received_bytes > self.max_bytes:
+                    raise _RequestBodyTooLarge
+            return message
+
+        try:
+            await self.app(scope, limited_receive, send)
+        except _RequestBodyTooLarge:
+            await self._send_too_large(scope, send)
+
+    @staticmethod
+    async def _send_too_large(
+        scope: dict[str, Any],
+        send: Callable[[dict[str, Any]], Awaitable[None]],
+    ) -> None:
+        response = JSONResponse(
+            status_code=413,
+            content={"detail": "Request body exceeds the configured byte limit"},
+        )
+
+        async def disconnected() -> dict[str, str]:
+            return {"type": "http.disconnect"}
+
+        await response(scope, disconnected, send)
+
+
+def configured_max_request_bytes() -> int:
+    raw_value = os.getenv("AML_MAX_REQUEST_BYTES", "2000000")
+    try:
+        value = int(raw_value)
+    except ValueError as exc:
+        raise ValueError("AML_MAX_REQUEST_BYTES must be a positive integer") from exc
+    if value <= 0:
+        raise ValueError("AML_MAX_REQUEST_BYTES must be a positive integer")
+    return value
 
 
 def configured_api_key() -> str | None:
@@ -137,6 +219,10 @@ def require_api_key(
 
 validate_api_key_configuration()
 app = FastAPI(title="AML Memory Entry", version="0.1.0")
+app.add_middleware(
+    RequestBodyLimitMiddleware,
+    max_bytes=configured_max_request_bytes(),
+)
 store = MemoryStore(os.getenv("AML_DB_PATH", "data/memory.db"))
 
 
