@@ -30,8 +30,12 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn("requirements.lock", hashes)
         self.assertIn("app/store.py", hashes)
         self.assertIn(".github/workflows/tests.yml", hashes)
+        self.assertIn("CLAUDE.md", hashes)
         self.assertIn("README.md", hashes)
         self.assertIn("docs/cycle-2-deployment.md", hashes)
+        self.assertIn(".railway/railway.ts", hashes)
+        self.assertIn("package-lock.json", hashes)
+        self.assertIn("package.json", hashes)
         self.assertIn("scripts/release_manifest.py", hashes)
         self.assertIn("scripts/smoke_local.py", hashes)
         self.assertIn("scripts/smoke_remote.py", hashes)
@@ -89,6 +93,19 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn("PORT=8000", guide)
         self.assertIn("只运行一个副本", guide)
         self.assertIn("python scripts\\smoke_remote.py", guide)
+
+    def test_railway_iac_uses_docker_healthcheck_and_one_replica(self):
+        root = Path(__file__).resolve().parents[1]
+        config = (root / ".railway/railway.ts").read_text(encoding="utf-8")
+        package = (root / "package.json").read_text(encoding="utf-8")
+
+        self.assertIn('builder: "DOCKERFILE"', config)
+        self.assertIn('dockerfilePath: "/Dockerfile"', config)
+        self.assertIn('healthcheck: "/health"', config)
+        self.assertIn('replicas: { "sfo": 1 }', config)
+        self.assertIn('volumeMounts: { "/data": apiVolume }', config)
+        self.assertIn("AML_API_KEY: preserve()", config)
+        self.assertIn('"railway": "3.11.0"', package)
 
     def test_docker_runs_as_a_fixed_unprivileged_user(self):
         dockerfile = (

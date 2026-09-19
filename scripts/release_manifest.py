@@ -10,10 +10,14 @@ from pathlib import Path
 
 
 CRITICAL_FILES = (
+    ".railway/railway.ts",
     ".github/workflows/tests.yml",
+    "CLAUDE.md",
     "Dockerfile",
     "README.md",
     "docs/cycle-2-deployment.md",
+    "package-lock.json",
+    "package.json",
     "requirements.lock",
     "requirements.txt",
     "app/__init__.py",

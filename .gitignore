@@ -6,3 +6,4 @@ data/
 *.db
 .env
 .gstack/
+node_modules/
