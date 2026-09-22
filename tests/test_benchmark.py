@@ -13,6 +13,35 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_blind4_is_frozen_disjoint_strict_and_high_distractor(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        blind4 = json.loads((root / "blind4_cases.json").read_text(encoding="utf-8"))
+        canonical_hash = hashlib.sha256(
+            json.dumps(blind4, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        self.assertEqual(
+            "76a1c23f4aa99fe4d794ca935acacde1da69f48db9bba109407eb958101e3918",
+            canonical_hash,
+            "blind4 changed; create a development copy instead of tuning it in place",
+        )
+        known_names = set()
+        for filename in (
+            "hard_cases.json", "confirmation_cases.json", "holdout_cases.json",
+            "blind2_cases.json", "blind3_cases.json",
+        ):
+            known_names.update(
+                case["name"]
+                for case in json.loads((root / filename).read_text(encoding="utf-8"))
+            )
+        self.assertEqual(6, len(blind4))
+        self.assertFalse({case["name"] for case in blind4} & known_names)
+        self.assertEqual(len(blind4), len({case["name"] for case in blind4}))
+        for case in blind4:
+            validate_source_case(case)
+            self.assertGreaterEqual(
+                len(case["memories"]) - len(case["expected_source_ids"]), 15
+            )
+
     def test_blind3_is_frozen_disjoint_strict_and_high_distractor(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         blind3 = json.loads((root / "blind3_cases.json").read_text(encoding="utf-8"))
