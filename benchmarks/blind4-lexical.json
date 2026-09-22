@@ -1,0 +1,363 @@
+{
+  "suite": "blind4",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 13,
+  "hit_at_1": 0.23076923076923078,
+  "hit_at_3": 0.46153846153846156,
+  "hit_at_5": 0.6923076923076923,
+  "mrr": 0.391025641025641,
+  "categories": {
+    "cross_lingual_chain": 0.0,
+    "implicit_temporal_supersession": 0.25,
+    "list_state_transitions": 0.5277777777777778,
+    "multi_hop_three_step": 0.5833333333333334,
+    "multi_hop_zh_three_step": 0.5,
+    "redundant_context_temporal": 0.0
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.0,
+  "complete_at_5": 0.5,
+  "complete_at_k": 0.5,
+  "evaluation_version": 3,
+  "suite_sha256": "76a1c23f4aa99fe4d794ca935acacde1da69f48db9bba109407eb958101e3918",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": null,
+  "embedding_identity": null,
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": null,
+    "embedding_batch_size": null
+  },
+  "evaluation_code": {
+    "sha256": "dcd0d959fdbf11f90c36822d529bbe21a4dfaad3a6437ee159f89e988d1fdcc8",
+    "files": {
+      "app/store.py": "c26371a80db3ecff1207c91238d2c7f9ed8a64014905398dc9f034686ced3d1f",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "57bbeb13db99ca33ad2b02f83bbb5d14aa31c22970d598e6a9a1fe8df41aa8be",
+      "benchmarks/evidence.py": "c431954f9b471f9ab3268f1f3fa7d3bb91003774114ee62d49c1ab519cbb2cc4",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "case_traces": [
+    {
+      "name": "blind4-bilingual-supervisor-schedule",
+      "category": "cross_lingual_chain",
+      "candidate_count": 17,
+      "expected": [
+        "identity",
+        "schedule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_8c4d5568b7d25ac2751f95de",
+          "content": "user: 我的课程辅导员每周二接待学生。",
+          "score": 18.928475,
+          "created_at": "2026-09-22T09:32:22.375665Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_5e9c78443b890e7fddf4341f",
+          "content": "user: 论文小组每周三线上开会。",
+          "score": 9.599378,
+          "created_at": "2026-09-22T09:32:22.396398Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_1d6e16515f63711ab0074c63",
+          "content": "user: 我的实验室管理员周四上午值班。",
+          "score": 4.80183,
+          "created_at": "2026-09-22T09:32:22.416605Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_86f627097092796efed66919",
+          "content": "user: 接待来访者需要提前登记。",
+          "score": 4.364778,
+          "created_at": "2026-09-22T09:32:22.438402Z",
+          "source_id": "d13"
+        }
+      ]
+    },
+    {
+      "name": "blind4-latest-insurance-provider",
+      "category": "implicit_temporal_supersession",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_67967aa1bcca89b831511c33",
+          "content": "user: I considered Summit Cover but did not choose it.",
+          "score": 10.0,
+          "created_at": "2026-09-22T09:32:22.530595Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_636cf5787f114c4dd17bbcb8",
+          "content": "[2023-04-01T00:00:00Z] user: Harbor Mutual provided my home insurance when I first moved in.",
+          "score": 7.329605,
+          "created_at": "2023-04-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_20edbf6a4d69219f5a96bc8f",
+          "content": "user: My travel insurance is with Summit Cover.",
+          "score": 6.670651,
+          "created_at": "2026-09-22T09:32:22.479101Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_06475181bb448e119869f280",
+          "content": "[2024-12-01T00:00:00Z] user: I switched the home insurance policy from Harbor Mutual to Cedar Shield.",
+          "score": 5.984694,
+          "created_at": "2024-12-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_861ee7c0c60039847d59dff3",
+          "content": "user: My landlord uses Harbor Mutual.",
+          "score": 5.695678,
+          "created_at": "2026-09-22T09:32:22.515280Z",
+          "source_id": "d09"
+        }
+      ]
+    },
+    {
+      "name": "blind4-museum-equipment-chain",
+      "category": "multi_hop_three_step",
+      "candidate_count": 18,
+      "expected": [
+        "scanner",
+        "room",
+        "card"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_adf93ce5c7eaa85431e483fb",
+          "content": "user: The Orion museum project uses the Larkspur archival scanner.",
+          "score": 10.208626,
+          "created_at": "2026-09-22T09:32:22.554862Z",
+          "source_id": "scanner"
+        },
+        {
+          "id": "mem_ef44ba6988367f908eb8b45d",
+          "content": "user: The Larkspur scanner is kept in the Amber conservation room.",
+          "score": 8.490098,
+          "created_at": "2026-09-22T09:32:22.560093Z",
+          "source_id": "room"
+        },
+        {
+          "id": "mem_16a468af0e22e38d876baa01",
+          "content": "user: Larkspur is also the name of a student club.",
+          "score": 5.620409,
+          "created_at": "2026-09-22T09:32:22.613907Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_5f11cdb97bf320cdb38d36aa",
+          "content": "user: Jonas Reed manages access cards for the Amber room.",
+          "score": 5.586145,
+          "created_at": "2026-09-22T09:32:22.564971Z",
+          "source_id": "card"
+        },
+        {
+          "id": "mem_b9bb5249f555aa21a17b5123",
+          "content": "user: Museum access ends at six.",
+          "score": 3.996415,
+          "created_at": "2026-09-22T09:32:22.648221Z",
+          "source_id": "d15"
+        }
+      ]
+    },
+    {
+      "name": "blind4-chinese-instrument-delivery-chain",
+      "category": "multi_hop_zh_three_step",
+      "candidate_count": 18,
+      "expected": [
+        "repairer",
+        "courier",
+        "pickup"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null,
+        2
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_1962da7fe112aaaab25d0bf0",
+          "content": "user: 负责修复我那把旧提琴的师傅叫林澈。",
+          "score": 16.259811,
+          "created_at": "2026-09-22T09:32:22.656125Z",
+          "source_id": "repairer"
+        },
+        {
+          "id": "mem_70166cadd3189c04c4dd16df",
+          "content": "user: 星桥快递把乐器包裹统一送到音乐学院北门领取点。",
+          "score": 15.157841,
+          "created_at": "2026-09-22T09:32:22.667301Z",
+          "source_id": "pickup"
+        },
+        {
+          "id": "mem_d4a8ec7f03877ee22c9659cd",
+          "content": "user: 旧提琴的琴盒是深棕色的。",
+          "score": 12.671634,
+          "created_at": "2026-09-22T09:32:22.688190Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_e94ae046ac7356e645f3c1de",
+          "content": "user: 另一个包裹送到了东门驿站。",
+          "score": 11.792517,
+          "created_at": "2026-09-22T09:32:22.742732Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_940b03eea1d4c55d8d79f496",
+          "content": "user: 北门领取点下午六点关闭。",
+          "score": 10.412931,
+          "created_at": "2026-09-22T09:32:22.758660Z",
+          "source_id": "d15"
+        }
+      ]
+    },
+    {
+      "name": "blind4-approved-field-trip-list",
+      "category": "list_state_transitions",
+      "candidate_count": 18,
+      "expected": [
+        "aya",
+        "ben",
+        "chen"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_a17353a0812a8d7ba35ffd13",
+          "content": "user: Aya confirmed her place on the Redwood field trip.",
+          "score": 17.798952,
+          "created_at": "2026-09-22T09:32:22.767932Z",
+          "source_id": "aya"
+        },
+        {
+          "id": "mem_0e8ff374d889a7fd0bac6fe4",
+          "content": "user: Aya confirmed the lunch order for the trip.",
+          "score": 17.385903,
+          "created_at": "2026-09-22T09:32:22.806592Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_70ddc3580280f6e71a363072",
+          "content": "user: Ben accepted the Redwood field trip invitation.",
+          "score": 11.647826,
+          "created_at": "2026-09-22T09:32:22.775849Z",
+          "source_id": "ben"
+        },
+        {
+          "id": "mem_1a1ca5d47d5d5fd68bfddd6e",
+          "content": "user: Chen said yes to joining the Redwood field trip.",
+          "score": 11.30065,
+          "created_at": "2026-09-22T09:32:22.782205Z",
+          "source_id": "chen"
+        },
+        {
+          "id": "mem_37a8d5044dcad63571295875",
+          "content": "user: The trip leader confirmed the departure time.",
+          "score": 11.085492,
+          "created_at": "2026-09-22T09:32:22.872963Z",
+          "source_id": "d14"
+        }
+      ]
+    },
+    {
+      "name": "blind4-duplicate-context-medication",
+      "category": "redundant_context_temporal",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_e9ffc5e275688165faf8da29",
+          "content": "user: assistant: You mentioned taking Lisinopril.\nuser: I will ask about it at my appointment.",
+          "score": 2.983791,
+          "created_at": "2026-09-22T09:32:22.904186Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_119d49f762b8023ec6577268",
+          "content": "user: My current allergy medicine is cetirizine.",
+          "score": 2.832346,
+          "created_at": "2026-09-22T09:32:22.962060Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_d9aa2b7b2f58a1fe60157ce6",
+          "content": "user: A blood-pressure monitor is in the kitchen.",
+          "score": 2.686148,
+          "created_at": "2026-09-22T09:32:22.935616Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_99d4d0f24868174f51bb85c1",
+          "content": "[2023-01-01T00:00:00Z] user: I used to take Lisinopril for blood pressure.",
+          "score": 1.660457,
+          "created_at": "2023-01-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_65488e67e0e6aa9032737c16",
+          "content": "user: I considered changing pharmacies.",
+          "score": 1.573689,
+          "created_at": "2026-09-22T09:32:22.928565Z",
+          "source_id": "d05"
+        }
+      ]
+    }
+  ]
+}
