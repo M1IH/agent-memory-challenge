@@ -135,6 +135,28 @@ class MultiHopRetrievalTests(unittest.TestCase):
         self.assertIn("My manager is Priya Nair", contents)
         self.assertIn("Priya Nair holds her team check-in every Thursday", contents)
 
+    def test_english_query_can_follow_discovered_chinese_name_to_schedule(self):
+        self.add_all([
+            "教我篆刻的老师叫沈禾。",
+            "沈禾每周日上午在青石工作室授课。",
+            "My watercolor tutor teaches on Tuesday morning.",
+            "我以前的篆刻老师叫陈墨。",
+            "陈墨每周五下午开课。",
+            "青石工作室周日中午关闭。",
+            "沈禾周三参加书法社活动。",
+            "The lesson desk opens at eight.",
+            "篆刻课需要自带印石。",
+            "My Chinese language tutor teaches on Monday.",
+            "沈荷负责周四的摄影课。",
+            "工作室旁边有一家文具店。",
+        ])
+        results = self.store.search(
+            "u", "Which morning does my seal-carving instructor teach?", 5
+        )
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("老师叫沈禾", contents)
+        self.assertIn("沈禾每周日上午", contents)
+
     def test_project_room_bridges_to_key_holder(self):
         self.add_all([
             "Project Juniper was assigned the Cedar room.",

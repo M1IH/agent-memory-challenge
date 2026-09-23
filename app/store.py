@@ -41,6 +41,11 @@ _CONCEPT_GROUPS = (
     ("过敏", "allergic", "allergy"),
     ("工作", "职业", "职位", "任职", "job", "career", "work"),
     (
+        "老师", "教师", "导师", "教练",
+        "teacher", "tutor", "instructor", "coach",
+        "supervisor", "mentor", "adviser", "advisor",
+    ),
+    (
         "预订", "预约", "订了", "订房",
         "book", "booked", "booking", "reserve", "reserved", "reservation",
         "confirm", "confirmed",
@@ -89,6 +94,10 @@ _CJK_ENTITY_PATTERNS = (
         r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
         r"(?=做好(?:了)?(?:证书|成品)|制成(?:了)?(?:证书|成品|器件))"
     ),
+    re.compile(
+        r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
+        r"(?=每周[一二三四五六日天])"
+    ),
     re.compile(r"(?:使用(?:了)?|通过|委托|交给)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(
@@ -121,7 +130,8 @@ _EVENT_NEGATION = re.compile(
 _QUERY_NEGATION = re.compile(r"\b(?:not|never|didn't|did not)\b|(?:没有|没|未)", re.I)
 _PRESENT_STATE_QUERY = re.compile(
     r"\b(?:what|which|who|where)\b.{0,100}"
-    r"\b(?:am|is|are|do|does|provides?|supplies?|uses?|takes?|visits?|works?|lives?)\b",
+    r"\b(?:am|is|are|do|does|provides?|supplies?|uses?|takes?|visits?|works?|lives?|"
+    r"teaches?|instructs?|meets?|holds?)\b",
     re.I,
 )
 _IDENTIFIER_TOKEN = re.compile(r"(?=.*\d)[a-z0-9]+(?:[-_][a-z0-9]+)+", re.I)
@@ -821,6 +831,7 @@ class MemoryStore:
                 memory for memory in memories
                 if has_marker(memory.content, _UPDATE_MARKERS)
                 or has_marker(memory.content, _CURRENT_MARKERS)
+                or has_marker(memory.content, _HISTORICAL_MARKERS)
             ]
             if config.temporal_enabled and present_state_syntax and not explicitly_current
             else []
@@ -923,6 +934,19 @@ class MemoryStore:
                 memory for _, memory in lexical_scores[1:5]
                 if re.search(r"\b(?:is|are|was|were)\b", memory.content, re.I)
             )
+            if asks_for_current:
+                current_seeds = [
+                    seed for seed in seeds
+                    if not has_marker(seed.content, _HISTORICAL_MARKERS)
+                ]
+                if not current_seeds:
+                    current_seeds = [
+                        memory for _, memory in lexical_scores[:10]
+                        if not has_marker(memory.content, _HISTORICAL_MARKERS)
+                        and entity_terms(memory.content)
+                    ]
+                if current_seeds:
+                    seeds = current_seeds
             query_entities = entity_terms(query)
             seed_entities = {
                 entity
@@ -990,9 +1014,22 @@ class MemoryStore:
             # Limit the second hop to ten seeds and CJK queries only. The wider
             # seed window is needed because a bridge statement can rank below
             # surface-form distractors before linkage is applied.
-            if _CJK_RUN.search(query):
+            first_hop = [memory for _, memory in lexical_scores[:10]]
+            if asks_for_current:
+                current_first_hop = [
+                    memory for memory in first_hop
+                    if not has_marker(memory.content, _HISTORICAL_MARKERS)
+                ]
+                if current_first_hop:
+                    first_hop = current_first_hop
+            has_cjk_bridge = any(
+                _CJK_RUN.search(entity) is not None
+                for memory in first_hop
+                for entity in entities_by_id[memory.id]
+            )
+            if _CJK_RUN.search(query) or has_cjk_bridge:
                 lexical_scores = linked_ranking(
-                    lexical_scores, [memory for _, memory in lexical_scores[:10]]
+                    lexical_scores, first_hop
                 )
         return self._finish_search(
             query, memories, lexical_scores, rank_key, config, top_k,
