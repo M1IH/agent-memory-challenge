@@ -67,6 +67,25 @@ class ExtendedBenchmarkTests(unittest.TestCase):
             self.assertGreaterEqual(
                 len(case["memories"]) - len(case["expected_source_ids"]), 15
             )
+        reports = {
+            name: json.loads((root / name).read_text(encoding="utf-8"))
+            for name in (
+                "blind7-candidate-lexical.json",
+                "blind7-candidate-bge.json",
+            )
+        }
+        for report in reports.values():
+            self.assertEqual(canonical_hash, report["suite_sha256"])
+            self.assertEqual(
+                "a7dfaeb10914db0b90bddeba76b90a997baeb03b",
+                report["git"]["production_git_sha"],
+            )
+            self.assertFalse(report["git"]["dirty"])
+        self.assertIsNone(reports["blind7-candidate-lexical.json"]["embedding_model"])
+        self.assertEqual(
+            "BAAI/bge-small-en-v1.5",
+            reports["blind7-candidate-bge.json"]["embedding_model"],
+        )
 
     def test_blind6_is_frozen_disjoint_strict_and_high_distractor(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
