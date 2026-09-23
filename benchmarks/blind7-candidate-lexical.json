@@ -1,0 +1,591 @@
+{
+  "suite": "blind7",
+  "top_k": 10,
+  "cases": 6,
+  "evidence": 16,
+  "hit_at_1": 0.25,
+  "hit_at_3": 0.5,
+  "hit_at_5": 0.75,
+  "mrr": 0.4465029761904762,
+  "categories": {
+    "cross_lingual_role_chain": 0.5833333333333334,
+    "high_repetition_negative_transfer": 0.1976190476190476,
+    "list_withdrawal_governance": 0.24206349206349206,
+    "mixed_current_historical_state": 0.75,
+    "multi_hop_identifier_chain": 0.44166666666666665,
+    "multi_hop_zh_logistics": 0.611111111111111
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.3333333333333333,
+  "complete_at_5": 0.3333333333333333,
+  "complete_at_k": 1.0,
+  "evaluation_version": 3,
+  "suite_sha256": "5bb3ca36972e0f975773f63eac6d710188dd1282b8701557746454063aac8079",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": null,
+  "embedding_identity": null,
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": null,
+    "embedding_batch_size": null
+  },
+  "evaluation_code": {
+    "sha256": "a20effeeab31ad92214217dde6ac7ecb88a1485b4600dd728b5b352c924ef580",
+    "files": {
+      "app/store.py": "ad7951c896479f4423a51e54e48ccee37ed3bad9bc122fcee5d057ae0eb6da33",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "45f0976f78d5640b0c5a701f74a98214b298657c92e97dc5eee3bd53540e3eab",
+      "benchmarks/evidence.py": "c431954f9b471f9ab3268f1f3fa7d3bb91003774114ee62d49c1ab519cbb2cc4",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "git": {
+    "production_git_sha": "a7dfaeb10914db0b90bddeba76b90a997baeb03b",
+    "harness_git_sha": "a7dfaeb10914db0b90bddeba76b90a997baeb03b",
+    "dirty": false
+  },
+  "case_traces": [
+    {
+      "name": "blind7-cross-language-pottery-location",
+      "category": "cross_lingual_role_chain",
+      "candidate_count": 17,
+      "expected": [
+        "identity",
+        "location"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        6
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_4b8d914fa0370c5d5d7a6bc7",
+          "content": "user: 替我修复青瓷碗的匠人叫顾棠。",
+          "score": 70.719835,
+          "created_at": "2026-09-23T02:41:47.409771Z",
+          "source_id": "identity"
+        },
+        {
+          "id": "mem_d02176c4d8882f5022d5dbd6",
+          "content": "user: 修复完成后我更换了展示柜。",
+          "score": 29.253919,
+          "created_at": "2026-09-23T02:41:47.466941Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_5b5ad017bd248a3d8bd6188b",
+          "content": "user: 另一只茶杯送去了河畔修复中心。",
+          "score": 27.019625,
+          "created_at": "2026-09-23T02:41:47.450813Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_1ddd87439b55cc6aec92b6f1",
+          "content": "user: 顾棠参加了春季陶艺展。",
+          "score": 16.130481,
+          "created_at": "2026-09-23T02:41:47.430619Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_9fd53d4bab6552bc6e310dbc",
+          "content": "user: 白鹭邮局只在工作日上午营业。",
+          "score": 11.288147,
+          "created_at": "2026-09-23T02:41:47.472301Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_e99796832caff54da89c0cb1",
+          "content": "user: 顾棠的工作室设在白鹭巷旧邮局二楼。",
+          "score": 10.086696,
+          "created_at": "2026-09-23T02:41:47.415147Z",
+          "source_id": "location"
+        },
+        {
+          "id": "mem_c70163ae71914d6aa9009392",
+          "content": "user: My glass vase was repaired by Mara Bell.",
+          "score": 6.683783,
+          "created_at": "2026-09-23T02:41:47.420122Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_9a398db23270a1c62e41d2fc",
+          "content": "user: The celadon exhibition closes next month.",
+          "score": 6.42332,
+          "created_at": "2026-09-23T02:41:47.477193Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_25ca4b85216ad2ebbef8ea89",
+          "content": "user: My artisan bread order is ready for pickup.",
+          "score": 6.045865,
+          "created_at": "2026-09-23T02:41:47.482168Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_a405cfbbbb0eadd5802fb213",
+          "content": "user: The pottery class meets above the train station.",
+          "score": 3.486462,
+          "created_at": "2026-09-23T02:41:47.456196Z",
+          "source_id": "d08"
+        }
+      ]
+    },
+    {
+      "name": "blind7-chinese-parcel-handoff",
+      "category": "multi_hop_zh_logistics",
+      "candidate_count": 18,
+      "expected": [
+        "framer",
+        "carrier",
+        "pickup"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3,
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_b3a89922d916b7c5b6a4bbaf",
+          "content": "user: 许澄装好后把成品交给云杉物流配送。",
+          "score": 35.792443,
+          "created_at": "2026-09-23T02:41:47.508731Z",
+          "source_id": "carrier"
+        },
+        {
+          "id": "mem_8f73ba6daeb9fbf009e340e9",
+          "content": "user: 云杉物流的大件统一送到湖滨社区北门服务房自取。",
+          "score": 18.190548,
+          "created_at": "2026-09-23T02:41:47.513944Z",
+          "source_id": "pickup"
+        },
+        {
+          "id": "mem_0e548168d38c1511e2fa3c7a",
+          "content": "user: 我的毕业证由装裱师许澄完成装框。",
+          "score": 17.696461,
+          "created_at": "2026-09-23T02:41:47.503482Z",
+          "source_id": "framer"
+        },
+        {
+          "id": "mem_36cb31271f16f28f043e8136",
+          "content": "user: 毕业证复印件收在蓝色文件夹里。",
+          "score": 10.843156,
+          "created_at": "2026-09-23T02:41:47.550403Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_8a808b689afa7c9e0b9467d5",
+          "content": "user: 云松物流只负责家具运输。",
+          "score": 7.568643,
+          "created_at": "2026-09-23T02:41:47.566189Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_e06ec7796877279c28543db3",
+          "content": "user: 装裱框使用了防紫外线玻璃。",
+          "score": 7.557645,
+          "created_at": "2026-09-23T02:41:47.544779Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_f0753fc953fc7259f12bee80",
+          "content": "user: 许成负责打印毕业合照。",
+          "score": 7.495939,
+          "created_at": "2026-09-23T02:41:47.529623Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_df5cbfc8b62d0dc05be16996",
+          "content": "user: 另一幅海报在文化馆装裱。",
+          "score": 5.144063,
+          "created_at": "2026-09-23T02:41:47.577157Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_90be3dee502a71bbde834bd2",
+          "content": "user: 取大件需要携带身份证件。",
+          "score": 3.606482,
+          "created_at": "2026-09-23T02:41:47.587850Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_0a40ea927ba2b9dd7750e21e",
+          "content": "user: 我的学位服由海岬快运寄回。",
+          "score": 3.219448,
+          "created_at": "2026-09-23T02:41:47.519113Z",
+          "source_id": "d01"
+        }
+      ]
+    },
+    {
+      "name": "blind7-rare-code-three-hop",
+      "category": "multi_hop_identifier_chain",
+      "candidate_count": 18,
+      "expected": [
+        "unit",
+        "cabinet",
+        "custodian"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        5,
+        8
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_3f665c9d11b661611aa42f3d",
+          "content": "user: The air-quality sensor assigned to unit VX-73 is stored in cabinet Cedar-8.",
+          "score": 9.727323,
+          "created_at": "2026-09-23T02:41:47.607199Z",
+          "source_id": "unit"
+        },
+        {
+          "id": "mem_5bbb83308ffdae3d753219cf",
+          "content": "user: Sensor VX-73 completed calibration on Tuesday.",
+          "score": 3.627101,
+          "created_at": "2026-09-23T02:41:47.666119Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_f3d6922bc92ef14479225ebe",
+          "content": "user: The VX-71 sensor is kept in cabinet Cedar-3.",
+          "score": 3.230496,
+          "created_at": "2026-09-23T02:41:47.628519Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_26fc97fd8dbd10b919524700",
+          "content": "user: Unit VX-71 uses a humidity sensor.",
+          "score": 2.997178,
+          "created_at": "2026-09-23T02:41:47.623137Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_6664c64367d7650829d4e7a5",
+          "content": "user: Cabinet Cedar-8 can only be opened with key ring KR-19.",
+          "score": 2.45138,
+          "created_at": "2026-09-23T02:41:47.612519Z",
+          "source_id": "cabinet"
+        },
+        {
+          "id": "mem_b32189273a9ab4fc1dd91207",
+          "content": "user: Key ring KR-17 opens the calibration lab.",
+          "score": 2.284776,
+          "created_at": "2026-09-23T02:41:47.639652Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_58a4bdf96d1d295a8cf83839",
+          "content": "user: The cabinet inventory lists nineteen adapters.",
+          "score": 2.196398,
+          "created_at": "2026-09-23T02:41:47.671261Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_73182f3932658f3b64afdad4",
+          "content": "user: Nolan Reyes is the registered custodian of key ring KR-19.",
+          "score": 1.976961,
+          "created_at": "2026-09-23T02:41:47.617995Z",
+          "source_id": "custodian"
+        },
+        {
+          "id": "mem_db4ec6b6b845c346bdc48430",
+          "content": "user: A portable sensor is stored in the west office.",
+          "score": 1.886453,
+          "created_at": "2026-09-23T02:41:47.681991Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_1c1f1fb375ef0b33456db7c2",
+          "content": "user: Nolan Reyes inspected unit VX-37.",
+          "score": 1.702296,
+          "created_at": "2026-09-23T02:41:47.650324Z",
+          "source_id": "d06"
+        }
+      ]
+    },
+    {
+      "name": "blind7-current-and-former-vendors",
+      "category": "mixed_current_historical_state",
+      "candidate_count": 17,
+      "expected": [
+        "old",
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_5ebe5f0dd585d22cacad87b6",
+          "content": "[2025-04-01T00:00:00Z] user: After the lobby reopened, I replaced Fern & Finch with Moss Harbor as the office-plant supplier.",
+          "score": 21.700166,
+          "created_at": "2025-04-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_bd4ebceae72075b1dc8a0392",
+          "content": "[2023-04-01T00:00:00Z] user: Before the lobby renovation, Fern & Finch supplied all plants for my office.",
+          "score": 16.306488,
+          "created_at": "2023-04-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_51a894f681ef0be9c641b32b",
+          "content": "user: Fern & Finch sent a final invoice.",
+          "score": 10.0,
+          "created_at": "2026-09-23T02:41:47.728450Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_ad88fa34be1a5b64631c37a4",
+          "content": "user: The lobby renovation added stone benches.",
+          "score": 3.953835,
+          "created_at": "2026-09-23T02:41:47.734068Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_bff77e5a4a2c404caed5273a",
+          "content": "user: I considered artificial plants but rejected the idea.",
+          "score": 2.343278,
+          "created_at": "2026-09-23T02:41:47.799791Z",
+          "source_id": "d15"
+        },
+        {
+          "id": "mem_4b7e48fd086d690f58f641ef",
+          "content": "user: The office reopened on a Monday.",
+          "score": 2.226856,
+          "created_at": "2026-09-23T02:41:47.777574Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_597309feb125df2e43f3e7c1",
+          "content": "user: My home garden uses a different nursery.",
+          "score": 2.106528,
+          "created_at": "2026-09-23T02:41:47.739788Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_b24c6d3e9fe992a3679d2397",
+          "content": "user: Harbor Office Supply delivers printer paper.",
+          "score": 1.853662,
+          "created_at": "2026-09-23T02:41:47.750410Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_b51d186d88eed5fbcc6ee69d",
+          "content": "user: Moss Harbor currently waters the lobby palms.",
+          "score": 1.644482,
+          "created_at": "2026-09-23T02:41:47.722832Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_3dbce99216b9158286e90156",
+          "content": "user: The old lobby plan is stored in the archive.",
+          "score": 1.618906,
+          "created_at": "2026-09-23T02:41:47.766650Z",
+          "source_id": "d09"
+        }
+      ]
+    },
+    {
+      "name": "blind7-active-translation-roster",
+      "category": "list_withdrawal_governance",
+      "candidate_count": 18,
+      "expected": [
+        "mei",
+        "omar",
+        "ruth"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3,
+        4,
+        7
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_89eb1e2a2c42601f3d85301a",
+          "content": "user: Four microphones have been reserved.",
+          "score": 19.111066,
+          "created_at": "2026-09-23T02:41:47.861790Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_18f40be0df77bd7608ccd2fa",
+          "content": "user: Jon Bell remains confirmed for the Cedar editing panel.",
+          "score": 15.231318,
+          "created_at": "2026-09-23T02:41:47.867413Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_66091780fa8382c9d9e195d7",
+          "content": "user: Mei Lin confirmed her seat on the Alder translation panel.",
+          "score": 13.207365,
+          "created_at": "2026-09-23T02:41:47.808697Z",
+          "source_id": "mei"
+        },
+        {
+          "id": "mem_b6d16d095b3e4a68caff6783",
+          "content": "user: Omar Haddad accepted the invitation to serve on the Alder translation panel.",
+          "score": 11.553352,
+          "created_at": "2026-09-23T02:41:47.813954Z",
+          "source_id": "omar"
+        },
+        {
+          "id": "mem_0acc240837de4920b89c600c",
+          "content": "user: Jon Bell accepted at first but withdrew from the Alder translation panel yesterday.",
+          "score": 11.221284,
+          "created_at": "2026-09-23T02:41:47.824976Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_44023e765fd96b1e86e074b4",
+          "content": "user: The moderator confirmed the running order.",
+          "score": 10.760368,
+          "created_at": "2026-09-23T02:41:47.889166Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_70f8c60c502e41b755b1320a",
+          "content": "user: Ruth Vega signed the final participation form for the Alder translation panel.",
+          "score": 5.00442,
+          "created_at": "2026-09-23T02:41:47.819859Z",
+          "source_id": "ruth"
+        },
+        {
+          "id": "mem_23366ac9829a6c23aaa9182a",
+          "content": "user: The Alder panel starts at ten.",
+          "score": 2.959491,
+          "created_at": "2026-09-23T02:41:47.856676Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_af09d0e3a897d88a13673661",
+          "content": "user: Ruth withdrew her proposal for an unrelated lecture.",
+          "score": 1.732982,
+          "created_at": "2026-09-23T02:41:47.899695Z",
+          "source_id": "d15"
+        },
+        {
+          "id": "mem_3cc76caac56cc946e7b9a028",
+          "content": "user: Omar shared a translation style guide.",
+          "score": 1.42866,
+          "created_at": "2026-09-23T02:41:47.894606Z",
+          "source_id": "d14"
+        }
+      ]
+    },
+    {
+      "name": "blind7-duplicate-policy-custodian",
+      "category": "high_repetition_negative_transfer",
+      "candidate_count": 18,
+      "expected": [
+        "vault",
+        "card",
+        "holder"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        7,
+        4,
+        5
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_cfc34388a81f85fc64c47fc7",
+          "content": "user: The Opal vault uses override card VG-28.",
+          "score": 16.185509,
+          "created_at": "2026-09-23T02:41:47.966863Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_c5b669f252664595d4192296",
+          "content": "user: The signed Vega policy is held in the Opal vault.",
+          "score": 11.858326,
+          "created_at": "2026-09-23T02:41:47.961622Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_c7b5d4a8d5efcca33700cc87",
+          "content": "user: Elena Soto reviewed an Orion training memo.",
+          "score": 11.399499,
+          "created_at": "2026-09-23T02:41:47.955773Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_530a88c4824e3edf19b1413d",
+          "content": "user: Emergency access to the Quartz records vault requires override card OR-28.",
+          "score": 7.520726,
+          "created_at": "2026-09-23T02:41:47.915868Z",
+          "source_id": "card"
+        },
+        {
+          "id": "mem_3c71a74a5a748f190c4e982c",
+          "content": "user: Elena Soto is the designated holder of override card OR-28.",
+          "score": 6.951305,
+          "created_at": "2026-09-23T02:41:47.921400Z",
+          "source_id": "holder"
+        },
+        {
+          "id": "mem_1fca67215e8a9986456eb98a",
+          "content": "user: Elena's staff badge does not open the vault.",
+          "score": 5.120645,
+          "created_at": "2026-09-23T02:41:48.006215Z",
+          "source_id": "d15"
+        },
+        {
+          "id": "mem_42f68c089b69bb883e8449a1",
+          "content": "user: The signed Orion policy is sealed in the Quartz records vault.",
+          "score": 4.883429,
+          "created_at": "2026-09-23T02:41:47.908415Z",
+          "source_id": "vault"
+        },
+        {
+          "id": "mem_6420e697bece2ce3180896ad",
+          "content": "user: The signed Orion policy is sealed in the Quartz records vault.",
+          "score": 4.883429,
+          "created_at": "2026-09-23T02:41:47.932435Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_544bec6c57870c7573b7d5e7",
+          "content": "user: Override card OR-82 belongs to the server room.",
+          "score": 3.218718,
+          "created_at": "2026-09-23T02:41:47.944087Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_900ef23b4bc1d3a04fd967f2",
+          "content": "user: The Quartz records vault requires two witnesses for routine access.",
+          "score": 2.989702,
+          "created_at": "2026-09-23T02:41:47.938818Z",
+          "source_id": "d03"
+        }
+      ]
+    }
+  ]
+}
