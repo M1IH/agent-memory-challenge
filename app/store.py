@@ -816,18 +816,22 @@ class MemoryStore:
             else (lambda memory: 0)
         )
         present_state_syntax = _PRESENT_STATE_QUERY.search(query) is not None
-        update_memories = (
-            [memory for memory in memories if has_marker(memory.content, _UPDATE_MARKERS)]
+        state_memories = (
+            [
+                memory for memory in memories
+                if has_marker(memory.content, _UPDATE_MARKERS)
+                or has_marker(memory.content, _CURRENT_MARKERS)
+            ]
             if config.temporal_enabled and present_state_syntax and not explicitly_current
             else []
         )
         asks_for_current = explicitly_current or (
             not asks_for_historical
             and present_state_syntax
-            and bool(update_memories)
+            and bool(state_memories)
             and any(
                 topic_terms(query) & topic_terms(memory.content)
-                for memory in update_memories
+                for memory in state_memories
             )
         )
         temporal_ids: set[str] = set()
@@ -943,6 +947,15 @@ class MemoryStore:
                 candidates: list[tuple[float, Memory]], active_seeds: list[Memory]
             ) -> list[tuple[float, Memory]]:
                 active_seed_ids = {seed.id for seed in active_seeds}
+                seed_bodies = {
+                    re.sub(
+                        r"^(?:\[[^\]]+\]\s+)?(?:user|assistant|system):\s*",
+                        "",
+                        seed.content,
+                        flags=re.I,
+                    ).casefold()
+                    for seed in active_seeds
+                }
                 bridge_terms = {
                     entity
                     for seed in active_seeds
@@ -952,12 +965,16 @@ class MemoryStore:
                 linked_scores = []
                 for score, memory in candidates:
                     shared = bridge_terms & entities_by_id[memory.id]
-                    if memory.id in active_seed_ids:
-                        # A linked duplicate must not gain more than the seed
-                        # merely because it is outside the active seed window.
-                        # Preserve the seed's rank while still lifting genuine
-                        # second-hop evidence into the same bounded band.
-                        bridge_score = 10.0 if shared else 0.0
+                    body = re.sub(
+                        r"^(?:\[[^\]]+\]\s+)?(?:user|assistant|system):\s*",
+                        "",
+                        memory.content,
+                        flags=re.I,
+                    ).casefold()
+                    if memory.id in active_seed_ids or body in seed_bodies:
+                        # A duplicate outside the seed window must not gain a
+                        # larger linkage bonus than the seed itself.
+                        bridge_score = 4.0 if shared else 0.0
                     else:
                         bridge_score = min(
                             10.0,
