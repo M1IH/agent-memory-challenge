@@ -159,6 +159,27 @@ class MemoryStoreTests(unittest.TestCase):
         results = self.store.search("alice", "我现在最喜欢什么早餐", 10)
         self.assertIn("燕麦酸奶", results[0]["content"])
 
+    def test_current_question_recognizes_replaced_and_switched_updates(self):
+        self.add(
+            "alice", "req-old", "I used to take Lisinopril for blood pressure.",
+            1672531200000,
+        )
+        self.add(
+            "alice", "req-new",
+            "My doctor replaced Lisinopril with Amlodipine for blood pressure.",
+            1735689600000,
+        )
+        for index, content in enumerate((
+            "My father takes Amlodipine.",
+            "Lisinopril appears in an archived insurance form.",
+            "A blood-pressure monitor is in the kitchen.",
+        )):
+            self.add("alice", f"req-d{index}", content)
+        result = self.store.search(
+            "alice", "What blood-pressure medicine am I taking now?", 1
+        )[0]
+        self.assertIn("replaced Lisinopril with Amlodipine", result["content"])
+
     def test_temporal_ablation_switch_removes_update_preference(self):
         self.add("alice", "req-1", "My current desk location is Room-101.", 1704067200000)
         self.add("alice", "req-2", "Later, it changed to Room-202.", 1704067300000)

@@ -59,13 +59,23 @@ _CONCEPT_GROUPS = (
     ),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
-_UPDATE_MARKERS = ("后来", "改成", "改为", "变了", "不再", "首选", "updated", "changed")
+_UPDATE_MARKERS = (
+    "后来", "改成", "改为", "换成", "替换", "停止使用", "变了", "不再", "首选",
+    "updated", "changed", "switched", "replaced", "stopped using", "no longer",
+)
 _TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
 _ENTITY_STOP = {"My", "The", "A", "An", "I", "He", "She", "It", "We", "They", "Project", "Room", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 _CJK_ENTITY_PATTERNS = (
     re.compile(r"叫([\u3400-\u9fff]{2,4})(?=[，。！？,.!?]|$)"),
-    re.compile(r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})(?=寄|负责|管理|保管|持有)"),
-    re.compile(r"(?:使用(?:了)?|通过)([\u3400-\u9fff]{2,6}快递)"),
+    re.compile(
+        r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
+        r"(?=寄|负责|管理|保管|持有)"
+    ),
+    re.compile(
+        r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
+        r"(?=完成(?:了)?(?:修复|维修|装订|调音))"
+    ),
+    re.compile(r"(?:使用(?:了)?|通过|委托)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(
         r"(?:^|:\s)(?!(?:今天|昨天|明天|现在|目前|后来))"

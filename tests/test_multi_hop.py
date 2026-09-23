@@ -47,6 +47,32 @@ class MultiHopRetrievalTests(unittest.TestCase):
         self.assertIn("许舟寄回键盘", contents)
         self.assertIn("东区三号取件柜", contents)
 
+    def test_chinese_repeated_names_bridge_without_fixed_sentence_templates(self):
+        self.add_all([
+            "负责修复我那把旧提琴的师傅叫林澈。",
+            "林澈完成修复后委托星桥快递运送提琴。",
+            "星桥快递把乐器包裹统一送到音乐学院北门领取点。",
+            "我的新吉他由周远调音。",
+            "周远使用青禾物流寄送配件。",
+            "青禾物流送到南门服务台。",
+            "旧提琴的琴盒是深棕色的。",
+            "林澈还修复过一把大提琴。",
+            "星桥音乐厅周一休息。",
+            "北门附近有一家咖啡店。",
+            "音乐学院服务台可以借谱架。",
+            "提琴修复费用已经支付。",
+            "领取乐器需要出示短信。",
+            "林澈没有使用青禾物流。",
+            "另一个包裹送到了东门驿站。",
+        ])
+        results = self.store.search(
+            "u", "给我修复旧提琴的人最后把琴送到了哪个领取点？", 5
+        )
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("师傅叫林澈", contents)
+        self.assertIn("林澈完成修复后委托星桥快递", contents)
+        self.assertIn("音乐学院北门领取点", contents)
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.store = MemoryStore(Path(self.directory.name) / "test.db", embedder=False)
