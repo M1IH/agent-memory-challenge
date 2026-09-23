@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import platform
+import subprocess
 import tempfile
 from collections import defaultdict
 from dataclasses import asdict
@@ -44,6 +45,26 @@ def evaluation_code_manifest(root: Path) -> dict[str, object]:
     return {"sha256": combined, "files": files}
 
 
+def git_evidence(root: Path, production_git_sha: str | None) -> dict[str, object]:
+    def git(*args: str) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=root, check=True, capture_output=True, text=True
+        ).stdout.strip()
+
+    harness_sha = git("rev-parse", "HEAD")
+    dirty = bool(git("status", "--porcelain"))
+    resolved_production_sha = production_git_sha or harness_sha
+    if len(resolved_production_sha) != 40 or any(
+        char not in "0123456789abcdefABCDEF" for char in resolved_production_sha
+    ):
+        raise ValueError("production Git SHA must contain exactly 40 hexadecimal characters")
+    return {
+        "production_git_sha": resolved_production_sha.lower(),
+        "harness_git_sha": harness_sha,
+        "dirty": dirty,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the local retrieval benchmark.")
     parser.add_argument(
@@ -67,6 +88,10 @@ def main() -> None:
     parser.add_argument("--lexical-weight", type=float, default=RetrievalConfig().lexical_weight)
     parser.add_argument("--dense-weight", type=float, default=RetrievalConfig().dense_weight)
     parser.add_argument("--no-embeddings", action="store_true")
+    parser.add_argument(
+        "--production-git-sha",
+        help="exact 40-character commit containing the production retrieval code",
+    )
     args = parser.parse_args()
     cases_path = Path(__file__).with_name("retrieval_cases.json")
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
@@ -225,6 +250,9 @@ def main() -> None:
             ),
         },
         "evaluation_code": evaluation_code_manifest(Path(__file__).resolve().parents[1]),
+        "git": git_evidence(
+            Path(__file__).resolve().parents[1], args.production_git_sha
+        ),
         "case_traces": traces,
     }
     if not args.quiet:

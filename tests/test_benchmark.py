@@ -8,11 +8,23 @@ from pathlib import Path
 from unittest.mock import patch
 
 from benchmarks.extended_cases import build_extended_cases
-from benchmarks.run_benchmark import evaluation_code_manifest, main, positive_int
+from benchmarks.run_benchmark import evaluation_code_manifest, git_evidence, main, positive_int
 from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_git_evidence_binds_production_and_harness_commits(self):
+        root = Path(__file__).resolve().parents[1]
+        evidence = git_evidence(root, "A" * 40)
+        self.assertEqual("a" * 40, evidence["production_git_sha"])
+        self.assertEqual(40, len(evidence["harness_git_sha"]))
+        self.assertIsInstance(evidence["dirty"], bool)
+
+    def test_git_evidence_rejects_ambiguous_production_ref(self):
+        root = Path(__file__).resolve().parents[1]
+        with self.assertRaisesRegex(ValueError, "40 hexadecimal"):
+            git_evidence(root, "main")
+
     def test_blind7_is_frozen_disjoint_strict_and_high_distractor(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         blind7 = json.loads((root / "blind7_cases.json").read_text(encoding="utf-8"))
