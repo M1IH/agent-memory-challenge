@@ -6,6 +6,23 @@ from app.store import MemoryStore, RetrievalConfig, entity_terms
 
 
 class MultiHopRetrievalTests(unittest.TestCase):
+    def test_cross_language_artisan_identity_bridges_to_workshop(self):
+        self.add_all([
+            "替我修复青瓷盘的匠人叫闻溪。",
+            "闻溪的工作室设在柳湾旧车站二楼。",
+            "My glass vase was repaired by Mara Bell.",
+            "Mara Bell rents a studio beside North Market.",
+            "The celadon exhibition closes next month.",
+        ])
+
+        results = self.store.search(
+            "u", "Where is the workshop of the artisan who restored my celadon plate?", 5
+        )
+
+        contents = {result["content"] for result in results}
+        self.assertTrue(any("匠人叫闻溪" in content for content in contents))
+        self.assertTrue(any("闻溪的工作室" in content for content in contents))
+
     def test_conservative_chinese_entity_extraction(self):
         self.assertEqual({"许舟"}, entity_terms("修好键盘的师傅叫许舟。"))
         self.assertEqual(

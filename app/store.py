@@ -46,6 +46,10 @@ _CONCEPT_GROUPS = (
         "supervisor", "mentor", "adviser", "advisor",
     ),
     (
+        "匠人", "工匠", "手艺人", "修复师", "装裱师",
+        "artisan", "craftsperson", "craftsman", "craftswoman", "restorer",
+    ),
+    (
         "预订", "预约", "订了", "订房",
         "book", "booked", "booking", "reserve", "reserved", "reservation",
         "confirm", "confirmed",
