@@ -98,8 +98,15 @@ _CJK_ENTITY_PATTERNS = (
         r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
         r"(?=每周[一二三四五六日天])"
     ),
-    re.compile(r"(?:使用(?:了)?|通过|委托|交给)([\u3400-\u9fff]{2,6}快递)"),
-    re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
+    re.compile(
+        r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
+        r"(?=完工后(?:托|委托|交给))"
+    ),
+    re.compile(
+        r"(?:使用(?:了)?|通过|委托|交给|托)"
+        r"([\u3400-\u9fff]{2,6}(?:快递|速递|物流))"
+    ),
+    re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}(?:快递|速递|物流))"),
     re.compile(
         r"(?:^|:\s)(?!(?:今天|昨天|明天|现在|目前|后来))"
         r"([\u3400-\u9fff]{2,4})(?<![我你他她它您们])"
@@ -929,6 +936,16 @@ class MemoryStore:
 
         lexical_scores.sort(key=rank_key)
         if config.lexical_enabled and config.linkage_enabled and lexical_scores:
+            def link_entities(text: str) -> set[str]:
+                entities = entity_terms(text)
+                if not rare_query_identifiers:
+                    entities.update(
+                        term for term in tokenize(text)
+                        if _IDENTIFIER_TOKEN.fullmatch(term)
+                        and 1 < document_frequency.get(term, 0) <= 4
+                    )
+                return entities
+
             seeds = [lexical_scores[0][1]]
             seeds.extend(
                 memory for _, memory in lexical_scores[1:5]
@@ -943,15 +960,15 @@ class MemoryStore:
                     current_seeds = [
                         memory for _, memory in lexical_scores[:10]
                         if not has_marker(memory.content, _HISTORICAL_MARKERS)
-                        and entity_terms(memory.content)
+                        and link_entities(memory.content)
                     ]
                 if current_seeds:
                     seeds = current_seeds
-            query_entities = entity_terms(query)
+            query_entities = link_entities(query)
             seed_entities = {
                 entity
                 for seed in seeds
-                for entity in entity_terms(seed.content) - query_entities
+                for entity in link_entities(seed.content) - query_entities
             }
             # If the seeds expose no proper-name bridge, linkage cannot change
             # any score. Avoid running several regexes over the entire user's
@@ -962,7 +979,9 @@ class MemoryStore:
                     rare_query_identifiers,
                 )
             entity_frequency: dict[str, int] = {}
-            entities_by_id = {memory.id: entity_terms(memory.content) for memory in memories}
+            entities_by_id = {
+                memory.id: link_entities(memory.content) for memory in memories
+            }
             for entities in entities_by_id.values():
                 for entity in entities:
                     entity_frequency[entity] = entity_frequency.get(entity, 0) + 1
@@ -1027,7 +1046,11 @@ class MemoryStore:
                 for memory in first_hop
                 for entity in entities_by_id[memory.id]
             )
-            if _CJK_RUN.search(query) or has_cjk_bridge:
+            has_identifier_bridge = not rare_query_identifiers and any(
+                _IDENTIFIER_TOKEN.fullmatch(entity) is not None
+                for memory in first_hop for entity in entities_by_id[memory.id]
+            )
+            if _CJK_RUN.search(query) or has_cjk_bridge or has_identifier_bridge:
                 lexical_scores = linked_ranking(
                     lexical_scores, first_hop
                 )

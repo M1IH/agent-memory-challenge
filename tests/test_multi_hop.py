@@ -157,6 +157,50 @@ class MultiHopRetrievalTests(unittest.TestCase):
         self.assertIn("老师叫沈禾", contents)
         self.assertIn("沈禾每周日上午", contents)
 
+    def test_chinese_completed_work_bridges_person_courier_and_destination(self):
+        self.add_all([
+            "祖传的铜锁由匠人周启修好。",
+            "周启完工后托云岭速递寄回铜锁。",
+            "云岭速递把贵重包裹放在古城东门保管处领取。",
+            "另一把门锁由陈森维修。",
+            "陈森交给远帆物流送往西门。",
+            "铜锁的钥匙放在木盒里。",
+            "云岭景区周一关闭。",
+            "东门旁边有一家茶馆。",
+            "维修费用已经结清。",
+            "领取包裹需要核对短信。",
+            "周启没有使用远帆物流。",
+            "古城保管处下午五点关门。",
+        ])
+        results = self.store.search("u", "修好祖传铜锁的人把锁送到哪里领取？", 5)
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("匠人周启修好", contents)
+        self.assertIn("周启完工后托云岭速递", contents)
+        self.assertIn("古城东门保管处", contents)
+
+    def test_opaque_identifier_enables_bounded_second_relation_hop(self):
+        self.add_all([
+            "Project Alder stores its flight prototype in the Quartz lab.",
+            "The Quartz lab uses access token QA-72.",
+            "Mina Cole safeguards access token QA-72.",
+            "Project Birch uses the Amber lab.",
+            "The Amber lab uses access token AM-19.",
+            "Noah Cole manages visitor passes.",
+            "The flight prototype demonstration is on Tuesday.",
+            "Quartz samples are stored in another building.",
+            "The access-token printer is offline.",
+            "Project Alder has six design drawings.",
+            "Mina Shah reviewed the lab budget.",
+            "The lab humidity is checked daily.",
+        ])
+        results = self.store.search(
+            "u", "Who safeguards access to the lab holding Project Alder's prototype?", 5
+        )
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("prototype in the Quartz lab", contents)
+        self.assertIn("access token QA-72", contents)
+        self.assertIn("Mina Cole safeguards", contents)
+
     def test_project_room_bridges_to_key_holder(self):
         self.add_all([
             "Project Juniper was assigned the Cedar room.",
