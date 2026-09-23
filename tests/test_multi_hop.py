@@ -24,6 +24,11 @@ class MultiHopRetrievalTests(unittest.TestCase):
         self.assertEqual(
             {"星桥维修店"}, entity_terms("user: 今天我在星桥维修店等待。")
         )
+        self.assertFalse(entity_terms("蛋糕做好后放进冰箱。"))
+        self.assertFalse(entity_terms("材料办好后交给同事。"))
+        self.assertFalse(entity_terms("已经做好了，明天去领取。"))
+        self.assertFalse(entity_terms("我会做好证书。"))
+        self.assertFalse(entity_terms("请你做好成品。"))
         self.assertEqual(set(), entity_terms("user: 我在维修店等待。"))
 
     def test_chinese_two_hop_chain_keeps_bridge_and_destination(self):

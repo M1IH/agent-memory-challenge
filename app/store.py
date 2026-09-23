@@ -61,8 +61,8 @@ _CONCEPT_GROUPS = (
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _HISTORICAL_MARKERS = (
     "以前", "过去", "原来", "曾经", "当时", "最初",
-    "used to", "formerly", "previous", "before", "originally", "at first",
-    "when i moved",
+    "used to", "formerly", "previously", "originally", "at first",
+    "when i moved", "before i moved",
 )
 _UPDATE_MARKERS = (
     "后来", "改成", "改为", "改由", "换成", "替换", "停止使用", "变了", "不再", "首选",
@@ -71,6 +71,10 @@ _UPDATE_MARKERS = (
 )
 _TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
 _ENTITY_STOP = {"My", "The", "A", "An", "I", "He", "She", "It", "We", "They", "Project", "Room", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+_CJK_ENTITY_STOP = {
+    "我会", "请你", "我们", "你们", "他们", "她们", "大家", "已经",
+    "材料", "蛋糕", "手续", "工作", "事情", "文件",
+}
 _CJK_ENTITY_PATTERNS = (
     re.compile(r"叫([\u3400-\u9fff]{2,4})(?=[，。！？,.!?]|$)"),
     re.compile(
@@ -83,7 +87,7 @@ _CJK_ENTITY_PATTERNS = (
     ),
     re.compile(
         r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
-        r"(?=做好|办好|制成)"
+        r"(?=做好(?:了)?(?:证书|成品)|制成(?:了)?(?:证书|成品|器件))"
     ),
     re.compile(r"(?:使用(?:了)?|通过|委托|交给)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
@@ -215,7 +219,10 @@ def entity_terms(text: str) -> set[str]:
         if token not in _ENTITY_STOP
     }
     for pattern in _CJK_ENTITY_PATTERNS:
-        entities.update(pattern.findall(text))
+        entities.update(
+            entity for entity in pattern.findall(text)
+            if entity not in _CJK_ENTITY_STOP
+        )
     return entities
 
 
@@ -792,17 +799,36 @@ class MemoryStore:
         lexical_candidates = []
         newest_timestamp = max((memory.timestamp_ms or 0) for memory in memories)
         oldest_timestamp = min((memory.timestamp_ms or 0) for memory in memories)
-        asks_for_historical = has_marker(query, _HISTORICAL_MARKERS)
+        explicitly_current = has_marker(query, _CURRENT_MARKERS)
+        asks_for_historical = (
+            not explicitly_current and has_marker(query, _HISTORICAL_MARKERS)
+        )
         rank_timestamp = (
-            (lambda memory: -(memory.timestamp_ms or 0))
+            (
+                lambda memory: (
+                    -memory.timestamp_ms
+                    if memory.timestamp_ms is not None else float("-inf")
+                )
+            )
             if config.temporal_enabled and asks_for_historical
             else (lambda memory: memory.timestamp_ms or 0)
             if config.temporal_enabled
             else (lambda memory: 0)
         )
-        asks_for_current = not asks_for_historical and (
-            has_marker(query, _CURRENT_MARKERS)
-            or _PRESENT_STATE_QUERY.search(query) is not None
+        present_state_syntax = _PRESENT_STATE_QUERY.search(query) is not None
+        update_memories = (
+            [memory for memory in memories if has_marker(memory.content, _UPDATE_MARKERS)]
+            if config.temporal_enabled and present_state_syntax and not explicitly_current
+            else []
+        )
+        asks_for_current = explicitly_current or (
+            not asks_for_historical
+            and present_state_syntax
+            and bool(update_memories)
+            and any(
+                topic_terms(query) & topic_terms(memory.content)
+                for memory in update_memories
+            )
         )
         temporal_ids: set[str] = set()
         if config.temporal_enabled and asks_for_current:
@@ -927,7 +953,11 @@ class MemoryStore:
                 for score, memory in candidates:
                     shared = bridge_terms & entities_by_id[memory.id]
                     if memory.id in active_seed_ids:
-                        bridge_score = 4.0 if shared else 0.0
+                        # A linked duplicate must not gain more than the seed
+                        # merely because it is outside the active seed window.
+                        # Preserve the seed's rank while still lifting genuine
+                        # second-hop evidence into the same bounded band.
+                        bridge_score = 10.0 if shared else 0.0
                     else:
                         bridge_score = min(
                             10.0,

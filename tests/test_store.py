@@ -216,6 +216,44 @@ class MemoryStoreTests(unittest.TestCase):
         )[0]
         self.assertIn("North Grid supplied electricity", result["content"])
 
+    def test_explicit_current_marker_wins_over_historical_comparison(self):
+        self.add(
+            "alice", "service-old", "I used Alpha before for the account.",
+            1672531200000,
+        )
+        self.add(
+            "alice", "service-new", "I switched from Alpha to Beta for the account.",
+            1735689600000,
+        )
+        result = self.store.search(
+            "alice", "What do I use now instead of before for the account?", 1
+        )[0]
+        self.assertIn("switched from Alpha to Beta", result["content"])
+
+    def test_before_in_procedure_question_does_not_trigger_historical_boost(self):
+        self.add(
+            "alice", "medicine",
+            "Check the dosage before taking medicine, then drink water.",
+        )
+        self.add("alice", "bedtime", "Before bed, I read a book and drank tea.")
+        result = self.store.search(
+            "alice", "What should I do before taking medicine?", 1
+        )[0]
+        self.assertIn("Check the dosage", result["content"])
+
+    def test_unknown_timestamp_does_not_beat_known_historical_timestamp_on_tie(self):
+        self.add(
+            "alice", "known-old", "I previously used Pine Vault for studio storage.",
+            1672531200000,
+        )
+        self.add(
+            "alice", "unknown", "I previously used Pine Vault for studio storage.",
+        )
+        result = self.store.search(
+            "alice", "Which storage company did I use previously?", 1
+        )[0]
+        self.assertTrue(result["content"].startswith("[2023-01-01T00:00:00Z]"))
+
     def test_temporal_ablation_switch_removes_update_preference(self):
         self.add("alice", "req-1", "My current desk location is Room-101.", 1704067200000)
         self.add("alice", "req-2", "Later, it changed to Room-202.", 1704067300000)

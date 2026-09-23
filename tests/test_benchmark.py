@@ -13,6 +13,49 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_blind6_is_frozen_disjoint_strict_and_high_distractor(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        blind6 = json.loads((root / "blind6_cases.json").read_text(encoding="utf-8"))
+        canonical_hash = hashlib.sha256(
+            json.dumps(blind6, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        self.assertEqual(
+            "0ee79ec5f5f037f0c6bc85a4de6ec1ce6a103de10395195797b9ddd25fa0efcc",
+            canonical_hash,
+            "blind6 changed; preserve the first-run confirmation set",
+        )
+        prior_names = set()
+        prior_queries = set()
+        prior_memories = set()
+        for filename in (
+            "hard_cases.json", "confirmation_cases.json", "holdout_cases.json",
+            "blind2_cases.json", "blind3_cases.json", "blind4_cases.json",
+            "blind5_cases.json",
+        ):
+            cases = json.loads((root / filename).read_text(encoding="utf-8"))
+            prior_names.update(case["name"] for case in cases)
+            prior_queries.update(case["query"].strip().casefold() for case in cases)
+            prior_memories.update(
+                memory["content"].strip().casefold()
+                for case in cases for memory in case["memories"]
+            )
+        self.assertEqual(6, len(blind6))
+        self.assertFalse({case["name"] for case in blind6} & prior_names)
+        self.assertFalse(
+            {case["query"].strip().casefold() for case in blind6} & prior_queries
+        )
+        self.assertFalse(
+            {
+                memory["content"].strip().casefold()
+                for case in blind6 for memory in case["memories"]
+            } & prior_memories
+        )
+        for case in blind6:
+            validate_source_case(case)
+            self.assertGreaterEqual(
+                len(case["memories"]) - len(case["expected_source_ids"]), 15
+            )
+
     def test_blind5_is_frozen_disjoint_strict_and_high_distractor(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         blind5 = json.loads((root / "blind5_cases.json").read_text(encoding="utf-8"))
