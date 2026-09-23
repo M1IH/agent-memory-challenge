@@ -180,6 +180,42 @@ class MemoryStoreTests(unittest.TestCase):
         )[0]
         self.assertIn("replaced Lisinopril with Amlodipine", result["content"])
 
+    def test_present_state_question_prefers_explicit_transition(self):
+        self.add(
+            "alice", "power-old",
+            "North Grid supplied electricity to my apartment when I moved in.",
+            1682899200000,
+        )
+        self.add(
+            "alice", "power-new",
+            "The apartment electricity service transitioned from North Grid to Willow Energy.",
+            1733011200000,
+        )
+        self.add(
+            "alice", "power-distractor",
+            "North Grid still supplies my parents' house.",
+        )
+        result = self.store.search(
+            "alice", "Which company supplies electricity to my apartment?", 1
+        )[0]
+        self.assertIn("transitioned from North Grid to Willow Energy", result["content"])
+
+    def test_historical_question_does_not_apply_present_state_boost(self):
+        self.add(
+            "alice", "power-old",
+            "North Grid supplied electricity to my apartment when I moved in.",
+            1682899200000,
+        )
+        self.add(
+            "alice", "power-new",
+            "The apartment electricity service transitioned from North Grid to Willow Energy.",
+            1733011200000,
+        )
+        result = self.store.search(
+            "alice", "Which company supplied electricity when I moved in?", 1
+        )[0]
+        self.assertIn("North Grid supplied electricity", result["content"])
+
     def test_temporal_ablation_switch_removes_update_preference(self):
         self.add("alice", "req-1", "My current desk location is Room-101.", 1704067200000)
         self.add("alice", "req-2", "Later, it changed to Room-202.", 1704067300000)

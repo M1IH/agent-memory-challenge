@@ -73,6 +73,32 @@ class MultiHopRetrievalTests(unittest.TestCase):
         self.assertIn("林澈完成修复后委托星桥快递", contents)
         self.assertIn("音乐学院北门领取点", contents)
 
+    def test_chinese_transfer_phrase_bridges_maker_courier_and_window(self):
+        self.add_all([
+            "负责制作我那本资格证书的师傅叫苏衡。",
+            "苏衡做好证书后交给岚途快递负责运送。",
+            "岚途快递将证件类包裹送到行政楼西侧三号领取窗口。",
+            "我的培训证由顾青负责装裱。",
+            "顾青把材料交给远山物流。",
+            "远山物流送到东门服务台。",
+            "资格证书的封皮是深蓝色的。",
+            "苏衡还制作过一张纪念卡。",
+            "岚途旅行社周日休息。",
+            "行政楼西侧有一间会议室。",
+            "三号窗口中午暂停办理业务。",
+            "证书制作费用已经缴清。",
+            "领取证件需要携带身份证。",
+            "苏衡没有使用远山物流。",
+            "另一个文件送到了北门驿站。",
+        ])
+        results = self.store.search(
+            "u", "制作我那本资格证书的人把成品送到了哪个领取窗口？", 5
+        )
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("师傅叫苏衡", contents)
+        self.assertIn("苏衡做好证书后交给岚途快递", contents)
+        self.assertIn("行政楼西侧三号领取窗口", contents)
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.store = MemoryStore(Path(self.directory.name) / "test.db", embedder=False)

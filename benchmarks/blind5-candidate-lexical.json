@@ -1,0 +1,363 @@
+{
+  "suite": "blind5",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 13,
+  "hit_at_1": 0.23076923076923078,
+  "hit_at_3": 0.6923076923076923,
+  "hit_at_5": 0.7692307692307693,
+  "mrr": 0.43846153846153846,
+  "categories": {
+    "cross_lingual_chain_reverse": 0.0,
+    "implicit_temporal_transition": 0.3333333333333333,
+    "list_state_transitions": 0.611111111111111,
+    "multi_hop_three_step": 0.611111111111111,
+    "multi_hop_zh_three_step": 0.5,
+    "temporal_transition_zh": 0.2
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.5,
+  "complete_at_5": 0.6666666666666666,
+  "complete_at_k": 0.6666666666666666,
+  "evaluation_version": 3,
+  "suite_sha256": "687187f181d17b030d9cb8b05bfd4e18f7f0c4e4ed25a379518bb7988ee8d60f",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": null,
+  "embedding_identity": null,
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": null,
+    "embedding_batch_size": null
+  },
+  "evaluation_code": {
+    "sha256": "da46b8c4321145d74b28ee8e9d57a5c64f5521f630c077ab295f3a948ff8e990",
+    "files": {
+      "app/store.py": "33d798469f28af51f4824815b944eb0557db068a9855b798efdc01b6fb195a1a",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "84a573b396b2468ecc655511e600ef6bcbfb1083bbb297a95fe496533e7fef13",
+      "benchmarks/evidence.py": "c431954f9b471f9ab3268f1f3fa7d3bb91003774114ee62d49c1ab519cbb2cc4",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "case_traces": [
+    {
+      "name": "blind5-current-electricity-provider",
+      "category": "implicit_temporal_transition",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_646654a0ea0682ebc60aaf0f",
+          "content": "[2023-05-01T00:00:00Z] user: North Grid supplied electricity to my apartment when I moved in.",
+          "score": 9.34872,
+          "created_at": "2023-05-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_a10fcace65ec729ea0b48404",
+          "content": "user: North Grid still supplies my parents' house.",
+          "score": 8.135908,
+          "created_at": "2026-09-23T00:56:29.490076Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_06d93d68b04abafe0986de80",
+          "content": "[2024-12-01T00:00:00Z] user: The apartment electricity service transitioned from North Grid to Willow Energy in December.",
+          "score": 7.778462,
+          "created_at": "2024-12-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_bcfbf1461fb3e42cbf031a77",
+          "content": "user: My landlord uses North Grid at another property.",
+          "score": 5.437833,
+          "created_at": "2026-09-23T00:56:29.600908Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_e6e18a687e91e43d16dbd313",
+          "content": "user: My apartment internet is provided by RiverNet.",
+          "score": 2.819702,
+          "created_at": "2026-09-23T00:56:29.515199Z",
+          "source_id": "d03"
+        }
+      ]
+    },
+    {
+      "name": "blind5-current-chinese-clinic",
+      "category": "temporal_transition_zh",
+      "candidate_count": 17,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        5
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_3a8fbb6ee7b0c2b158a24fa9",
+          "content": "[2023-07-01T00:00:00Z] user: 我以前固定去松林诊所复诊。",
+          "score": 21.624903,
+          "created_at": "2023-07-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_518483c604e32392d893113c",
+          "content": "user: 我妹妹在青禾诊所看牙。",
+          "score": 5.644126,
+          "created_at": "2026-09-23T00:56:29.723837Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_38e777e1dc0307adfd017aea",
+          "content": "user: 复诊日期通常安排在周五。",
+          "score": 5.03556,
+          "created_at": "2026-09-23T00:56:29.813289Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_6900b2989ca10e690088be73",
+          "content": "user: 复诊前需要测量体温。",
+          "score": 3.887651,
+          "created_at": "2026-09-23T00:56:29.733486Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_ece18101ad115caefb50a25b",
+          "content": "[2025-03-01T00:00:00Z] user: 今年三月起，我的复诊改由白帆医疗中心负责。",
+          "score": 3.808185,
+          "created_at": "2025-03-01T00:00:00Z",
+          "source_id": "current"
+        }
+      ]
+    },
+    {
+      "name": "blind5-observatory-device-chain",
+      "category": "multi_hop_three_step",
+      "candidate_count": 18,
+      "expected": [
+        "camera",
+        "room",
+        "entry"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3,
+        2
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_8249d2021714b1292fa64894",
+          "content": "user: The Meridian observatory survey uses the Alder sky camera.",
+          "score": 10.760995,
+          "created_at": "2026-09-23T00:56:29.881711Z",
+          "source_id": "camera"
+        },
+        {
+          "id": "mem_e260113e2fbea538cdbdb7d8",
+          "content": "user: Sofia Malik controls entry permissions for the Cobalt room.",
+          "score": 10.542552,
+          "created_at": "2026-09-23T00:56:29.909027Z",
+          "source_id": "entry"
+        },
+        {
+          "id": "mem_d92941bb731cb676900567d7",
+          "content": "user: The Alder camera is installed in the Cobalt imaging room.",
+          "score": 7.13345,
+          "created_at": "2026-09-23T00:56:29.895277Z",
+          "source_id": "room"
+        },
+        {
+          "id": "mem_cf1871e6c3a290072967f3c4",
+          "content": "user: Cobalt paint is used in the gallery.",
+          "score": 6.874969,
+          "created_at": "2026-09-23T00:56:30.077391Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_0c4668b4341a7307156e4613",
+          "content": "user: The Cobalt meeting room seats twelve people.",
+          "score": 6.022415,
+          "created_at": "2026-09-23T00:56:29.971370Z",
+          "source_id": "d05"
+        }
+      ]
+    },
+    {
+      "name": "blind5-chinese-certificate-delivery",
+      "category": "multi_hop_zh_three_step",
+      "candidate_count": 18,
+      "expected": [
+        "maker",
+        "courier",
+        "window"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null,
+        2
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_54a35be593db6d0a8d553889",
+          "content": "user: 负责制作我那本资格证书的师傅叫苏衡。",
+          "score": 32.191737,
+          "created_at": "2026-09-23T00:56:30.113685Z",
+          "source_id": "maker"
+        },
+        {
+          "id": "mem_232267cfd67c86b45cd30da8",
+          "content": "user: 岚途快递将证件类包裹送到行政楼西侧三号领取窗口。",
+          "score": 18.872,
+          "created_at": "2026-09-23T00:56:30.140176Z",
+          "source_id": "window"
+        },
+        {
+          "id": "mem_90fa7f5db85dbd3a659d41c4",
+          "content": "user: 资格证书的封皮是深蓝色的。",
+          "score": 16.317229,
+          "created_at": "2026-09-23T00:56:30.212078Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_3c101d98afa097c752ebb4a2",
+          "content": "user: 另一个文件送到了北门驿站。",
+          "score": 12.152516,
+          "created_at": "2026-09-23T00:56:30.328189Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_b7a9d46cb0f34d80a0bcc988",
+          "content": "user: 岚途快递的信封是灰色的。",
+          "score": 10.145541,
+          "created_at": "2026-09-23T00:56:30.312358Z",
+          "source_id": "d12"
+        }
+      ]
+    },
+    {
+      "name": "blind5-active-review-panel-list",
+      "category": "list_state_transitions",
+      "candidate_count": 18,
+      "expected": [
+        "imani",
+        "joel",
+        "mei"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        3,
+        1
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_f02e39fe73dca0208a190ab4",
+          "content": "user: Mei gave a definite yes for the Cedar grant review panel.",
+          "score": 18.790296,
+          "created_at": "2026-09-23T00:56:30.386228Z",
+          "source_id": "mei"
+        },
+        {
+          "id": "mem_541112cb1e55dbcf17bb000b",
+          "content": "user: Imani confirmed her seat on the Cedar grant review panel.",
+          "score": 14.011604,
+          "created_at": "2026-09-23T00:56:30.366574Z",
+          "source_id": "imani"
+        },
+        {
+          "id": "mem_a4c2260e5f06f82839ab257b",
+          "content": "user: Joel accepted the invitation to the Cedar grant review panel.",
+          "score": 13.191893,
+          "created_at": "2026-09-23T00:56:30.375041Z",
+          "source_id": "joel"
+        },
+        {
+          "id": "mem_cdc41bfe0c1b23c943229a0d",
+          "content": "user: The chair confirmed the review deadline.",
+          "score": 12.023247,
+          "created_at": "2026-09-23T00:56:30.583324Z",
+          "source_id": "d14"
+        },
+        {
+          "id": "mem_574d8f13b98cb8d3e1773f05",
+          "content": "user: Nora confirmed but later withdrew from the Cedar panel.",
+          "score": 11.620301,
+          "created_at": "2026-09-23T00:56:30.399761Z",
+          "source_id": "d01"
+        }
+      ]
+    },
+    {
+      "name": "blind5-reverse-language-tutor-chain",
+      "category": "cross_lingual_chain_reverse",
+      "candidate_count": 17,
+      "expected": [
+        "identity",
+        "schedule"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        null,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_82bbecb6d1c7fdec11125bc7",
+          "content": "user: My Chinese language tutor teaches on Monday.",
+          "score": 11.075391,
+          "created_at": "2026-09-23T00:56:30.733416Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_17dac35d30947986685e46ce",
+          "content": "user: My piano tutor teaches on Tuesday evening.",
+          "score": 10.395483,
+          "created_at": "2026-09-23T00:56:30.643976Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_76a6ffa00e316291c80fc3c7",
+          "content": "user: Evening class notes are kept in a folder.",
+          "score": 2.625679,
+          "created_at": "2026-09-23T00:56:30.774837Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_fe9888f21780983c7c9c14b4",
+          "content": "user: The tutor registration desk opens at six.",
+          "score": 2.262988,
+          "created_at": "2026-09-23T00:56:30.811675Z",
+          "source_id": "d13"
+        }
+      ]
+    }
+  ]
+}

@@ -59,9 +59,15 @@ _CONCEPT_GROUPS = (
     ),
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
+_HISTORICAL_MARKERS = (
+    "以前", "过去", "原来", "曾经", "当时", "最初",
+    "used to", "formerly", "previous", "before", "originally", "at first",
+    "when i moved",
+)
 _UPDATE_MARKERS = (
-    "后来", "改成", "改为", "换成", "替换", "停止使用", "变了", "不再", "首选",
-    "updated", "changed", "switched", "replaced", "stopped using", "no longer",
+    "后来", "改成", "改为", "改由", "换成", "替换", "停止使用", "变了", "不再", "首选",
+    "updated", "changed", "switched", "replaced", "transitioned", "stopped using",
+    "no longer",
 )
 _TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
 _ENTITY_STOP = {"My", "The", "A", "An", "I", "He", "She", "It", "We", "They", "Project", "Room", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
@@ -75,7 +81,11 @@ _CJK_ENTITY_PATTERNS = (
         r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
         r"(?=完成(?:了)?(?:修复|维修|装订|调音))"
     ),
-    re.compile(r"(?:使用(?:了)?|通过|委托)([\u3400-\u9fff]{2,6}快递)"),
+    re.compile(
+        r"(?:^|[，。！？,.!?]|:\s)([\u3400-\u9fff]{2,4})"
+        r"(?=做好|办好|制成)"
+    ),
+    re.compile(r"(?:使用(?:了)?|通过|委托|交给)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(r"(?:^|:\s)([\u3400-\u9fff]{2,6}快递)"),
     re.compile(
         r"(?:^|:\s)(?!(?:今天|昨天|明天|现在|目前|后来))"
@@ -105,6 +115,11 @@ _EVENT_NEGATION = re.compile(
     re.I,
 )
 _QUERY_NEGATION = re.compile(r"\b(?:not|never|didn't|did not)\b|(?:没有|没|未)", re.I)
+_PRESENT_STATE_QUERY = re.compile(
+    r"\b(?:what|which|who|where)\b.{0,100}"
+    r"\b(?:am|is|are|do|does|provides?|supplies?|uses?|takes?|visits?|works?|lives?)\b",
+    re.I,
+)
 _IDENTIFIER_TOKEN = re.compile(r"(?=.*\d)[a-z0-9]+(?:[-_][a-z0-9]+)+", re.I)
 _OTHER_FIRST_PERSON = re.compile(
     r"\bmy (?:colleague|coworker|friend|brother|sister|roommate|manager)\b|"
@@ -777,11 +792,18 @@ class MemoryStore:
         lexical_candidates = []
         newest_timestamp = max((memory.timestamp_ms or 0) for memory in memories)
         oldest_timestamp = min((memory.timestamp_ms or 0) for memory in memories)
+        asks_for_historical = has_marker(query, _HISTORICAL_MARKERS)
         rank_timestamp = (
-            (lambda memory: memory.timestamp_ms or 0)
-            if config.temporal_enabled else (lambda memory: 0)
+            (lambda memory: -(memory.timestamp_ms or 0))
+            if config.temporal_enabled and asks_for_historical
+            else (lambda memory: memory.timestamp_ms or 0)
+            if config.temporal_enabled
+            else (lambda memory: 0)
         )
-        asks_for_current = has_marker(query, _CURRENT_MARKERS)
+        asks_for_current = not asks_for_historical and (
+            has_marker(query, _CURRENT_MARKERS)
+            or _PRESENT_STATE_QUERY.search(query) is not None
+        )
         temporal_ids: set[str] = set()
         if config.temporal_enabled and asks_for_current:
             query_topics = topic_terms(query)
@@ -839,6 +861,13 @@ class MemoryStore:
             unique_query_terms = set(query_terms)
             matched_query_terms = unique_query_terms.intersection(memory.terms)
             score += 0.75 * len(matched_query_terms) / max(len(unique_query_terms), 1)
+            if (
+                config.temporal_enabled
+                and asks_for_historical
+                and matched_query_terms
+                and has_marker(memory.content, _HISTORICAL_MARKERS)
+            ):
+                score += 10.0
             if query.lower() in memory.content.lower():
                 score += 2.0
             if any(option.lower() in memory.content.lower() for option in option_texts):

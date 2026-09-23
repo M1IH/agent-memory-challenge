@@ -24,6 +24,15 @@ class ExtendedBenchmarkTests(unittest.TestCase):
             canonical_hash,
             "blind5 changed; create a development copy instead of tuning it in place",
         )
+        for report_name in (
+            "blind5-baseline-bge.json",
+            "blind5-baseline-lexical.json",
+            "blind5-candidate-bge.json",
+            "blind5-candidate-lexical.json",
+            "blind5-development-temporal-linkage.json",
+        ):
+            report = json.loads((root / report_name).read_text(encoding="utf-8"))
+            self.assertEqual(canonical_hash, report["suite_sha256"])
         known_names = set()
         for filename in (
             "hard_cases.json", "confirmation_cases.json", "holdout_cases.json",
