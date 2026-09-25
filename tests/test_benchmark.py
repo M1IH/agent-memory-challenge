@@ -13,6 +13,44 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_blind8_is_frozen_disjoint_and_session_scoped(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        blind8 = json.loads((root / "blind8_cases.json").read_text(encoding="utf-8"))
+        canonical_hash = hashlib.sha256(
+            json.dumps(blind8, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        self.assertEqual(
+            "87a5b9948a6064d9bc8c7da4ae2324517f0e83d2eb2d9fd95bd0d5953b1e2725",
+            canonical_hash,
+            "blind8 changed; preserve the first-run session-window suite",
+        )
+        prior_names = set()
+        prior_queries = set()
+        for filename in (
+            "hard_cases.json", "confirmation_cases.json", "holdout_cases.json",
+            "blind2_cases.json", "blind3_cases.json", "blind4_cases.json",
+            "blind5_cases.json", "blind6_cases.json", "blind7_cases.json",
+        ):
+            cases = json.loads((root / filename).read_text(encoding="utf-8"))
+            prior_names.update(case["name"] for case in cases)
+            prior_queries.update(case["query"].strip().casefold() for case in cases)
+        self.assertEqual(6, len(blind8))
+        self.assertFalse({case["name"] for case in blind8} & prior_names)
+        self.assertFalse(
+            {case["query"].strip().casefold() for case in blind8} & prior_queries
+        )
+        for case in blind8:
+            validate_source_case(case)
+            self.assertGreaterEqual(
+                len(case["memories"]) - len(case["expected_source_ids"]), 15
+            )
+            expected_sessions = {
+                memory["session_id"] for memory in case["memories"]
+                if memory["source_id"] in case["expected_source_ids"]
+            }
+            self.assertEqual(1, len(expected_sessions))
+            self.assertGreater(len({m["session_id"] for m in case["memories"]}), 2)
+
     def test_git_evidence_binds_production_and_harness_commits(self):
         root = Path(__file__).resolve().parents[1]
         evidence = git_evidence(root, "A" * 40)

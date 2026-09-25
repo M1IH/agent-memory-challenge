@@ -74,7 +74,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--suite",
-        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7"),
+        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8"),
         default="core",
     )
     parser.add_argument("--fail-on-miss", action="store_true")
@@ -97,7 +97,7 @@ def main() -> None:
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     if args.suite == "extended":
         cases.extend(build_extended_cases())
-    elif args.suite in {"hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7"}:
+    elif args.suite in {"hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8"}:
         filename = {
             "hard": "hard_cases.json",
             "confirmation": "confirmation_cases.json",
@@ -108,6 +108,7 @@ def main() -> None:
             "blind5": "blind5_cases.json",
             "blind6": "blind6_cases.json",
             "blind7": "blind7_cases.json",
+            "blind8": "blind8_cases.json",
         }[args.suite]
         cases = json.loads(Path(__file__).with_name(filename).read_text(encoding="utf-8"))
         for case in cases:
@@ -158,13 +159,15 @@ def main() -> None:
                     request_id = f"case-{case_index}-memory-{memory_index}"
                     if "source_id" in memory:
                         source_by_request[request_id] = memory["source_id"]
+                    message = {
+                        key: value for key, value in memory.items()
+                        if key not in {"source_id", "session_id"}
+                    }
                     store.add(
                         request_id=request_id,
                         user_id=user_id,
-                        session_id="benchmark-session",
-                        messages=[{"role": memory.get("role", "user"), **{
-                            key: value for key, value in memory.items() if key != "source_id"
-                        }}],
+                        session_id=memory.get("session_id", "benchmark-session"),
+                        messages=[{"role": memory.get("role", "user"), **message}],
                     )
             results = store.search(
                 user_id=user_id,
