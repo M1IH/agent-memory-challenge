@@ -74,6 +74,49 @@ class MemoryStoreTests(unittest.TestCase):
         results = self.store.search("bob", "秘密代号是什么", 10)
         self.assertFalse(any("蓝鲸" in item["content"] for item in results))
 
+    def test_search_promotes_adjacent_evidence_from_the_same_session(self):
+        self.store.add(
+            request_id="dinner",
+            user_id="alice",
+            session_id="lantern",
+            messages=[
+                {"role": "user", "content": "Dinner was at the Lantern Room."},
+                {"role": "user", "content": "I chose pistachio semifreddo."},
+                {"role": "user", "content": "Then we walked home."},
+            ],
+        )
+        for index in range(8):
+            self.store.add(
+                request_id=f"noise-{index}",
+                user_id="alice",
+                session_id=f"noise-{index}",
+                messages=[{"role": "user", "content": f"Lantern display item {index}."}],
+            )
+
+        results = self.store.search("alice", "Where was the Lantern Room dinner?", 3)
+
+        self.assertTrue(any("semifreddo" in item["content"] for item in results))
+
+    def test_session_window_never_crosses_session_or_user_boundaries(self):
+        self.store.add(
+            "cedar", "alice", "review",
+            [{"role": "user", "content": "The Cedar grant review meeting ended."}],
+        )
+        self.store.add(
+            "trap", "alice", "archive",
+            [{"role": "user", "content": "Daniel approved an archive request."}],
+        )
+        self.store.add(
+            "private", "bob", "review",
+            [{"role": "user", "content": "Bob's private approval code is SECRET."}],
+        )
+
+        results = self.store.search("alice", "What happened at the Cedar review meeting?", 5)
+
+        contents = " ".join(item["content"] for item in results)
+        self.assertNotIn("Daniel", contents)
+        self.assertNotIn("SECRET", contents)
+
     def test_repeated_add_is_idempotent(self):
         self.add("alice", "req-1", "我喜欢乌龙茶")
         self.add("alice", "req-1", "我喜欢乌龙茶")

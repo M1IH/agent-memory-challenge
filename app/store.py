@@ -200,6 +200,9 @@ def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
     for memory in memories:
         total += sys.getsizeof(memory)
         total += sys.getsizeof(memory.id)
+        total += sys.getsizeof(memory.request_id)
+        total += sys.getsizeof(memory.session_id)
+        total += sys.getsizeof(memory.storage_order)
         total += sys.getsizeof(memory.content)
         total += sys.getsizeof(memory.created_at)
         total += sys.getsizeof(memory.timestamp_ms)
@@ -282,6 +285,7 @@ class RetrievalConfig:
     expansion_enabled: bool = True
     temporal_enabled: bool = True
     linkage_enabled: bool = True
+    session_window_enabled: bool = True
     lexical_weight: float = 1.5
     dense_weight: float = 0.5
 
@@ -318,6 +322,9 @@ def semantic_expansion_terms(text: str) -> list[str]:
 @dataclass(frozen=True)
 class Memory:
     id: str
+    request_id: str
+    session_id: str
+    storage_order: int
     content: str
     created_at: str
     timestamp_ms: int | None
@@ -720,7 +727,8 @@ class MemoryStore:
             with self._connection() as connection:
                 db_rows = connection.execute(
                     """
-                    SELECT id, content, timestamp_ms, created_at, terms, embedding
+                    SELECT rowid AS storage_order, id, request_id, session_id,
+                           content, timestamp_ms, created_at, terms, embedding
                     FROM memories WHERE user_id = ?
                     """,
                     (user_id,),
@@ -741,7 +749,9 @@ class MemoryStore:
                 for term in terms:
                     term_counts[term] = term_counts.get(term, 0) + 1
                 memories.append(Memory(
-                    id=row["id"], content=row["content"],
+                    id=row["id"], request_id=row["request_id"],
+                    session_id=row["session_id"], storage_order=row["storage_order"],
+                    content=row["content"],
                     timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
                     terms=terms, term_counts=term_counts, embedding=embedding,
                 ))
@@ -1160,7 +1170,56 @@ class MemoryStore:
                 fused.append((score, memory_by_id[memory_id]))
             fused.sort(key=rank_key)
             scores = fused
+        if config.session_window_enabled:
+            scores = self._session_window_scores(query, scores, memories, rank_key)
         return self._results(scores, top_k)
+
+    @staticmethod
+    def _session_window_scores(
+        query: str,
+        scores: list[tuple[float, Memory]],
+        memories: list[Memory],
+        rank_key: Callable[[tuple[float, Memory]], tuple[float, int, str]],
+    ) -> list[tuple[float, Memory]]:
+        """Promote at most two messages adjacent to the strongest session seed."""
+        if not scores or scores[0][0] <= 0:
+            return scores
+        query_entities = entity_terms(query)
+        seed_score, seed = max(
+            scores[:3],
+            key=lambda item: (
+                len(query_entities.intersection(entity_terms(item[1].content))),
+                item[0],
+            ),
+        )
+        session = [memory for memory in memories if memory.session_id == seed.session_id]
+        # Session membership is only useful when it narrows the corpus. A
+        # catch-all or very long session would turn unrelated neighbors into
+        # false evidence and crowd out strong direct/multi-hop matches.
+        if len(session) < 2 or len(session) > 8 or len(session) * 2 > len(memories):
+            return scores
+        if all(memory.timestamp_ms is not None for memory in session):
+            session.sort(key=lambda memory: (memory.timestamp_ms, memory.storage_order))
+        else:
+            session.sort(key=lambda memory: memory.storage_order)
+        seed_index = next(
+            (index for index, memory in enumerate(session) if memory.id == seed.id),
+            None,
+        )
+        if seed_index is None:
+            return scores
+
+        promoted = {memory.id: (score, memory) for score, memory in scores}
+        for distance in (1, 2):
+            for index in (seed_index - distance, seed_index + distance):
+                if not 0 <= index < len(session):
+                    continue
+                neighbor = session[index]
+                inherited_score = seed_score * (0.96 - 0.04 * (distance - 1))
+                existing = promoted.get(neighbor.id)
+                if existing is None or inherited_score > existing[0]:
+                    promoted[neighbor.id] = (inherited_score, neighbor)
+        return sorted(promoted.values(), key=rank_key)
 
     @staticmethod
     def _results(scores: list[tuple[float, Memory]], top_k: int) -> list[dict]:

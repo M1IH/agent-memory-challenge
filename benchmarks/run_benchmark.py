@@ -85,6 +85,7 @@ def main() -> None:
     parser.add_argument("--disable-expansion", action="store_true")
     parser.add_argument("--disable-temporal", action="store_true")
     parser.add_argument("--disable-linkage", action="store_true")
+    parser.add_argument("--disable-session-window", action="store_true")
     parser.add_argument("--lexical-weight", type=float, default=RetrievalConfig().lexical_weight)
     parser.add_argument("--dense-weight", type=float, default=RetrievalConfig().dense_weight)
     parser.add_argument("--no-embeddings", action="store_true")
@@ -126,6 +127,7 @@ def main() -> None:
         expansion_enabled=not args.disable_expansion,
         temporal_enabled=not args.disable_temporal,
         linkage_enabled=not args.disable_linkage,
+        session_window_enabled=not args.disable_session_window,
         lexical_weight=args.lexical_weight,
         dense_weight=args.dense_weight,
     )

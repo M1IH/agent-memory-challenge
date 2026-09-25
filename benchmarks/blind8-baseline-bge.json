@@ -1,0 +1,375 @@
+{
+  "suite": "blind8",
+  "top_k": 5,
+  "cases": 6,
+  "evidence": 13,
+  "hit_at_1": 0.38461538461538464,
+  "hit_at_3": 0.6923076923076923,
+  "hit_at_5": 0.8461538461538461,
+  "mrr": 0.5346153846153846,
+  "categories": {
+    "session_adjacent_decision": 0.375,
+    "session_adjacent_fact": 0.6666666666666666,
+    "session_adjacent_instruction": 0.6666666666666666,
+    "session_adjacent_list": 0.39999999999999997,
+    "session_adjacent_zh": 0.6666666666666666,
+    "session_boundary_control": 0.5
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.5,
+  "complete_at_5": 0.6666666666666666,
+  "complete_at_k": 0.6666666666666666,
+  "evaluation_version": 3,
+  "suite_sha256": "87a5b9948a6064d9bc8c7da4ae2324517f0e83d2eb2d9fd95bd0d5953b1e2725",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "embedding_identity": "fastembed:BAAI/bge-small-en-v1.5:52398278842ec682c6f32300af41344b1c0b0bb2:51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431:d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66:float32:l2-v1",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64
+  },
+  "evaluation_code": {
+    "sha256": "3a020cca0e092073ebb1c6d76613e5d34c127e7a5bf19ee3e25f97099fb7e52d",
+    "files": {
+      "app/store.py": "bc53a9eca7836327d330060c83c26079a7e832d84bf26c0d3f24456974d2ed29",
+      "app/embedding.py": "a1a166a4d7caa5ed0dd0f0c84e4a63b6a5974e6bc95005ac644fb28eea9e3113",
+      "benchmarks/run_benchmark.py": "1c54461073ed31147d4cb17df082a5f46295962228d7b5da5492073016b679fe",
+      "benchmarks/evidence.py": "d34f2b3e7d4afde949aff7294b7f19cdaf314614d3a24e7119015002611662e8",
+      "benchmarks/extended_cases.py": "b9b284a0d0e34dbe08f2f5a89a35d167c19ec478e0285a0253a25b4a8695ece2"
+    }
+  },
+  "git": {
+    "production_git_sha": "a7dfaeb10914db0b90bddeba76b90a997baeb03b",
+    "harness_git_sha": "aa7bf9b82d8c9c2f6653104d5c540370465905ea",
+    "dirty": false
+  },
+  "case_traces": [
+    {
+      "name": "blind8-neighbor-dessert-choice",
+      "category": "session_adjacent_fact",
+      "candidate_count": 17,
+      "expected": [
+        "meal",
+        "choice"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_80e2fda9a955c2c7f71e7b26",
+          "content": "user: We celebrated the promotion with dinner at the Lantern Room.",
+          "score": 0.032787,
+          "created_at": "2026-09-25T10:36:38.283230Z",
+          "source_id": "meal"
+        },
+        {
+          "id": "mem_0986c80750e94c44473fa6ad",
+          "content": "user: The Lantern Room lobby displays a brass map.",
+          "score": 0.03144,
+          "created_at": "2026-09-25T10:36:38.421668Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_e8d689c52ee9bcfb7dbe3fbc",
+          "content": "user: When the menus arrived, I picked the pistachio semifreddo.",
+          "score": 0.030889,
+          "created_at": "2026-09-25T10:36:38.355028Z",
+          "source_id": "choice"
+        },
+        {
+          "id": "mem_61c2740e32cb6b2f32d211c7",
+          "content": "user: I bought pistachio soap at the market.",
+          "score": 0.030566,
+          "created_at": "2026-09-25T10:36:38.546108Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_e9b26f8397e86272dd1d1919",
+          "content": "user: The market closes before dinner.",
+          "score": 0.030287,
+          "created_at": "2026-09-25T10:36:38.604152Z",
+          "source_id": "d04"
+        }
+      ]
+    },
+    {
+      "name": "blind8-neighbor-medication-instruction",
+      "category": "session_adjacent_instruction",
+      "candidate_count": 17,
+      "expected": [
+        "visit",
+        "instruction"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_074e89995d2530450169df5e",
+          "content": "user: At Westbridge Clinic, Dr. Hale prescribed a new nasal spray.",
+          "score": 0.034787,
+          "created_at": "2026-09-25T10:36:39.443785Z",
+          "source_id": "visit"
+        },
+        {
+          "id": "mem_d7b98835c2a918a8a551c0ed",
+          "content": "user: Dr. Hall recommended an evening walk.",
+          "score": 0.033138,
+          "created_at": "2026-09-25T10:36:39.701771Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_ff80888b001ad253fe5b068c",
+          "content": "user: She told me to use two sprays every morning for ten days.",
+          "score": 0.031746,
+          "created_at": "2026-09-25T10:36:39.509608Z",
+          "source_id": "instruction"
+        },
+        {
+          "id": "mem_e676752a86bc698c05768b9e",
+          "content": "user: Westbridge Pharmacy opens at eight.",
+          "score": 0.031141,
+          "created_at": "2026-09-25T10:36:39.569710Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_b9dc74aacc53e3d6eaccc38e",
+          "content": "user: The morning train leaves Westbridge at seven.",
+          "score": 0.031013,
+          "created_at": "2026-09-25T10:36:40.208934Z",
+          "source_id": "d11"
+        }
+      ]
+    },
+    {
+      "name": "blind8-neighbor-project-decision",
+      "category": "session_adjacent_decision",
+      "candidate_count": 17,
+      "expected": [
+        "meeting",
+        "decision"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        4
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_bf56671e99fc8702fe17ccde",
+          "content": "user: We considered MongoDB for an abandoned prototype.",
+          "score": 0.032527,
+          "created_at": "2026-09-25T10:36:41.248995Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_f3ec0c019fd116c9efd964ed",
+          "content": "user: The Project Kestrel architecture review compared three storage backends.",
+          "score": 0.032006,
+          "created_at": "2026-09-25T10:36:40.608459Z",
+          "source_id": "meeting"
+        },
+        {
+          "id": "mem_78a137d97e9dcda9ae0ae1e7",
+          "content": "user: Project Heron uses SQLite for its local cache.",
+          "score": 0.032006,
+          "created_at": "2026-09-25T10:36:40.739578Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_6bbc517acb8033c72a8a5ebd",
+          "content": "user: After the final vote, we selected PostgreSQL.",
+          "score": 0.030769,
+          "created_at": "2026-09-25T10:36:40.673762Z",
+          "source_id": "decision"
+        },
+        {
+          "id": "mem_b5b361bb51c5cde30821c871",
+          "content": "user: Database hosting has a separate budget.",
+          "score": 0.03058,
+          "created_at": "2026-09-25T10:36:41.431704Z",
+          "source_id": "d12"
+        }
+      ]
+    },
+    {
+      "name": "blind8-neighbor-chinese-pickup-code",
+      "category": "session_adjacent_zh",
+      "candidate_count": 17,
+      "expected": [
+        "shop",
+        "code"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3
+      ],
+      "complete_at_k": true,
+      "results": [
+        {
+          "id": "mem_7dbb52013dad92a0752eab4d",
+          "content": "user: 我把旅行胶卷送到青岚照相馆冲洗。",
+          "score": 0.034655,
+          "created_at": "2026-09-25T10:36:41.750093Z",
+          "source_id": "shop"
+        },
+        {
+          "id": "mem_34c981882f1b89a3abd81a03",
+          "content": "user: 青岚相机的序列号是QL-03。",
+          "score": 0.03413,
+          "created_at": "2026-09-25T10:36:42.755320Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_4f3d214bf3abb6d6bec2ada5",
+          "content": "user: 店员让我取件时说暗号“夏夜三号”。",
+          "score": 0.033622,
+          "created_at": "2026-09-25T10:36:41.822379Z",
+          "source_id": "code"
+        },
+        {
+          "id": "mem_2164fd8b5f4eeb6434d6a2fe",
+          "content": "user: 照相馆旁边新开了一家咖啡店。",
+          "score": 0.03254,
+          "created_at": "2026-09-25T10:36:42.334275Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_4c14184779d22510a7b4ac17",
+          "content": "user: 远山工作室的取件码是冬日八号。",
+          "score": 0.03248,
+          "created_at": "2026-09-25T10:36:42.125602Z",
+          "source_id": "d04"
+        }
+      ]
+    },
+    {
+      "name": "blind8-session-boundary-negative",
+      "category": "session_boundary_control",
+      "candidate_count": 17,
+      "expected": [
+        "meeting",
+        "approver"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_b753619b382077ed21811194",
+          "content": "user: The Cedar grant review meeting finished shortly before noon.",
+          "score": 0.032787,
+          "created_at": "2026-09-25T10:36:43.023360Z",
+          "source_id": "meeting"
+        },
+        {
+          "id": "mem_b4d307759a922dcf72f1d552",
+          "content": "user: The Cedar grant documents were copied for the archive.",
+          "score": 0.031874,
+          "created_at": "2026-09-25T10:36:43.160125Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_e8ae32cd0870db8a51e19b5e",
+          "content": "user: Maintenance approved its removal.",
+          "score": 0.031236,
+          "created_at": "2026-09-25T10:36:43.866776Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_7ff27e1a5c6e6de7e712f201",
+          "content": "user: Daniel Cho approved the unrelated archive disposal request.",
+          "score": 0.030684,
+          "created_at": "2026-09-25T10:36:43.226905Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_081013e012c47061526a3cd9",
+          "content": "user: The review minutes were signed digitally.",
+          "score": 0.03054,
+          "created_at": "2026-09-25T10:36:43.681220Z",
+          "source_id": "d09"
+        }
+      ]
+    },
+    {
+      "name": "blind8-session-list-coverage",
+      "category": "session_adjacent_list",
+      "candidate_count": 18,
+      "expected": [
+        "trip",
+        "first",
+        "second"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null,
+        5
+      ],
+      "complete_at_k": false,
+      "results": [
+        {
+          "id": "mem_25df6182099c1b3a71a572e2",
+          "content": "user: I packed my bag for the Marlow sketching trip on Friday.",
+          "score": 0.042787,
+          "created_at": "2026-09-25T10:36:44.196107Z",
+          "source_id": "trip"
+        },
+        {
+          "id": "mem_d3ed5b9ebf78d4c8e8229ed3",
+          "content": "user: I had packed a compass for that hike.",
+          "score": 0.041886,
+          "created_at": "2026-09-25T10:36:44.478215Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_bab1ad82721d8522149ed1e2",
+          "content": "user: The sketching guide recommends three viewpoints.",
+          "score": 0.031874,
+          "created_at": "2026-09-25T10:36:45.173462Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_dee5d62610f2defcf8adb84d",
+          "content": "user: Marlow Station sells travel supplies.",
+          "score": 0.031374,
+          "created_at": "2026-09-25T10:36:44.787458Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_6c5a6a6078b1ef85324f06da",
+          "content": "user: Then I added the small watercolor tin.",
+          "score": 0.030119,
+          "created_at": "2026-09-25T10:36:44.340401Z",
+          "source_id": "second"
+        }
+      ]
+    }
+  ]
+}
