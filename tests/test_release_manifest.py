@@ -59,9 +59,22 @@ class ReleaseManifestTests(unittest.TestCase):
             dockerfile.index("ENV PYTHONDONTWRITEBYTECODE"),
             dockerfile.index("model_optimized.onnx"),
         )
-        self.assertGreater(
-            dockerfile.index("ARG AML_EMBED_MODEL_SHA256"),
-            dockerfile.index("TextEmbedding('BAAI/bge-small-en-v1.5'"),
+        self.assertLess(
+            dockerfile.index("ARG AML_EMBED_MODEL_REVISION"),
+            dockerfile.index("snapshot_download("),
+        )
+
+    def test_docker_downloads_the_embedding_from_the_pinned_revision(self):
+        dockerfile = (
+            Path(__file__).resolve().parents[1] / "Dockerfile"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("revision='$AML_EMBED_MODEL_REVISION'", dockerfile)
+        self.assertIn("HF_HUB_OFFLINE=1", dockerfile)
+        self.assertIn("local_files_only=True", dockerfile)
+        self.assertLess(
+            dockerfile.index("snapshot_download("),
+            dockerfile.index("HF_HUB_OFFLINE=1"),
         )
 
     def test_documented_and_ci_volumes_mount_the_database_directory(self):

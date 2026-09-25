@@ -3,11 +3,15 @@ FROM python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1
 WORKDIR /app
 COPY requirements.txt requirements.lock ./
 RUN pip install --no-cache-dir -r requirements.lock
-RUN mkdir -p /models && python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/models')"
 
 ARG AML_EMBED_MODEL_REVISION=52398278842ec682c6f32300af41344b1c0b0bb2
 ARG AML_EMBED_MODEL_SHA256=51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431
 ARG AML_EMBED_TOKENIZER_SHA256=d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66
+RUN mkdir -p /models \
+    && python -c "from huggingface_hub import snapshot_download; snapshot_download('qdrant/bge-small-en-v1.5-onnx-q', revision='$AML_EMBED_MODEL_REVISION', cache_dir='/models', allow_patterns=['config.json', 'tokenizer.json', 'tokenizer_config.json', 'special_tokens_map.json', 'model_optimized.onnx'])" \
+    && mkdir -p /models/models--qdrant--bge-small-en-v1.5-onnx-q/refs \
+    && printf '%s' "$AML_EMBED_MODEL_REVISION" > /models/models--qdrant--bge-small-en-v1.5-onnx-q/refs/main \
+    && HF_HUB_OFFLINE=1 python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/models', local_files_only=True)"
 RUN test "$(cat /models/models--qdrant--bge-small-en-v1.5-onnx-q/refs/main)" = "$AML_EMBED_MODEL_REVISION" \
     && echo "$AML_EMBED_MODEL_SHA256  /models/models--qdrant--bge-small-en-v1.5-onnx-q/snapshots/$AML_EMBED_MODEL_REVISION/model_optimized.onnx" | sha256sum -c - \
     && echo "$AML_EMBED_TOKENIZER_SHA256  /models/models--qdrant--bge-small-en-v1.5-onnx-q/snapshots/$AML_EMBED_MODEL_REVISION/tokenizer.json" | sha256sum -c -
