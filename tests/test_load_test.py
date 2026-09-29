@@ -18,9 +18,52 @@ from benchmarks.run_load_test import (
     positive_int,
     process_rss_bytes,
 )
+from benchmarks.compare_load_reports import comparison, workload_mismatches
 
 
 class LoadTestTests(unittest.TestCase):
+    def test_load_report_comparison_rejects_different_workloads(self):
+        baseline = {"config": {"top_k": 10, "add_workers": 8}}
+        candidate = {"config": {"top_k": 100, "add_workers": 64}}
+
+        self.assertEqual(
+            {"add_workers": (8, 64), "top_k": (10, 100)},
+            workload_mismatches(baseline, candidate),
+        )
+        with self.assertRaisesRegex(ValueError, "not comparable"):
+            comparison(baseline, candidate)
+
+    def test_load_report_comparison_reports_deltas(self):
+        config = {key: None for key in (
+            "add_requests", "messages_per_request", "search_requests",
+            "add_workers", "search_workers", "users", "mixed_add_requests",
+            "mixed_search_requests", "soak_seconds", "soak_add_workers",
+            "soak_search_workers", "top_k", "embeddings_enabled",
+            "embedding_concurrency", "embedding_batch_size",
+            "memory_cache_users", "memory_cache_max_bytes",
+        )}
+        baseline = {
+            "config": config,
+            "memory": {"peak_rss_bytes": 100, "rss_limit_passed": True},
+            "add": {"p95_seconds": 2.0, "p95_limit_passed": True, "errors": 0},
+            "search": {
+                "p95_seconds": 3.0, "p95_limit_passed": True,
+                "errors": 0, "top_1_correct": 9,
+            },
+        }
+        candidate = json.loads(json.dumps(baseline))
+        candidate["memory"]["peak_rss_bytes"] = 120
+        candidate["search"]["p95_seconds"] = 2.5
+        candidate["search"]["top_1_correct"] = 10
+
+        result = comparison(baseline, candidate)
+
+        self.assertTrue(result["comparable"])
+        self.assertTrue(result["candidate_passed"])
+        self.assertEqual(20, result["peak_rss_delta_bytes"])
+        self.assertEqual(-0.5, result["search_p95_delta_seconds"])
+        self.assertEqual(1, result["search_top_1_delta"])
+
     def test_current_rss_is_positive_when_supported(self):
         rss = current_rss_bytes()
         self.assertTrue(rss is None or rss > 0)

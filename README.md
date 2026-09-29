@@ -366,6 +366,15 @@ JSON 报告包含成功写入吞吐、错误类型、Search p50/p95/p99、吞吐
 准确率。`--no-embeddings` 只用于隔离 SQLite、词法评分和并发开销，不代表
 正式提交配置。
 
+对两个负载报告做回归判断前，先用比较器确认压力参数完全一致；如果
+`workers`、`top_k`、缓存或 embedding 配置不同，命令会拒绝输出性能差值：
+
+```powershell
+python -m benchmarks.compare_load_reports `
+  benchmarks/load-10k-bge-term-counts.json `
+  benchmarks/load-10k-session-window-bge-comparable.json
+```
+
 容量阶梯可加入 `--max-rss-bytes 1073741824`，记录当前与进程生命周期峰值 RSS，
 并在峰值无法读取或超过 1 GiB 时让命令失败。它是测得峰值的回归门禁，不是操作系统
 硬内存隔离；硬限制仍需使用 Docker `--memory` 并检查 cgroup/OOM 状态。
