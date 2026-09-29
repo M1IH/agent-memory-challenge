@@ -204,3 +204,20 @@ run `36594606237` 在该精确 SHA 上通过单元测试、扩展基准、真实
 峰值 RSS `500,060,160` bytes（约 476.9 MiB），所有门禁通过。报告保存为
 `benchmarks/load-10k-historical-session-a5b3f04.json`。这仍是本机合成容量边界，不是
 生产或官方评测证明。下一门禁转为候选 diff、发布清单、回滚与新官网版本复核。
+
+## 第三次官方 Smoke（2026-09-30）
+
+候选已快进合并为 `main@c95010cd235e3a3f3145233e8840366218deeb59`，精确 SHA
+GitHub Actions run `36596520343` 通过。Railway deployment
+`0520004a-ee5a-46ca-9829-140ed9c7dae0` 构建镜像 digest
+`sha256:085827000e941bb55928c8d21315be916976af581c22ad723bcd00d4a8230e9c`，挂载原 `/data`
+卷并成功启动。公网健康检查与非官方远程 Smoke 通过。
+
+官网版本 `v1.2.0-historical-c95010c`（`version_96022a1034dd`）的第三次 textual
+Smoke `teval_4e4a341c8fa52f15` 在与前两次相同的 16/16 并发和 Top-K 100 下完成
+46/46。总分 `0.49357638888888894`，A/B/C/D/E/G/H/streaming 及所有子能力与第二次
+完全相同；C 仍为 `0.35`，streaming 仍为 `0.6041666666666666`。因此 Blind9 的
+本地改善没有命中当前 Smoke 固定样本，或 C 类根因并非此假设。不以结果反推隐藏请求，
+不对同一套件追样本调参，不启动 Full。资格为 `smoke=passed`、`full_allowed=true`、
+`smoke_used=3/30`、`full_used=0/2`；下一步是使用公开能力定义重建 C1/C2 错误假设和
+全新冻结盲测，没有独立提分证据不消耗第四次 Smoke。

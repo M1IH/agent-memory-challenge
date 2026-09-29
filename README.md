@@ -14,7 +14,7 @@
 
 ## 阶段检查点（恢复工作时先读）
 
-> 最后核对：2026-09-29（Asia/Shanghai）。本节是上下文压缩、新任务和交接后的
+> 最后核对：2026-09-30（Asia/Shanghai）。本节是上下文压缩、新任务和交接后的
 > 恢复入口。继续工作前先核对这里，再从“下一步优先级”中最高的未完成项开始；
 > 每次完成重大外部动作后同步更新本节。历史细节见
 > [迭代检查点](docs/iteration-checkpoint.md)、
@@ -26,7 +26,7 @@
 
 - 目标：以获奖为导向，在零预算优先的前提下安全完成 Agent Memory Leaderboard
   文本赛道的官方评测；正确性、服务稳定性和提交可靠性优先于展示包装。
-- 当前阶段：第二个正式 Smoke 已通过，但候选总分 `0.49357638888888894` 低于旧版
+- 当前阶段：第三个正式 Smoke 已通过，但候选总分 `0.49357638888888894` 仍低于旧版
   `0.5175347222222222`，因此禁止直接 Full。分项中 A/B/D/E/G/H 不变、streaming
   提升，C 从 `0.50` 降至 `0.35`。Blind9 已定位到历史意图短语和历史会话 seed
   选择不足；候选修复在 lexical/BGE 上均将 Hit@5 从 `0.75` 提至 `1.00`、
@@ -34,6 +34,8 @@
   confirmation、holdout 与 Blind4--Blind8 的同配置 lexical/BGE 对照无回退。
   修复已提交为 `a5b3f0488b81c4124edbb28c9987ce01ebe084c4`；GitHub Actions run
   `36594606237` 的单元/扩展基准和真实 Docker 离线 BGE 内存门禁均成功。
+  然而第三次 Smoke 与第二次的总分、能力项和子能力项完全相同，因此
+  Blind9 改善没有命中当前官方 Smoke 的固定样本，不能作为启动 Full 的理由。
 - 粗略总体进度：约 `99%`，Full 前提分阶段约 `97%`。这是项目管理估计，不是
   官方成绩；剩余 Smoke 和首次 Full 都是高影响门禁，不能按普通调试操作处理。
 
@@ -42,15 +44,15 @@
 | 项目 | 当前基线 |
 | --- | --- |
 | 公开仓库 | `M1IH/agent-memory-challenge` |
-| 固定 Git Commit | `e9f5730fe54b8cb90208f5261af96462bd83fb41` |
-| GitHub Actions | run `36553154994`，上述精确 SHA 的 `tests` 已成功 |
+| 固定 Git Commit | `c95010cd235e3a3f3145233e8840366218deeb59` |
+| GitHub Actions | run `36596520343`，上述精确 SHA 的 `tests` 已成功 |
 | 公网服务 | `https://api-production-40d75.up.railway.app` |
-| 健康检查 | 2026-09-29 核对为 HTTP 200、`{"status":"ok"}` |
-| Railway 部署 | deployment `c64799a1-44a6-48db-9a47-fc3d8e2474c3`，状态 `SUCCESS` |
-| 持久卷 | `/data`，READY，最近核对约 52.7 MB / 500 MB |
-| 线上镜像 | digest `sha256:8f5e4f808dd72afc8276d97634ca137d9b140ca13998a29d42329228c8e1c97b` |
+| 健康检查 | 2026-09-30 核对为 HTTP 200、`{"status":"ok"}` |
+| Railway 部署 | deployment `0520004a-ee5a-46ca-9829-140ed9c7dae0`，状态 `SUCCESS` |
+| 持久卷 | `/data`，READY，最近核对约 53 MB / 500 MB |
+| 线上镜像 | digest `sha256:085827000e941bb55928c8d21315be916976af581c22ad723bcd00d4a8230e9c` |
 | 官方系统 | `Nagasaki soyo's memory` |
-| 官方版本 | `v1.1.0-session-e9f5730`，version id `version_165f5e80b810` |
+| 官方版本 | `v1.2.0-historical-c95010c`，version id `version_96022a1034dd` |
 | 榜单 | 学术榜，文本赛道 |
 
 本地单元测试最近记录为 180 项通过；这不是“没有任何 Bug”的证明。容量与检索指标
@@ -84,6 +86,14 @@
   与旧版相同，C 为 `0.35`（旧版 `0.50`），streaming 为 `0.6041666666666666`
   （旧版 `0.5625`）。资格仍为 `full_allowed=true`，`smoke_used=2/30`、
   `full_used=0/2`。该版本不进入 Full。
+- 2026-09-30 将经本地盲测、10k BGE 容量和精确 SHA CI 验证的候选快进合并到
+  `main@c95010c`，部署为 Railway deployment `0520004a-ee5a-46ca-9829-140ed9c7dae0`。
+  生产健康检查和非官方远程 Smoke 通过 HTTPS、鉴权、幂等 Add/Search 和用户隔离。
+- 同日为 `v1.2.0-historical-c95010c` 运行第三次 textual Smoke，evaluation id
+  `teval_4e4a341c8fa52f15`；46/46 成功，总分、能力项和子能力项与第二次完全相同：
+  总分 `0.49357638888888894`、C `0.35`、streaming `0.6041666666666666`。
+  资格为 `smoke=passed`、`full_allowed=true`、`smoke_used=3/30`、`full_used=0/2`。
+  因未恢复并超过旧版 `0.5175347222222222`，仍不进入 Full。
 - 同期项目内归因复查为 152 项本地测试通过、源码编译通过、仓库秘密扫描无命中；
   公网 `/health` 为 HTTP 200，Railway 服务和固定部署正常，最近评测相关 Add/Search
   请求除预期未鉴权探针外均为 HTTP 200，GitHub `main` 最新 CI 成功。这些证据未发现
@@ -93,11 +103,11 @@
 
 ### 下一步优先级（严格按顺序）
 
-1. **P0：第三版发布前复核。** 精确 SHA CI、Blind9 正式报告和 10k 真实 BGE
-   容量门禁已通过。下一步复查候选 diff、发布清单、线上可回滚性和官网版本命名；
-   复核完成前不合并 main、不部署。
-2. **P0：第三版发布门禁。** 只有上述证据完整，才创建新官网版本、部署并考虑
-   第三次 Smoke。当前剩余 Smoke 28 次，Full 2 次。
+1. **P0：重建 C 类错误假设。** 第三次 Smoke 对 Blind9 改善无反应，因此不再围绕
+   “历史会话邻接”继续追加规则。只使用公开能力定义和独立合成套件，审计 C1/C2 可能
+   对应的列表完整性、时序更新、冲突证据或多跳排序；无独立改善不发新版。
+2. **P0：第四次 Smoke 门禁。** 只有新冻结盲测、全部回归、10k 容量和精确 SHA CI
+   同时支持新候选，才考虑第四次 Smoke。当前剩余 Smoke 27 次，Full 2 次。
 3. **P0：首次 Full 决策。** 只有 Smoke 至少恢复并超过旧版 `0.51753`，才把分项、
    门禁结果、剩余次数和风险报告给用户；
    只有得到新的明确确认后才能启动 Full。Full 运行期间禁止部署、改变量或重启服务。
