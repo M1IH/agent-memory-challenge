@@ -196,3 +196,11 @@ run `36594606237` 在该精确 SHA 上通过单元测试、扩展基准、真实
 `dirty=false`，冻结套件哈希仍为
 `50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa`。下一步是复核
 10k 容量边界；在完成前仍不合并、不部署、不消耗 Smoke。
+
+10k 真实 BGE 复跑使用与现有门禁一致的 500 Add x 20 条、8/32 Add/Search worker、
+96 Search、Top-10、embedding 并发 2、batch 64 和单用户 64 MiB 快照缓存；预先设定
+1 GiB RSS、45 秒 Add p95 和 15 秒 Search p95 门禁。结果写入 10,000/10,000，
+96/96 Search Top-1，Add/Search 均为零错误；Add p95 `6.706s`、Search p95 `9.898s`，
+峰值 RSS `500,060,160` bytes（约 476.9 MiB），所有门禁通过。报告保存为
+`benchmarks/load-10k-historical-session-a5b3f04.json`。这仍是本机合成容量边界，不是
+生产或官方评测证明。下一门禁转为候选 diff、发布清单、回滚与新官网版本复核。
