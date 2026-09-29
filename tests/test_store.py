@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from app.store import (
     MemoryStore,
@@ -116,6 +117,48 @@ class MemoryStoreTests(unittest.TestCase):
         contents = " ".join(item["content"] for item in results)
         self.assertNotIn("Daniel", contents)
         self.assertNotIn("SECRET", contents)
+
+    def test_current_state_query_does_not_promote_stale_session_neighbors(self):
+        self.store.add(
+            "kestrel-old", "alice", "planning",
+            [
+                {
+                    "role": "user",
+                    "content": "The Project Kestrel database planning meeting started.",
+                    "timestamp": 1704067200000,
+                },
+                {
+                    "role": "user",
+                    "content": "At first we selected SQLite for the prototype.",
+                    "timestamp": 1704067201000,
+                },
+            ],
+        )
+        self.store.add(
+            "kestrel-new", "alice", "migration",
+            [{
+                "role": "user",
+                "content": "Project Kestrel later switched to PostgreSQL; that is the current database.",
+                "timestamp": 1704153600000,
+            }],
+        )
+        for index in range(6):
+            self.store.add(
+                f"noise-{index}", "alice", f"noise-{index}",
+                [{"role": "user", "content": f"Database archive note {index}."}],
+            )
+
+        with patch.object(
+            self.store,
+            "_session_window_scores",
+            wraps=self.store._session_window_scores,
+        ) as session_window:
+            results = self.store.search(
+                "alice", "What is the current database for Project Kestrel?", 2
+            )
+
+        self.assertIn("PostgreSQL", results[0]["content"])
+        session_window.assert_not_called()
 
     def test_repeated_add_is_idempotent(self):
         self.add("alice", "req-1", "我喜欢乌龙茶")
