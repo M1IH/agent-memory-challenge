@@ -991,7 +991,6 @@ class MemoryStore:
                 return self._finish_search(
                     query, memories, lexical_scores, rank_key, config, top_k,
                     rare_query_identifiers,
-                    allow_session_window=not (asks_for_current or asks_for_historical),
                 )
             entity_frequency: dict[str, int] = {}
             entities_by_id = {
@@ -1072,7 +1071,6 @@ class MemoryStore:
         return self._finish_search(
             query, memories, lexical_scores, rank_key, config, top_k,
             rare_query_identifiers,
-            allow_session_window=not (asks_for_current or asks_for_historical),
         )
 
     def _finish_search(
@@ -1084,7 +1082,6 @@ class MemoryStore:
         config: RetrievalConfig,
         top_k: int,
         rare_query_identifiers: set[str],
-        allow_session_window: bool,
     ) -> list[dict]:
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
@@ -1173,7 +1170,7 @@ class MemoryStore:
                 fused.append((score, memory_by_id[memory_id]))
             fused.sort(key=rank_key)
             scores = fused
-        if config.session_window_enabled and allow_session_window:
+        if config.session_window_enabled:
             scores = self._session_window_scores(query, scores, memories, rank_key)
         return self._results(scores, top_k)
 
