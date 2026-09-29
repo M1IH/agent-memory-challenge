@@ -1,0 +1,583 @@
+{
+  "suite": "blind9",
+  "top_k": 10,
+  "cases": 6,
+  "evidence": 8,
+  "hit_at_1": 0.625,
+  "hit_at_3": 1.0,
+  "hit_at_5": 1.0,
+  "mrr": 0.8125,
+  "categories": {
+    "current_state_session_trap": 0.8333333333333334,
+    "current_state_session_trap_zh": 1.0,
+    "historical_session_evidence": 0.75,
+    "historical_session_evidence_zh": 0.75
+  },
+  "complete_at_1": 0.5,
+  "complete_at_3": 1.0,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "forbidden_at_5": 1,
+  "evaluation_version": 3,
+  "suite_sha256": "50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "session_window_enabled": true,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "embedding_identity": "fastembed:BAAI/bge-small-en-v1.5:52398278842ec682c6f32300af41344b1c0b0bb2:51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431:d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66:float32:l2-v1",
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": 2,
+    "embedding_batch_size": 64
+  },
+  "evaluation_code": {
+    "sha256": "a05ebcfb410ec0ca7a696c06344c9dedba3d46b5e9237e5e312f59b0da20c333",
+    "files": {
+      "app/store.py": "d61fedc9f7e82353efaea978f782b8b29ddbc9df0e4ff66066ff01e4e468582d",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "c8b1b23329fe5d8dad3d2f383e70e5debef03a6370571e8f1876c9d1915586cb",
+      "benchmarks/evidence.py": "2f27df14a07230fa585899765479239cc1b53f454cb2906c38cdfde49838c1c9",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "git": {
+    "production_git_sha": "a5b3f0488b81c4124edbb28c9987ce01ebe084c4",
+    "harness_git_sha": "a5b3f0488b81c4124edbb28c9987ce01ebe084c4",
+    "dirty": false
+  },
+  "case_traces": [
+    {
+      "name": "blind9-current-kestrel-database",
+      "category": "current_state_session_trap",
+      "candidate_count": 18,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_55ee85fbfd2ab82be251f5e7",
+          "content": "[2024-02-01T00:00:00Z] user: Project Kestrel later switched to PostgreSQL, which is the current database.",
+          "score": 0.034787,
+          "created_at": "2024-02-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_08c8b88c45cd89bd26640ee4",
+          "content": "user: A different project switched to MySQL.",
+          "score": 0.033336,
+          "created_at": "2026-09-29T16:02:48.061804Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_fe08eedd1f3fbf68cabfaebf",
+          "content": "[2024-01-01T00:00:00Z] user: The Project Kestrel database planning meeting compared local prototypes.",
+          "score": 0.031141,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_777fbf4bf4b154fefbc87ea9",
+          "content": "user: A PostgreSQL workshop starts Friday.",
+          "score": 0.031013,
+          "created_at": "2026-09-29T16:02:47.572739Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_430afadc0275a3e2860fec54",
+          "content": "user: PostgreSQL hosting costs changed.",
+          "score": 0.030566,
+          "created_at": "2026-09-29T16:02:47.937922Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_f511f46fb8ff1792b0a11b7d",
+          "content": "user: The Kestrel meeting room is upstairs.",
+          "score": 0.029974,
+          "created_at": "2026-09-29T16:02:47.999425Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_86b57a388792c948727bdcfc",
+          "content": "user: The current logo database stores SVG files.",
+          "score": 0.029851,
+          "created_at": "2026-09-29T16:02:47.704804Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_7bd82be6fe738f5ba0c75812",
+          "content": "user: Kestrel birds nest near the database office.",
+          "score": 0.029751,
+          "created_at": "2026-09-29T16:02:47.634968Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_961081b1fd1af9162565b46b",
+          "content": "user: Project Heron currently uses SQLite.",
+          "score": 0.029241,
+          "created_at": "2026-09-29T16:02:47.512139Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_9757388f3bfc47b8fa7e4b95",
+          "content": "user: Kestrel deployment notes are private.",
+          "score": 0.02877,
+          "created_at": "2026-09-29T16:02:48.370394Z",
+          "source_id": "d15"
+        }
+      ]
+    },
+    {
+      "name": "blind9-current-clinic-dosage",
+      "category": "current_state_session_trap",
+      "candidate_count": 18,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_5c0d5123f14b050ee6bf1e62",
+          "content": "[2024-03-01T00:00:00Z] user: At follow-up, the clinic changed Norvex to two tablets at night; this is the current dosage.",
+          "score": 0.034655,
+          "created_at": "2024-03-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_01d62df30cef5415b1fd854f",
+          "content": "[2024-01-01T00:00:00Z] user: The clinic reviewed my Norvex dosage during the winter visit.",
+          "score": 0.03239,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_92fc8dfcb5e8722966305287",
+          "content": "user: Dosage questions go to reception.",
+          "score": 0.03125,
+          "created_at": "2026-09-29T16:02:49.590820Z",
+          "source_id": "d15"
+        },
+        {
+          "id": "mem_f25aa349381f85dcef604d31",
+          "content": "user: The pharmacy stocks Norvex.",
+          "score": 0.031013,
+          "created_at": "2026-09-29T16:02:49.351000Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_ebd5f43867eea3abbba8979c",
+          "content": "user: The clinic opens at night for emergencies.",
+          "score": 0.030952,
+          "created_at": "2026-09-29T16:02:48.777638Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_6bbe6cd2cbadd2fab2ba5a40",
+          "content": "user: A dosage chart hangs in the pharmacy.",
+          "score": 0.029751,
+          "created_at": "2026-09-29T16:02:48.904719Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_e4eaf91022f9d258911fb70a",
+          "content": "user: Night buses stop near the clinic.",
+          "score": 0.029577,
+          "created_at": "2026-09-29T16:02:49.418970Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_a292a24dd0bdca6b28cd03f2",
+          "content": "user: Norvex packaging is blue.",
+          "score": 0.029315,
+          "created_at": "2026-09-29T16:02:48.838663Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_b449e27fd29d7ef3fc4f5913",
+          "content": "user: A morning alarm is set for seven.",
+          "score": 0.028882,
+          "created_at": "2026-09-29T16:02:49.165694Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_a1eff2f9d630a3a5d5aecafc",
+          "content": "user: The current appointment is Friday.",
+          "score": 0.028296,
+          "created_at": "2026-09-29T16:02:49.098160Z",
+          "source_id": "d07"
+        }
+      ]
+    },
+    {
+      "name": "blind9-current-chinese-courier",
+      "category": "current_state_session_trap_zh",
+      "candidate_count": 18,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [
+        5
+      ],
+      "results": [
+        {
+          "id": "mem_468e5c5c52686cb4c5088de2",
+          "content": "[2024-04-01T00:00:00Z] user: 后来青禾工作室改用白鹭速运寄陶器，目前都由白鹭负责。",
+          "score": 0.034527,
+          "created_at": "2024-04-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_a32be6748de8404809384971",
+          "content": "user: 青禾工作室目前周一休息。",
+          "score": 0.03439,
+          "created_at": "2026-09-29T16:02:50.059980Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_e1eba7e4aa0ac8eff519c469",
+          "content": "[2024-01-01T00:00:00Z] user: 青禾工作室开会讨论陶器快递方案。",
+          "score": 0.033622,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_d7d69e8efb2a3665c3be230c",
+          "content": "user: 远帆快递负责另一家画室。",
+          "score": 0.032653,
+          "created_at": "2026-09-29T16:02:49.936854Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_03aeb18052f55175c9e716e0",
+          "content": "[2024-01-01T00:00:01Z] user: 最初决定交给远帆快递。",
+          "score": 0.03248,
+          "created_at": "2024-01-01T00:00:01Z",
+          "source_id": "stale"
+        },
+        {
+          "id": "mem_c4d092448438c2a0a315f79c",
+          "content": "user: 青禾路正在施工。",
+          "score": 0.030453,
+          "created_at": "2026-09-29T16:02:50.660271Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_b0b4ab219d1c077b950db7c1",
+          "content": "user: 目前展厅有十二件作品。",
+          "score": 0.029751,
+          "created_at": "2026-09-29T16:02:50.346929Z",
+          "source_id": "d08"
+        },
+        {
+          "id": "mem_91eeb7b5fde0219629f17b53",
+          "content": "user: 工作室换了新门牌。",
+          "score": 0.029306,
+          "created_at": "2026-09-29T16:02:50.291294Z",
+          "source_id": "d07"
+        },
+        {
+          "id": "mem_5c024840ff90f3dc8936228c",
+          "content": "user: 工作室给花瓶拍了照片。",
+          "score": 0.029202,
+          "created_at": "2026-09-29T16:02:50.727989Z",
+          "source_id": "d14"
+        },
+        {
+          "id": "mem_44fbe0f6762a409790fcd7ad",
+          "content": "user: 陶器课程下月开始。",
+          "score": 0.028278,
+          "created_at": "2026-09-29T16:02:50.531980Z",
+          "source_id": "d11"
+        }
+      ]
+    },
+    {
+      "name": "blind9-current-studio-location",
+      "category": "current_state_session_trap",
+      "candidate_count": 18,
+      "expected": [
+        "current"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_c437424740214cbdfc6f3095",
+          "content": "user: Mira's current exhibition is downtown.",
+          "score": 0.032527,
+          "created_at": "2026-09-29T16:02:51.224324Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_9408a331ea46303bb0b104d2",
+          "content": "[2024-05-01T00:00:00Z] user: Mira moved the pottery studio to 18 Willow Quay, its current location.",
+          "score": 0.03239,
+          "created_at": "2024-05-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_2ccfc83be798c481e6ab2f2b",
+          "content": "[2024-01-01T00:00:00Z] user: Mira discussed the location of her pottery studio.",
+          "score": 0.031502,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_a78116ebf39ee20f02de6b8b",
+          "content": "user: The old studio sign is archived.",
+          "score": 0.030754,
+          "created_at": "2026-09-29T16:02:51.593676Z",
+          "source_id": "d09"
+        },
+        {
+          "id": "mem_7c87f289d95931547cc00036",
+          "content": "user: Pottery clay arrives monthly.",
+          "score": 0.029964,
+          "created_at": "2026-09-29T16:02:51.704091Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_a0679eaf8711b10409620122",
+          "content": "user: The location map is printed.",
+          "score": 0.029926,
+          "created_at": "2026-09-29T16:02:51.817255Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_7bdb69a5915d016b479da7fa",
+          "content": "user: A studio at 18 Harbor Road closed.",
+          "score": 0.029751,
+          "created_at": "2026-09-29T16:02:51.280160Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_c1cd2b1e8fe90afa02e88df2",
+          "content": "user: Current class times are online.",
+          "score": 0.029306,
+          "created_at": "2026-09-29T16:02:51.649276Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_3e600abdf6bf6d728000b234",
+          "content": "user: The pottery kiln was repaired.",
+          "score": 0.029202,
+          "created_at": "2026-09-29T16:02:51.341023Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_919d3f23ae496c141bf28713",
+          "content": "user: Northgate Station has a pottery mural.",
+          "score": 0.028782,
+          "created_at": "2026-09-29T16:02:51.102797Z",
+          "source_id": "d01"
+        }
+      ]
+    },
+    {
+      "name": "blind9-historical-bakery-supplier",
+      "category": "historical_session_evidence",
+      "candidate_count": 18,
+      "expected": [
+        "old-anchor",
+        "historical"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_4a38b8ff437ff699a455657e",
+          "content": "[2024-01-01T00:00:00Z] user: The bakery reviewed its flour supplier contract in January.",
+          "score": 0.034527,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_0c7d4c947628eea37fefcad7",
+          "content": "[2024-01-01T00:00:01Z] user: At that time the flour came from Redbrook Mill.",
+          "score": 0.034527,
+          "created_at": "2024-01-01T00:00:01Z",
+          "source_id": "historical"
+        },
+        {
+          "id": "mem_9626ae4caf1a3d476ed12801",
+          "content": "user: Another bakery uses Oak Mill.",
+          "score": 0.034258,
+          "created_at": "2026-09-29T16:02:52.557164Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_c0ddf97b031f2ea6f8a607e7",
+          "content": "[2024-06-01T00:00:00Z] user: The bakery later switched suppliers and now buys from Stonefield Mills.",
+          "score": 0.030924,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_d2af78f87e4b4a4cf3c84670",
+          "content": "user: The bakery changed its logo.",
+          "score": 0.030889,
+          "created_at": "2026-09-29T16:02:52.914845Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_ca5260636bc8d064926af8cd",
+          "content": "user: Redbrook sells bread baskets.",
+          "score": 0.030754,
+          "created_at": "2026-09-29T16:02:52.258809Z",
+          "source_id": "d01"
+        },
+        {
+          "id": "mem_eeea87e86fa723cbbdb98a48",
+          "content": "user: Redbrook Road was resurfaced.",
+          "score": 0.030016,
+          "created_at": "2026-09-29T16:02:52.856273Z",
+          "source_id": "d11"
+        },
+        {
+          "id": "mem_15e84a64f9c011527a4ac13d",
+          "content": "user: Flour prices changed in March.",
+          "score": 0.029964,
+          "created_at": "2026-09-29T16:02:52.497088Z",
+          "source_id": "d05"
+        },
+        {
+          "id": "mem_20fc631c195f1c88f6fb6156",
+          "content": "user: A mill wheel was repaired.",
+          "score": 0.029305,
+          "created_at": "2026-09-29T16:02:52.368447Z",
+          "source_id": "d03"
+        },
+        {
+          "id": "mem_5cc5b4b322c9096a069ff614",
+          "content": "user: Stonefield bakery opens early.",
+          "score": 0.028891,
+          "created_at": "2026-09-29T16:02:52.314317Z",
+          "source_id": "d02"
+        }
+      ]
+    },
+    {
+      "name": "blind9-historical-chinese-repairer",
+      "category": "historical_session_evidence_zh",
+      "candidate_count": 18,
+      "expected": [
+        "old-anchor",
+        "historical"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_b899bd5f494a566e09696de0",
+          "content": "[2024-01-01T00:00:00Z] user: 钟表店最早登记了那只怀表的维修记录。",
+          "score": 0.033943,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_754d9f9ef55b377bf4b09a71",
+          "content": "[2024-01-01T00:00:01Z] user: 当时由林师傅负责清洗机芯。",
+          "score": 0.033943,
+          "created_at": "2024-01-01T00:00:01Z",
+          "source_id": "historical"
+        },
+        {
+          "id": "mem_3e77b18e10c493e87410b718",
+          "content": "[2024-07-01T00:00:00Z] user: 后来钟表店换了维修师，现在怀表由周师傅负责。",
+          "score": 0.033769,
+          "created_at": "2024-07-01T00:00:00Z",
+          "source_id": "current"
+        },
+        {
+          "id": "mem_1a1a56dff79f6728e1c5d366",
+          "content": "user: 钟表店换了招牌。",
+          "score": 0.032924,
+          "created_at": "2026-09-29T16:02:53.591991Z",
+          "source_id": "d04"
+        },
+        {
+          "id": "mem_178922a75ef04ddc27f85f81",
+          "content": "user: 最早的营业执照已归档。",
+          "score": 0.032659,
+          "created_at": "2026-09-29T16:02:53.715518Z",
+          "source_id": "d06"
+        },
+        {
+          "id": "mem_8b688d7179fac4a288bae8f7",
+          "content": "user: 林师傅以前住在城南。",
+          "score": 0.03254,
+          "created_at": "2026-09-29T16:02:54.086592Z",
+          "source_id": "d12"
+        },
+        {
+          "id": "mem_8c81a287c395c80a8d19813f",
+          "content": "user: 怀表维修费已经支付。",
+          "score": 0.029995,
+          "created_at": "2026-09-29T16:02:53.969116Z",
+          "source_id": "d10"
+        },
+        {
+          "id": "mem_923614f9d79076ad9c9f37ff",
+          "content": "user: 钟表店周日休息。",
+          "score": 0.029634,
+          "created_at": "2026-09-29T16:02:54.150601Z",
+          "source_id": "d13"
+        },
+        {
+          "id": "mem_dea0b6eca09d1d73b9d73b87",
+          "content": "user: 周师傅现在负责收银。",
+          "score": 0.029552,
+          "created_at": "2026-09-29T16:02:53.471951Z",
+          "source_id": "d02"
+        },
+        {
+          "id": "mem_58d7dbac9aaabc1b28a4d3ea",
+          "content": "user: 维修记录使用蓝色纸张。",
+          "score": 0.028335,
+          "created_at": "2026-09-29T16:02:53.653216Z",
+          "source_id": "d05"
+        }
+      ]
+    }
+  ]
+}

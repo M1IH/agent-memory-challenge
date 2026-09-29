@@ -186,5 +186,13 @@ Blind5 已参与第二轮开发，不能再作为最终独立证明。反向中�
 为避免用不同模式的旧报告误判回退，另外从改动前精确 HEAD 提取独立工作副本，对
 confirmation、holdout、Blind4--Blind8 各跑 lexical/BGE 同配置对照。14 组中 Hit@5、MRR、
 Complete@5 和 `forbidden_at_5` 全部不变。完整单元测试 180 项通过。这些是本地
-合成证据，不等同于官方分数；下一门禁是提交/推送后的精确 SHA CI，在此前不部署、
-不启动新 Smoke。
+合成证据，不等同于官方分数；因此进入提交/推送后的精确 SHA CI 门禁，
+仍不部署、不启动新 Smoke。
+
+候选修复已提交为 `a5b3f0488b81c4124edbb28c9987ce01ebe084c4`。GitHub Actions
+run `36594606237` 在该精确 SHA 上通过单元测试、扩展基准、真实 Docker 构建与镜像身份、
+离线 BGE 及 512 MiB 内存门禁。正式报告
+`blind9-historical-session-a5b3f04-{lexical,bge}.json` 的 production/harness SHA 均绑定该提交、
+`dirty=false`，冻结套件哈希仍为
+`50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa`。下一步是复核
+10k 容量边界；在完成前仍不合并、不部署、不消耗 Smoke。
