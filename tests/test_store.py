@@ -68,6 +68,61 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertTrue(results)
         self.assertIn("乌龙茶", results[0]["content"])
 
+    def test_before_change_query_prefers_historical_supplier(self):
+        self.add(
+            "alice", "old", "The bakery originally used Redbrook Mill.",
+            timestamp=1704067200000,
+        )
+        self.add(
+            "alice", "new", "The bakery later changed to Stonefield Mills.",
+            timestamp=1717200000000,
+        )
+
+        results = self.store.search(
+            "alice", "Which mill supplied the bakery before it changed suppliers?", 2
+        )
+
+        self.assertIn("Redbrook", results[0]["content"])
+
+    def test_chinese_before_query_prefers_earliest_repairer(self):
+        self.add(
+            "alice", "old", "最早由林师傅负责维修怀表。",
+            timestamp=1704067200000,
+        )
+        self.add(
+            "alice", "new", "后来换成周师傅负责维修怀表。",
+            timestamp=1719792000000,
+        )
+
+        results = self.store.search(
+            "alice", "换维修师之前，最早是谁负责修怀表？", 2
+        )
+
+        self.assertIn("林师傅", results[0]["content"])
+
+    def test_historical_query_uses_historical_session_seed(self):
+        self.store.add(
+            "old-session", "alice", "old-contract",
+            [
+                {"role": "user", "content": "The bakery reviewed its supplier contract."},
+                {"role": "user", "content": "At that time flour came from Redbrook Mill."},
+            ],
+        )
+        self.add("alice", "new", "The bakery now uses Stonefield Mills.")
+        for index in range(8):
+            self.store.add(
+                f"noise-{index}", "alice", f"noise-{index}",
+                [{"role": "user", "content": f"Bakery supplier archive {index}."}],
+            )
+
+        results = self.store.search(
+            "alice", "Which mill supplied the bakery before it changed suppliers?", 5
+        )
+
+        contents = " ".join(result["content"] for result in results)
+        self.assertIn("reviewed its supplier contract", contents)
+        self.assertIn("Redbrook Mill", contents)
+
     def test_user_ids_are_strictly_isolated(self):
         self.add("alice", "req-1", "秘密代号是蓝鲸")
         self.add("bob", "req-2", "Bob 喜欢苹果")

@@ -69,9 +69,9 @@ _CONCEPT_GROUPS = (
 )
 _CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
 _HISTORICAL_MARKERS = (
-    "以前", "过去", "原来", "曾经", "当时", "最初",
-    "used to", "formerly", "previously", "originally", "at first",
-    "when i moved", "before i moved",
+    "以前", "过去", "原来", "曾经", "当时", "最初", "之前", "最早",
+    "used to", "formerly", "previously", "originally", "at first", "at that time",
+    "when i moved", "before i moved", "before it changed", "before they changed",
 )
 _UPDATE_MARKERS = (
     "后来", "改成", "改为", "改由", "换成", "替换", "停止使用", "变了", "不再", "首选",
@@ -1185,8 +1185,16 @@ class MemoryStore:
         if not scores or scores[0][0] <= 0:
             return scores
         query_entities = entity_terms(query)
+        historical_query = has_marker(query, _HISTORICAL_MARKERS)
+        seed_pool = scores[:3]
+        if historical_query:
+            historical_seeds = [
+                item for item in scores[:10]
+                if has_marker(item[1].content, _HISTORICAL_MARKERS)
+            ]
+            seed_pool = historical_seeds or scores[:10]
         seed_score, seed = max(
-            scores[:3],
+            seed_pool,
             key=lambda item: (
                 len(query_entities.intersection(entity_terms(item[1].content))),
                 item[0],
@@ -1215,7 +1223,9 @@ class MemoryStore:
                 if not 0 <= index < len(session):
                     continue
                 neighbor = session[index]
-                inherited_score = seed_score * (0.96 - 0.04 * (distance - 1))
+                inherited_score = seed_score * (
+                    (1.0 if historical_query else 0.96) - 0.04 * (distance - 1)
+                )
                 existing = promoted.get(neighbor.id)
                 if existing is None or inherited_score > existing[0]:
                     promoted[neighbor.id] = (inherited_score, neighbor)
