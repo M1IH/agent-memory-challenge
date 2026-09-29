@@ -4,6 +4,7 @@
 def validate_source_case(case: dict) -> None:
     sources = [memory.get("source_id") for memory in case["memories"]]
     expected = case.get("expected_source_ids", [])
+    forbidden = case.get("forbidden_source_ids", [])
     if case.get("single_add"):
         raise ValueError("source cases require one message per add to avoid contextual copies")
     if not sources or any(not isinstance(source, str) or not source for source in sources):
@@ -12,6 +13,13 @@ def validate_source_case(case: dict) -> None:
         raise ValueError("duplicate source_id")
     if not expected or len(set(expected)) != len(expected) or not set(expected) <= set(sources):
         raise ValueError("expected_source_ids must be unique known sources")
+    if (
+        not isinstance(forbidden, list)
+        or len(set(forbidden)) != len(forbidden)
+        or not set(forbidden) <= set(sources)
+        or set(forbidden) & set(expected)
+    ):
+        raise ValueError("forbidden_source_ids must be unique known non-expected sources")
 
 
 def source_ranks(expected: list[str], results: list[dict], source_by_id: dict[str, str]) -> list[int | None]:

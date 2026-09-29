@@ -74,7 +74,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--suite",
-        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8"),
+        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8", "blind9"),
         default="core",
     )
     parser.add_argument("--fail-on-miss", action="store_true")
@@ -98,7 +98,7 @@ def main() -> None:
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     if args.suite == "extended":
         cases.extend(build_extended_cases())
-    elif args.suite in {"hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8"}:
+    elif args.suite in {"hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8", "blind9"}:
         filename = {
             "hard": "hard_cases.json",
             "confirmation": "confirmation_cases.json",
@@ -110,6 +110,7 @@ def main() -> None:
             "blind6": "blind6_cases.json",
             "blind7": "blind7_cases.json",
             "blind8": "blind8_cases.json",
+            "blind9": "blind9_cases.json",
         }[args.suite]
         cases = json.loads(Path(__file__).with_name(filename).read_text(encoding="utf-8"))
         for case in cases:
@@ -122,6 +123,7 @@ def main() -> None:
     category_scores: dict[str, list[float]] = defaultdict(list)
     traces = []
     complete_counts = {1: 0, 3: 0, 5: 0, args.top_k: 0}
+    forbidden_at_5 = 0
     config = RetrievalConfig(
         lexical_enabled=not args.disable_lexical,
         expansion_enabled=not args.disable_expansion,
@@ -205,11 +207,18 @@ def main() -> None:
                 ]
             for cutoff in complete_counts:
                 complete_counts[cutoff] += complete_at(ranks, cutoff)
+            forbidden = set(case.get("forbidden_source_ids", []))
+            forbidden_ranks = sorted(
+                rank for source in forbidden
+                if (rank := source_ranks([source], results, source_by_id)[0]) is not None
+            )
+            forbidden_at_5 += sum(rank <= 5 for rank in forbidden_ranks)
             traces.append({
                 "name": case["name"], "category": case["category"],
                 "candidate_count": len(case["memories"]), "expected": expected_items,
                 "matching": "source_id" if source_by_id else "substring",
                 "ranks": ranks, "complete_at_k": complete_at(ranks, args.top_k),
+                "forbidden_ranks": forbidden_ranks,
                 "results": [{**result, "source_id": source_by_id.get(result["id"])} for result in results],
             })
             reciprocal_ranks = [0.0 if rank is None else 1.0 / rank for rank in ranks]
@@ -237,6 +246,7 @@ def main() -> None:
         "complete_at_3": complete_counts[3] / len(cases),
         "complete_at_5": complete_counts[5] / len(cases),
         "complete_at_k": complete_counts[args.top_k] / len(cases),
+        "forbidden_at_5": forbidden_at_5,
         "evaluation_version": 3,
         "suite_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
         "retrieval_config": asdict(config), "embedding_model": backend_name,

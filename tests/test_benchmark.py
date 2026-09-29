@@ -13,6 +13,41 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_blind9_is_frozen_disjoint_and_temporal_safety_scoped(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        blind9 = json.loads((root / "blind9_cases.json").read_text(encoding="utf-8"))
+        canonical_hash = hashlib.sha256(
+            json.dumps(blind9, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        self.assertEqual(
+            "50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa",
+            canonical_hash,
+            "blind9 changed; preserve the first-run temporal safety suite",
+        )
+        prior_names = set()
+        prior_queries = set()
+        for filename in (
+            "hard_cases.json", "confirmation_cases.json", "holdout_cases.json",
+            "blind2_cases.json", "blind3_cases.json", "blind4_cases.json",
+            "blind5_cases.json", "blind6_cases.json", "blind7_cases.json",
+            "blind8_cases.json",
+        ):
+            cases = json.loads((root / filename).read_text(encoding="utf-8"))
+            prior_names.update(case["name"] for case in cases)
+            prior_queries.update(case["query"].strip().casefold() for case in cases)
+        self.assertEqual(6, len(blind9))
+        self.assertFalse({case["name"] for case in blind9} & prior_names)
+        self.assertFalse(
+            {case["query"].strip().casefold() for case in blind9} & prior_queries
+        )
+        for case in blind9:
+            validate_source_case(case)
+            self.assertGreaterEqual(
+                len(case["memories"]) - len(case["expected_source_ids"]), 15
+            )
+            if case["category"].startswith("current_state"):
+                self.assertTrue(case["forbidden_source_ids"])
+
     def test_blind8_is_frozen_disjoint_and_session_scoped(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         blind8 = json.loads((root / "blind8_cases.json").read_text(encoding="utf-8"))
@@ -365,6 +400,8 @@ class ExtendedBenchmarkTests(unittest.TestCase):
             {"memories": [{"source_id": "a"}], "expected_source_ids": ["missing"]},
             {"memories": [{"source_id": "a"}], "expected_source_ids": []},
             {"memories": [{"source_id": "a"}], "expected_source_ids": ["a"], "single_add": True},
+            {"memories": [{"source_id": "a"}], "expected_source_ids": ["a"], "forbidden_source_ids": ["a"]},
+            {"memories": [{"source_id": "a"}], "expected_source_ids": ["a"], "forbidden_source_ids": ["missing"]},
         ]
         for case in invalid:
             with self.subTest(case=case), self.assertRaises(ValueError):
