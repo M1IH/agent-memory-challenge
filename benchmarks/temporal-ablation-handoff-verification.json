@@ -1,0 +1,320 @@
+{
+  "purpose": "Ablation correctness repair; default retrieval unchanged, not a score improvement claim",
+  "reports": {
+    "lexical": {
+      "suite": "blind9",
+      "top_k": 10,
+      "cases": 6,
+      "evidence": 8,
+      "hit_at_1": 0.625,
+      "hit_at_3": 1.0,
+      "hit_at_5": 1.0,
+      "mrr": 0.8125,
+      "categories": {
+        "current_state_session_trap": 0.8333333333333334,
+        "current_state_session_trap_zh": 1.0,
+        "historical_session_evidence": 0.75,
+        "historical_session_evidence_zh": 0.75
+      },
+      "complete_at_1": 0.5,
+      "complete_at_3": 1.0,
+      "complete_at_5": 1.0,
+      "complete_at_k": 1.0,
+      "forbidden_at_5": 1,
+      "evaluation_version": 3,
+      "suite_sha256": "50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa",
+      "retrieval_config": {
+        "lexical_enabled": true,
+        "expansion_enabled": true,
+        "temporal_enabled": true,
+        "linkage_enabled": true,
+        "session_window_enabled": true,
+        "lexical_weight": 1.5,
+        "dense_weight": 0.5
+      },
+      "embedding_model": null,
+      "embedding_identity": null,
+      "runtime": {
+        "python": "3.13.9",
+        "numpy": "2.3.5",
+        "fastembed": "0.8.0",
+        "max_context_chars": 1200,
+        "max_add_chars": 200000,
+        "max_search_chars": 200000,
+        "embedding_concurrency": null,
+        "embedding_batch_size": null
+      },
+      "evaluation_code": {
+        "sha256": "adf56462a4fcf753ead84f5111f857999da3cf7eba8d57e7ec84993df9704f63",
+        "files": {
+          "app/store.py": "859940a7a81b8f75b8fe77b6815bcab197025d31bf12b1aade112251c2a9ca1e",
+          "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+          "benchmarks/run_benchmark.py": "218d6e08be12204681f57cdac409ef0dbcbdc03510f49f4d9b27fbac62f961c3",
+          "benchmarks/evidence.py": "7732424715710548999fcc6769a9b146c0357638f9dd157a7ef69f178ac29976",
+          "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+        }
+      },
+      "git": {
+        "production_git_sha": "0662457977fcc075f2f7d56909afe86658648506",
+        "harness_git_sha": "0662457977fcc075f2f7d56909afe86658648506",
+        "dirty": false
+      },
+      "case_traces": [
+        {
+          "name": "blind9-current-kestrel-database",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-clinic-dosage",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-chinese-courier",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-studio-location",
+          "ranks": [
+            2
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-historical-bakery-supplier",
+          "ranks": [
+            1,
+            2
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-historical-chinese-repairer",
+          "ranks": [
+            1,
+            2
+          ],
+          "complete_at_k": true
+        }
+      ]
+    },
+    "bge": {
+      "suite": "blind9",
+      "top_k": 10,
+      "cases": 6,
+      "evidence": 8,
+      "hit_at_1": 0.625,
+      "hit_at_3": 1.0,
+      "hit_at_5": 1.0,
+      "mrr": 0.8125,
+      "categories": {
+        "current_state_session_trap": 0.8333333333333334,
+        "current_state_session_trap_zh": 1.0,
+        "historical_session_evidence": 0.75,
+        "historical_session_evidence_zh": 0.75
+      },
+      "complete_at_1": 0.5,
+      "complete_at_3": 1.0,
+      "complete_at_5": 1.0,
+      "complete_at_k": 1.0,
+      "forbidden_at_5": 1,
+      "evaluation_version": 3,
+      "suite_sha256": "50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa",
+      "retrieval_config": {
+        "lexical_enabled": true,
+        "expansion_enabled": true,
+        "temporal_enabled": true,
+        "linkage_enabled": true,
+        "session_window_enabled": true,
+        "lexical_weight": 1.5,
+        "dense_weight": 0.5
+      },
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "embedding_identity": "fastembed:BAAI/bge-small-en-v1.5:52398278842ec682c6f32300af41344b1c0b0bb2:51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431:d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66:float32:l2-v1",
+      "runtime": {
+        "python": "3.13.9",
+        "numpy": "2.3.5",
+        "fastembed": "0.8.0",
+        "max_context_chars": 1200,
+        "max_add_chars": 200000,
+        "max_search_chars": 200000,
+        "embedding_concurrency": 2,
+        "embedding_batch_size": 64
+      },
+      "evaluation_code": {
+        "sha256": "adf56462a4fcf753ead84f5111f857999da3cf7eba8d57e7ec84993df9704f63",
+        "files": {
+          "app/store.py": "859940a7a81b8f75b8fe77b6815bcab197025d31bf12b1aade112251c2a9ca1e",
+          "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+          "benchmarks/run_benchmark.py": "218d6e08be12204681f57cdac409ef0dbcbdc03510f49f4d9b27fbac62f961c3",
+          "benchmarks/evidence.py": "7732424715710548999fcc6769a9b146c0357638f9dd157a7ef69f178ac29976",
+          "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+        }
+      },
+      "git": {
+        "production_git_sha": "0662457977fcc075f2f7d56909afe86658648506",
+        "harness_git_sha": "0662457977fcc075f2f7d56909afe86658648506",
+        "dirty": false
+      },
+      "case_traces": [
+        {
+          "name": "blind9-current-kestrel-database",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-clinic-dosage",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-chinese-courier",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-studio-location",
+          "ranks": [
+            2
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-historical-bakery-supplier",
+          "ranks": [
+            1,
+            2
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-historical-chinese-repairer",
+          "ranks": [
+            1,
+            2
+          ],
+          "complete_at_k": true
+        }
+      ]
+    },
+    "no-temporal": {
+      "suite": "blind9",
+      "top_k": 10,
+      "cases": 6,
+      "evidence": 8,
+      "hit_at_1": 0.25,
+      "hit_at_3": 0.625,
+      "hit_at_5": 0.75,
+      "mrr": 0.49598214285714287,
+      "categories": {
+        "current_state_session_trap": 0.8333333333333334,
+        "current_state_session_trap_zh": 0.5,
+        "historical_session_evidence": 0.17142857142857143,
+        "historical_session_evidence_zh": 0.3125
+      },
+      "complete_at_1": 0.3333333333333333,
+      "complete_at_3": 0.6666666666666666,
+      "complete_at_5": 0.6666666666666666,
+      "complete_at_k": 1.0,
+      "forbidden_at_5": 1,
+      "evaluation_version": 3,
+      "suite_sha256": "50e2eecbbc81332d1195cae614c0e190aab42cc1bb9aa42814802b07fd5f13aa",
+      "retrieval_config": {
+        "lexical_enabled": true,
+        "expansion_enabled": true,
+        "temporal_enabled": false,
+        "linkage_enabled": true,
+        "session_window_enabled": true,
+        "lexical_weight": 1.5,
+        "dense_weight": 0.5
+      },
+      "embedding_model": null,
+      "embedding_identity": null,
+      "runtime": {
+        "python": "3.13.9",
+        "numpy": "2.3.5",
+        "fastembed": "0.8.0",
+        "max_context_chars": 1200,
+        "max_add_chars": 200000,
+        "max_search_chars": 200000,
+        "embedding_concurrency": null,
+        "embedding_batch_size": null
+      },
+      "evaluation_code": {
+        "sha256": "adf56462a4fcf753ead84f5111f857999da3cf7eba8d57e7ec84993df9704f63",
+        "files": {
+          "app/store.py": "859940a7a81b8f75b8fe77b6815bcab197025d31bf12b1aade112251c2a9ca1e",
+          "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+          "benchmarks/run_benchmark.py": "218d6e08be12204681f57cdac409ef0dbcbdc03510f49f4d9b27fbac62f961c3",
+          "benchmarks/evidence.py": "7732424715710548999fcc6769a9b146c0357638f9dd157a7ef69f178ac29976",
+          "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+        }
+      },
+      "git": {
+        "production_git_sha": "0662457977fcc075f2f7d56909afe86658648506",
+        "harness_git_sha": "0662457977fcc075f2f7d56909afe86658648506",
+        "dirty": false
+      },
+      "case_traces": [
+        {
+          "name": "blind9-current-kestrel-database",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-clinic-dosage",
+          "ranks": [
+            1
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-chinese-courier",
+          "ranks": [
+            2
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-current-studio-location",
+          "ranks": [
+            2
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-historical-bakery-supplier",
+          "ranks": [
+            7,
+            5
+          ],
+          "complete_at_k": true
+        },
+        {
+          "name": "blind9-historical-chinese-repairer",
+          "ranks": [
+            2,
+            8
+          ],
+          "complete_at_k": true
+        }
+      ]
+    }
+  }
+}
