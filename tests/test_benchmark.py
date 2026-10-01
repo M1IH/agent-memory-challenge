@@ -10,9 +10,44 @@ from unittest.mock import patch
 from benchmarks.extended_cases import build_extended_cases
 from benchmarks.run_benchmark import evaluation_code_manifest, git_evidence, main, positive_int
 from benchmarks.evidence import complete_at, source_ranks, validate_source_case
+from benchmarks.temporal_order import ordering_diagnostic
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_blind11_frozen_conflict_suite(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        cases = json.loads((root / "blind11_cases.json").read_text(encoding="utf-8"))
+        self.assertEqual("a0229003081a554b0393f4a3f66e28f26e907be66018bba9528ebffc76053064",
+                         hashlib.sha256(json.dumps(cases, sort_keys=True, ensure_ascii=False).encode()).hexdigest())
+        self.assertEqual(6, len(cases))
+        previous_queries = set()
+        for path in root.glob("*_cases.json"):
+            if path.name != "blind11_cases.json":
+                previous_queries.update(c["query"].strip().casefold()
+                                        for c in json.loads(path.read_text(encoding="utf-8")))
+        for case in cases:
+            validate_source_case(case)
+            self.assertNotIn(case["query"].strip().casefold(), previous_queries)
+            self.assertGreater(len(case["memories"]), 100)
+            sources = {m["source_id"] for m in case["memories"]}
+            for preferred, other in case["preferred_source_pairs"]:
+                self.assertIn(preferred, case["expected_source_ids"])
+                self.assertIn(other, sources)
+                self.assertNotEqual(preferred, other)
+
+    def test_order_diagnostic_does_not_count_missing_competitor_as_success(self):
+        cases = [{"name": "order", "preferred_source_pairs": [["new", "old"]]}]
+        digest = hashlib.sha256(json.dumps(cases, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+        for sources, expected in ((["new", "old"], "preferred_first"),
+                                  (["old", "new"], "reversed"), (["new"], "missing")):
+            report = {"suite_sha256": digest, "case_traces": [{
+                "name": "order", "results": [{"source_id": source} for source in sources],
+            }]}
+            self.assertEqual(1, ordering_diagnostic(cases, report)["counts"][expected])
+        report["suite_sha256"] = "wrong"
+        with self.assertRaises(ValueError):
+            ordering_diagnostic(cases, report)
+
     def test_blind10_frozen_temporal_budget_cases(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         cases = json.loads((root / "blind10_cases.json").read_text(encoding="utf-8"))

@@ -74,7 +74,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--suite",
-        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8", "blind9", "blind10"),
+        choices=("core", "extended", "hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8", "blind9", "blind10", "blind11"),
         default="core",
     )
     parser.add_argument("--fail-on-miss", action="store_true")
@@ -98,7 +98,7 @@ def main() -> None:
     cases = json.loads(cases_path.read_text(encoding="utf-8"))
     if args.suite == "extended":
         cases.extend(build_extended_cases())
-    elif args.suite in {"hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8", "blind9", "blind10"}:
+    elif args.suite in {"hard", "confirmation", "holdout", "blind2", "blind3", "blind4", "blind5", "blind6", "blind7", "blind8", "blind9", "blind10", "blind11"}:
         filename = {
             "hard": "hard_cases.json",
             "confirmation": "confirmation_cases.json",
@@ -112,6 +112,7 @@ def main() -> None:
             "blind8": "blind8_cases.json",
             "blind9": "blind9_cases.json",
             "blind10": "blind10_cases.json",
+            "blind11": "blind11_cases.json",
         }[args.suite]
         cases = json.loads(Path(__file__).with_name(filename).read_text(encoding="utf-8"))
         for case in cases:
