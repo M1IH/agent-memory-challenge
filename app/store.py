@@ -1171,7 +1171,9 @@ class MemoryStore:
             fused.sort(key=rank_key)
             scores = fused
         if config.session_window_enabled:
-            scores = self._session_window_scores(query, scores, memories, rank_key)
+            scores = self._session_window_scores(
+                query, scores, memories, rank_key, temporal_enabled=config.temporal_enabled,
+            )
         return self._results(scores, top_k)
 
     @staticmethod
@@ -1180,12 +1182,16 @@ class MemoryStore:
         scores: list[tuple[float, Memory]],
         memories: list[Memory],
         rank_key: Callable[[tuple[float, Memory]], tuple[float, int, str]],
+        *,
+        temporal_enabled: bool = True,
     ) -> list[tuple[float, Memory]]:
         """Promote at most two messages adjacent to the strongest session seed."""
         if not scores or scores[0][0] <= 0:
             return scores
         query_entities = entity_terms(query)
-        historical_query = has_marker(query, _HISTORICAL_MARKERS)
+        # The time ablation must remove historical seed and inheritance biases
+        # while preserving ordinary same-session context expansion.
+        historical_query = temporal_enabled and has_marker(query, _HISTORICAL_MARKERS)
         seed_pool = scores[:3]
         if historical_query:
             historical_seeds = [
