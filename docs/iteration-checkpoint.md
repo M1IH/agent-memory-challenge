@@ -1,5 +1,7 @@
 # Iteration checkpoint
 
+> 最新核对与执行清单：[2026-10-01 项目进展](progress-2026-10-01.md)。下方保留历史阶段与证据，旧待办不代表当前状态。
+
 Resume from the highest unfinished priority in the competition plan. Each iteration ends with code review and relevant regression tests.
 
 ## Current review

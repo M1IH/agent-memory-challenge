@@ -1,0 +1,4371 @@
+{
+  "suite": "blind10",
+  "top_k": 100,
+  "cases": 6,
+  "evidence": 12,
+  "hit_at_1": 0.5,
+  "hit_at_3": 1.0,
+  "hit_at_5": 1.0,
+  "mrr": 0.75,
+  "categories": {
+    "bounded_history_zh": 0.75,
+    "cancelled_update": 0.75,
+    "effective_vs_recorded": 0.75,
+    "event_order": 0.75,
+    "event_order_zh": 0.75,
+    "event_vs_ingestion": 0.75
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 1.0,
+  "complete_at_5": 1.0,
+  "complete_at_k": 1.0,
+  "forbidden_at_5": 0,
+  "evaluation_version": 3,
+  "suite_sha256": "d7c7efdf9d14871110ab33c3720ebebba4dad94a58f74975362117e30edcf602",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "session_window_enabled": false,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": null,
+  "embedding_identity": null,
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": null,
+    "embedding_batch_size": null
+  },
+  "evaluation_code": {
+    "sha256": "248dd96d6f814c3ea0c6ad4bfd170a75455669c46cb9b926b5ea5dba90b02a8f",
+    "files": {
+      "app/store.py": "d61fedc9f7e82353efaea978f782b8b29ddbc9df0e4ff66066ff01e4e468582d",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "218d6e08be12204681f57cdac409ef0dbcbdc03510f49f4d9b27fbac62f961c3",
+      "benchmarks/evidence.py": "7732424715710548999fcc6769a9b146c0357638f9dd157a7ef69f178ac29976",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "git": {
+    "production_git_sha": "246b638126d2f5245ef07b407f8460f80ffaf9f8",
+    "harness_git_sha": "830d5726dc900de19bbd74269e5b29d4ab38cc52",
+    "dirty": true
+  },
+  "case_traces": [
+    {
+      "name": "blind10-event-order",
+      "category": "event_order",
+      "candidate_count": 114,
+      "expected": [
+        "delivery",
+        "calibration"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_c7323d3a85564eda4fcf893f",
+          "content": "[2024-05-01T00:00:00Z] user: The Lumen observatory lens delivery occurred on 12 April 2024.",
+          "score": 14.19863,
+          "created_at": "2024-05-01T00:00:00Z",
+          "source_id": "delivery"
+        },
+        {
+          "id": "mem_c5d3f9519f2ffc27dc7360ea",
+          "content": "[2024-04-01T00:00:00Z] user: The Lumen observatory calibration occurred on 19 April 2024.",
+          "score": 13.383817,
+          "created_at": "2024-04-01T00:00:00Z",
+          "source_id": "calibration"
+        },
+        {
+          "id": "mem_73d02bb2899aa1e84d48baa6",
+          "content": "[2024-11-01T00:01:51Z] user: Lumen observatory administrative note 112: receipt envelopes reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:51Z",
+          "source_id": "d111"
+        },
+        {
+          "id": "mem_78780feb2a3dc75657ce1d74",
+          "content": "[2024-11-01T00:01:50Z] user: Lumen observatory administrative note 111: parking permits reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:50Z",
+          "source_id": "d110"
+        },
+        {
+          "id": "mem_befe10e4ad7140e262642166",
+          "content": "[2024-11-01T00:01:49Z] user: Lumen observatory administrative note 110: publicity leaflets reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:49Z",
+          "source_id": "d109"
+        },
+        {
+          "id": "mem_49e0e8d3e96de3cf4f03f1c3",
+          "content": "[2024-11-01T00:01:48Z] user: Lumen observatory administrative note 109: staff refreshments reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:48Z",
+          "source_id": "d108"
+        },
+        {
+          "id": "mem_c46e8d1431ac915175ec3bb5",
+          "content": "[2024-11-01T00:01:47Z] user: Lumen observatory administrative note 108: insurance paperwork reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:47Z",
+          "source_id": "d107"
+        },
+        {
+          "id": "mem_ce7b725c5c6a1d4ba8ab439c",
+          "content": "[2024-11-01T00:01:46Z] user: Lumen observatory administrative note 107: cleaning supplies reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:46Z",
+          "source_id": "d106"
+        },
+        {
+          "id": "mem_b6ea0944cc14605aaeb01e48",
+          "content": "[2024-11-01T00:01:45Z] user: Lumen observatory administrative note 106: visitor badges reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:45Z",
+          "source_id": "d105"
+        },
+        {
+          "id": "mem_417fe8ea53ca2761388708f4",
+          "content": "[2024-11-01T00:01:44Z] user: Lumen observatory administrative note 105: inventory labels reviewed by the office team, batch 14.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:44Z",
+          "source_id": "d104"
+        },
+        {
+          "id": "mem_6fb8fee93c179bf8a71efba2",
+          "content": "[2024-11-01T00:01:43Z] user: Lumen observatory administrative note 104: receipt envelopes reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:43Z",
+          "source_id": "d103"
+        },
+        {
+          "id": "mem_5732a75eec00321ed47614d8",
+          "content": "[2024-11-01T00:01:42Z] user: Lumen observatory administrative note 103: parking permits reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:42Z",
+          "source_id": "d102"
+        },
+        {
+          "id": "mem_9e363ef2da70fae6a3abc36c",
+          "content": "[2024-11-01T00:01:41Z] user: Lumen observatory administrative note 102: publicity leaflets reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:41Z",
+          "source_id": "d101"
+        },
+        {
+          "id": "mem_dc84f6c969f28ae50f3746d1",
+          "content": "[2024-11-01T00:01:40Z] user: Lumen observatory administrative note 101: staff refreshments reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:40Z",
+          "source_id": "d100"
+        },
+        {
+          "id": "mem_c72355b85bbd0c872add0522",
+          "content": "[2024-11-01T00:01:39Z] user: Lumen observatory administrative note 100: insurance paperwork reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:39Z",
+          "source_id": "d099"
+        },
+        {
+          "id": "mem_5c58085f21a147776742d099",
+          "content": "[2024-11-01T00:01:38Z] user: Lumen observatory administrative note 99: cleaning supplies reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:38Z",
+          "source_id": "d098"
+        },
+        {
+          "id": "mem_28bfcf10c50f70bf4a3f43ae",
+          "content": "[2024-11-01T00:01:37Z] user: Lumen observatory administrative note 98: visitor badges reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:37Z",
+          "source_id": "d097"
+        },
+        {
+          "id": "mem_6305d61e9188729aa019e7b5",
+          "content": "[2024-11-01T00:01:36Z] user: Lumen observatory administrative note 97: inventory labels reviewed by the office team, batch 13.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:36Z",
+          "source_id": "d096"
+        },
+        {
+          "id": "mem_140040361c3e03293cef11fe",
+          "content": "[2024-11-01T00:01:35Z] user: Lumen observatory administrative note 96: receipt envelopes reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:35Z",
+          "source_id": "d095"
+        },
+        {
+          "id": "mem_cbb9a412c0bd3608e5dd5329",
+          "content": "[2024-11-01T00:01:34Z] user: Lumen observatory administrative note 95: parking permits reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:34Z",
+          "source_id": "d094"
+        },
+        {
+          "id": "mem_c92f9e5b268f136394db6f62",
+          "content": "[2024-11-01T00:01:33Z] user: Lumen observatory administrative note 94: publicity leaflets reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:33Z",
+          "source_id": "d093"
+        },
+        {
+          "id": "mem_dd4df23457982ea9118833e3",
+          "content": "[2024-11-01T00:01:32Z] user: Lumen observatory administrative note 93: staff refreshments reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:32Z",
+          "source_id": "d092"
+        },
+        {
+          "id": "mem_6ac9c823b77ab66dc08bd2fa",
+          "content": "[2024-11-01T00:01:31Z] user: Lumen observatory administrative note 92: insurance paperwork reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:31Z",
+          "source_id": "d091"
+        },
+        {
+          "id": "mem_5598a736fde99b42fe6e466c",
+          "content": "[2024-11-01T00:01:30Z] user: Lumen observatory administrative note 91: cleaning supplies reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:30Z",
+          "source_id": "d090"
+        },
+        {
+          "id": "mem_67819bb9ca1e568a8f83064a",
+          "content": "[2024-11-01T00:01:29Z] user: Lumen observatory administrative note 90: visitor badges reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:29Z",
+          "source_id": "d089"
+        },
+        {
+          "id": "mem_9218edc6cfdb05ced0bc07c0",
+          "content": "[2024-11-01T00:01:28Z] user: Lumen observatory administrative note 89: inventory labels reviewed by the office team, batch 12.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:28Z",
+          "source_id": "d088"
+        },
+        {
+          "id": "mem_fb1fe905e1687451c5de95af",
+          "content": "[2024-11-01T00:01:27Z] user: Lumen observatory administrative note 88: receipt envelopes reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:27Z",
+          "source_id": "d087"
+        },
+        {
+          "id": "mem_53e1640ef98c8aee771db9f9",
+          "content": "[2024-11-01T00:01:26Z] user: Lumen observatory administrative note 87: parking permits reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:26Z",
+          "source_id": "d086"
+        },
+        {
+          "id": "mem_c270360afa84b9a6022aef02",
+          "content": "[2024-11-01T00:01:25Z] user: Lumen observatory administrative note 86: publicity leaflets reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:25Z",
+          "source_id": "d085"
+        },
+        {
+          "id": "mem_41370c781f9f71f31f8071e5",
+          "content": "[2024-11-01T00:01:24Z] user: Lumen observatory administrative note 85: staff refreshments reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:24Z",
+          "source_id": "d084"
+        },
+        {
+          "id": "mem_ae4b248716c7af45a765e807",
+          "content": "[2024-11-01T00:01:23Z] user: Lumen observatory administrative note 84: insurance paperwork reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:23Z",
+          "source_id": "d083"
+        },
+        {
+          "id": "mem_51b477173b416d3da0c13163",
+          "content": "[2024-11-01T00:01:22Z] user: Lumen observatory administrative note 83: cleaning supplies reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:22Z",
+          "source_id": "d082"
+        },
+        {
+          "id": "mem_30d38ff169467ca2aabed1b2",
+          "content": "[2024-11-01T00:01:21Z] user: Lumen observatory administrative note 82: visitor badges reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:21Z",
+          "source_id": "d081"
+        },
+        {
+          "id": "mem_df64f70921daf2a1afd66cc4",
+          "content": "[2024-11-01T00:01:20Z] user: Lumen observatory administrative note 81: inventory labels reviewed by the office team, batch 11.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:20Z",
+          "source_id": "d080"
+        },
+        {
+          "id": "mem_6447b670a3d3c81f9fdfc088",
+          "content": "[2024-11-01T00:01:19Z] user: Lumen observatory administrative note 80: receipt envelopes reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:19Z",
+          "source_id": "d079"
+        },
+        {
+          "id": "mem_b5c91d4e74257029aa0fda07",
+          "content": "[2024-11-01T00:01:18Z] user: Lumen observatory administrative note 79: parking permits reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:18Z",
+          "source_id": "d078"
+        },
+        {
+          "id": "mem_fee63c0eb3e2c857b1f8d94a",
+          "content": "[2024-11-01T00:01:17Z] user: Lumen observatory administrative note 78: publicity leaflets reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:17Z",
+          "source_id": "d077"
+        },
+        {
+          "id": "mem_736432ae01488a848232b372",
+          "content": "[2024-11-01T00:01:16Z] user: Lumen observatory administrative note 77: staff refreshments reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:16Z",
+          "source_id": "d076"
+        },
+        {
+          "id": "mem_e54bca1245ddcc017382b24c",
+          "content": "[2024-11-01T00:01:15Z] user: Lumen observatory administrative note 76: insurance paperwork reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:15Z",
+          "source_id": "d075"
+        },
+        {
+          "id": "mem_5144453152d6b70ee1950117",
+          "content": "[2024-11-01T00:01:14Z] user: Lumen observatory administrative note 75: cleaning supplies reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:14Z",
+          "source_id": "d074"
+        },
+        {
+          "id": "mem_6298328a168d8ee6a3cf433b",
+          "content": "[2024-11-01T00:01:13Z] user: Lumen observatory administrative note 74: visitor badges reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:13Z",
+          "source_id": "d073"
+        },
+        {
+          "id": "mem_4b8eeeb6e2b92ad4be8dc4d6",
+          "content": "[2024-11-01T00:01:12Z] user: Lumen observatory administrative note 73: inventory labels reviewed by the office team, batch 10.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:12Z",
+          "source_id": "d072"
+        },
+        {
+          "id": "mem_79edd3b2b8ad7dbe13ac33b2",
+          "content": "[2024-11-01T00:01:11Z] user: Lumen observatory administrative note 72: receipt envelopes reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:11Z",
+          "source_id": "d071"
+        },
+        {
+          "id": "mem_3520a22063afa2e50a2ac14c",
+          "content": "[2024-11-01T00:01:10Z] user: Lumen observatory administrative note 71: parking permits reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:10Z",
+          "source_id": "d070"
+        },
+        {
+          "id": "mem_7955f6fabef8f09a0ecae18d",
+          "content": "[2024-11-01T00:01:09Z] user: Lumen observatory administrative note 70: publicity leaflets reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:09Z",
+          "source_id": "d069"
+        },
+        {
+          "id": "mem_9713194d09de528070979917",
+          "content": "[2024-11-01T00:01:08Z] user: Lumen observatory administrative note 69: staff refreshments reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:08Z",
+          "source_id": "d068"
+        },
+        {
+          "id": "mem_c0bd9a6f8f80bdf4431ed63d",
+          "content": "[2024-11-01T00:01:07Z] user: Lumen observatory administrative note 68: insurance paperwork reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:07Z",
+          "source_id": "d067"
+        },
+        {
+          "id": "mem_fec4323c50e583c856f7912b",
+          "content": "[2024-11-01T00:01:06Z] user: Lumen observatory administrative note 67: cleaning supplies reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:06Z",
+          "source_id": "d066"
+        },
+        {
+          "id": "mem_b8ead306086fed37142dcc73",
+          "content": "[2024-11-01T00:01:05Z] user: Lumen observatory administrative note 66: visitor badges reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:05Z",
+          "source_id": "d065"
+        },
+        {
+          "id": "mem_854eee0bef24b54453c8ffdc",
+          "content": "[2024-11-01T00:01:04Z] user: Lumen observatory administrative note 65: inventory labels reviewed by the office team, batch 9.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:04Z",
+          "source_id": "d064"
+        },
+        {
+          "id": "mem_eeb211537d8d3fc87bf5ef08",
+          "content": "[2024-11-01T00:01:03Z] user: Lumen observatory administrative note 64: receipt envelopes reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:03Z",
+          "source_id": "d063"
+        },
+        {
+          "id": "mem_7d267ad2e252f6e6aee502c4",
+          "content": "[2024-11-01T00:01:02Z] user: Lumen observatory administrative note 63: parking permits reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:02Z",
+          "source_id": "d062"
+        },
+        {
+          "id": "mem_85832f4b975a5e1e89d0670b",
+          "content": "[2024-11-01T00:01:01Z] user: Lumen observatory administrative note 62: publicity leaflets reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:01Z",
+          "source_id": "d061"
+        },
+        {
+          "id": "mem_f07fea082341f965dfff9729",
+          "content": "[2024-11-01T00:01:00Z] user: Lumen observatory administrative note 61: staff refreshments reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:01:00Z",
+          "source_id": "d060"
+        },
+        {
+          "id": "mem_715d276b2f908d6bf3f811dd",
+          "content": "[2024-11-01T00:00:59Z] user: Lumen observatory administrative note 60: insurance paperwork reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:59Z",
+          "source_id": "d059"
+        },
+        {
+          "id": "mem_912bcafc226c11295ba6d71f",
+          "content": "[2024-11-01T00:00:58Z] user: Lumen observatory administrative note 59: cleaning supplies reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:58Z",
+          "source_id": "d058"
+        },
+        {
+          "id": "mem_893454d61261c28c3b55c20a",
+          "content": "[2024-11-01T00:00:57Z] user: Lumen observatory administrative note 58: visitor badges reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:57Z",
+          "source_id": "d057"
+        },
+        {
+          "id": "mem_d27c624f603bc11f0ffc35d0",
+          "content": "[2024-11-01T00:00:56Z] user: Lumen observatory administrative note 57: inventory labels reviewed by the office team, batch 8.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:56Z",
+          "source_id": "d056"
+        },
+        {
+          "id": "mem_c0f9fd4b51efc3b6ce768936",
+          "content": "[2024-11-01T00:00:55Z] user: Lumen observatory administrative note 56: receipt envelopes reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:55Z",
+          "source_id": "d055"
+        },
+        {
+          "id": "mem_6e43f2205fe7374e143e5641",
+          "content": "[2024-11-01T00:00:54Z] user: Lumen observatory administrative note 55: parking permits reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:54Z",
+          "source_id": "d054"
+        },
+        {
+          "id": "mem_cd22ca0de3424fe76bb1e79a",
+          "content": "[2024-11-01T00:00:53Z] user: Lumen observatory administrative note 54: publicity leaflets reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:53Z",
+          "source_id": "d053"
+        },
+        {
+          "id": "mem_e6c9682e169003cce4cb3b2c",
+          "content": "[2024-11-01T00:00:52Z] user: Lumen observatory administrative note 53: staff refreshments reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:52Z",
+          "source_id": "d052"
+        },
+        {
+          "id": "mem_ddf9b546bb7fdd809d08c2f3",
+          "content": "[2024-11-01T00:00:51Z] user: Lumen observatory administrative note 52: insurance paperwork reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:51Z",
+          "source_id": "d051"
+        },
+        {
+          "id": "mem_bb98b4d909410823de40b674",
+          "content": "[2024-11-01T00:00:50Z] user: Lumen observatory administrative note 51: cleaning supplies reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:50Z",
+          "source_id": "d050"
+        },
+        {
+          "id": "mem_6bc81ffc3c1a800a334a1d82",
+          "content": "[2024-11-01T00:00:49Z] user: Lumen observatory administrative note 50: visitor badges reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:49Z",
+          "source_id": "d049"
+        },
+        {
+          "id": "mem_0ba14b89cf7a03ee408044c0",
+          "content": "[2024-11-01T00:00:48Z] user: Lumen observatory administrative note 49: inventory labels reviewed by the office team, batch 7.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:48Z",
+          "source_id": "d048"
+        },
+        {
+          "id": "mem_a462820126052ff661232460",
+          "content": "[2024-11-01T00:00:47Z] user: Lumen observatory administrative note 48: receipt envelopes reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:47Z",
+          "source_id": "d047"
+        },
+        {
+          "id": "mem_c56102c1f25462092ae666c0",
+          "content": "[2024-11-01T00:00:46Z] user: Lumen observatory administrative note 47: parking permits reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:46Z",
+          "source_id": "d046"
+        },
+        {
+          "id": "mem_d0384a2cdf8c6dd2d4333950",
+          "content": "[2024-11-01T00:00:45Z] user: Lumen observatory administrative note 46: publicity leaflets reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:45Z",
+          "source_id": "d045"
+        },
+        {
+          "id": "mem_7d6f652c576dac2a259e7375",
+          "content": "[2024-11-01T00:00:44Z] user: Lumen observatory administrative note 45: staff refreshments reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:44Z",
+          "source_id": "d044"
+        },
+        {
+          "id": "mem_5153c6741b672c102186d32f",
+          "content": "[2024-11-01T00:00:43Z] user: Lumen observatory administrative note 44: insurance paperwork reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:43Z",
+          "source_id": "d043"
+        },
+        {
+          "id": "mem_6c4a7ffc234bb509be866e1a",
+          "content": "[2024-11-01T00:00:42Z] user: Lumen observatory administrative note 43: cleaning supplies reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:42Z",
+          "source_id": "d042"
+        },
+        {
+          "id": "mem_6de006ce6f901d8cfd0e3523",
+          "content": "[2024-11-01T00:00:41Z] user: Lumen observatory administrative note 42: visitor badges reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:41Z",
+          "source_id": "d041"
+        },
+        {
+          "id": "mem_3b4b2cc815965cfedb9dad71",
+          "content": "[2024-11-01T00:00:40Z] user: Lumen observatory administrative note 41: inventory labels reviewed by the office team, batch 6.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:40Z",
+          "source_id": "d040"
+        },
+        {
+          "id": "mem_341e5771b22d38cf62c655a4",
+          "content": "[2024-11-01T00:00:39Z] user: Lumen observatory administrative note 40: receipt envelopes reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:39Z",
+          "source_id": "d039"
+        },
+        {
+          "id": "mem_5ef4072f180efbdfe27c3474",
+          "content": "[2024-11-01T00:00:38Z] user: Lumen observatory administrative note 39: parking permits reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:38Z",
+          "source_id": "d038"
+        },
+        {
+          "id": "mem_a791dceb0c83904704d1493b",
+          "content": "[2024-11-01T00:00:37Z] user: Lumen observatory administrative note 38: publicity leaflets reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:37Z",
+          "source_id": "d037"
+        },
+        {
+          "id": "mem_2d95c2f217c7c1f248f6e649",
+          "content": "[2024-11-01T00:00:36Z] user: Lumen observatory administrative note 37: staff refreshments reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:36Z",
+          "source_id": "d036"
+        },
+        {
+          "id": "mem_30da5bc1f1a752fe02c645a9",
+          "content": "[2024-11-01T00:00:35Z] user: Lumen observatory administrative note 36: insurance paperwork reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:35Z",
+          "source_id": "d035"
+        },
+        {
+          "id": "mem_c10243f0b7257df99cbde247",
+          "content": "[2024-11-01T00:00:34Z] user: Lumen observatory administrative note 35: cleaning supplies reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:34Z",
+          "source_id": "d034"
+        },
+        {
+          "id": "mem_a35e3f8622102bc36fbd3f48",
+          "content": "[2024-11-01T00:00:33Z] user: Lumen observatory administrative note 34: visitor badges reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:33Z",
+          "source_id": "d033"
+        },
+        {
+          "id": "mem_80338aa8d8ddfe3f7fb9f309",
+          "content": "[2024-11-01T00:00:32Z] user: Lumen observatory administrative note 33: inventory labels reviewed by the office team, batch 5.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:32Z",
+          "source_id": "d032"
+        },
+        {
+          "id": "mem_67b523fa912157d20af292be",
+          "content": "[2024-11-01T00:00:31Z] user: Lumen observatory administrative note 32: receipt envelopes reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:31Z",
+          "source_id": "d031"
+        },
+        {
+          "id": "mem_9919754634d8be8e5c6b6aba",
+          "content": "[2024-11-01T00:00:30Z] user: Lumen observatory administrative note 31: parking permits reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:30Z",
+          "source_id": "d030"
+        },
+        {
+          "id": "mem_b2c06a303384c348c77f5ee4",
+          "content": "[2024-11-01T00:00:29Z] user: Lumen observatory administrative note 30: publicity leaflets reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:29Z",
+          "source_id": "d029"
+        },
+        {
+          "id": "mem_7ebdbdaeb1331261a27c05cc",
+          "content": "[2024-11-01T00:00:28Z] user: Lumen observatory administrative note 29: staff refreshments reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:28Z",
+          "source_id": "d028"
+        },
+        {
+          "id": "mem_30cf439e5f4f38500128a350",
+          "content": "[2024-11-01T00:00:27Z] user: Lumen observatory administrative note 28: insurance paperwork reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:27Z",
+          "source_id": "d027"
+        },
+        {
+          "id": "mem_a48a3d6b6038993b83cf2691",
+          "content": "[2024-11-01T00:00:26Z] user: Lumen observatory administrative note 27: cleaning supplies reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:26Z",
+          "source_id": "d026"
+        },
+        {
+          "id": "mem_01cbf62aa34549ed2774e78d",
+          "content": "[2024-11-01T00:00:25Z] user: Lumen observatory administrative note 26: visitor badges reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:25Z",
+          "source_id": "d025"
+        },
+        {
+          "id": "mem_7e5e08f5badaae104d4713cd",
+          "content": "[2024-11-01T00:00:24Z] user: Lumen observatory administrative note 25: inventory labels reviewed by the office team, batch 4.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:24Z",
+          "source_id": "d024"
+        },
+        {
+          "id": "mem_1afc8ab527ddf065aa0c0f70",
+          "content": "[2024-11-01T00:00:23Z] user: Lumen observatory administrative note 24: receipt envelopes reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:23Z",
+          "source_id": "d023"
+        },
+        {
+          "id": "mem_ab301bd93e2399399b843f77",
+          "content": "[2024-11-01T00:00:22Z] user: Lumen observatory administrative note 23: parking permits reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:22Z",
+          "source_id": "d022"
+        },
+        {
+          "id": "mem_dd900ff83b383574eb1d3bb0",
+          "content": "[2024-11-01T00:00:21Z] user: Lumen observatory administrative note 22: publicity leaflets reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:21Z",
+          "source_id": "d021"
+        },
+        {
+          "id": "mem_ec777055373c7a361f1fadd9",
+          "content": "[2024-11-01T00:00:20Z] user: Lumen observatory administrative note 21: staff refreshments reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:20Z",
+          "source_id": "d020"
+        },
+        {
+          "id": "mem_c1a54b01112f268bd0d4754a",
+          "content": "[2024-11-01T00:00:19Z] user: Lumen observatory administrative note 20: insurance paperwork reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:19Z",
+          "source_id": "d019"
+        },
+        {
+          "id": "mem_babb2692e3d135a82f78c022",
+          "content": "[2024-11-01T00:00:18Z] user: Lumen observatory administrative note 19: cleaning supplies reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:18Z",
+          "source_id": "d018"
+        },
+        {
+          "id": "mem_3b5d8c46b1c615f53189856b",
+          "content": "[2024-11-01T00:00:17Z] user: Lumen observatory administrative note 18: visitor badges reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:17Z",
+          "source_id": "d017"
+        },
+        {
+          "id": "mem_0d203773a5fc8c55b31d8c3b",
+          "content": "[2024-11-01T00:00:16Z] user: Lumen observatory administrative note 17: inventory labels reviewed by the office team, batch 3.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:16Z",
+          "source_id": "d016"
+        },
+        {
+          "id": "mem_f53e3215283373c8765f1e02",
+          "content": "[2024-11-01T00:00:15Z] user: Lumen observatory administrative note 16: receipt envelopes reviewed by the office team, batch 2.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:15Z",
+          "source_id": "d015"
+        },
+        {
+          "id": "mem_665c249989d7f9d943e02a84",
+          "content": "[2024-11-01T00:00:14Z] user: Lumen observatory administrative note 15: parking permits reviewed by the office team, batch 2.",
+          "score": 0.217586,
+          "created_at": "2024-11-01T00:00:14Z",
+          "source_id": "d014"
+        }
+      ]
+    },
+    {
+      "name": "blind10-effective-date",
+      "category": "effective_vs_recorded",
+      "candidate_count": 114,
+      "expected": [
+        "old",
+        "new"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_a00ab08f6888633597a53a01",
+          "content": "[2024-06-01T00:00:00Z] user: Nadia remained responsible for the Bracken archive until 30 June 2024.",
+          "score": 17.84643,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "old"
+        },
+        {
+          "id": "mem_cc539a559c81b196dd4e1c14",
+          "content": "[2024-06-05T00:00:00Z] user: Owen takes responsibility for the Bracken archive effective 1 July 2024; this change was announced on 5 June.",
+          "score": 14.583193,
+          "created_at": "2024-06-05T00:00:00Z",
+          "source_id": "new"
+        },
+        {
+          "id": "mem_4317a10b506e8b3103a1abd6",
+          "content": "[2024-11-01T00:00:14Z] user: Bracken archive administrative note 15: parking permits reviewed by the office team, batch 2.",
+          "score": 4.603684,
+          "created_at": "2024-11-01T00:00:14Z",
+          "source_id": "d014"
+        },
+        {
+          "id": "mem_6ffa4dabf611e1010c5f4e92",
+          "content": "[2024-11-01T00:01:51Z] user: Bracken archive administrative note 112: receipt envelopes reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:51Z",
+          "source_id": "d111"
+        },
+        {
+          "id": "mem_6fc1bf96092f9c7f1f2ad863",
+          "content": "[2024-11-01T00:01:50Z] user: Bracken archive administrative note 111: parking permits reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:50Z",
+          "source_id": "d110"
+        },
+        {
+          "id": "mem_2a67d9b49633d27fc1cea3fc",
+          "content": "[2024-11-01T00:01:49Z] user: Bracken archive administrative note 110: publicity leaflets reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:49Z",
+          "source_id": "d109"
+        },
+        {
+          "id": "mem_3e77fdbccb5ffb0c9f124f07",
+          "content": "[2024-11-01T00:01:48Z] user: Bracken archive administrative note 109: staff refreshments reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:48Z",
+          "source_id": "d108"
+        },
+        {
+          "id": "mem_52adccbe0d6085756628bdf9",
+          "content": "[2024-11-01T00:01:47Z] user: Bracken archive administrative note 108: insurance paperwork reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:47Z",
+          "source_id": "d107"
+        },
+        {
+          "id": "mem_4eda3d658e1ee0b51478b477",
+          "content": "[2024-11-01T00:01:46Z] user: Bracken archive administrative note 107: cleaning supplies reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:46Z",
+          "source_id": "d106"
+        },
+        {
+          "id": "mem_cc8cff7e4ed36374105c11d8",
+          "content": "[2024-11-01T00:01:45Z] user: Bracken archive administrative note 106: visitor badges reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:45Z",
+          "source_id": "d105"
+        },
+        {
+          "id": "mem_62e7b98b1e58fac9fb0a5b72",
+          "content": "[2024-11-01T00:01:44Z] user: Bracken archive administrative note 105: inventory labels reviewed by the office team, batch 14.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:44Z",
+          "source_id": "d104"
+        },
+        {
+          "id": "mem_2f20116bc176419a8f9893fe",
+          "content": "[2024-11-01T00:01:43Z] user: Bracken archive administrative note 104: receipt envelopes reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:43Z",
+          "source_id": "d103"
+        },
+        {
+          "id": "mem_dbaed506be842be6dbaf3003",
+          "content": "[2024-11-01T00:01:42Z] user: Bracken archive administrative note 103: parking permits reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:42Z",
+          "source_id": "d102"
+        },
+        {
+          "id": "mem_66d6098bd5059a396b79f1dd",
+          "content": "[2024-11-01T00:01:41Z] user: Bracken archive administrative note 102: publicity leaflets reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:41Z",
+          "source_id": "d101"
+        },
+        {
+          "id": "mem_9214bfce8eefb9c36efb751e",
+          "content": "[2024-11-01T00:01:40Z] user: Bracken archive administrative note 101: staff refreshments reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:40Z",
+          "source_id": "d100"
+        },
+        {
+          "id": "mem_377fd0522c0bd1e1e4db0fa6",
+          "content": "[2024-11-01T00:01:39Z] user: Bracken archive administrative note 100: insurance paperwork reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:39Z",
+          "source_id": "d099"
+        },
+        {
+          "id": "mem_457c893f4986406dd4a58bba",
+          "content": "[2024-11-01T00:01:38Z] user: Bracken archive administrative note 99: cleaning supplies reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:38Z",
+          "source_id": "d098"
+        },
+        {
+          "id": "mem_3e21959f5ebf342fbf8fbc0f",
+          "content": "[2024-11-01T00:01:37Z] user: Bracken archive administrative note 98: visitor badges reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:37Z",
+          "source_id": "d097"
+        },
+        {
+          "id": "mem_184aaabd89af4a3de030133a",
+          "content": "[2024-11-01T00:01:36Z] user: Bracken archive administrative note 97: inventory labels reviewed by the office team, batch 13.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:36Z",
+          "source_id": "d096"
+        },
+        {
+          "id": "mem_c6d88d750db20035b3b72f13",
+          "content": "[2024-11-01T00:01:35Z] user: Bracken archive administrative note 96: receipt envelopes reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:35Z",
+          "source_id": "d095"
+        },
+        {
+          "id": "mem_e2137a441ccf38bad0fee1cf",
+          "content": "[2024-11-01T00:01:34Z] user: Bracken archive administrative note 95: parking permits reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:34Z",
+          "source_id": "d094"
+        },
+        {
+          "id": "mem_78e5377a4150972ed09e0f2a",
+          "content": "[2024-11-01T00:01:33Z] user: Bracken archive administrative note 94: publicity leaflets reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:33Z",
+          "source_id": "d093"
+        },
+        {
+          "id": "mem_afcfd0b742f3d89d2af0840e",
+          "content": "[2024-11-01T00:01:32Z] user: Bracken archive administrative note 93: staff refreshments reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:32Z",
+          "source_id": "d092"
+        },
+        {
+          "id": "mem_44ddde0295236a73b17320b5",
+          "content": "[2024-11-01T00:01:31Z] user: Bracken archive administrative note 92: insurance paperwork reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:31Z",
+          "source_id": "d091"
+        },
+        {
+          "id": "mem_c08ad77e927414b00ed0a7d0",
+          "content": "[2024-11-01T00:01:30Z] user: Bracken archive administrative note 91: cleaning supplies reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:30Z",
+          "source_id": "d090"
+        },
+        {
+          "id": "mem_ceb054fc920cc3c8a28c1e08",
+          "content": "[2024-11-01T00:01:29Z] user: Bracken archive administrative note 90: visitor badges reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:29Z",
+          "source_id": "d089"
+        },
+        {
+          "id": "mem_9b25635fdcef5849a6f8c753",
+          "content": "[2024-11-01T00:01:28Z] user: Bracken archive administrative note 89: inventory labels reviewed by the office team, batch 12.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:28Z",
+          "source_id": "d088"
+        },
+        {
+          "id": "mem_0e8d103a4268e45d13adc4d7",
+          "content": "[2024-11-01T00:01:27Z] user: Bracken archive administrative note 88: receipt envelopes reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:27Z",
+          "source_id": "d087"
+        },
+        {
+          "id": "mem_66400bb626394aeac4707fd5",
+          "content": "[2024-11-01T00:01:26Z] user: Bracken archive administrative note 87: parking permits reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:26Z",
+          "source_id": "d086"
+        },
+        {
+          "id": "mem_a232b92bdbc2c8fc72bd895f",
+          "content": "[2024-11-01T00:01:25Z] user: Bracken archive administrative note 86: publicity leaflets reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:25Z",
+          "source_id": "d085"
+        },
+        {
+          "id": "mem_c29c4cb4bf7cc0952caef960",
+          "content": "[2024-11-01T00:01:24Z] user: Bracken archive administrative note 85: staff refreshments reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:24Z",
+          "source_id": "d084"
+        },
+        {
+          "id": "mem_93d7dc0d092a6a9a18651e40",
+          "content": "[2024-11-01T00:01:23Z] user: Bracken archive administrative note 84: insurance paperwork reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:23Z",
+          "source_id": "d083"
+        },
+        {
+          "id": "mem_9ca04a9203b0f7695bbb9d60",
+          "content": "[2024-11-01T00:01:22Z] user: Bracken archive administrative note 83: cleaning supplies reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:22Z",
+          "source_id": "d082"
+        },
+        {
+          "id": "mem_6640efa04472ea181ae403c0",
+          "content": "[2024-11-01T00:01:21Z] user: Bracken archive administrative note 82: visitor badges reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:21Z",
+          "source_id": "d081"
+        },
+        {
+          "id": "mem_76e3f9f2078567b56fb6bc45",
+          "content": "[2024-11-01T00:01:20Z] user: Bracken archive administrative note 81: inventory labels reviewed by the office team, batch 11.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:20Z",
+          "source_id": "d080"
+        },
+        {
+          "id": "mem_1515005253e9a18567b0037d",
+          "content": "[2024-11-01T00:01:19Z] user: Bracken archive administrative note 80: receipt envelopes reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:19Z",
+          "source_id": "d079"
+        },
+        {
+          "id": "mem_abdbd46b452df155623646eb",
+          "content": "[2024-11-01T00:01:18Z] user: Bracken archive administrative note 79: parking permits reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:18Z",
+          "source_id": "d078"
+        },
+        {
+          "id": "mem_a89646a2512d98021614c586",
+          "content": "[2024-11-01T00:01:17Z] user: Bracken archive administrative note 78: publicity leaflets reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:17Z",
+          "source_id": "d077"
+        },
+        {
+          "id": "mem_b5dfe105a4f74d1fd59222d1",
+          "content": "[2024-11-01T00:01:16Z] user: Bracken archive administrative note 77: staff refreshments reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:16Z",
+          "source_id": "d076"
+        },
+        {
+          "id": "mem_b61f61dee8a5c4b8250e3218",
+          "content": "[2024-11-01T00:01:15Z] user: Bracken archive administrative note 76: insurance paperwork reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:15Z",
+          "source_id": "d075"
+        },
+        {
+          "id": "mem_fbb395c4276f15b91642257c",
+          "content": "[2024-11-01T00:01:14Z] user: Bracken archive administrative note 75: cleaning supplies reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:14Z",
+          "source_id": "d074"
+        },
+        {
+          "id": "mem_b33c82d94a0e1b28067ee9bb",
+          "content": "[2024-11-01T00:01:13Z] user: Bracken archive administrative note 74: visitor badges reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:13Z",
+          "source_id": "d073"
+        },
+        {
+          "id": "mem_3ae59d2d433b6ab93896f536",
+          "content": "[2024-11-01T00:01:12Z] user: Bracken archive administrative note 73: inventory labels reviewed by the office team, batch 10.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:12Z",
+          "source_id": "d072"
+        },
+        {
+          "id": "mem_061dea1ac8a56f516f49061e",
+          "content": "[2024-11-01T00:01:11Z] user: Bracken archive administrative note 72: receipt envelopes reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:11Z",
+          "source_id": "d071"
+        },
+        {
+          "id": "mem_6939b69abc87b53b1da7ff1d",
+          "content": "[2024-11-01T00:01:10Z] user: Bracken archive administrative note 71: parking permits reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:10Z",
+          "source_id": "d070"
+        },
+        {
+          "id": "mem_64a70a6dc0611772058be332",
+          "content": "[2024-11-01T00:01:09Z] user: Bracken archive administrative note 70: publicity leaflets reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:09Z",
+          "source_id": "d069"
+        },
+        {
+          "id": "mem_8e83084c4ffa59cad80d1fc4",
+          "content": "[2024-11-01T00:01:08Z] user: Bracken archive administrative note 69: staff refreshments reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:08Z",
+          "source_id": "d068"
+        },
+        {
+          "id": "mem_6ef2525d1ad1624eacd5e14f",
+          "content": "[2024-11-01T00:01:07Z] user: Bracken archive administrative note 68: insurance paperwork reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:07Z",
+          "source_id": "d067"
+        },
+        {
+          "id": "mem_804eaefc5b7c5b36ae1bb3ea",
+          "content": "[2024-11-01T00:01:06Z] user: Bracken archive administrative note 67: cleaning supplies reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:06Z",
+          "source_id": "d066"
+        },
+        {
+          "id": "mem_60afe3fb6b851997995b073f",
+          "content": "[2024-11-01T00:01:05Z] user: Bracken archive administrative note 66: visitor badges reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:05Z",
+          "source_id": "d065"
+        },
+        {
+          "id": "mem_e350da1427601dd34c8382b8",
+          "content": "[2024-11-01T00:01:04Z] user: Bracken archive administrative note 65: inventory labels reviewed by the office team, batch 9.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:04Z",
+          "source_id": "d064"
+        },
+        {
+          "id": "mem_d8234812e1e9263bfd22e3d7",
+          "content": "[2024-11-01T00:01:03Z] user: Bracken archive administrative note 64: receipt envelopes reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:03Z",
+          "source_id": "d063"
+        },
+        {
+          "id": "mem_dcde458dccf6ed95147871b4",
+          "content": "[2024-11-01T00:01:02Z] user: Bracken archive administrative note 63: parking permits reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:02Z",
+          "source_id": "d062"
+        },
+        {
+          "id": "mem_c4cf42ebc21ff52e68c64b24",
+          "content": "[2024-11-01T00:01:01Z] user: Bracken archive administrative note 62: publicity leaflets reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:01Z",
+          "source_id": "d061"
+        },
+        {
+          "id": "mem_f5f0a258335abe3a8117e61f",
+          "content": "[2024-11-01T00:01:00Z] user: Bracken archive administrative note 61: staff refreshments reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:01:00Z",
+          "source_id": "d060"
+        },
+        {
+          "id": "mem_41784d55a717f55247b781ff",
+          "content": "[2024-11-01T00:00:59Z] user: Bracken archive administrative note 60: insurance paperwork reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:59Z",
+          "source_id": "d059"
+        },
+        {
+          "id": "mem_f4185e6fba0cae300ef011a2",
+          "content": "[2024-11-01T00:00:58Z] user: Bracken archive administrative note 59: cleaning supplies reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:58Z",
+          "source_id": "d058"
+        },
+        {
+          "id": "mem_2b0f804be033d678607cb8bb",
+          "content": "[2024-11-01T00:00:57Z] user: Bracken archive administrative note 58: visitor badges reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:57Z",
+          "source_id": "d057"
+        },
+        {
+          "id": "mem_121e0788719ae7597749c6e9",
+          "content": "[2024-11-01T00:00:56Z] user: Bracken archive administrative note 57: inventory labels reviewed by the office team, batch 8.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:56Z",
+          "source_id": "d056"
+        },
+        {
+          "id": "mem_36890354cd42fd802b3f1139",
+          "content": "[2024-11-01T00:00:55Z] user: Bracken archive administrative note 56: receipt envelopes reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:55Z",
+          "source_id": "d055"
+        },
+        {
+          "id": "mem_f8d31ee0af591419a6da374a",
+          "content": "[2024-11-01T00:00:54Z] user: Bracken archive administrative note 55: parking permits reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:54Z",
+          "source_id": "d054"
+        },
+        {
+          "id": "mem_5a9db343c66302af9f4598b7",
+          "content": "[2024-11-01T00:00:53Z] user: Bracken archive administrative note 54: publicity leaflets reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:53Z",
+          "source_id": "d053"
+        },
+        {
+          "id": "mem_9765699dc5524dd851423e55",
+          "content": "[2024-11-01T00:00:52Z] user: Bracken archive administrative note 53: staff refreshments reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:52Z",
+          "source_id": "d052"
+        },
+        {
+          "id": "mem_24818543918c64501ac98965",
+          "content": "[2024-11-01T00:00:51Z] user: Bracken archive administrative note 52: insurance paperwork reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:51Z",
+          "source_id": "d051"
+        },
+        {
+          "id": "mem_f48da9ac69a9c01d9ca25809",
+          "content": "[2024-11-01T00:00:50Z] user: Bracken archive administrative note 51: cleaning supplies reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:50Z",
+          "source_id": "d050"
+        },
+        {
+          "id": "mem_935cec31f8653c67c8ab9379",
+          "content": "[2024-11-01T00:00:49Z] user: Bracken archive administrative note 50: visitor badges reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:49Z",
+          "source_id": "d049"
+        },
+        {
+          "id": "mem_4f36bf3521e067d25e4a38b3",
+          "content": "[2024-11-01T00:00:48Z] user: Bracken archive administrative note 49: inventory labels reviewed by the office team, batch 7.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:48Z",
+          "source_id": "d048"
+        },
+        {
+          "id": "mem_699bd6a1903b4457836f2974",
+          "content": "[2024-11-01T00:00:47Z] user: Bracken archive administrative note 48: receipt envelopes reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:47Z",
+          "source_id": "d047"
+        },
+        {
+          "id": "mem_98b37f32957da820e33ec1a7",
+          "content": "[2024-11-01T00:00:46Z] user: Bracken archive administrative note 47: parking permits reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:46Z",
+          "source_id": "d046"
+        },
+        {
+          "id": "mem_e666ad557f7ad01191dfea7e",
+          "content": "[2024-11-01T00:00:45Z] user: Bracken archive administrative note 46: publicity leaflets reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:45Z",
+          "source_id": "d045"
+        },
+        {
+          "id": "mem_541e102d647732a3d2cfde17",
+          "content": "[2024-11-01T00:00:44Z] user: Bracken archive administrative note 45: staff refreshments reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:44Z",
+          "source_id": "d044"
+        },
+        {
+          "id": "mem_e77dd2559387833aa06a1a1b",
+          "content": "[2024-11-01T00:00:43Z] user: Bracken archive administrative note 44: insurance paperwork reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:43Z",
+          "source_id": "d043"
+        },
+        {
+          "id": "mem_50af3fb8d01a6f0ea636374b",
+          "content": "[2024-11-01T00:00:42Z] user: Bracken archive administrative note 43: cleaning supplies reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:42Z",
+          "source_id": "d042"
+        },
+        {
+          "id": "mem_8fe910d3e775d318994a2468",
+          "content": "[2024-11-01T00:00:41Z] user: Bracken archive administrative note 42: visitor badges reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:41Z",
+          "source_id": "d041"
+        },
+        {
+          "id": "mem_10b9b9ef24717d51987a7f9f",
+          "content": "[2024-11-01T00:00:40Z] user: Bracken archive administrative note 41: inventory labels reviewed by the office team, batch 6.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:40Z",
+          "source_id": "d040"
+        },
+        {
+          "id": "mem_f36c254d7ba290ad629da31d",
+          "content": "[2024-11-01T00:00:39Z] user: Bracken archive administrative note 40: receipt envelopes reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:39Z",
+          "source_id": "d039"
+        },
+        {
+          "id": "mem_7eed8dd1bf0c2cb82bb7fe99",
+          "content": "[2024-11-01T00:00:38Z] user: Bracken archive administrative note 39: parking permits reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:38Z",
+          "source_id": "d038"
+        },
+        {
+          "id": "mem_07d7a6daae5a2a6dff357d98",
+          "content": "[2024-11-01T00:00:37Z] user: Bracken archive administrative note 38: publicity leaflets reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:37Z",
+          "source_id": "d037"
+        },
+        {
+          "id": "mem_08eb3d38f0246b5e952caff3",
+          "content": "[2024-11-01T00:00:36Z] user: Bracken archive administrative note 37: staff refreshments reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:36Z",
+          "source_id": "d036"
+        },
+        {
+          "id": "mem_37ef95a245deaa8d23e88daf",
+          "content": "[2024-11-01T00:00:35Z] user: Bracken archive administrative note 36: insurance paperwork reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:35Z",
+          "source_id": "d035"
+        },
+        {
+          "id": "mem_3ab98ac707ee2506dd36b160",
+          "content": "[2024-11-01T00:00:34Z] user: Bracken archive administrative note 35: cleaning supplies reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:34Z",
+          "source_id": "d034"
+        },
+        {
+          "id": "mem_920298eb605a50542ff72d32",
+          "content": "[2024-11-01T00:00:33Z] user: Bracken archive administrative note 34: visitor badges reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:33Z",
+          "source_id": "d033"
+        },
+        {
+          "id": "mem_1b53eba1961353934a088ebb",
+          "content": "[2024-11-01T00:00:32Z] user: Bracken archive administrative note 33: inventory labels reviewed by the office team, batch 5.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:32Z",
+          "source_id": "d032"
+        },
+        {
+          "id": "mem_ae1b4cb2970a0872d721b847",
+          "content": "[2024-11-01T00:00:31Z] user: Bracken archive administrative note 32: receipt envelopes reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:31Z",
+          "source_id": "d031"
+        },
+        {
+          "id": "mem_c538339342a0422d3120f9e5",
+          "content": "[2024-11-01T00:00:30Z] user: Bracken archive administrative note 31: parking permits reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:30Z",
+          "source_id": "d030"
+        },
+        {
+          "id": "mem_df9b963bcdb9e432e84e8a92",
+          "content": "[2024-11-01T00:00:29Z] user: Bracken archive administrative note 30: publicity leaflets reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:29Z",
+          "source_id": "d029"
+        },
+        {
+          "id": "mem_d6b4e2b1750994733d07ae9c",
+          "content": "[2024-11-01T00:00:28Z] user: Bracken archive administrative note 29: staff refreshments reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:28Z",
+          "source_id": "d028"
+        },
+        {
+          "id": "mem_8b9783c6778f5f2a7a42f399",
+          "content": "[2024-11-01T00:00:27Z] user: Bracken archive administrative note 28: insurance paperwork reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:27Z",
+          "source_id": "d027"
+        },
+        {
+          "id": "mem_1fbfeb5a6ba09f0eb1affe54",
+          "content": "[2024-11-01T00:00:26Z] user: Bracken archive administrative note 27: cleaning supplies reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:26Z",
+          "source_id": "d026"
+        },
+        {
+          "id": "mem_bf86f779a4c3eb00e4aa0c03",
+          "content": "[2024-11-01T00:00:25Z] user: Bracken archive administrative note 26: visitor badges reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:25Z",
+          "source_id": "d025"
+        },
+        {
+          "id": "mem_db30128c447e5a4279477916",
+          "content": "[2024-11-01T00:00:24Z] user: Bracken archive administrative note 25: inventory labels reviewed by the office team, batch 4.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:24Z",
+          "source_id": "d024"
+        },
+        {
+          "id": "mem_bb1ed0ee8dbd0df63a65822d",
+          "content": "[2024-11-01T00:00:23Z] user: Bracken archive administrative note 24: receipt envelopes reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:23Z",
+          "source_id": "d023"
+        },
+        {
+          "id": "mem_ca6c55370f5350e1f55491a5",
+          "content": "[2024-11-01T00:00:22Z] user: Bracken archive administrative note 23: parking permits reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:22Z",
+          "source_id": "d022"
+        },
+        {
+          "id": "mem_93b8289b7a7c01a8dcf9ecb0",
+          "content": "[2024-11-01T00:00:21Z] user: Bracken archive administrative note 22: publicity leaflets reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:21Z",
+          "source_id": "d021"
+        },
+        {
+          "id": "mem_18e75790a656b9a2455d6ce0",
+          "content": "[2024-11-01T00:00:20Z] user: Bracken archive administrative note 21: staff refreshments reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:20Z",
+          "source_id": "d020"
+        },
+        {
+          "id": "mem_658b1d6a24ac4b23915615f7",
+          "content": "[2024-11-01T00:00:19Z] user: Bracken archive administrative note 20: insurance paperwork reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:19Z",
+          "source_id": "d019"
+        },
+        {
+          "id": "mem_a597c5f15dd8f2c278bd7181",
+          "content": "[2024-11-01T00:00:18Z] user: Bracken archive administrative note 19: cleaning supplies reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:18Z",
+          "source_id": "d018"
+        },
+        {
+          "id": "mem_cb048e13d3dbd1e7d51ce64f",
+          "content": "[2024-11-01T00:00:17Z] user: Bracken archive administrative note 18: visitor badges reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:17Z",
+          "source_id": "d017"
+        },
+        {
+          "id": "mem_3001528b6b6ddeeb6ab07c20",
+          "content": "[2024-11-01T00:00:16Z] user: Bracken archive administrative note 17: inventory labels reviewed by the office team, batch 3.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:16Z",
+          "source_id": "d016"
+        },
+        {
+          "id": "mem_d17af5fc00a600cead18f40e",
+          "content": "[2024-11-01T00:00:15Z] user: Bracken archive administrative note 16: receipt envelopes reviewed by the office team, batch 2.",
+          "score": 0.200575,
+          "created_at": "2024-11-01T00:00:15Z",
+          "source_id": "d015"
+        }
+      ]
+    },
+    {
+      "name": "blind10-cancelled-change",
+      "category": "cancelled_update",
+      "candidate_count": 114,
+      "expected": [
+        "original",
+        "cancel"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_9c8b12058ca6907f0c7116d7",
+          "content": "[2024-05-01T00:00:00Z] user: The proposed move of the Solace workshop to Birch Hall was cancelled; the original venue booking remains valid.",
+          "score": 12.134015,
+          "created_at": "2024-05-01T00:00:00Z",
+          "source_id": "cancel"
+        },
+        {
+          "id": "mem_fa253498ad3a8bc3ad0085f7",
+          "content": "[2024-04-01T00:00:00Z] user: The Solace workshop is booked at Cedar Hall.",
+          "score": 4.240935,
+          "created_at": "2024-04-01T00:00:00Z",
+          "source_id": "original"
+        },
+        {
+          "id": "mem_4ec3cfec835a60eecd9d9129",
+          "content": "[2024-11-01T00:01:51Z] user: Solace workshop administrative note 112: receipt envelopes reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:51Z",
+          "source_id": "d111"
+        },
+        {
+          "id": "mem_06caea3394a42e8a51179849",
+          "content": "[2024-11-01T00:01:50Z] user: Solace workshop administrative note 111: parking permits reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:50Z",
+          "source_id": "d110"
+        },
+        {
+          "id": "mem_b5aee81ef264a7e9c3c3ab56",
+          "content": "[2024-11-01T00:01:49Z] user: Solace workshop administrative note 110: publicity leaflets reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:49Z",
+          "source_id": "d109"
+        },
+        {
+          "id": "mem_988616521b77ab3227264ef9",
+          "content": "[2024-11-01T00:01:48Z] user: Solace workshop administrative note 109: staff refreshments reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:48Z",
+          "source_id": "d108"
+        },
+        {
+          "id": "mem_f017c4fa5ae473dca06a3883",
+          "content": "[2024-11-01T00:01:47Z] user: Solace workshop administrative note 108: insurance paperwork reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:47Z",
+          "source_id": "d107"
+        },
+        {
+          "id": "mem_4e9ec2ad91208ae0ad3f79a9",
+          "content": "[2024-11-01T00:01:46Z] user: Solace workshop administrative note 107: cleaning supplies reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:46Z",
+          "source_id": "d106"
+        },
+        {
+          "id": "mem_e8ff3ec1aa579e820885259a",
+          "content": "[2024-11-01T00:01:45Z] user: Solace workshop administrative note 106: visitor badges reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:45Z",
+          "source_id": "d105"
+        },
+        {
+          "id": "mem_fcfa6dfd7ebdb304a7b8ba4c",
+          "content": "[2024-11-01T00:01:44Z] user: Solace workshop administrative note 105: inventory labels reviewed by the office team, batch 14.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:44Z",
+          "source_id": "d104"
+        },
+        {
+          "id": "mem_9883e71338cf0dc603722b74",
+          "content": "[2024-11-01T00:01:43Z] user: Solace workshop administrative note 104: receipt envelopes reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:43Z",
+          "source_id": "d103"
+        },
+        {
+          "id": "mem_8e997882d90048ed23eef65a",
+          "content": "[2024-11-01T00:01:42Z] user: Solace workshop administrative note 103: parking permits reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:42Z",
+          "source_id": "d102"
+        },
+        {
+          "id": "mem_f48ea54a02ba5a42e04ae87c",
+          "content": "[2024-11-01T00:01:41Z] user: Solace workshop administrative note 102: publicity leaflets reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:41Z",
+          "source_id": "d101"
+        },
+        {
+          "id": "mem_94f7dc17ba8ebf10dab4d073",
+          "content": "[2024-11-01T00:01:40Z] user: Solace workshop administrative note 101: staff refreshments reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:40Z",
+          "source_id": "d100"
+        },
+        {
+          "id": "mem_471b7951938cdd2815d01236",
+          "content": "[2024-11-01T00:01:39Z] user: Solace workshop administrative note 100: insurance paperwork reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:39Z",
+          "source_id": "d099"
+        },
+        {
+          "id": "mem_c2d3edf2c362249cfa3ca249",
+          "content": "[2024-11-01T00:01:38Z] user: Solace workshop administrative note 99: cleaning supplies reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:38Z",
+          "source_id": "d098"
+        },
+        {
+          "id": "mem_7904e52d6f9d81022bde5d44",
+          "content": "[2024-11-01T00:01:37Z] user: Solace workshop administrative note 98: visitor badges reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:37Z",
+          "source_id": "d097"
+        },
+        {
+          "id": "mem_a348b04ea7af70e78bbc1ba3",
+          "content": "[2024-11-01T00:01:36Z] user: Solace workshop administrative note 97: inventory labels reviewed by the office team, batch 13.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:36Z",
+          "source_id": "d096"
+        },
+        {
+          "id": "mem_a4430a1dd7dbb22e4c8645d9",
+          "content": "[2024-11-01T00:01:35Z] user: Solace workshop administrative note 96: receipt envelopes reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:35Z",
+          "source_id": "d095"
+        },
+        {
+          "id": "mem_c460c6f884dbffcd9f79e079",
+          "content": "[2024-11-01T00:01:34Z] user: Solace workshop administrative note 95: parking permits reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:34Z",
+          "source_id": "d094"
+        },
+        {
+          "id": "mem_2666133d4c79cefb4ec08f98",
+          "content": "[2024-11-01T00:01:33Z] user: Solace workshop administrative note 94: publicity leaflets reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:33Z",
+          "source_id": "d093"
+        },
+        {
+          "id": "mem_422396f5ff12282d45ba2ae3",
+          "content": "[2024-11-01T00:01:32Z] user: Solace workshop administrative note 93: staff refreshments reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:32Z",
+          "source_id": "d092"
+        },
+        {
+          "id": "mem_db68a5ce28a03411b2babb42",
+          "content": "[2024-11-01T00:01:31Z] user: Solace workshop administrative note 92: insurance paperwork reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:31Z",
+          "source_id": "d091"
+        },
+        {
+          "id": "mem_3c6ccb490e42308c0207fd49",
+          "content": "[2024-11-01T00:01:30Z] user: Solace workshop administrative note 91: cleaning supplies reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:30Z",
+          "source_id": "d090"
+        },
+        {
+          "id": "mem_177763dcaabb2547a41907c7",
+          "content": "[2024-11-01T00:01:29Z] user: Solace workshop administrative note 90: visitor badges reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:29Z",
+          "source_id": "d089"
+        },
+        {
+          "id": "mem_9b1555c75714dda6160803cc",
+          "content": "[2024-11-01T00:01:28Z] user: Solace workshop administrative note 89: inventory labels reviewed by the office team, batch 12.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:28Z",
+          "source_id": "d088"
+        },
+        {
+          "id": "mem_02303aa0cd8303cbc9236cb0",
+          "content": "[2024-11-01T00:01:27Z] user: Solace workshop administrative note 88: receipt envelopes reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:27Z",
+          "source_id": "d087"
+        },
+        {
+          "id": "mem_9c745c255d095c290c524543",
+          "content": "[2024-11-01T00:01:26Z] user: Solace workshop administrative note 87: parking permits reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:26Z",
+          "source_id": "d086"
+        },
+        {
+          "id": "mem_bc92c75d5ff3cd1eeac26a3a",
+          "content": "[2024-11-01T00:01:25Z] user: Solace workshop administrative note 86: publicity leaflets reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:25Z",
+          "source_id": "d085"
+        },
+        {
+          "id": "mem_ac250ea46dfe26fe07f055e5",
+          "content": "[2024-11-01T00:01:24Z] user: Solace workshop administrative note 85: staff refreshments reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:24Z",
+          "source_id": "d084"
+        },
+        {
+          "id": "mem_43a3c59e5c85e488ae35defb",
+          "content": "[2024-11-01T00:01:23Z] user: Solace workshop administrative note 84: insurance paperwork reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:23Z",
+          "source_id": "d083"
+        },
+        {
+          "id": "mem_c0d01f487d65580f35da4f6d",
+          "content": "[2024-11-01T00:01:22Z] user: Solace workshop administrative note 83: cleaning supplies reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:22Z",
+          "source_id": "d082"
+        },
+        {
+          "id": "mem_a3c32b763d7ad973c733d76c",
+          "content": "[2024-11-01T00:01:21Z] user: Solace workshop administrative note 82: visitor badges reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:21Z",
+          "source_id": "d081"
+        },
+        {
+          "id": "mem_47a91dbec5009455a184a485",
+          "content": "[2024-11-01T00:01:20Z] user: Solace workshop administrative note 81: inventory labels reviewed by the office team, batch 11.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:20Z",
+          "source_id": "d080"
+        },
+        {
+          "id": "mem_cc2ccf5fcbd6f734d536ea60",
+          "content": "[2024-11-01T00:01:19Z] user: Solace workshop administrative note 80: receipt envelopes reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:19Z",
+          "source_id": "d079"
+        },
+        {
+          "id": "mem_1475125b8240fc5518bc5e5a",
+          "content": "[2024-11-01T00:01:18Z] user: Solace workshop administrative note 79: parking permits reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:18Z",
+          "source_id": "d078"
+        },
+        {
+          "id": "mem_b0023c303a734edfe1818bb0",
+          "content": "[2024-11-01T00:01:17Z] user: Solace workshop administrative note 78: publicity leaflets reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:17Z",
+          "source_id": "d077"
+        },
+        {
+          "id": "mem_d893400e3d6b2ec087b8be3a",
+          "content": "[2024-11-01T00:01:16Z] user: Solace workshop administrative note 77: staff refreshments reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:16Z",
+          "source_id": "d076"
+        },
+        {
+          "id": "mem_1072de2e4684fe35ff1637cd",
+          "content": "[2024-11-01T00:01:15Z] user: Solace workshop administrative note 76: insurance paperwork reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:15Z",
+          "source_id": "d075"
+        },
+        {
+          "id": "mem_071011daca9b1a8bd9025db4",
+          "content": "[2024-11-01T00:01:14Z] user: Solace workshop administrative note 75: cleaning supplies reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:14Z",
+          "source_id": "d074"
+        },
+        {
+          "id": "mem_67bb2b68b5fe85e0ccaf8b1a",
+          "content": "[2024-11-01T00:01:13Z] user: Solace workshop administrative note 74: visitor badges reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:13Z",
+          "source_id": "d073"
+        },
+        {
+          "id": "mem_cf30712cc2d59b62ece5b8bd",
+          "content": "[2024-11-01T00:01:12Z] user: Solace workshop administrative note 73: inventory labels reviewed by the office team, batch 10.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:12Z",
+          "source_id": "d072"
+        },
+        {
+          "id": "mem_0c975f29ef0169fed67e8d9c",
+          "content": "[2024-11-01T00:01:11Z] user: Solace workshop administrative note 72: receipt envelopes reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:11Z",
+          "source_id": "d071"
+        },
+        {
+          "id": "mem_2fb6e175a7fae2fb2639b383",
+          "content": "[2024-11-01T00:01:10Z] user: Solace workshop administrative note 71: parking permits reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:10Z",
+          "source_id": "d070"
+        },
+        {
+          "id": "mem_5ed255a718a328cc9636c9ad",
+          "content": "[2024-11-01T00:01:09Z] user: Solace workshop administrative note 70: publicity leaflets reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:09Z",
+          "source_id": "d069"
+        },
+        {
+          "id": "mem_d2e7ec8b5486aada4f3d3f40",
+          "content": "[2024-11-01T00:01:08Z] user: Solace workshop administrative note 69: staff refreshments reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:08Z",
+          "source_id": "d068"
+        },
+        {
+          "id": "mem_878a0058c6fa1d52511f36f4",
+          "content": "[2024-11-01T00:01:07Z] user: Solace workshop administrative note 68: insurance paperwork reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:07Z",
+          "source_id": "d067"
+        },
+        {
+          "id": "mem_9dd256ae1c0574e22c1b0333",
+          "content": "[2024-11-01T00:01:06Z] user: Solace workshop administrative note 67: cleaning supplies reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:06Z",
+          "source_id": "d066"
+        },
+        {
+          "id": "mem_12c082b8724e4fce73db9f14",
+          "content": "[2024-11-01T00:01:05Z] user: Solace workshop administrative note 66: visitor badges reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:05Z",
+          "source_id": "d065"
+        },
+        {
+          "id": "mem_d29837280c8d5a9b80c3eb42",
+          "content": "[2024-11-01T00:01:04Z] user: Solace workshop administrative note 65: inventory labels reviewed by the office team, batch 9.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:04Z",
+          "source_id": "d064"
+        },
+        {
+          "id": "mem_22f6238820212893b4aa190e",
+          "content": "[2024-11-01T00:01:03Z] user: Solace workshop administrative note 64: receipt envelopes reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:03Z",
+          "source_id": "d063"
+        },
+        {
+          "id": "mem_bc821a6d59d0ee0a65d59e6f",
+          "content": "[2024-11-01T00:01:02Z] user: Solace workshop administrative note 63: parking permits reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:02Z",
+          "source_id": "d062"
+        },
+        {
+          "id": "mem_0ae496f57822922c48fe1667",
+          "content": "[2024-11-01T00:01:01Z] user: Solace workshop administrative note 62: publicity leaflets reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:01Z",
+          "source_id": "d061"
+        },
+        {
+          "id": "mem_923f3573af2d18327f73e0d3",
+          "content": "[2024-11-01T00:01:00Z] user: Solace workshop administrative note 61: staff refreshments reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:01:00Z",
+          "source_id": "d060"
+        },
+        {
+          "id": "mem_c22cc9953e148dd2b3b0cd41",
+          "content": "[2024-11-01T00:00:59Z] user: Solace workshop administrative note 60: insurance paperwork reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:59Z",
+          "source_id": "d059"
+        },
+        {
+          "id": "mem_758793782b73450247337567",
+          "content": "[2024-11-01T00:00:58Z] user: Solace workshop administrative note 59: cleaning supplies reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:58Z",
+          "source_id": "d058"
+        },
+        {
+          "id": "mem_893da9a8805f02b3f155ca87",
+          "content": "[2024-11-01T00:00:57Z] user: Solace workshop administrative note 58: visitor badges reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:57Z",
+          "source_id": "d057"
+        },
+        {
+          "id": "mem_7b25d11d70332f004f341ef8",
+          "content": "[2024-11-01T00:00:56Z] user: Solace workshop administrative note 57: inventory labels reviewed by the office team, batch 8.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:56Z",
+          "source_id": "d056"
+        },
+        {
+          "id": "mem_db655bd3cfd0b6a33b8bc765",
+          "content": "[2024-11-01T00:00:55Z] user: Solace workshop administrative note 56: receipt envelopes reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:55Z",
+          "source_id": "d055"
+        },
+        {
+          "id": "mem_55335af63806a59221565bcd",
+          "content": "[2024-11-01T00:00:54Z] user: Solace workshop administrative note 55: parking permits reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:54Z",
+          "source_id": "d054"
+        },
+        {
+          "id": "mem_bebb2a32c5bd79f1f025206a",
+          "content": "[2024-11-01T00:00:53Z] user: Solace workshop administrative note 54: publicity leaflets reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:53Z",
+          "source_id": "d053"
+        },
+        {
+          "id": "mem_d08ae0ef7445b5df87548051",
+          "content": "[2024-11-01T00:00:52Z] user: Solace workshop administrative note 53: staff refreshments reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:52Z",
+          "source_id": "d052"
+        },
+        {
+          "id": "mem_8bde423506a4cdd24577dfe0",
+          "content": "[2024-11-01T00:00:51Z] user: Solace workshop administrative note 52: insurance paperwork reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:51Z",
+          "source_id": "d051"
+        },
+        {
+          "id": "mem_49cf927d90cfe3f4e138efa8",
+          "content": "[2024-11-01T00:00:50Z] user: Solace workshop administrative note 51: cleaning supplies reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:50Z",
+          "source_id": "d050"
+        },
+        {
+          "id": "mem_010472f7cdc5b240a9b60a97",
+          "content": "[2024-11-01T00:00:49Z] user: Solace workshop administrative note 50: visitor badges reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:49Z",
+          "source_id": "d049"
+        },
+        {
+          "id": "mem_b5cb1567789423d48530e8a5",
+          "content": "[2024-11-01T00:00:48Z] user: Solace workshop administrative note 49: inventory labels reviewed by the office team, batch 7.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:48Z",
+          "source_id": "d048"
+        },
+        {
+          "id": "mem_5a1af4b7fd5f836103985266",
+          "content": "[2024-11-01T00:00:47Z] user: Solace workshop administrative note 48: receipt envelopes reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:47Z",
+          "source_id": "d047"
+        },
+        {
+          "id": "mem_b643678731ca12be21c802f1",
+          "content": "[2024-11-01T00:00:46Z] user: Solace workshop administrative note 47: parking permits reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:46Z",
+          "source_id": "d046"
+        },
+        {
+          "id": "mem_7d3f536b0565e968527d6aba",
+          "content": "[2024-11-01T00:00:45Z] user: Solace workshop administrative note 46: publicity leaflets reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:45Z",
+          "source_id": "d045"
+        },
+        {
+          "id": "mem_b2808c0cfceec8e8a04bb155",
+          "content": "[2024-11-01T00:00:44Z] user: Solace workshop administrative note 45: staff refreshments reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:44Z",
+          "source_id": "d044"
+        },
+        {
+          "id": "mem_1a944376552065b43190de68",
+          "content": "[2024-11-01T00:00:43Z] user: Solace workshop administrative note 44: insurance paperwork reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:43Z",
+          "source_id": "d043"
+        },
+        {
+          "id": "mem_5e629cef81e86c8746328e3c",
+          "content": "[2024-11-01T00:00:42Z] user: Solace workshop administrative note 43: cleaning supplies reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:42Z",
+          "source_id": "d042"
+        },
+        {
+          "id": "mem_fa4588488b4d8a8dee8df858",
+          "content": "[2024-11-01T00:00:41Z] user: Solace workshop administrative note 42: visitor badges reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:41Z",
+          "source_id": "d041"
+        },
+        {
+          "id": "mem_47873e7da241c06078167016",
+          "content": "[2024-11-01T00:00:40Z] user: Solace workshop administrative note 41: inventory labels reviewed by the office team, batch 6.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:40Z",
+          "source_id": "d040"
+        },
+        {
+          "id": "mem_e382dbb69cad38f7d422faae",
+          "content": "[2024-11-01T00:00:39Z] user: Solace workshop administrative note 40: receipt envelopes reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:39Z",
+          "source_id": "d039"
+        },
+        {
+          "id": "mem_800b65b440e898499522b4e3",
+          "content": "[2024-11-01T00:00:38Z] user: Solace workshop administrative note 39: parking permits reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:38Z",
+          "source_id": "d038"
+        },
+        {
+          "id": "mem_3d3530fb6231d40505385cb7",
+          "content": "[2024-11-01T00:00:37Z] user: Solace workshop administrative note 38: publicity leaflets reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:37Z",
+          "source_id": "d037"
+        },
+        {
+          "id": "mem_b360b3a88fefc233d0f8fa9a",
+          "content": "[2024-11-01T00:00:36Z] user: Solace workshop administrative note 37: staff refreshments reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:36Z",
+          "source_id": "d036"
+        },
+        {
+          "id": "mem_7a35c885aaf9bb17b5970993",
+          "content": "[2024-11-01T00:00:35Z] user: Solace workshop administrative note 36: insurance paperwork reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:35Z",
+          "source_id": "d035"
+        },
+        {
+          "id": "mem_70a82103b896b70a2a44246c",
+          "content": "[2024-11-01T00:00:34Z] user: Solace workshop administrative note 35: cleaning supplies reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:34Z",
+          "source_id": "d034"
+        },
+        {
+          "id": "mem_e59368f0423e83843ee91418",
+          "content": "[2024-11-01T00:00:33Z] user: Solace workshop administrative note 34: visitor badges reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:33Z",
+          "source_id": "d033"
+        },
+        {
+          "id": "mem_45f0577b13f2ab4e1f768f28",
+          "content": "[2024-11-01T00:00:32Z] user: Solace workshop administrative note 33: inventory labels reviewed by the office team, batch 5.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:32Z",
+          "source_id": "d032"
+        },
+        {
+          "id": "mem_f86dcffc6be936025c80ccd8",
+          "content": "[2024-11-01T00:00:31Z] user: Solace workshop administrative note 32: receipt envelopes reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:31Z",
+          "source_id": "d031"
+        },
+        {
+          "id": "mem_fbcc524722042d3eb1ae70dd",
+          "content": "[2024-11-01T00:00:30Z] user: Solace workshop administrative note 31: parking permits reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:30Z",
+          "source_id": "d030"
+        },
+        {
+          "id": "mem_ac7b3b9b9a66986a112dd475",
+          "content": "[2024-11-01T00:00:29Z] user: Solace workshop administrative note 30: publicity leaflets reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:29Z",
+          "source_id": "d029"
+        },
+        {
+          "id": "mem_c3b81684e972cfcb83a77e98",
+          "content": "[2024-11-01T00:00:28Z] user: Solace workshop administrative note 29: staff refreshments reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:28Z",
+          "source_id": "d028"
+        },
+        {
+          "id": "mem_640382a42c21ef9075523954",
+          "content": "[2024-11-01T00:00:27Z] user: Solace workshop administrative note 28: insurance paperwork reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:27Z",
+          "source_id": "d027"
+        },
+        {
+          "id": "mem_24303c08f0d7a7c7ed2a2727",
+          "content": "[2024-11-01T00:00:26Z] user: Solace workshop administrative note 27: cleaning supplies reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:26Z",
+          "source_id": "d026"
+        },
+        {
+          "id": "mem_5ffdacc61a0ead9c454bbdd4",
+          "content": "[2024-11-01T00:00:25Z] user: Solace workshop administrative note 26: visitor badges reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:25Z",
+          "source_id": "d025"
+        },
+        {
+          "id": "mem_d09cf97b7c47a3f232626c74",
+          "content": "[2024-11-01T00:00:24Z] user: Solace workshop administrative note 25: inventory labels reviewed by the office team, batch 4.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:24Z",
+          "source_id": "d024"
+        },
+        {
+          "id": "mem_d4d991dae667a65a68420ace",
+          "content": "[2024-11-01T00:00:23Z] user: Solace workshop administrative note 24: receipt envelopes reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:23Z",
+          "source_id": "d023"
+        },
+        {
+          "id": "mem_8625b362b6f6cf5f3db7db2f",
+          "content": "[2024-11-01T00:00:22Z] user: Solace workshop administrative note 23: parking permits reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:22Z",
+          "source_id": "d022"
+        },
+        {
+          "id": "mem_6bd6bfc250f51262665a98b4",
+          "content": "[2024-11-01T00:00:21Z] user: Solace workshop administrative note 22: publicity leaflets reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:21Z",
+          "source_id": "d021"
+        },
+        {
+          "id": "mem_be105ff4c35c979e47d72f9b",
+          "content": "[2024-11-01T00:00:20Z] user: Solace workshop administrative note 21: staff refreshments reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:20Z",
+          "source_id": "d020"
+        },
+        {
+          "id": "mem_be48c9b30bb778a66343bd76",
+          "content": "[2024-11-01T00:00:19Z] user: Solace workshop administrative note 20: insurance paperwork reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:19Z",
+          "source_id": "d019"
+        },
+        {
+          "id": "mem_153f336761966231c9945898",
+          "content": "[2024-11-01T00:00:18Z] user: Solace workshop administrative note 19: cleaning supplies reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:18Z",
+          "source_id": "d018"
+        },
+        {
+          "id": "mem_12879ebd99798f47e4e1c26b",
+          "content": "[2024-11-01T00:00:17Z] user: Solace workshop administrative note 18: visitor badges reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:17Z",
+          "source_id": "d017"
+        },
+        {
+          "id": "mem_a27c690d4177fdcccbd13ed5",
+          "content": "[2024-11-01T00:00:16Z] user: Solace workshop administrative note 17: inventory labels reviewed by the office team, batch 3.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:16Z",
+          "source_id": "d016"
+        },
+        {
+          "id": "mem_0e084f0e088282f5782e31e8",
+          "content": "[2024-11-01T00:00:15Z] user: Solace workshop administrative note 16: receipt envelopes reviewed by the office team, batch 2.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:15Z",
+          "source_id": "d015"
+        },
+        {
+          "id": "mem_b6bec8da984617ee382740dc",
+          "content": "[2024-11-01T00:00:14Z] user: Solace workshop administrative note 15: parking permits reviewed by the office team, batch 2.",
+          "score": 0.238065,
+          "created_at": "2024-11-01T00:00:14Z",
+          "source_id": "d014"
+        }
+      ]
+    },
+    {
+      "name": "blind10-out-of-order-report",
+      "category": "event_vs_ingestion",
+      "candidate_count": 114,
+      "expected": [
+        "recent",
+        "late-report"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_ad09e53ce5f5cb02412e3cf6",
+          "content": "[2024-08-21T00:00:00Z] user: The Fenwick garden installed the copper pump on 20 August 2024.",
+          "score": 8.799969,
+          "created_at": "2024-08-21T00:00:00Z",
+          "source_id": "recent"
+        },
+        {
+          "id": "mem_7915e33eb7883a1b13a47275",
+          "content": "[2024-09-01T00:00:00Z] user: Late archive entry: the Fenwick garden installed the silver pump on 3 March 2024.",
+          "score": 8.041161,
+          "created_at": "2024-09-01T00:00:00Z",
+          "source_id": "late-report"
+        },
+        {
+          "id": "mem_e7168021541230e138b93c1a",
+          "content": "[2024-11-01T00:01:51Z] user: Fenwick garden administrative note 112: receipt envelopes reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:51Z",
+          "source_id": "d111"
+        },
+        {
+          "id": "mem_b0ec235a78011493badf34c6",
+          "content": "[2024-11-01T00:01:50Z] user: Fenwick garden administrative note 111: parking permits reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:50Z",
+          "source_id": "d110"
+        },
+        {
+          "id": "mem_bf98f203cf8d96b20dda9a31",
+          "content": "[2024-11-01T00:01:49Z] user: Fenwick garden administrative note 110: publicity leaflets reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:49Z",
+          "source_id": "d109"
+        },
+        {
+          "id": "mem_0934120edf6b3ed29944df64",
+          "content": "[2024-11-01T00:01:48Z] user: Fenwick garden administrative note 109: staff refreshments reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:48Z",
+          "source_id": "d108"
+        },
+        {
+          "id": "mem_5e80d0270e424f0a52b9f21d",
+          "content": "[2024-11-01T00:01:47Z] user: Fenwick garden administrative note 108: insurance paperwork reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:47Z",
+          "source_id": "d107"
+        },
+        {
+          "id": "mem_7936e814ed26b3956d32e400",
+          "content": "[2024-11-01T00:01:46Z] user: Fenwick garden administrative note 107: cleaning supplies reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:46Z",
+          "source_id": "d106"
+        },
+        {
+          "id": "mem_5ba3a9730821573d46c5ce5e",
+          "content": "[2024-11-01T00:01:45Z] user: Fenwick garden administrative note 106: visitor badges reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:45Z",
+          "source_id": "d105"
+        },
+        {
+          "id": "mem_8404244833a083ab314e24d5",
+          "content": "[2024-11-01T00:01:44Z] user: Fenwick garden administrative note 105: inventory labels reviewed by the office team, batch 14.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:44Z",
+          "source_id": "d104"
+        },
+        {
+          "id": "mem_52ef6be1c541814c5a01f868",
+          "content": "[2024-11-01T00:01:43Z] user: Fenwick garden administrative note 104: receipt envelopes reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:43Z",
+          "source_id": "d103"
+        },
+        {
+          "id": "mem_753443ce726deca70bb92237",
+          "content": "[2024-11-01T00:01:42Z] user: Fenwick garden administrative note 103: parking permits reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:42Z",
+          "source_id": "d102"
+        },
+        {
+          "id": "mem_ddee86994a8adb9828927742",
+          "content": "[2024-11-01T00:01:41Z] user: Fenwick garden administrative note 102: publicity leaflets reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:41Z",
+          "source_id": "d101"
+        },
+        {
+          "id": "mem_0e95174154ab5ca471b182e6",
+          "content": "[2024-11-01T00:01:40Z] user: Fenwick garden administrative note 101: staff refreshments reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:40Z",
+          "source_id": "d100"
+        },
+        {
+          "id": "mem_dd4c8440e4d24854e541c6a4",
+          "content": "[2024-11-01T00:01:39Z] user: Fenwick garden administrative note 100: insurance paperwork reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:39Z",
+          "source_id": "d099"
+        },
+        {
+          "id": "mem_f94d5de6812ffd2732b551d6",
+          "content": "[2024-11-01T00:01:38Z] user: Fenwick garden administrative note 99: cleaning supplies reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:38Z",
+          "source_id": "d098"
+        },
+        {
+          "id": "mem_0295453698d7c751689cf4df",
+          "content": "[2024-11-01T00:01:37Z] user: Fenwick garden administrative note 98: visitor badges reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:37Z",
+          "source_id": "d097"
+        },
+        {
+          "id": "mem_581ab22dcc446fff22eb73a1",
+          "content": "[2024-11-01T00:01:36Z] user: Fenwick garden administrative note 97: inventory labels reviewed by the office team, batch 13.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:36Z",
+          "source_id": "d096"
+        },
+        {
+          "id": "mem_330ce1c06d02178bd331ac98",
+          "content": "[2024-11-01T00:01:35Z] user: Fenwick garden administrative note 96: receipt envelopes reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:35Z",
+          "source_id": "d095"
+        },
+        {
+          "id": "mem_35bb6cf2e1ee1fd2f84c2ee8",
+          "content": "[2024-11-01T00:01:34Z] user: Fenwick garden administrative note 95: parking permits reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:34Z",
+          "source_id": "d094"
+        },
+        {
+          "id": "mem_28bdf6d7ff1a64258e9e5e3b",
+          "content": "[2024-11-01T00:01:33Z] user: Fenwick garden administrative note 94: publicity leaflets reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:33Z",
+          "source_id": "d093"
+        },
+        {
+          "id": "mem_da51d4fd6bf2f0dd97faa4f1",
+          "content": "[2024-11-01T00:01:32Z] user: Fenwick garden administrative note 93: staff refreshments reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:32Z",
+          "source_id": "d092"
+        },
+        {
+          "id": "mem_e535008bc104f3476d455957",
+          "content": "[2024-11-01T00:01:31Z] user: Fenwick garden administrative note 92: insurance paperwork reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:31Z",
+          "source_id": "d091"
+        },
+        {
+          "id": "mem_ce57ac4acbf8a00d546c119c",
+          "content": "[2024-11-01T00:01:30Z] user: Fenwick garden administrative note 91: cleaning supplies reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:30Z",
+          "source_id": "d090"
+        },
+        {
+          "id": "mem_7bdddf5484a485fc9e5524bd",
+          "content": "[2024-11-01T00:01:29Z] user: Fenwick garden administrative note 90: visitor badges reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:29Z",
+          "source_id": "d089"
+        },
+        {
+          "id": "mem_1cc187adbedce79827e2acd0",
+          "content": "[2024-11-01T00:01:28Z] user: Fenwick garden administrative note 89: inventory labels reviewed by the office team, batch 12.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:28Z",
+          "source_id": "d088"
+        },
+        {
+          "id": "mem_19acd3587bdfc7991fbd398d",
+          "content": "[2024-11-01T00:01:27Z] user: Fenwick garden administrative note 88: receipt envelopes reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:27Z",
+          "source_id": "d087"
+        },
+        {
+          "id": "mem_e392ad699fd4a6d003d9a2c0",
+          "content": "[2024-11-01T00:01:26Z] user: Fenwick garden administrative note 87: parking permits reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:26Z",
+          "source_id": "d086"
+        },
+        {
+          "id": "mem_ae8c01973f7fae482d5b333b",
+          "content": "[2024-11-01T00:01:25Z] user: Fenwick garden administrative note 86: publicity leaflets reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:25Z",
+          "source_id": "d085"
+        },
+        {
+          "id": "mem_1ae864545c4482b0731bc0fd",
+          "content": "[2024-11-01T00:01:24Z] user: Fenwick garden administrative note 85: staff refreshments reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:24Z",
+          "source_id": "d084"
+        },
+        {
+          "id": "mem_2e98aff0fee11b5c809fb72e",
+          "content": "[2024-11-01T00:01:23Z] user: Fenwick garden administrative note 84: insurance paperwork reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:23Z",
+          "source_id": "d083"
+        },
+        {
+          "id": "mem_7497f5cdfb2e74a4c0ba74b6",
+          "content": "[2024-11-01T00:01:22Z] user: Fenwick garden administrative note 83: cleaning supplies reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:22Z",
+          "source_id": "d082"
+        },
+        {
+          "id": "mem_476ed720ab3d74835ae0224b",
+          "content": "[2024-11-01T00:01:21Z] user: Fenwick garden administrative note 82: visitor badges reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:21Z",
+          "source_id": "d081"
+        },
+        {
+          "id": "mem_0001c50a8ff5d9e88d447d34",
+          "content": "[2024-11-01T00:01:20Z] user: Fenwick garden administrative note 81: inventory labels reviewed by the office team, batch 11.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:20Z",
+          "source_id": "d080"
+        },
+        {
+          "id": "mem_6c56fa86bcc01ccae8634b7f",
+          "content": "[2024-11-01T00:01:19Z] user: Fenwick garden administrative note 80: receipt envelopes reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:19Z",
+          "source_id": "d079"
+        },
+        {
+          "id": "mem_b5153f48a3f5aae4d0f93427",
+          "content": "[2024-11-01T00:01:18Z] user: Fenwick garden administrative note 79: parking permits reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:18Z",
+          "source_id": "d078"
+        },
+        {
+          "id": "mem_86431cb8d26d46b2204a3386",
+          "content": "[2024-11-01T00:01:17Z] user: Fenwick garden administrative note 78: publicity leaflets reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:17Z",
+          "source_id": "d077"
+        },
+        {
+          "id": "mem_9034bdb84e9d9b221ad635aa",
+          "content": "[2024-11-01T00:01:16Z] user: Fenwick garden administrative note 77: staff refreshments reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:16Z",
+          "source_id": "d076"
+        },
+        {
+          "id": "mem_922900242cc69221a9cd983e",
+          "content": "[2024-11-01T00:01:15Z] user: Fenwick garden administrative note 76: insurance paperwork reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:15Z",
+          "source_id": "d075"
+        },
+        {
+          "id": "mem_ef4f4336809615d22249d15f",
+          "content": "[2024-11-01T00:01:14Z] user: Fenwick garden administrative note 75: cleaning supplies reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:14Z",
+          "source_id": "d074"
+        },
+        {
+          "id": "mem_0af48582257cb0573a476f7b",
+          "content": "[2024-11-01T00:01:13Z] user: Fenwick garden administrative note 74: visitor badges reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:13Z",
+          "source_id": "d073"
+        },
+        {
+          "id": "mem_b26d70ae56534e150f77cf51",
+          "content": "[2024-11-01T00:01:12Z] user: Fenwick garden administrative note 73: inventory labels reviewed by the office team, batch 10.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:12Z",
+          "source_id": "d072"
+        },
+        {
+          "id": "mem_665aa61347ed66d4ddc3c1b3",
+          "content": "[2024-11-01T00:01:11Z] user: Fenwick garden administrative note 72: receipt envelopes reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:11Z",
+          "source_id": "d071"
+        },
+        {
+          "id": "mem_875aefe083ef3148aca12b39",
+          "content": "[2024-11-01T00:01:10Z] user: Fenwick garden administrative note 71: parking permits reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:10Z",
+          "source_id": "d070"
+        },
+        {
+          "id": "mem_0c4d422ba4ba0f3270377a08",
+          "content": "[2024-11-01T00:01:09Z] user: Fenwick garden administrative note 70: publicity leaflets reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:09Z",
+          "source_id": "d069"
+        },
+        {
+          "id": "mem_2145da1d89f7c6c55393d1c7",
+          "content": "[2024-11-01T00:01:08Z] user: Fenwick garden administrative note 69: staff refreshments reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:08Z",
+          "source_id": "d068"
+        },
+        {
+          "id": "mem_0f3ff247ec43a17ddb6a798e",
+          "content": "[2024-11-01T00:01:07Z] user: Fenwick garden administrative note 68: insurance paperwork reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:07Z",
+          "source_id": "d067"
+        },
+        {
+          "id": "mem_ffbd9103256e3c672ba98a4c",
+          "content": "[2024-11-01T00:01:06Z] user: Fenwick garden administrative note 67: cleaning supplies reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:06Z",
+          "source_id": "d066"
+        },
+        {
+          "id": "mem_88bd4785971825c5938e4070",
+          "content": "[2024-11-01T00:01:05Z] user: Fenwick garden administrative note 66: visitor badges reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:05Z",
+          "source_id": "d065"
+        },
+        {
+          "id": "mem_2fd9f9bf96fa5604fe7def11",
+          "content": "[2024-11-01T00:01:04Z] user: Fenwick garden administrative note 65: inventory labels reviewed by the office team, batch 9.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:04Z",
+          "source_id": "d064"
+        },
+        {
+          "id": "mem_794b0c40f385967bfc2855be",
+          "content": "[2024-11-01T00:01:03Z] user: Fenwick garden administrative note 64: receipt envelopes reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:03Z",
+          "source_id": "d063"
+        },
+        {
+          "id": "mem_8e8d562368cba63e531f71a8",
+          "content": "[2024-11-01T00:01:02Z] user: Fenwick garden administrative note 63: parking permits reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:02Z",
+          "source_id": "d062"
+        },
+        {
+          "id": "mem_bc97118faf7562c383cf514e",
+          "content": "[2024-11-01T00:01:01Z] user: Fenwick garden administrative note 62: publicity leaflets reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:01Z",
+          "source_id": "d061"
+        },
+        {
+          "id": "mem_feb1ac5f03bfe879d7fcc1a2",
+          "content": "[2024-11-01T00:01:00Z] user: Fenwick garden administrative note 61: staff refreshments reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:01:00Z",
+          "source_id": "d060"
+        },
+        {
+          "id": "mem_1de17d5d3df476a15714ced5",
+          "content": "[2024-11-01T00:00:59Z] user: Fenwick garden administrative note 60: insurance paperwork reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:59Z",
+          "source_id": "d059"
+        },
+        {
+          "id": "mem_f5bea52bb5ffd76da473dd3f",
+          "content": "[2024-11-01T00:00:58Z] user: Fenwick garden administrative note 59: cleaning supplies reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:58Z",
+          "source_id": "d058"
+        },
+        {
+          "id": "mem_a09d79eeee4964ac6e999944",
+          "content": "[2024-11-01T00:00:57Z] user: Fenwick garden administrative note 58: visitor badges reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:57Z",
+          "source_id": "d057"
+        },
+        {
+          "id": "mem_9152879a6f45e3046ffe42a0",
+          "content": "[2024-11-01T00:00:56Z] user: Fenwick garden administrative note 57: inventory labels reviewed by the office team, batch 8.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:56Z",
+          "source_id": "d056"
+        },
+        {
+          "id": "mem_a5031fc094dfca3ccfae1668",
+          "content": "[2024-11-01T00:00:55Z] user: Fenwick garden administrative note 56: receipt envelopes reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:55Z",
+          "source_id": "d055"
+        },
+        {
+          "id": "mem_1f3cb3509c791fe4870b2bfa",
+          "content": "[2024-11-01T00:00:54Z] user: Fenwick garden administrative note 55: parking permits reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:54Z",
+          "source_id": "d054"
+        },
+        {
+          "id": "mem_a7962215712685918b2e70dd",
+          "content": "[2024-11-01T00:00:53Z] user: Fenwick garden administrative note 54: publicity leaflets reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:53Z",
+          "source_id": "d053"
+        },
+        {
+          "id": "mem_27db2143eb429be108e46aa0",
+          "content": "[2024-11-01T00:00:52Z] user: Fenwick garden administrative note 53: staff refreshments reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:52Z",
+          "source_id": "d052"
+        },
+        {
+          "id": "mem_450435a286211f4209a84e3e",
+          "content": "[2024-11-01T00:00:51Z] user: Fenwick garden administrative note 52: insurance paperwork reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:51Z",
+          "source_id": "d051"
+        },
+        {
+          "id": "mem_61696a6efbcc0caeeb96109d",
+          "content": "[2024-11-01T00:00:50Z] user: Fenwick garden administrative note 51: cleaning supplies reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:50Z",
+          "source_id": "d050"
+        },
+        {
+          "id": "mem_ece2b07a6dd63f75b18fbdf3",
+          "content": "[2024-11-01T00:00:49Z] user: Fenwick garden administrative note 50: visitor badges reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:49Z",
+          "source_id": "d049"
+        },
+        {
+          "id": "mem_11e0384a02a88d0393ec993b",
+          "content": "[2024-11-01T00:00:48Z] user: Fenwick garden administrative note 49: inventory labels reviewed by the office team, batch 7.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:48Z",
+          "source_id": "d048"
+        },
+        {
+          "id": "mem_db593a47cb3da553674338d6",
+          "content": "[2024-11-01T00:00:47Z] user: Fenwick garden administrative note 48: receipt envelopes reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:47Z",
+          "source_id": "d047"
+        },
+        {
+          "id": "mem_e720048928e0748dd38f4df6",
+          "content": "[2024-11-01T00:00:46Z] user: Fenwick garden administrative note 47: parking permits reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:46Z",
+          "source_id": "d046"
+        },
+        {
+          "id": "mem_595d4ecc90ca1f8a1708540d",
+          "content": "[2024-11-01T00:00:45Z] user: Fenwick garden administrative note 46: publicity leaflets reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:45Z",
+          "source_id": "d045"
+        },
+        {
+          "id": "mem_e7eb570f75ad7198a439505a",
+          "content": "[2024-11-01T00:00:44Z] user: Fenwick garden administrative note 45: staff refreshments reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:44Z",
+          "source_id": "d044"
+        },
+        {
+          "id": "mem_82b46ab2a2c34963a538524b",
+          "content": "[2024-11-01T00:00:43Z] user: Fenwick garden administrative note 44: insurance paperwork reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:43Z",
+          "source_id": "d043"
+        },
+        {
+          "id": "mem_6e372b0644c8ca350eb0abc9",
+          "content": "[2024-11-01T00:00:42Z] user: Fenwick garden administrative note 43: cleaning supplies reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:42Z",
+          "source_id": "d042"
+        },
+        {
+          "id": "mem_0be005d2f2af2527f36ce632",
+          "content": "[2024-11-01T00:00:41Z] user: Fenwick garden administrative note 42: visitor badges reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:41Z",
+          "source_id": "d041"
+        },
+        {
+          "id": "mem_a03d8e2f3338ae787cc23c86",
+          "content": "[2024-11-01T00:00:40Z] user: Fenwick garden administrative note 41: inventory labels reviewed by the office team, batch 6.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:40Z",
+          "source_id": "d040"
+        },
+        {
+          "id": "mem_7258659b340ecfa47c66d37d",
+          "content": "[2024-11-01T00:00:39Z] user: Fenwick garden administrative note 40: receipt envelopes reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:39Z",
+          "source_id": "d039"
+        },
+        {
+          "id": "mem_3cac2f4cb33388dbf5b32adf",
+          "content": "[2024-11-01T00:00:38Z] user: Fenwick garden administrative note 39: parking permits reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:38Z",
+          "source_id": "d038"
+        },
+        {
+          "id": "mem_942c7a234b116050ec3b0c25",
+          "content": "[2024-11-01T00:00:37Z] user: Fenwick garden administrative note 38: publicity leaflets reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:37Z",
+          "source_id": "d037"
+        },
+        {
+          "id": "mem_505dd1d635289d812fe58220",
+          "content": "[2024-11-01T00:00:36Z] user: Fenwick garden administrative note 37: staff refreshments reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:36Z",
+          "source_id": "d036"
+        },
+        {
+          "id": "mem_9caf465f04cb529dc2b458ef",
+          "content": "[2024-11-01T00:00:35Z] user: Fenwick garden administrative note 36: insurance paperwork reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:35Z",
+          "source_id": "d035"
+        },
+        {
+          "id": "mem_6b1291a1bc6de44390b79cbb",
+          "content": "[2024-11-01T00:00:34Z] user: Fenwick garden administrative note 35: cleaning supplies reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:34Z",
+          "source_id": "d034"
+        },
+        {
+          "id": "mem_844e10308d41b521f6b27791",
+          "content": "[2024-11-01T00:00:33Z] user: Fenwick garden administrative note 34: visitor badges reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:33Z",
+          "source_id": "d033"
+        },
+        {
+          "id": "mem_37ec097d08056e972ca7dea1",
+          "content": "[2024-11-01T00:00:32Z] user: Fenwick garden administrative note 33: inventory labels reviewed by the office team, batch 5.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:32Z",
+          "source_id": "d032"
+        },
+        {
+          "id": "mem_001097deebfe96ca50753c4e",
+          "content": "[2024-11-01T00:00:31Z] user: Fenwick garden administrative note 32: receipt envelopes reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:31Z",
+          "source_id": "d031"
+        },
+        {
+          "id": "mem_4b918ad62ee801b93ef66430",
+          "content": "[2024-11-01T00:00:30Z] user: Fenwick garden administrative note 31: parking permits reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:30Z",
+          "source_id": "d030"
+        },
+        {
+          "id": "mem_52329a19c33ffa4a24bc4c23",
+          "content": "[2024-11-01T00:00:29Z] user: Fenwick garden administrative note 30: publicity leaflets reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:29Z",
+          "source_id": "d029"
+        },
+        {
+          "id": "mem_3612e98d4ec4eb12a37b4fd7",
+          "content": "[2024-11-01T00:00:28Z] user: Fenwick garden administrative note 29: staff refreshments reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:28Z",
+          "source_id": "d028"
+        },
+        {
+          "id": "mem_7c7bf6c8e24ce51bff250001",
+          "content": "[2024-11-01T00:00:27Z] user: Fenwick garden administrative note 28: insurance paperwork reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:27Z",
+          "source_id": "d027"
+        },
+        {
+          "id": "mem_8aca5045bdc1fb211b8af55c",
+          "content": "[2024-11-01T00:00:26Z] user: Fenwick garden administrative note 27: cleaning supplies reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:26Z",
+          "source_id": "d026"
+        },
+        {
+          "id": "mem_0c8fc0cde55643ae1b2b3520",
+          "content": "[2024-11-01T00:00:25Z] user: Fenwick garden administrative note 26: visitor badges reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:25Z",
+          "source_id": "d025"
+        },
+        {
+          "id": "mem_04cdfc0397fd2166a3efe017",
+          "content": "[2024-11-01T00:00:24Z] user: Fenwick garden administrative note 25: inventory labels reviewed by the office team, batch 4.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:24Z",
+          "source_id": "d024"
+        },
+        {
+          "id": "mem_381cba3f4e6ed5c113054436",
+          "content": "[2024-11-01T00:00:23Z] user: Fenwick garden administrative note 24: receipt envelopes reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:23Z",
+          "source_id": "d023"
+        },
+        {
+          "id": "mem_30b41a31efa60f3212f7a813",
+          "content": "[2024-11-01T00:00:22Z] user: Fenwick garden administrative note 23: parking permits reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:22Z",
+          "source_id": "d022"
+        },
+        {
+          "id": "mem_0fa3418a46c51502041dca98",
+          "content": "[2024-11-01T00:00:21Z] user: Fenwick garden administrative note 22: publicity leaflets reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:21Z",
+          "source_id": "d021"
+        },
+        {
+          "id": "mem_57c959f9af7ae40b279fe442",
+          "content": "[2024-11-01T00:00:20Z] user: Fenwick garden administrative note 21: staff refreshments reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:20Z",
+          "source_id": "d020"
+        },
+        {
+          "id": "mem_e04ad2e800a9715f54d0c91b",
+          "content": "[2024-11-01T00:00:19Z] user: Fenwick garden administrative note 20: insurance paperwork reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:19Z",
+          "source_id": "d019"
+        },
+        {
+          "id": "mem_34d371a145708125aad919f2",
+          "content": "[2024-11-01T00:00:18Z] user: Fenwick garden administrative note 19: cleaning supplies reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:18Z",
+          "source_id": "d018"
+        },
+        {
+          "id": "mem_5a86c98b78cfab67dbe193ea",
+          "content": "[2024-11-01T00:00:17Z] user: Fenwick garden administrative note 18: visitor badges reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:17Z",
+          "source_id": "d017"
+        },
+        {
+          "id": "mem_9ef6e96a20a6a6f0d0cf66fa",
+          "content": "[2024-11-01T00:00:16Z] user: Fenwick garden administrative note 17: inventory labels reviewed by the office team, batch 3.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:16Z",
+          "source_id": "d016"
+        },
+        {
+          "id": "mem_3bbf60d3b627999db671f961",
+          "content": "[2024-11-01T00:00:15Z] user: Fenwick garden administrative note 16: receipt envelopes reviewed by the office team, batch 2.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:15Z",
+          "source_id": "d015"
+        },
+        {
+          "id": "mem_891fa1031da7a8ff53791bc7",
+          "content": "[2024-11-01T00:00:14Z] user: Fenwick garden administrative note 15: parking permits reviewed by the office team, batch 2.",
+          "score": 0.238062,
+          "created_at": "2024-11-01T00:00:14Z",
+          "source_id": "d014"
+        }
+      ]
+    },
+    {
+      "name": "blind10-interval-zh",
+      "category": "bounded_history_zh",
+      "candidate_count": 114,
+      "expected": [
+        "may",
+        "june"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        2
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_78416166e4d948197a9546e2",
+          "content": "[2024-04-20T00:00:00Z] user: 松岚画廊从2024年4月20日至5月31日由沈青保管钥匙。",
+          "score": 41.671765,
+          "created_at": "2024-04-20T00:00:00Z",
+          "source_id": "may"
+        },
+        {
+          "id": "mem_e04a445ff2c744a786e16901",
+          "content": "[2024-06-01T00:00:00Z] user: 自2024年6月1日起，松岚画廊钥匙改由陆宁保管。",
+          "score": 36.591856,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "june"
+        },
+        {
+          "id": "mem_374c285ccc62b587cfd446d8",
+          "content": "[2024-11-01T00:01:47Z] user: 松岚画廊行政记录第108号：保险资料由行政组复核，批次14。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:01:47Z",
+          "source_id": "d107"
+        },
+        {
+          "id": "mem_68687c0106e888f696a3ac68",
+          "content": "[2024-11-01T00:01:39Z] user: 松岚画廊行政记录第100号：保险资料由行政组复核，批次13。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:01:39Z",
+          "source_id": "d099"
+        },
+        {
+          "id": "mem_f5f606a3c8d5d727576e219f",
+          "content": "[2024-11-01T00:01:31Z] user: 松岚画廊行政记录第92号：保险资料由行政组复核，批次12。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:01:31Z",
+          "source_id": "d091"
+        },
+        {
+          "id": "mem_4a6ca79262bdb8fc5c49dc35",
+          "content": "[2024-11-01T00:01:23Z] user: 松岚画廊行政记录第84号：保险资料由行政组复核，批次11。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:01:23Z",
+          "source_id": "d083"
+        },
+        {
+          "id": "mem_0d4fbfec573ea8e43debb023",
+          "content": "[2024-11-01T00:01:15Z] user: 松岚画廊行政记录第76号：保险资料由行政组复核，批次10。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:01:15Z",
+          "source_id": "d075"
+        },
+        {
+          "id": "mem_823997344b7f158dee83397e",
+          "content": "[2024-11-01T00:01:07Z] user: 松岚画廊行政记录第68号：保险资料由行政组复核，批次9。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:01:07Z",
+          "source_id": "d067"
+        },
+        {
+          "id": "mem_76ba988310828946eff72333",
+          "content": "[2024-11-01T00:00:59Z] user: 松岚画廊行政记录第60号：保险资料由行政组复核，批次8。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:59Z",
+          "source_id": "d059"
+        },
+        {
+          "id": "mem_a82c63577f0811155be326a7",
+          "content": "[2024-11-01T00:00:51Z] user: 松岚画廊行政记录第52号：保险资料由行政组复核，批次7。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:51Z",
+          "source_id": "d051"
+        },
+        {
+          "id": "mem_6bd540f68c8380bde92259b3",
+          "content": "[2024-11-01T00:00:43Z] user: 松岚画廊行政记录第44号：保险资料由行政组复核，批次6。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:43Z",
+          "source_id": "d043"
+        },
+        {
+          "id": "mem_4bb4f76f2c7124045080a450",
+          "content": "[2024-11-01T00:00:35Z] user: 松岚画廊行政记录第36号：保险资料由行政组复核，批次5。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:35Z",
+          "source_id": "d035"
+        },
+        {
+          "id": "mem_d584bc045141cf979bff7feb",
+          "content": "[2024-11-01T00:00:27Z] user: 松岚画廊行政记录第28号：保险资料由行政组复核，批次4。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:27Z",
+          "source_id": "d027"
+        },
+        {
+          "id": "mem_74d22435bf9c889dd1441adc",
+          "content": "[2024-11-01T00:00:19Z] user: 松岚画廊行政记录第20号：保险资料由行政组复核，批次3。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:19Z",
+          "source_id": "d019"
+        },
+        {
+          "id": "mem_0f155c4e758a0e0d6e3d9e8b",
+          "content": "[2024-11-01T00:00:11Z] user: 松岚画廊行政记录第12号：保险资料由行政组复核，批次2。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:11Z",
+          "source_id": "d011"
+        },
+        {
+          "id": "mem_4524ded48bd93a2093d6e688",
+          "content": "[2024-11-01T00:00:03Z] user: 松岚画廊行政记录第4号：保险资料由行政组复核，批次1。",
+          "score": 2.167622,
+          "created_at": "2024-11-01T00:00:03Z",
+          "source_id": "d003"
+        },
+        {
+          "id": "mem_3865ea2689ecab03532c3427",
+          "content": "[2024-11-01T00:01:50Z] user: 松岚画廊行政记录第111号：停车证由行政组复核，批次14。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:50Z",
+          "source_id": "d110"
+        },
+        {
+          "id": "mem_cb648a5d91b44fca4b38fdc1",
+          "content": "[2024-11-01T00:01:49Z] user: 松岚画廊行政记录第110号：宣传页由行政组复核，批次14。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:49Z",
+          "source_id": "d109"
+        },
+        {
+          "id": "mem_3e06f94dad93f22aa7e612f1",
+          "content": "[2024-11-01T00:01:42Z] user: 松岚画廊行政记录第103号：停车证由行政组复核，批次13。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:42Z",
+          "source_id": "d102"
+        },
+        {
+          "id": "mem_97da04c999c936434a416155",
+          "content": "[2024-11-01T00:01:41Z] user: 松岚画廊行政记录第102号：宣传页由行政组复核，批次13。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:41Z",
+          "source_id": "d101"
+        },
+        {
+          "id": "mem_3b6d4c41dbf83bb1b37a5d9e",
+          "content": "[2024-11-01T00:01:34Z] user: 松岚画廊行政记录第95号：停车证由行政组复核，批次12。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:34Z",
+          "source_id": "d094"
+        },
+        {
+          "id": "mem_6d01f0e41855f77888d7a7c9",
+          "content": "[2024-11-01T00:01:33Z] user: 松岚画廊行政记录第94号：宣传页由行政组复核，批次12。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:33Z",
+          "source_id": "d093"
+        },
+        {
+          "id": "mem_70b71843f91899b3fadbf82b",
+          "content": "[2024-11-01T00:01:26Z] user: 松岚画廊行政记录第87号：停车证由行政组复核，批次11。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:26Z",
+          "source_id": "d086"
+        },
+        {
+          "id": "mem_e195c8ec0dd4b4e5a044821f",
+          "content": "[2024-11-01T00:01:25Z] user: 松岚画廊行政记录第86号：宣传页由行政组复核，批次11。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:25Z",
+          "source_id": "d085"
+        },
+        {
+          "id": "mem_b467120706b1a7e6b2733d8c",
+          "content": "[2024-11-01T00:01:18Z] user: 松岚画廊行政记录第79号：停车证由行政组复核，批次10。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:18Z",
+          "source_id": "d078"
+        },
+        {
+          "id": "mem_d93c2f3652f0fc19ecbfd2ae",
+          "content": "[2024-11-01T00:01:17Z] user: 松岚画廊行政记录第78号：宣传页由行政组复核，批次10。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:17Z",
+          "source_id": "d077"
+        },
+        {
+          "id": "mem_3c52dda275831b239e279641",
+          "content": "[2024-11-01T00:01:10Z] user: 松岚画廊行政记录第71号：停车证由行政组复核，批次9。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:10Z",
+          "source_id": "d070"
+        },
+        {
+          "id": "mem_936d5a528e41756a6dae87a4",
+          "content": "[2024-11-01T00:01:09Z] user: 松岚画廊行政记录第70号：宣传页由行政组复核，批次9。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:09Z",
+          "source_id": "d069"
+        },
+        {
+          "id": "mem_cce92e7cfc6eddb73295f217",
+          "content": "[2024-11-01T00:01:02Z] user: 松岚画廊行政记录第63号：停车证由行政组复核，批次8。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:02Z",
+          "source_id": "d062"
+        },
+        {
+          "id": "mem_df4926c135b1ff964b0fc082",
+          "content": "[2024-11-01T00:01:01Z] user: 松岚画廊行政记录第62号：宣传页由行政组复核，批次8。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:01:01Z",
+          "source_id": "d061"
+        },
+        {
+          "id": "mem_78adcae4457b6ebd6f1f53e8",
+          "content": "[2024-11-01T00:00:54Z] user: 松岚画廊行政记录第55号：停车证由行政组复核，批次7。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:54Z",
+          "source_id": "d054"
+        },
+        {
+          "id": "mem_a5205e5c9babc4012d0e10e0",
+          "content": "[2024-11-01T00:00:53Z] user: 松岚画廊行政记录第54号：宣传页由行政组复核，批次7。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:53Z",
+          "source_id": "d053"
+        },
+        {
+          "id": "mem_c787e7bb81f8fdeff2331aca",
+          "content": "[2024-11-01T00:00:46Z] user: 松岚画廊行政记录第47号：停车证由行政组复核，批次6。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:46Z",
+          "source_id": "d046"
+        },
+        {
+          "id": "mem_89fb6c0a15cc3f583fee22b7",
+          "content": "[2024-11-01T00:00:45Z] user: 松岚画廊行政记录第46号：宣传页由行政组复核，批次6。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:45Z",
+          "source_id": "d045"
+        },
+        {
+          "id": "mem_a23f183df1673fe938effe50",
+          "content": "[2024-11-01T00:00:38Z] user: 松岚画廊行政记录第39号：停车证由行政组复核，批次5。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:38Z",
+          "source_id": "d038"
+        },
+        {
+          "id": "mem_cca9a3f62070c461c7166fc7",
+          "content": "[2024-11-01T00:00:37Z] user: 松岚画廊行政记录第38号：宣传页由行政组复核，批次5。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:37Z",
+          "source_id": "d037"
+        },
+        {
+          "id": "mem_f37b950a1b7b3e01fd16d22a",
+          "content": "[2024-11-01T00:00:30Z] user: 松岚画廊行政记录第31号：停车证由行政组复核，批次4。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:30Z",
+          "source_id": "d030"
+        },
+        {
+          "id": "mem_320687950d3b38ebb0782a03",
+          "content": "[2024-11-01T00:00:29Z] user: 松岚画廊行政记录第30号：宣传页由行政组复核，批次4。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:29Z",
+          "source_id": "d029"
+        },
+        {
+          "id": "mem_e2e24c32807c343f403289f9",
+          "content": "[2024-11-01T00:00:22Z] user: 松岚画廊行政记录第23号：停车证由行政组复核，批次3。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:22Z",
+          "source_id": "d022"
+        },
+        {
+          "id": "mem_d0e1ebd51333aa2f8fa21b55",
+          "content": "[2024-11-01T00:00:21Z] user: 松岚画廊行政记录第22号：宣传页由行政组复核，批次3。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:21Z",
+          "source_id": "d021"
+        },
+        {
+          "id": "mem_4a748eee4498e3e1ef668ebf",
+          "content": "[2024-11-01T00:00:14Z] user: 松岚画廊行政记录第15号：停车证由行政组复核，批次2。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:14Z",
+          "source_id": "d014"
+        },
+        {
+          "id": "mem_048d879f0b8228c79510df3d",
+          "content": "[2024-11-01T00:00:13Z] user: 松岚画廊行政记录第14号：宣传页由行政组复核，批次2。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:13Z",
+          "source_id": "d013"
+        },
+        {
+          "id": "mem_328acc870fa2e261018885e5",
+          "content": "[2024-11-01T00:00:06Z] user: 松岚画廊行政记录第7号：停车证由行政组复核，批次1。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:06Z",
+          "source_id": "d006"
+        },
+        {
+          "id": "mem_48d93ce7fa14a443e3052079",
+          "content": "[2024-11-01T00:00:05Z] user: 松岚画廊行政记录第6号：宣传页由行政组复核，批次1。",
+          "score": 0.217187,
+          "created_at": "2024-11-01T00:00:05Z",
+          "source_id": "d005"
+        },
+        {
+          "id": "mem_73b40d557bf2381e7609fda8",
+          "content": "[2024-11-01T00:01:51Z] user: 松岚画廊行政记录第112号：收据归档由行政组复核，批次14。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:51Z",
+          "source_id": "d111"
+        },
+        {
+          "id": "mem_bb11ced6ec3653fce45f483a",
+          "content": "[2024-11-01T00:01:48Z] user: 松岚画廊行政记录第109号：茶点采购由行政组复核，批次14。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:48Z",
+          "source_id": "d108"
+        },
+        {
+          "id": "mem_819d9caf43c5aa8790e2cc8a",
+          "content": "[2024-11-01T00:01:46Z] user: 松岚画廊行政记录第107号：清洁用品由行政组复核，批次14。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:46Z",
+          "source_id": "d106"
+        },
+        {
+          "id": "mem_a17cf5121b883563ee63c714",
+          "content": "[2024-11-01T00:01:45Z] user: 松岚画廊行政记录第106号：访客登记由行政组复核，批次14。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:45Z",
+          "source_id": "d105"
+        },
+        {
+          "id": "mem_55947fe3ae9dbef9e724d3ba",
+          "content": "[2024-11-01T00:01:44Z] user: 松岚画廊行政记录第105号：标签盘点由行政组复核，批次14。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:44Z",
+          "source_id": "d104"
+        },
+        {
+          "id": "mem_2089ae2465ab681182212e76",
+          "content": "[2024-11-01T00:01:43Z] user: 松岚画廊行政记录第104号：收据归档由行政组复核，批次13。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:43Z",
+          "source_id": "d103"
+        },
+        {
+          "id": "mem_44bdb255aecffbfcb24e0b2a",
+          "content": "[2024-11-01T00:01:40Z] user: 松岚画廊行政记录第101号：茶点采购由行政组复核，批次13。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:40Z",
+          "source_id": "d100"
+        },
+        {
+          "id": "mem_6f6c180f5e90e87b865aae4a",
+          "content": "[2024-11-01T00:01:38Z] user: 松岚画廊行政记录第99号：清洁用品由行政组复核，批次13。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:38Z",
+          "source_id": "d098"
+        },
+        {
+          "id": "mem_72cda91ed8f4f11b0e5229fc",
+          "content": "[2024-11-01T00:01:37Z] user: 松岚画廊行政记录第98号：访客登记由行政组复核，批次13。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:37Z",
+          "source_id": "d097"
+        },
+        {
+          "id": "mem_12da2ee2e670a059fe14e5bf",
+          "content": "[2024-11-01T00:01:36Z] user: 松岚画廊行政记录第97号：标签盘点由行政组复核，批次13。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:36Z",
+          "source_id": "d096"
+        },
+        {
+          "id": "mem_9b7375f53458b670a9f79df4",
+          "content": "[2024-11-01T00:01:35Z] user: 松岚画廊行政记录第96号：收据归档由行政组复核，批次12。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:35Z",
+          "source_id": "d095"
+        },
+        {
+          "id": "mem_02297da6e6294b1ddc36afeb",
+          "content": "[2024-11-01T00:01:32Z] user: 松岚画廊行政记录第93号：茶点采购由行政组复核，批次12。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:32Z",
+          "source_id": "d092"
+        },
+        {
+          "id": "mem_b07ebccfc56ec97b828d63d9",
+          "content": "[2024-11-01T00:01:30Z] user: 松岚画廊行政记录第91号：清洁用品由行政组复核，批次12。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:30Z",
+          "source_id": "d090"
+        },
+        {
+          "id": "mem_0425b6fe7133f2bdc78cd37f",
+          "content": "[2024-11-01T00:01:29Z] user: 松岚画廊行政记录第90号：访客登记由行政组复核，批次12。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:29Z",
+          "source_id": "d089"
+        },
+        {
+          "id": "mem_255cf84d8cb94b7224853e1c",
+          "content": "[2024-11-01T00:01:28Z] user: 松岚画廊行政记录第89号：标签盘点由行政组复核，批次12。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:28Z",
+          "source_id": "d088"
+        },
+        {
+          "id": "mem_b1abf0526969062e6bccedc0",
+          "content": "[2024-11-01T00:01:27Z] user: 松岚画廊行政记录第88号：收据归档由行政组复核，批次11。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:27Z",
+          "source_id": "d087"
+        },
+        {
+          "id": "mem_a587ec055832cf0bbcb031fe",
+          "content": "[2024-11-01T00:01:24Z] user: 松岚画廊行政记录第85号：茶点采购由行政组复核，批次11。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:24Z",
+          "source_id": "d084"
+        },
+        {
+          "id": "mem_96b8d3f102ebca2a6a347b24",
+          "content": "[2024-11-01T00:01:22Z] user: 松岚画廊行政记录第83号：清洁用品由行政组复核，批次11。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:22Z",
+          "source_id": "d082"
+        },
+        {
+          "id": "mem_88e82bf2a0a16762b1fde24b",
+          "content": "[2024-11-01T00:01:21Z] user: 松岚画廊行政记录第82号：访客登记由行政组复核，批次11。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:21Z",
+          "source_id": "d081"
+        },
+        {
+          "id": "mem_ac042339073b4ac812b7f054",
+          "content": "[2024-11-01T00:01:20Z] user: 松岚画廊行政记录第81号：标签盘点由行政组复核，批次11。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:20Z",
+          "source_id": "d080"
+        },
+        {
+          "id": "mem_cde7d7d7a52a469abd2789ce",
+          "content": "[2024-11-01T00:01:19Z] user: 松岚画廊行政记录第80号：收据归档由行政组复核，批次10。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:19Z",
+          "source_id": "d079"
+        },
+        {
+          "id": "mem_832c682971d5fb29f67034de",
+          "content": "[2024-11-01T00:01:16Z] user: 松岚画廊行政记录第77号：茶点采购由行政组复核，批次10。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:16Z",
+          "source_id": "d076"
+        },
+        {
+          "id": "mem_9f3c4b5f7e52cac598a9c552",
+          "content": "[2024-11-01T00:01:14Z] user: 松岚画廊行政记录第75号：清洁用品由行政组复核，批次10。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:14Z",
+          "source_id": "d074"
+        },
+        {
+          "id": "mem_e5bc84809f0549e471dd6995",
+          "content": "[2024-11-01T00:01:13Z] user: 松岚画廊行政记录第74号：访客登记由行政组复核，批次10。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:13Z",
+          "source_id": "d073"
+        },
+        {
+          "id": "mem_b060ad4ed5957ea205521771",
+          "content": "[2024-11-01T00:01:12Z] user: 松岚画廊行政记录第73号：标签盘点由行政组复核，批次10。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:12Z",
+          "source_id": "d072"
+        },
+        {
+          "id": "mem_549e8c0a01c7bd65983ba4eb",
+          "content": "[2024-11-01T00:01:11Z] user: 松岚画廊行政记录第72号：收据归档由行政组复核，批次9。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:11Z",
+          "source_id": "d071"
+        },
+        {
+          "id": "mem_5e89d26c69e1a73b4dd1cdd5",
+          "content": "[2024-11-01T00:01:08Z] user: 松岚画廊行政记录第69号：茶点采购由行政组复核，批次9。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:08Z",
+          "source_id": "d068"
+        },
+        {
+          "id": "mem_48eed20ebabc53a1d38ca5f0",
+          "content": "[2024-11-01T00:01:06Z] user: 松岚画廊行政记录第67号：清洁用品由行政组复核，批次9。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:06Z",
+          "source_id": "d066"
+        },
+        {
+          "id": "mem_a4dbd577b130db018eda75f8",
+          "content": "[2024-11-01T00:01:05Z] user: 松岚画廊行政记录第66号：访客登记由行政组复核，批次9。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:05Z",
+          "source_id": "d065"
+        },
+        {
+          "id": "mem_2ac4c106ceffd6b6d513a8a6",
+          "content": "[2024-11-01T00:01:04Z] user: 松岚画廊行政记录第65号：标签盘点由行政组复核，批次9。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:04Z",
+          "source_id": "d064"
+        },
+        {
+          "id": "mem_34f3f766e777362aa6aa4e08",
+          "content": "[2024-11-01T00:01:03Z] user: 松岚画廊行政记录第64号：收据归档由行政组复核，批次8。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:03Z",
+          "source_id": "d063"
+        },
+        {
+          "id": "mem_73beb5b44e13a83616b39cf6",
+          "content": "[2024-11-01T00:01:00Z] user: 松岚画廊行政记录第61号：茶点采购由行政组复核，批次8。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:01:00Z",
+          "source_id": "d060"
+        },
+        {
+          "id": "mem_6abc2e7ad588993597c96a6b",
+          "content": "[2024-11-01T00:00:58Z] user: 松岚画廊行政记录第59号：清洁用品由行政组复核，批次8。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:58Z",
+          "source_id": "d058"
+        },
+        {
+          "id": "mem_539b18da818830897208d2fd",
+          "content": "[2024-11-01T00:00:57Z] user: 松岚画廊行政记录第58号：访客登记由行政组复核，批次8。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:57Z",
+          "source_id": "d057"
+        },
+        {
+          "id": "mem_3db700603b13ee1257dbac06",
+          "content": "[2024-11-01T00:00:56Z] user: 松岚画廊行政记录第57号：标签盘点由行政组复核，批次8。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:56Z",
+          "source_id": "d056"
+        },
+        {
+          "id": "mem_623ed1d37c0672dcb6f4f7eb",
+          "content": "[2024-11-01T00:00:55Z] user: 松岚画廊行政记录第56号：收据归档由行政组复核，批次7。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:55Z",
+          "source_id": "d055"
+        },
+        {
+          "id": "mem_f5763f93b7f3da087a31a661",
+          "content": "[2024-11-01T00:00:52Z] user: 松岚画廊行政记录第53号：茶点采购由行政组复核，批次7。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:52Z",
+          "source_id": "d052"
+        },
+        {
+          "id": "mem_56d59304772dad68c0e550ee",
+          "content": "[2024-11-01T00:00:50Z] user: 松岚画廊行政记录第51号：清洁用品由行政组复核，批次7。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:50Z",
+          "source_id": "d050"
+        },
+        {
+          "id": "mem_0d26bf965c3be68131dd68a6",
+          "content": "[2024-11-01T00:00:49Z] user: 松岚画廊行政记录第50号：访客登记由行政组复核，批次7。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:49Z",
+          "source_id": "d049"
+        },
+        {
+          "id": "mem_dddbc928d5c51728c54635f2",
+          "content": "[2024-11-01T00:00:48Z] user: 松岚画廊行政记录第49号：标签盘点由行政组复核，批次7。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:48Z",
+          "source_id": "d048"
+        },
+        {
+          "id": "mem_f4bb94ee07b7f061d271e825",
+          "content": "[2024-11-01T00:00:47Z] user: 松岚画廊行政记录第48号：收据归档由行政组复核，批次6。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:47Z",
+          "source_id": "d047"
+        },
+        {
+          "id": "mem_0147b5e0ec65b00e1c97cca1",
+          "content": "[2024-11-01T00:00:44Z] user: 松岚画廊行政记录第45号：茶点采购由行政组复核，批次6。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:44Z",
+          "source_id": "d044"
+        },
+        {
+          "id": "mem_0df0daa14f6f382dfa891405",
+          "content": "[2024-11-01T00:00:42Z] user: 松岚画廊行政记录第43号：清洁用品由行政组复核，批次6。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:42Z",
+          "source_id": "d042"
+        },
+        {
+          "id": "mem_d8e402d2c188b8b05c654a48",
+          "content": "[2024-11-01T00:00:41Z] user: 松岚画廊行政记录第42号：访客登记由行政组复核，批次6。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:41Z",
+          "source_id": "d041"
+        },
+        {
+          "id": "mem_bee7b44039a2a3a85494af56",
+          "content": "[2024-11-01T00:00:40Z] user: 松岚画廊行政记录第41号：标签盘点由行政组复核，批次6。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:40Z",
+          "source_id": "d040"
+        },
+        {
+          "id": "mem_500228d9c09590244c2f240b",
+          "content": "[2024-11-01T00:00:39Z] user: 松岚画廊行政记录第40号：收据归档由行政组复核，批次5。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:39Z",
+          "source_id": "d039"
+        },
+        {
+          "id": "mem_018951de498a552f7f720942",
+          "content": "[2024-11-01T00:00:36Z] user: 松岚画廊行政记录第37号：茶点采购由行政组复核，批次5。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:36Z",
+          "source_id": "d036"
+        },
+        {
+          "id": "mem_479c85ded8217102e25ccdb5",
+          "content": "[2024-11-01T00:00:34Z] user: 松岚画廊行政记录第35号：清洁用品由行政组复核，批次5。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:34Z",
+          "source_id": "d034"
+        },
+        {
+          "id": "mem_e69d4dbcaace19c739c49571",
+          "content": "[2024-11-01T00:00:33Z] user: 松岚画廊行政记录第34号：访客登记由行政组复核，批次5。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:33Z",
+          "source_id": "d033"
+        },
+        {
+          "id": "mem_f6e46fa298289cc3dfc69b95",
+          "content": "[2024-11-01T00:00:32Z] user: 松岚画廊行政记录第33号：标签盘点由行政组复核，批次5。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:32Z",
+          "source_id": "d032"
+        },
+        {
+          "id": "mem_ac8618d9754e185172b9f7ad",
+          "content": "[2024-11-01T00:00:31Z] user: 松岚画廊行政记录第32号：收据归档由行政组复核，批次4。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:31Z",
+          "source_id": "d031"
+        },
+        {
+          "id": "mem_6812762395e2d06fa187fb5c",
+          "content": "[2024-11-01T00:00:28Z] user: 松岚画廊行政记录第29号：茶点采购由行政组复核，批次4。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:28Z",
+          "source_id": "d028"
+        },
+        {
+          "id": "mem_87c498cb0e5e929b33b53e36",
+          "content": "[2024-11-01T00:00:26Z] user: 松岚画廊行政记录第27号：清洁用品由行政组复核，批次4。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:26Z",
+          "source_id": "d026"
+        },
+        {
+          "id": "mem_cbe9272343eaa52b8b8b4ba3",
+          "content": "[2024-11-01T00:00:25Z] user: 松岚画廊行政记录第26号：访客登记由行政组复核，批次4。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:25Z",
+          "source_id": "d025"
+        },
+        {
+          "id": "mem_7488a312c72ee347abb943a5",
+          "content": "[2024-11-01T00:00:24Z] user: 松岚画廊行政记录第25号：标签盘点由行政组复核，批次4。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:24Z",
+          "source_id": "d024"
+        },
+        {
+          "id": "mem_15d7015b5a11d70757aa8d9c",
+          "content": "[2024-11-01T00:00:23Z] user: 松岚画廊行政记录第24号：收据归档由行政组复核，批次3。",
+          "score": 0.216441,
+          "created_at": "2024-11-01T00:00:23Z",
+          "source_id": "d023"
+        }
+      ]
+    },
+    {
+      "name": "blind10-sequence-zh",
+      "category": "event_order_zh",
+      "candidate_count": 114,
+      "expected": [
+        "costume",
+        "lighting"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_71d4db7f651ec53c4848d700",
+          "content": "[2024-09-10T00:00:00Z] user: 补记：白石剧团于2024年9月3日完成灯光测试。",
+          "score": 52.933234,
+          "created_at": "2024-09-10T00:00:00Z",
+          "source_id": "lighting"
+        },
+        {
+          "id": "mem_768f86b14cbae234ac8b00ff",
+          "content": "[2024-09-08T00:00:00Z] user: 白石剧团于2024年9月8日完成服装验收。",
+          "score": 52.157856,
+          "created_at": "2024-09-08T00:00:00Z",
+          "source_id": "costume"
+        },
+        {
+          "id": "mem_7e7ebd4628653e520d997f2a",
+          "content": "[2024-11-01T00:01:51Z] user: 白石剧团行政记录第112号：收据归档由行政组复核，批次14。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:51Z",
+          "source_id": "d111"
+        },
+        {
+          "id": "mem_2a668840fccc7426994ec532",
+          "content": "[2024-11-01T00:01:43Z] user: 白石剧团行政记录第104号：收据归档由行政组复核，批次13。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:43Z",
+          "source_id": "d103"
+        },
+        {
+          "id": "mem_4e072cf80b4dd87499ade7a8",
+          "content": "[2024-11-01T00:01:35Z] user: 白石剧团行政记录第96号：收据归档由行政组复核，批次12。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:35Z",
+          "source_id": "d095"
+        },
+        {
+          "id": "mem_396ccb3be8259431f4a74b68",
+          "content": "[2024-11-01T00:01:27Z] user: 白石剧团行政记录第88号：收据归档由行政组复核，批次11。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:27Z",
+          "source_id": "d087"
+        },
+        {
+          "id": "mem_bc9d685817dcf5439e5a22a3",
+          "content": "[2024-11-01T00:01:19Z] user: 白石剧团行政记录第80号：收据归档由行政组复核，批次10。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:19Z",
+          "source_id": "d079"
+        },
+        {
+          "id": "mem_48ffd5918d39c827aed18297",
+          "content": "[2024-11-01T00:01:11Z] user: 白石剧团行政记录第72号：收据归档由行政组复核，批次9。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:11Z",
+          "source_id": "d071"
+        },
+        {
+          "id": "mem_ab219061b8f9b7750f80e572",
+          "content": "[2024-11-01T00:01:03Z] user: 白石剧团行政记录第64号：收据归档由行政组复核，批次8。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:01:03Z",
+          "source_id": "d063"
+        },
+        {
+          "id": "mem_f430b9b8a3d6c8e9d23f8b67",
+          "content": "[2024-11-01T00:00:55Z] user: 白石剧团行政记录第56号：收据归档由行政组复核，批次7。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:55Z",
+          "source_id": "d055"
+        },
+        {
+          "id": "mem_58886ac10ee55507bf13b506",
+          "content": "[2024-11-01T00:00:47Z] user: 白石剧团行政记录第48号：收据归档由行政组复核，批次6。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:47Z",
+          "source_id": "d047"
+        },
+        {
+          "id": "mem_704541b736823c9d4bceef7e",
+          "content": "[2024-11-01T00:00:39Z] user: 白石剧团行政记录第40号：收据归档由行政组复核，批次5。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:39Z",
+          "source_id": "d039"
+        },
+        {
+          "id": "mem_bb66924588f3f9fc6097b785",
+          "content": "[2024-11-01T00:00:31Z] user: 白石剧团行政记录第32号：收据归档由行政组复核，批次4。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:31Z",
+          "source_id": "d031"
+        },
+        {
+          "id": "mem_81de638e64013de22d5ba9e6",
+          "content": "[2024-11-01T00:00:23Z] user: 白石剧团行政记录第24号：收据归档由行政组复核，批次3。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:23Z",
+          "source_id": "d023"
+        },
+        {
+          "id": "mem_ba91cfd78ec6e3bb4d568c95",
+          "content": "[2024-11-01T00:00:15Z] user: 白石剧团行政记录第16号：收据归档由行政组复核，批次2。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:15Z",
+          "source_id": "d015"
+        },
+        {
+          "id": "mem_1f17b84d8fb79368b78df3db",
+          "content": "[2024-11-01T00:00:07Z] user: 白石剧团行政记录第8号：收据归档由行政组复核，批次1。",
+          "score": 2.195416,
+          "created_at": "2024-11-01T00:00:07Z",
+          "source_id": "d007"
+        },
+        {
+          "id": "mem_9f0542d87571b49d0b0948bf",
+          "content": "[2024-11-01T00:01:50Z] user: 白石剧团行政记录第111号：停车证由行政组复核，批次14。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:50Z",
+          "source_id": "d110"
+        },
+        {
+          "id": "mem_699df7838c16538fc1ff7f0b",
+          "content": "[2024-11-01T00:01:49Z] user: 白石剧团行政记录第110号：宣传页由行政组复核，批次14。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:49Z",
+          "source_id": "d109"
+        },
+        {
+          "id": "mem_8a5742c76f64c861f7573fe0",
+          "content": "[2024-11-01T00:01:42Z] user: 白石剧团行政记录第103号：停车证由行政组复核，批次13。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:42Z",
+          "source_id": "d102"
+        },
+        {
+          "id": "mem_6ac8b80f44ac461cac2554b3",
+          "content": "[2024-11-01T00:01:41Z] user: 白石剧团行政记录第102号：宣传页由行政组复核，批次13。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:41Z",
+          "source_id": "d101"
+        },
+        {
+          "id": "mem_e12006c9c5bcb4e401ddd59c",
+          "content": "[2024-11-01T00:01:34Z] user: 白石剧团行政记录第95号：停车证由行政组复核，批次12。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:34Z",
+          "source_id": "d094"
+        },
+        {
+          "id": "mem_f8da4439a326b3efcf04828c",
+          "content": "[2024-11-01T00:01:33Z] user: 白石剧团行政记录第94号：宣传页由行政组复核，批次12。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:33Z",
+          "source_id": "d093"
+        },
+        {
+          "id": "mem_22ab4677166a98c2d02723e7",
+          "content": "[2024-11-01T00:01:26Z] user: 白石剧团行政记录第87号：停车证由行政组复核，批次11。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:26Z",
+          "source_id": "d086"
+        },
+        {
+          "id": "mem_eb5e674def934c4c1d6bc60d",
+          "content": "[2024-11-01T00:01:25Z] user: 白石剧团行政记录第86号：宣传页由行政组复核，批次11。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:25Z",
+          "source_id": "d085"
+        },
+        {
+          "id": "mem_154163401a89fe6bd8fc1200",
+          "content": "[2024-11-01T00:01:18Z] user: 白石剧团行政记录第79号：停车证由行政组复核，批次10。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:18Z",
+          "source_id": "d078"
+        },
+        {
+          "id": "mem_3126a2d3a81730f89159a3cf",
+          "content": "[2024-11-01T00:01:17Z] user: 白石剧团行政记录第78号：宣传页由行政组复核，批次10。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:17Z",
+          "source_id": "d077"
+        },
+        {
+          "id": "mem_fb3a24c7075ea963e104018f",
+          "content": "[2024-11-01T00:01:10Z] user: 白石剧团行政记录第71号：停车证由行政组复核，批次9。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:10Z",
+          "source_id": "d070"
+        },
+        {
+          "id": "mem_d97a4919ba2d6e4cdc39ee13",
+          "content": "[2024-11-01T00:01:09Z] user: 白石剧团行政记录第70号：宣传页由行政组复核，批次9。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:09Z",
+          "source_id": "d069"
+        },
+        {
+          "id": "mem_e837a7438fd7b05c719f46d0",
+          "content": "[2024-11-01T00:01:02Z] user: 白石剧团行政记录第63号：停车证由行政组复核，批次8。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:02Z",
+          "source_id": "d062"
+        },
+        {
+          "id": "mem_d5e09133bafe9bb8ac161891",
+          "content": "[2024-11-01T00:01:01Z] user: 白石剧团行政记录第62号：宣传页由行政组复核，批次8。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:01:01Z",
+          "source_id": "d061"
+        },
+        {
+          "id": "mem_31df743b9c278b476bc78c3b",
+          "content": "[2024-11-01T00:00:54Z] user: 白石剧团行政记录第55号：停车证由行政组复核，批次7。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:54Z",
+          "source_id": "d054"
+        },
+        {
+          "id": "mem_c6c1d9a855b4d41ef0fee802",
+          "content": "[2024-11-01T00:00:53Z] user: 白石剧团行政记录第54号：宣传页由行政组复核，批次7。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:53Z",
+          "source_id": "d053"
+        },
+        {
+          "id": "mem_ffe090b704e911c5ef7273d0",
+          "content": "[2024-11-01T00:00:46Z] user: 白石剧团行政记录第47号：停车证由行政组复核，批次6。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:46Z",
+          "source_id": "d046"
+        },
+        {
+          "id": "mem_6f2933617869109626486d96",
+          "content": "[2024-11-01T00:00:45Z] user: 白石剧团行政记录第46号：宣传页由行政组复核，批次6。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:45Z",
+          "source_id": "d045"
+        },
+        {
+          "id": "mem_0ef360a68b3e8c9026394ce6",
+          "content": "[2024-11-01T00:00:38Z] user: 白石剧团行政记录第39号：停车证由行政组复核，批次5。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:38Z",
+          "source_id": "d038"
+        },
+        {
+          "id": "mem_f49e9cbbbc61b49133240990",
+          "content": "[2024-11-01T00:00:37Z] user: 白石剧团行政记录第38号：宣传页由行政组复核，批次5。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:37Z",
+          "source_id": "d037"
+        },
+        {
+          "id": "mem_9fd9c1353aec787583d4d911",
+          "content": "[2024-11-01T00:00:30Z] user: 白石剧团行政记录第31号：停车证由行政组复核，批次4。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:30Z",
+          "source_id": "d030"
+        },
+        {
+          "id": "mem_1b50521593d2a248b7265104",
+          "content": "[2024-11-01T00:00:29Z] user: 白石剧团行政记录第30号：宣传页由行政组复核，批次4。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:29Z",
+          "source_id": "d029"
+        },
+        {
+          "id": "mem_0945849b3a3a2129478ac362",
+          "content": "[2024-11-01T00:00:22Z] user: 白石剧团行政记录第23号：停车证由行政组复核，批次3。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:22Z",
+          "source_id": "d022"
+        },
+        {
+          "id": "mem_0d949d908d0a9a9ea5afa07f",
+          "content": "[2024-11-01T00:00:21Z] user: 白石剧团行政记录第22号：宣传页由行政组复核，批次3。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:21Z",
+          "source_id": "d021"
+        },
+        {
+          "id": "mem_bf171f4ec78eb59316ed5c77",
+          "content": "[2024-11-01T00:00:14Z] user: 白石剧团行政记录第15号：停车证由行政组复核，批次2。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:14Z",
+          "source_id": "d014"
+        },
+        {
+          "id": "mem_a12c7d376cb22227289d4eba",
+          "content": "[2024-11-01T00:00:13Z] user: 白石剧团行政记录第14号：宣传页由行政组复核，批次2。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:13Z",
+          "source_id": "d013"
+        },
+        {
+          "id": "mem_fdc581398490f2f21092bb38",
+          "content": "[2024-11-01T00:00:06Z] user: 白石剧团行政记录第7号：停车证由行政组复核，批次1。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:06Z",
+          "source_id": "d006"
+        },
+        {
+          "id": "mem_b7c6563a68190b33015ec6ab",
+          "content": "[2024-11-01T00:00:05Z] user: 白石剧团行政记录第6号：宣传页由行政组复核，批次1。",
+          "score": 0.185332,
+          "created_at": "2024-11-01T00:00:05Z",
+          "source_id": "d005"
+        },
+        {
+          "id": "mem_769af0ce98e32fdcc1ff2676",
+          "content": "[2024-11-01T00:01:48Z] user: 白石剧团行政记录第109号：茶点采购由行政组复核，批次14。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:48Z",
+          "source_id": "d108"
+        },
+        {
+          "id": "mem_69dc2069d7116159493cd844",
+          "content": "[2024-11-01T00:01:47Z] user: 白石剧团行政记录第108号：保险资料由行政组复核，批次14。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:47Z",
+          "source_id": "d107"
+        },
+        {
+          "id": "mem_a5caff7bb26b9ec4047a8e77",
+          "content": "[2024-11-01T00:01:46Z] user: 白石剧团行政记录第107号：清洁用品由行政组复核，批次14。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:46Z",
+          "source_id": "d106"
+        },
+        {
+          "id": "mem_ccf91b9d7b3df5a92d299da1",
+          "content": "[2024-11-01T00:01:45Z] user: 白石剧团行政记录第106号：访客登记由行政组复核，批次14。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:45Z",
+          "source_id": "d105"
+        },
+        {
+          "id": "mem_c32eb6a8162d037346953bd4",
+          "content": "[2024-11-01T00:01:44Z] user: 白石剧团行政记录第105号：标签盘点由行政组复核，批次14。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:44Z",
+          "source_id": "d104"
+        },
+        {
+          "id": "mem_642618f13078174b8c76b0dc",
+          "content": "[2024-11-01T00:01:40Z] user: 白石剧团行政记录第101号：茶点采购由行政组复核，批次13。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:40Z",
+          "source_id": "d100"
+        },
+        {
+          "id": "mem_868b33b7502b198eb42053c9",
+          "content": "[2024-11-01T00:01:39Z] user: 白石剧团行政记录第100号：保险资料由行政组复核，批次13。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:39Z",
+          "source_id": "d099"
+        },
+        {
+          "id": "mem_2ced1db9a6f9526ccc5f3a5f",
+          "content": "[2024-11-01T00:01:38Z] user: 白石剧团行政记录第99号：清洁用品由行政组复核，批次13。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:38Z",
+          "source_id": "d098"
+        },
+        {
+          "id": "mem_9f28a852f59547ac8ae09d7f",
+          "content": "[2024-11-01T00:01:37Z] user: 白石剧团行政记录第98号：访客登记由行政组复核，批次13。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:37Z",
+          "source_id": "d097"
+        },
+        {
+          "id": "mem_83b14bdc201332f15de6fa5a",
+          "content": "[2024-11-01T00:01:36Z] user: 白石剧团行政记录第97号：标签盘点由行政组复核，批次13。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:36Z",
+          "source_id": "d096"
+        },
+        {
+          "id": "mem_8198917823faa29c543b301d",
+          "content": "[2024-11-01T00:01:32Z] user: 白石剧团行政记录第93号：茶点采购由行政组复核，批次12。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:32Z",
+          "source_id": "d092"
+        },
+        {
+          "id": "mem_3ec444aa4bd0df987556fb66",
+          "content": "[2024-11-01T00:01:31Z] user: 白石剧团行政记录第92号：保险资料由行政组复核，批次12。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:31Z",
+          "source_id": "d091"
+        },
+        {
+          "id": "mem_314d1d13db97d73f946d7cf6",
+          "content": "[2024-11-01T00:01:30Z] user: 白石剧团行政记录第91号：清洁用品由行政组复核，批次12。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:30Z",
+          "source_id": "d090"
+        },
+        {
+          "id": "mem_a9b09b8fd10dd0ac88ec255b",
+          "content": "[2024-11-01T00:01:29Z] user: 白石剧团行政记录第90号：访客登记由行政组复核，批次12。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:29Z",
+          "source_id": "d089"
+        },
+        {
+          "id": "mem_08fd150f1a1c1764b724f975",
+          "content": "[2024-11-01T00:01:28Z] user: 白石剧团行政记录第89号：标签盘点由行政组复核，批次12。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:28Z",
+          "source_id": "d088"
+        },
+        {
+          "id": "mem_701bd637886fc3a52cc67619",
+          "content": "[2024-11-01T00:01:24Z] user: 白石剧团行政记录第85号：茶点采购由行政组复核，批次11。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:24Z",
+          "source_id": "d084"
+        },
+        {
+          "id": "mem_daa504b42cf17559703d4d79",
+          "content": "[2024-11-01T00:01:23Z] user: 白石剧团行政记录第84号：保险资料由行政组复核，批次11。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:23Z",
+          "source_id": "d083"
+        },
+        {
+          "id": "mem_487ef76fe72e0f70c607afbf",
+          "content": "[2024-11-01T00:01:22Z] user: 白石剧团行政记录第83号：清洁用品由行政组复核，批次11。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:22Z",
+          "source_id": "d082"
+        },
+        {
+          "id": "mem_b093f61a6299457940fc4372",
+          "content": "[2024-11-01T00:01:21Z] user: 白石剧团行政记录第82号：访客登记由行政组复核，批次11。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:21Z",
+          "source_id": "d081"
+        },
+        {
+          "id": "mem_86159afb41b72a1a8a2789e3",
+          "content": "[2024-11-01T00:01:20Z] user: 白石剧团行政记录第81号：标签盘点由行政组复核，批次11。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:20Z",
+          "source_id": "d080"
+        },
+        {
+          "id": "mem_3ca6c03447fbe762dcf0e25c",
+          "content": "[2024-11-01T00:01:16Z] user: 白石剧团行政记录第77号：茶点采购由行政组复核，批次10。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:16Z",
+          "source_id": "d076"
+        },
+        {
+          "id": "mem_57b2f93690979dcae09d0c13",
+          "content": "[2024-11-01T00:01:15Z] user: 白石剧团行政记录第76号：保险资料由行政组复核，批次10。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:15Z",
+          "source_id": "d075"
+        },
+        {
+          "id": "mem_669aa319ad72d85822b94434",
+          "content": "[2024-11-01T00:01:14Z] user: 白石剧团行政记录第75号：清洁用品由行政组复核，批次10。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:14Z",
+          "source_id": "d074"
+        },
+        {
+          "id": "mem_751fdfba97c337e6e5817064",
+          "content": "[2024-11-01T00:01:13Z] user: 白石剧团行政记录第74号：访客登记由行政组复核，批次10。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:13Z",
+          "source_id": "d073"
+        },
+        {
+          "id": "mem_f9328425356d77de850fe42a",
+          "content": "[2024-11-01T00:01:12Z] user: 白石剧团行政记录第73号：标签盘点由行政组复核，批次10。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:12Z",
+          "source_id": "d072"
+        },
+        {
+          "id": "mem_df4cf0538eca8b62559bb944",
+          "content": "[2024-11-01T00:01:08Z] user: 白石剧团行政记录第69号：茶点采购由行政组复核，批次9。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:08Z",
+          "source_id": "d068"
+        },
+        {
+          "id": "mem_bed905cf596622c94b2da8e5",
+          "content": "[2024-11-01T00:01:07Z] user: 白石剧团行政记录第68号：保险资料由行政组复核，批次9。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:07Z",
+          "source_id": "d067"
+        },
+        {
+          "id": "mem_0b7773935d814add8ac73255",
+          "content": "[2024-11-01T00:01:06Z] user: 白石剧团行政记录第67号：清洁用品由行政组复核，批次9。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:06Z",
+          "source_id": "d066"
+        },
+        {
+          "id": "mem_badab8498b32cdcf02c71fde",
+          "content": "[2024-11-01T00:01:05Z] user: 白石剧团行政记录第66号：访客登记由行政组复核，批次9。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:05Z",
+          "source_id": "d065"
+        },
+        {
+          "id": "mem_ba864414501e641b84887509",
+          "content": "[2024-11-01T00:01:04Z] user: 白石剧团行政记录第65号：标签盘点由行政组复核，批次9。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:04Z",
+          "source_id": "d064"
+        },
+        {
+          "id": "mem_4620628199149269677bc472",
+          "content": "[2024-11-01T00:01:00Z] user: 白石剧团行政记录第61号：茶点采购由行政组复核，批次8。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:01:00Z",
+          "source_id": "d060"
+        },
+        {
+          "id": "mem_4fbc4f52bef4c0af25f5a9ac",
+          "content": "[2024-11-01T00:00:59Z] user: 白石剧团行政记录第60号：保险资料由行政组复核，批次8。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:59Z",
+          "source_id": "d059"
+        },
+        {
+          "id": "mem_5100cdc87860a8b9f04b1003",
+          "content": "[2024-11-01T00:00:58Z] user: 白石剧团行政记录第59号：清洁用品由行政组复核，批次8。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:58Z",
+          "source_id": "d058"
+        },
+        {
+          "id": "mem_9860cf2caa7e519d3fdc0ea2",
+          "content": "[2024-11-01T00:00:57Z] user: 白石剧团行政记录第58号：访客登记由行政组复核，批次8。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:57Z",
+          "source_id": "d057"
+        },
+        {
+          "id": "mem_a903d97de5f9da63d8034ff1",
+          "content": "[2024-11-01T00:00:56Z] user: 白石剧团行政记录第57号：标签盘点由行政组复核，批次8。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:56Z",
+          "source_id": "d056"
+        },
+        {
+          "id": "mem_3d7456e964ec78b145bde741",
+          "content": "[2024-11-01T00:00:52Z] user: 白石剧团行政记录第53号：茶点采购由行政组复核，批次7。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:52Z",
+          "source_id": "d052"
+        },
+        {
+          "id": "mem_89cdf31c18f7013fe2236131",
+          "content": "[2024-11-01T00:00:51Z] user: 白石剧团行政记录第52号：保险资料由行政组复核，批次7。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:51Z",
+          "source_id": "d051"
+        },
+        {
+          "id": "mem_a4a5b9706ef1d547fad740a1",
+          "content": "[2024-11-01T00:00:50Z] user: 白石剧团行政记录第51号：清洁用品由行政组复核，批次7。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:50Z",
+          "source_id": "d050"
+        },
+        {
+          "id": "mem_34247fde4712694379691ade",
+          "content": "[2024-11-01T00:00:49Z] user: 白石剧团行政记录第50号：访客登记由行政组复核，批次7。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:49Z",
+          "source_id": "d049"
+        },
+        {
+          "id": "mem_b6fe4f0adc7a52a6771f681f",
+          "content": "[2024-11-01T00:00:48Z] user: 白石剧团行政记录第49号：标签盘点由行政组复核，批次7。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:48Z",
+          "source_id": "d048"
+        },
+        {
+          "id": "mem_75bfdd2a7411c1545f231331",
+          "content": "[2024-11-01T00:00:44Z] user: 白石剧团行政记录第45号：茶点采购由行政组复核，批次6。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:44Z",
+          "source_id": "d044"
+        },
+        {
+          "id": "mem_8f4887e64f7301e4748475fd",
+          "content": "[2024-11-01T00:00:43Z] user: 白石剧团行政记录第44号：保险资料由行政组复核，批次6。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:43Z",
+          "source_id": "d043"
+        },
+        {
+          "id": "mem_50718b30d05eb1c4cb7d122f",
+          "content": "[2024-11-01T00:00:42Z] user: 白石剧团行政记录第43号：清洁用品由行政组复核，批次6。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:42Z",
+          "source_id": "d042"
+        },
+        {
+          "id": "mem_e4dac3946cf69d9363e200a5",
+          "content": "[2024-11-01T00:00:41Z] user: 白石剧团行政记录第42号：访客登记由行政组复核，批次6。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:41Z",
+          "source_id": "d041"
+        },
+        {
+          "id": "mem_fb324cfaecd518895fb52e71",
+          "content": "[2024-11-01T00:00:40Z] user: 白石剧团行政记录第41号：标签盘点由行政组复核，批次6。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:40Z",
+          "source_id": "d040"
+        },
+        {
+          "id": "mem_2ffefbe46e1f920d2bfbe04e",
+          "content": "[2024-11-01T00:00:36Z] user: 白石剧团行政记录第37号：茶点采购由行政组复核，批次5。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:36Z",
+          "source_id": "d036"
+        },
+        {
+          "id": "mem_74eee3bafc1f6ec6c61121f0",
+          "content": "[2024-11-01T00:00:35Z] user: 白石剧团行政记录第36号：保险资料由行政组复核，批次5。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:35Z",
+          "source_id": "d035"
+        },
+        {
+          "id": "mem_05d287a51c707dc5d29cf685",
+          "content": "[2024-11-01T00:00:34Z] user: 白石剧团行政记录第35号：清洁用品由行政组复核，批次5。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:34Z",
+          "source_id": "d034"
+        },
+        {
+          "id": "mem_5f9d15aea7a674bf1394da95",
+          "content": "[2024-11-01T00:00:33Z] user: 白石剧团行政记录第34号：访客登记由行政组复核，批次5。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:33Z",
+          "source_id": "d033"
+        },
+        {
+          "id": "mem_c49f9764b483f909a90d8b78",
+          "content": "[2024-11-01T00:00:32Z] user: 白石剧团行政记录第33号：标签盘点由行政组复核，批次5。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:32Z",
+          "source_id": "d032"
+        },
+        {
+          "id": "mem_4aa70d9fe2a10b0f97a558c3",
+          "content": "[2024-11-01T00:00:28Z] user: 白石剧团行政记录第29号：茶点采购由行政组复核，批次4。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:28Z",
+          "source_id": "d028"
+        },
+        {
+          "id": "mem_3d9b06293055f2be9c75fbc8",
+          "content": "[2024-11-01T00:00:27Z] user: 白石剧团行政记录第28号：保险资料由行政组复核，批次4。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:27Z",
+          "source_id": "d027"
+        },
+        {
+          "id": "mem_016fc01a6122392211486638",
+          "content": "[2024-11-01T00:00:26Z] user: 白石剧团行政记录第27号：清洁用品由行政组复核，批次4。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:26Z",
+          "source_id": "d026"
+        },
+        {
+          "id": "mem_5bd84025565523e10d3a112a",
+          "content": "[2024-11-01T00:00:25Z] user: 白石剧团行政记录第26号：访客登记由行政组复核，批次4。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:25Z",
+          "source_id": "d025"
+        },
+        {
+          "id": "mem_3cc9c716ecd07f96f159fb8e",
+          "content": "[2024-11-01T00:00:24Z] user: 白石剧团行政记录第25号：标签盘点由行政组复核，批次4。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:24Z",
+          "source_id": "d024"
+        },
+        {
+          "id": "mem_ae67aceb36351894f48579cf",
+          "content": "[2024-11-01T00:00:20Z] user: 白石剧团行政记录第21号：茶点采购由行政组复核，批次3。",
+          "score": 0.184678,
+          "created_at": "2024-11-01T00:00:20Z",
+          "source_id": "d020"
+        }
+      ]
+    }
+  ]
+}
