@@ -13,6 +13,23 @@ from benchmarks.evidence import complete_at, source_ranks, validate_source_case
 
 
 class ExtendedBenchmarkTests(unittest.TestCase):
+    def test_blind10_frozen_temporal_budget_cases(self):
+        root = Path(__file__).resolve().parents[1] / "benchmarks"
+        cases = json.loads((root / "blind10_cases.json").read_text(encoding="utf-8"))
+        self.assertEqual("d7c7efdf9d14871110ab33c3720ebebba4dad94a58f74975362117e30edcf602", hashlib.sha256(
+            json.dumps(cases, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest())
+        self.assertEqual(6, len(cases))
+        prior_queries = set()
+        for path in root.glob("*_cases.json"):
+            if path.name != "blind10_cases.json":
+                prior_queries.update(c["query"].strip().casefold() for c in json.loads(path.read_text(encoding="utf-8")))
+        for case in cases:
+            validate_source_case(case)
+            self.assertNotIn(case["query"].strip().casefold(), prior_queries)
+            self.assertGreater(len(case["memories"]), 100)
+            self.assertEqual(2, len(case["expected_source_ids"]))
+
     def test_blind9_is_frozen_disjoint_and_temporal_safety_scoped(self):
         root = Path(__file__).resolve().parents[1] / "benchmarks"
         blind9 = json.loads((root / "blind9_cases.json").read_text(encoding="utf-8"))

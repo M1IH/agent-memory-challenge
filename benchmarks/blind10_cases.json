@@ -1,0 +1,4178 @@
+[
+  {
+    "name": "blind10-event-order",
+    "category": "event_order",
+    "query": "Which happened first for the Lumen observatory: the lens delivery or the calibration?",
+    "expected_source_ids": [
+      "delivery",
+      "calibration"
+    ],
+    "forbidden_source_ids": [],
+    "memories": [
+      {
+        "source_id": "delivery",
+        "session_id": "delivery",
+        "timestamp": 1714521600000,
+        "content": "The Lumen observatory lens delivery occurred on 12 April 2024."
+      },
+      {
+        "source_id": "calibration",
+        "session_id": "calibration",
+        "timestamp": 1711929600000,
+        "content": "The Lumen observatory calibration occurred on 19 April 2024."
+      },
+      {
+        "source_id": "d000",
+        "session_id": "noise-0",
+        "timestamp": 1730419200000,
+        "content": "Lumen observatory administrative note 1: inventory labels reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d001",
+        "session_id": "noise-1",
+        "timestamp": 1730419201000,
+        "content": "Lumen observatory administrative note 2: visitor badges reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d002",
+        "session_id": "noise-2",
+        "timestamp": 1730419202000,
+        "content": "Lumen observatory administrative note 3: cleaning supplies reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d003",
+        "session_id": "noise-3",
+        "timestamp": 1730419203000,
+        "content": "Lumen observatory administrative note 4: insurance paperwork reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d004",
+        "session_id": "noise-4",
+        "timestamp": 1730419204000,
+        "content": "Lumen observatory administrative note 5: staff refreshments reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d005",
+        "session_id": "noise-5",
+        "timestamp": 1730419205000,
+        "content": "Lumen observatory administrative note 6: publicity leaflets reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d006",
+        "session_id": "noise-6",
+        "timestamp": 1730419206000,
+        "content": "Lumen observatory administrative note 7: parking permits reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d007",
+        "session_id": "noise-7",
+        "timestamp": 1730419207000,
+        "content": "Lumen observatory administrative note 8: receipt envelopes reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d008",
+        "session_id": "noise-8",
+        "timestamp": 1730419208000,
+        "content": "Lumen observatory administrative note 9: inventory labels reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d009",
+        "session_id": "noise-9",
+        "timestamp": 1730419209000,
+        "content": "Lumen observatory administrative note 10: visitor badges reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d010",
+        "session_id": "noise-10",
+        "timestamp": 1730419210000,
+        "content": "Lumen observatory administrative note 11: cleaning supplies reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d011",
+        "session_id": "noise-11",
+        "timestamp": 1730419211000,
+        "content": "Lumen observatory administrative note 12: insurance paperwork reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d012",
+        "session_id": "noise-12",
+        "timestamp": 1730419212000,
+        "content": "Lumen observatory administrative note 13: staff refreshments reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d013",
+        "session_id": "noise-13",
+        "timestamp": 1730419213000,
+        "content": "Lumen observatory administrative note 14: publicity leaflets reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d014",
+        "session_id": "noise-14",
+        "timestamp": 1730419214000,
+        "content": "Lumen observatory administrative note 15: parking permits reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d015",
+        "session_id": "noise-15",
+        "timestamp": 1730419215000,
+        "content": "Lumen observatory administrative note 16: receipt envelopes reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d016",
+        "session_id": "noise-16",
+        "timestamp": 1730419216000,
+        "content": "Lumen observatory administrative note 17: inventory labels reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d017",
+        "session_id": "noise-17",
+        "timestamp": 1730419217000,
+        "content": "Lumen observatory administrative note 18: visitor badges reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d018",
+        "session_id": "noise-18",
+        "timestamp": 1730419218000,
+        "content": "Lumen observatory administrative note 19: cleaning supplies reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d019",
+        "session_id": "noise-19",
+        "timestamp": 1730419219000,
+        "content": "Lumen observatory administrative note 20: insurance paperwork reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d020",
+        "session_id": "noise-20",
+        "timestamp": 1730419220000,
+        "content": "Lumen observatory administrative note 21: staff refreshments reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d021",
+        "session_id": "noise-21",
+        "timestamp": 1730419221000,
+        "content": "Lumen observatory administrative note 22: publicity leaflets reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d022",
+        "session_id": "noise-22",
+        "timestamp": 1730419222000,
+        "content": "Lumen observatory administrative note 23: parking permits reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d023",
+        "session_id": "noise-23",
+        "timestamp": 1730419223000,
+        "content": "Lumen observatory administrative note 24: receipt envelopes reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d024",
+        "session_id": "noise-24",
+        "timestamp": 1730419224000,
+        "content": "Lumen observatory administrative note 25: inventory labels reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d025",
+        "session_id": "noise-25",
+        "timestamp": 1730419225000,
+        "content": "Lumen observatory administrative note 26: visitor badges reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d026",
+        "session_id": "noise-26",
+        "timestamp": 1730419226000,
+        "content": "Lumen observatory administrative note 27: cleaning supplies reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d027",
+        "session_id": "noise-27",
+        "timestamp": 1730419227000,
+        "content": "Lumen observatory administrative note 28: insurance paperwork reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d028",
+        "session_id": "noise-28",
+        "timestamp": 1730419228000,
+        "content": "Lumen observatory administrative note 29: staff refreshments reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d029",
+        "session_id": "noise-29",
+        "timestamp": 1730419229000,
+        "content": "Lumen observatory administrative note 30: publicity leaflets reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d030",
+        "session_id": "noise-30",
+        "timestamp": 1730419230000,
+        "content": "Lumen observatory administrative note 31: parking permits reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d031",
+        "session_id": "noise-31",
+        "timestamp": 1730419231000,
+        "content": "Lumen observatory administrative note 32: receipt envelopes reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d032",
+        "session_id": "noise-32",
+        "timestamp": 1730419232000,
+        "content": "Lumen observatory administrative note 33: inventory labels reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d033",
+        "session_id": "noise-33",
+        "timestamp": 1730419233000,
+        "content": "Lumen observatory administrative note 34: visitor badges reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d034",
+        "session_id": "noise-34",
+        "timestamp": 1730419234000,
+        "content": "Lumen observatory administrative note 35: cleaning supplies reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d035",
+        "session_id": "noise-35",
+        "timestamp": 1730419235000,
+        "content": "Lumen observatory administrative note 36: insurance paperwork reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d036",
+        "session_id": "noise-36",
+        "timestamp": 1730419236000,
+        "content": "Lumen observatory administrative note 37: staff refreshments reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d037",
+        "session_id": "noise-37",
+        "timestamp": 1730419237000,
+        "content": "Lumen observatory administrative note 38: publicity leaflets reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d038",
+        "session_id": "noise-38",
+        "timestamp": 1730419238000,
+        "content": "Lumen observatory administrative note 39: parking permits reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d039",
+        "session_id": "noise-39",
+        "timestamp": 1730419239000,
+        "content": "Lumen observatory administrative note 40: receipt envelopes reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d040",
+        "session_id": "noise-40",
+        "timestamp": 1730419240000,
+        "content": "Lumen observatory administrative note 41: inventory labels reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d041",
+        "session_id": "noise-41",
+        "timestamp": 1730419241000,
+        "content": "Lumen observatory administrative note 42: visitor badges reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d042",
+        "session_id": "noise-42",
+        "timestamp": 1730419242000,
+        "content": "Lumen observatory administrative note 43: cleaning supplies reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d043",
+        "session_id": "noise-43",
+        "timestamp": 1730419243000,
+        "content": "Lumen observatory administrative note 44: insurance paperwork reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d044",
+        "session_id": "noise-44",
+        "timestamp": 1730419244000,
+        "content": "Lumen observatory administrative note 45: staff refreshments reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d045",
+        "session_id": "noise-45",
+        "timestamp": 1730419245000,
+        "content": "Lumen observatory administrative note 46: publicity leaflets reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d046",
+        "session_id": "noise-46",
+        "timestamp": 1730419246000,
+        "content": "Lumen observatory administrative note 47: parking permits reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d047",
+        "session_id": "noise-47",
+        "timestamp": 1730419247000,
+        "content": "Lumen observatory administrative note 48: receipt envelopes reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d048",
+        "session_id": "noise-48",
+        "timestamp": 1730419248000,
+        "content": "Lumen observatory administrative note 49: inventory labels reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d049",
+        "session_id": "noise-49",
+        "timestamp": 1730419249000,
+        "content": "Lumen observatory administrative note 50: visitor badges reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d050",
+        "session_id": "noise-50",
+        "timestamp": 1730419250000,
+        "content": "Lumen observatory administrative note 51: cleaning supplies reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d051",
+        "session_id": "noise-51",
+        "timestamp": 1730419251000,
+        "content": "Lumen observatory administrative note 52: insurance paperwork reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d052",
+        "session_id": "noise-52",
+        "timestamp": 1730419252000,
+        "content": "Lumen observatory administrative note 53: staff refreshments reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d053",
+        "session_id": "noise-53",
+        "timestamp": 1730419253000,
+        "content": "Lumen observatory administrative note 54: publicity leaflets reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d054",
+        "session_id": "noise-54",
+        "timestamp": 1730419254000,
+        "content": "Lumen observatory administrative note 55: parking permits reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d055",
+        "session_id": "noise-55",
+        "timestamp": 1730419255000,
+        "content": "Lumen observatory administrative note 56: receipt envelopes reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d056",
+        "session_id": "noise-56",
+        "timestamp": 1730419256000,
+        "content": "Lumen observatory administrative note 57: inventory labels reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d057",
+        "session_id": "noise-57",
+        "timestamp": 1730419257000,
+        "content": "Lumen observatory administrative note 58: visitor badges reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d058",
+        "session_id": "noise-58",
+        "timestamp": 1730419258000,
+        "content": "Lumen observatory administrative note 59: cleaning supplies reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d059",
+        "session_id": "noise-59",
+        "timestamp": 1730419259000,
+        "content": "Lumen observatory administrative note 60: insurance paperwork reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d060",
+        "session_id": "noise-60",
+        "timestamp": 1730419260000,
+        "content": "Lumen observatory administrative note 61: staff refreshments reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d061",
+        "session_id": "noise-61",
+        "timestamp": 1730419261000,
+        "content": "Lumen observatory administrative note 62: publicity leaflets reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d062",
+        "session_id": "noise-62",
+        "timestamp": 1730419262000,
+        "content": "Lumen observatory administrative note 63: parking permits reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d063",
+        "session_id": "noise-63",
+        "timestamp": 1730419263000,
+        "content": "Lumen observatory administrative note 64: receipt envelopes reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d064",
+        "session_id": "noise-64",
+        "timestamp": 1730419264000,
+        "content": "Lumen observatory administrative note 65: inventory labels reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d065",
+        "session_id": "noise-65",
+        "timestamp": 1730419265000,
+        "content": "Lumen observatory administrative note 66: visitor badges reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d066",
+        "session_id": "noise-66",
+        "timestamp": 1730419266000,
+        "content": "Lumen observatory administrative note 67: cleaning supplies reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d067",
+        "session_id": "noise-67",
+        "timestamp": 1730419267000,
+        "content": "Lumen observatory administrative note 68: insurance paperwork reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d068",
+        "session_id": "noise-68",
+        "timestamp": 1730419268000,
+        "content": "Lumen observatory administrative note 69: staff refreshments reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d069",
+        "session_id": "noise-69",
+        "timestamp": 1730419269000,
+        "content": "Lumen observatory administrative note 70: publicity leaflets reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d070",
+        "session_id": "noise-70",
+        "timestamp": 1730419270000,
+        "content": "Lumen observatory administrative note 71: parking permits reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d071",
+        "session_id": "noise-71",
+        "timestamp": 1730419271000,
+        "content": "Lumen observatory administrative note 72: receipt envelopes reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d072",
+        "session_id": "noise-72",
+        "timestamp": 1730419272000,
+        "content": "Lumen observatory administrative note 73: inventory labels reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d073",
+        "session_id": "noise-73",
+        "timestamp": 1730419273000,
+        "content": "Lumen observatory administrative note 74: visitor badges reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d074",
+        "session_id": "noise-74",
+        "timestamp": 1730419274000,
+        "content": "Lumen observatory administrative note 75: cleaning supplies reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d075",
+        "session_id": "noise-75",
+        "timestamp": 1730419275000,
+        "content": "Lumen observatory administrative note 76: insurance paperwork reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d076",
+        "session_id": "noise-76",
+        "timestamp": 1730419276000,
+        "content": "Lumen observatory administrative note 77: staff refreshments reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d077",
+        "session_id": "noise-77",
+        "timestamp": 1730419277000,
+        "content": "Lumen observatory administrative note 78: publicity leaflets reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d078",
+        "session_id": "noise-78",
+        "timestamp": 1730419278000,
+        "content": "Lumen observatory administrative note 79: parking permits reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d079",
+        "session_id": "noise-79",
+        "timestamp": 1730419279000,
+        "content": "Lumen observatory administrative note 80: receipt envelopes reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d080",
+        "session_id": "noise-80",
+        "timestamp": 1730419280000,
+        "content": "Lumen observatory administrative note 81: inventory labels reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d081",
+        "session_id": "noise-81",
+        "timestamp": 1730419281000,
+        "content": "Lumen observatory administrative note 82: visitor badges reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d082",
+        "session_id": "noise-82",
+        "timestamp": 1730419282000,
+        "content": "Lumen observatory administrative note 83: cleaning supplies reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d083",
+        "session_id": "noise-83",
+        "timestamp": 1730419283000,
+        "content": "Lumen observatory administrative note 84: insurance paperwork reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d084",
+        "session_id": "noise-84",
+        "timestamp": 1730419284000,
+        "content": "Lumen observatory administrative note 85: staff refreshments reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d085",
+        "session_id": "noise-85",
+        "timestamp": 1730419285000,
+        "content": "Lumen observatory administrative note 86: publicity leaflets reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d086",
+        "session_id": "noise-86",
+        "timestamp": 1730419286000,
+        "content": "Lumen observatory administrative note 87: parking permits reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d087",
+        "session_id": "noise-87",
+        "timestamp": 1730419287000,
+        "content": "Lumen observatory administrative note 88: receipt envelopes reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d088",
+        "session_id": "noise-88",
+        "timestamp": 1730419288000,
+        "content": "Lumen observatory administrative note 89: inventory labels reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d089",
+        "session_id": "noise-89",
+        "timestamp": 1730419289000,
+        "content": "Lumen observatory administrative note 90: visitor badges reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d090",
+        "session_id": "noise-90",
+        "timestamp": 1730419290000,
+        "content": "Lumen observatory administrative note 91: cleaning supplies reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d091",
+        "session_id": "noise-91",
+        "timestamp": 1730419291000,
+        "content": "Lumen observatory administrative note 92: insurance paperwork reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d092",
+        "session_id": "noise-92",
+        "timestamp": 1730419292000,
+        "content": "Lumen observatory administrative note 93: staff refreshments reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d093",
+        "session_id": "noise-93",
+        "timestamp": 1730419293000,
+        "content": "Lumen observatory administrative note 94: publicity leaflets reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d094",
+        "session_id": "noise-94",
+        "timestamp": 1730419294000,
+        "content": "Lumen observatory administrative note 95: parking permits reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d095",
+        "session_id": "noise-95",
+        "timestamp": 1730419295000,
+        "content": "Lumen observatory administrative note 96: receipt envelopes reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d096",
+        "session_id": "noise-96",
+        "timestamp": 1730419296000,
+        "content": "Lumen observatory administrative note 97: inventory labels reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d097",
+        "session_id": "noise-97",
+        "timestamp": 1730419297000,
+        "content": "Lumen observatory administrative note 98: visitor badges reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d098",
+        "session_id": "noise-98",
+        "timestamp": 1730419298000,
+        "content": "Lumen observatory administrative note 99: cleaning supplies reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d099",
+        "session_id": "noise-99",
+        "timestamp": 1730419299000,
+        "content": "Lumen observatory administrative note 100: insurance paperwork reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d100",
+        "session_id": "noise-100",
+        "timestamp": 1730419300000,
+        "content": "Lumen observatory administrative note 101: staff refreshments reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d101",
+        "session_id": "noise-101",
+        "timestamp": 1730419301000,
+        "content": "Lumen observatory administrative note 102: publicity leaflets reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d102",
+        "session_id": "noise-102",
+        "timestamp": 1730419302000,
+        "content": "Lumen observatory administrative note 103: parking permits reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d103",
+        "session_id": "noise-103",
+        "timestamp": 1730419303000,
+        "content": "Lumen observatory administrative note 104: receipt envelopes reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d104",
+        "session_id": "noise-104",
+        "timestamp": 1730419304000,
+        "content": "Lumen observatory administrative note 105: inventory labels reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d105",
+        "session_id": "noise-105",
+        "timestamp": 1730419305000,
+        "content": "Lumen observatory administrative note 106: visitor badges reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d106",
+        "session_id": "noise-106",
+        "timestamp": 1730419306000,
+        "content": "Lumen observatory administrative note 107: cleaning supplies reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d107",
+        "session_id": "noise-107",
+        "timestamp": 1730419307000,
+        "content": "Lumen observatory administrative note 108: insurance paperwork reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d108",
+        "session_id": "noise-108",
+        "timestamp": 1730419308000,
+        "content": "Lumen observatory administrative note 109: staff refreshments reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d109",
+        "session_id": "noise-109",
+        "timestamp": 1730419309000,
+        "content": "Lumen observatory administrative note 110: publicity leaflets reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d110",
+        "session_id": "noise-110",
+        "timestamp": 1730419310000,
+        "content": "Lumen observatory administrative note 111: parking permits reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d111",
+        "session_id": "noise-111",
+        "timestamp": 1730419311000,
+        "content": "Lumen observatory administrative note 112: receipt envelopes reviewed by the office team, batch 14."
+      }
+    ]
+  },
+  {
+    "name": "blind10-effective-date",
+    "category": "effective_vs_recorded",
+    "query": "As of 15 June 2024, who was responsible for the Bracken archive?",
+    "expected_source_ids": [
+      "old",
+      "new"
+    ],
+    "forbidden_source_ids": [],
+    "memories": [
+      {
+        "source_id": "old",
+        "session_id": "old",
+        "timestamp": 1717200000000,
+        "content": "Nadia remained responsible for the Bracken archive until 30 June 2024."
+      },
+      {
+        "source_id": "new",
+        "session_id": "new",
+        "timestamp": 1717545600000,
+        "content": "Owen takes responsibility for the Bracken archive effective 1 July 2024; this change was announced on 5 June."
+      },
+      {
+        "source_id": "d000",
+        "session_id": "noise-0",
+        "timestamp": 1730419200000,
+        "content": "Bracken archive administrative note 1: inventory labels reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d001",
+        "session_id": "noise-1",
+        "timestamp": 1730419201000,
+        "content": "Bracken archive administrative note 2: visitor badges reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d002",
+        "session_id": "noise-2",
+        "timestamp": 1730419202000,
+        "content": "Bracken archive administrative note 3: cleaning supplies reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d003",
+        "session_id": "noise-3",
+        "timestamp": 1730419203000,
+        "content": "Bracken archive administrative note 4: insurance paperwork reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d004",
+        "session_id": "noise-4",
+        "timestamp": 1730419204000,
+        "content": "Bracken archive administrative note 5: staff refreshments reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d005",
+        "session_id": "noise-5",
+        "timestamp": 1730419205000,
+        "content": "Bracken archive administrative note 6: publicity leaflets reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d006",
+        "session_id": "noise-6",
+        "timestamp": 1730419206000,
+        "content": "Bracken archive administrative note 7: parking permits reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d007",
+        "session_id": "noise-7",
+        "timestamp": 1730419207000,
+        "content": "Bracken archive administrative note 8: receipt envelopes reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d008",
+        "session_id": "noise-8",
+        "timestamp": 1730419208000,
+        "content": "Bracken archive administrative note 9: inventory labels reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d009",
+        "session_id": "noise-9",
+        "timestamp": 1730419209000,
+        "content": "Bracken archive administrative note 10: visitor badges reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d010",
+        "session_id": "noise-10",
+        "timestamp": 1730419210000,
+        "content": "Bracken archive administrative note 11: cleaning supplies reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d011",
+        "session_id": "noise-11",
+        "timestamp": 1730419211000,
+        "content": "Bracken archive administrative note 12: insurance paperwork reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d012",
+        "session_id": "noise-12",
+        "timestamp": 1730419212000,
+        "content": "Bracken archive administrative note 13: staff refreshments reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d013",
+        "session_id": "noise-13",
+        "timestamp": 1730419213000,
+        "content": "Bracken archive administrative note 14: publicity leaflets reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d014",
+        "session_id": "noise-14",
+        "timestamp": 1730419214000,
+        "content": "Bracken archive administrative note 15: parking permits reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d015",
+        "session_id": "noise-15",
+        "timestamp": 1730419215000,
+        "content": "Bracken archive administrative note 16: receipt envelopes reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d016",
+        "session_id": "noise-16",
+        "timestamp": 1730419216000,
+        "content": "Bracken archive administrative note 17: inventory labels reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d017",
+        "session_id": "noise-17",
+        "timestamp": 1730419217000,
+        "content": "Bracken archive administrative note 18: visitor badges reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d018",
+        "session_id": "noise-18",
+        "timestamp": 1730419218000,
+        "content": "Bracken archive administrative note 19: cleaning supplies reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d019",
+        "session_id": "noise-19",
+        "timestamp": 1730419219000,
+        "content": "Bracken archive administrative note 20: insurance paperwork reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d020",
+        "session_id": "noise-20",
+        "timestamp": 1730419220000,
+        "content": "Bracken archive administrative note 21: staff refreshments reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d021",
+        "session_id": "noise-21",
+        "timestamp": 1730419221000,
+        "content": "Bracken archive administrative note 22: publicity leaflets reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d022",
+        "session_id": "noise-22",
+        "timestamp": 1730419222000,
+        "content": "Bracken archive administrative note 23: parking permits reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d023",
+        "session_id": "noise-23",
+        "timestamp": 1730419223000,
+        "content": "Bracken archive administrative note 24: receipt envelopes reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d024",
+        "session_id": "noise-24",
+        "timestamp": 1730419224000,
+        "content": "Bracken archive administrative note 25: inventory labels reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d025",
+        "session_id": "noise-25",
+        "timestamp": 1730419225000,
+        "content": "Bracken archive administrative note 26: visitor badges reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d026",
+        "session_id": "noise-26",
+        "timestamp": 1730419226000,
+        "content": "Bracken archive administrative note 27: cleaning supplies reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d027",
+        "session_id": "noise-27",
+        "timestamp": 1730419227000,
+        "content": "Bracken archive administrative note 28: insurance paperwork reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d028",
+        "session_id": "noise-28",
+        "timestamp": 1730419228000,
+        "content": "Bracken archive administrative note 29: staff refreshments reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d029",
+        "session_id": "noise-29",
+        "timestamp": 1730419229000,
+        "content": "Bracken archive administrative note 30: publicity leaflets reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d030",
+        "session_id": "noise-30",
+        "timestamp": 1730419230000,
+        "content": "Bracken archive administrative note 31: parking permits reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d031",
+        "session_id": "noise-31",
+        "timestamp": 1730419231000,
+        "content": "Bracken archive administrative note 32: receipt envelopes reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d032",
+        "session_id": "noise-32",
+        "timestamp": 1730419232000,
+        "content": "Bracken archive administrative note 33: inventory labels reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d033",
+        "session_id": "noise-33",
+        "timestamp": 1730419233000,
+        "content": "Bracken archive administrative note 34: visitor badges reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d034",
+        "session_id": "noise-34",
+        "timestamp": 1730419234000,
+        "content": "Bracken archive administrative note 35: cleaning supplies reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d035",
+        "session_id": "noise-35",
+        "timestamp": 1730419235000,
+        "content": "Bracken archive administrative note 36: insurance paperwork reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d036",
+        "session_id": "noise-36",
+        "timestamp": 1730419236000,
+        "content": "Bracken archive administrative note 37: staff refreshments reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d037",
+        "session_id": "noise-37",
+        "timestamp": 1730419237000,
+        "content": "Bracken archive administrative note 38: publicity leaflets reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d038",
+        "session_id": "noise-38",
+        "timestamp": 1730419238000,
+        "content": "Bracken archive administrative note 39: parking permits reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d039",
+        "session_id": "noise-39",
+        "timestamp": 1730419239000,
+        "content": "Bracken archive administrative note 40: receipt envelopes reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d040",
+        "session_id": "noise-40",
+        "timestamp": 1730419240000,
+        "content": "Bracken archive administrative note 41: inventory labels reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d041",
+        "session_id": "noise-41",
+        "timestamp": 1730419241000,
+        "content": "Bracken archive administrative note 42: visitor badges reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d042",
+        "session_id": "noise-42",
+        "timestamp": 1730419242000,
+        "content": "Bracken archive administrative note 43: cleaning supplies reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d043",
+        "session_id": "noise-43",
+        "timestamp": 1730419243000,
+        "content": "Bracken archive administrative note 44: insurance paperwork reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d044",
+        "session_id": "noise-44",
+        "timestamp": 1730419244000,
+        "content": "Bracken archive administrative note 45: staff refreshments reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d045",
+        "session_id": "noise-45",
+        "timestamp": 1730419245000,
+        "content": "Bracken archive administrative note 46: publicity leaflets reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d046",
+        "session_id": "noise-46",
+        "timestamp": 1730419246000,
+        "content": "Bracken archive administrative note 47: parking permits reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d047",
+        "session_id": "noise-47",
+        "timestamp": 1730419247000,
+        "content": "Bracken archive administrative note 48: receipt envelopes reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d048",
+        "session_id": "noise-48",
+        "timestamp": 1730419248000,
+        "content": "Bracken archive administrative note 49: inventory labels reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d049",
+        "session_id": "noise-49",
+        "timestamp": 1730419249000,
+        "content": "Bracken archive administrative note 50: visitor badges reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d050",
+        "session_id": "noise-50",
+        "timestamp": 1730419250000,
+        "content": "Bracken archive administrative note 51: cleaning supplies reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d051",
+        "session_id": "noise-51",
+        "timestamp": 1730419251000,
+        "content": "Bracken archive administrative note 52: insurance paperwork reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d052",
+        "session_id": "noise-52",
+        "timestamp": 1730419252000,
+        "content": "Bracken archive administrative note 53: staff refreshments reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d053",
+        "session_id": "noise-53",
+        "timestamp": 1730419253000,
+        "content": "Bracken archive administrative note 54: publicity leaflets reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d054",
+        "session_id": "noise-54",
+        "timestamp": 1730419254000,
+        "content": "Bracken archive administrative note 55: parking permits reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d055",
+        "session_id": "noise-55",
+        "timestamp": 1730419255000,
+        "content": "Bracken archive administrative note 56: receipt envelopes reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d056",
+        "session_id": "noise-56",
+        "timestamp": 1730419256000,
+        "content": "Bracken archive administrative note 57: inventory labels reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d057",
+        "session_id": "noise-57",
+        "timestamp": 1730419257000,
+        "content": "Bracken archive administrative note 58: visitor badges reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d058",
+        "session_id": "noise-58",
+        "timestamp": 1730419258000,
+        "content": "Bracken archive administrative note 59: cleaning supplies reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d059",
+        "session_id": "noise-59",
+        "timestamp": 1730419259000,
+        "content": "Bracken archive administrative note 60: insurance paperwork reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d060",
+        "session_id": "noise-60",
+        "timestamp": 1730419260000,
+        "content": "Bracken archive administrative note 61: staff refreshments reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d061",
+        "session_id": "noise-61",
+        "timestamp": 1730419261000,
+        "content": "Bracken archive administrative note 62: publicity leaflets reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d062",
+        "session_id": "noise-62",
+        "timestamp": 1730419262000,
+        "content": "Bracken archive administrative note 63: parking permits reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d063",
+        "session_id": "noise-63",
+        "timestamp": 1730419263000,
+        "content": "Bracken archive administrative note 64: receipt envelopes reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d064",
+        "session_id": "noise-64",
+        "timestamp": 1730419264000,
+        "content": "Bracken archive administrative note 65: inventory labels reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d065",
+        "session_id": "noise-65",
+        "timestamp": 1730419265000,
+        "content": "Bracken archive administrative note 66: visitor badges reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d066",
+        "session_id": "noise-66",
+        "timestamp": 1730419266000,
+        "content": "Bracken archive administrative note 67: cleaning supplies reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d067",
+        "session_id": "noise-67",
+        "timestamp": 1730419267000,
+        "content": "Bracken archive administrative note 68: insurance paperwork reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d068",
+        "session_id": "noise-68",
+        "timestamp": 1730419268000,
+        "content": "Bracken archive administrative note 69: staff refreshments reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d069",
+        "session_id": "noise-69",
+        "timestamp": 1730419269000,
+        "content": "Bracken archive administrative note 70: publicity leaflets reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d070",
+        "session_id": "noise-70",
+        "timestamp": 1730419270000,
+        "content": "Bracken archive administrative note 71: parking permits reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d071",
+        "session_id": "noise-71",
+        "timestamp": 1730419271000,
+        "content": "Bracken archive administrative note 72: receipt envelopes reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d072",
+        "session_id": "noise-72",
+        "timestamp": 1730419272000,
+        "content": "Bracken archive administrative note 73: inventory labels reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d073",
+        "session_id": "noise-73",
+        "timestamp": 1730419273000,
+        "content": "Bracken archive administrative note 74: visitor badges reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d074",
+        "session_id": "noise-74",
+        "timestamp": 1730419274000,
+        "content": "Bracken archive administrative note 75: cleaning supplies reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d075",
+        "session_id": "noise-75",
+        "timestamp": 1730419275000,
+        "content": "Bracken archive administrative note 76: insurance paperwork reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d076",
+        "session_id": "noise-76",
+        "timestamp": 1730419276000,
+        "content": "Bracken archive administrative note 77: staff refreshments reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d077",
+        "session_id": "noise-77",
+        "timestamp": 1730419277000,
+        "content": "Bracken archive administrative note 78: publicity leaflets reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d078",
+        "session_id": "noise-78",
+        "timestamp": 1730419278000,
+        "content": "Bracken archive administrative note 79: parking permits reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d079",
+        "session_id": "noise-79",
+        "timestamp": 1730419279000,
+        "content": "Bracken archive administrative note 80: receipt envelopes reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d080",
+        "session_id": "noise-80",
+        "timestamp": 1730419280000,
+        "content": "Bracken archive administrative note 81: inventory labels reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d081",
+        "session_id": "noise-81",
+        "timestamp": 1730419281000,
+        "content": "Bracken archive administrative note 82: visitor badges reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d082",
+        "session_id": "noise-82",
+        "timestamp": 1730419282000,
+        "content": "Bracken archive administrative note 83: cleaning supplies reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d083",
+        "session_id": "noise-83",
+        "timestamp": 1730419283000,
+        "content": "Bracken archive administrative note 84: insurance paperwork reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d084",
+        "session_id": "noise-84",
+        "timestamp": 1730419284000,
+        "content": "Bracken archive administrative note 85: staff refreshments reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d085",
+        "session_id": "noise-85",
+        "timestamp": 1730419285000,
+        "content": "Bracken archive administrative note 86: publicity leaflets reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d086",
+        "session_id": "noise-86",
+        "timestamp": 1730419286000,
+        "content": "Bracken archive administrative note 87: parking permits reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d087",
+        "session_id": "noise-87",
+        "timestamp": 1730419287000,
+        "content": "Bracken archive administrative note 88: receipt envelopes reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d088",
+        "session_id": "noise-88",
+        "timestamp": 1730419288000,
+        "content": "Bracken archive administrative note 89: inventory labels reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d089",
+        "session_id": "noise-89",
+        "timestamp": 1730419289000,
+        "content": "Bracken archive administrative note 90: visitor badges reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d090",
+        "session_id": "noise-90",
+        "timestamp": 1730419290000,
+        "content": "Bracken archive administrative note 91: cleaning supplies reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d091",
+        "session_id": "noise-91",
+        "timestamp": 1730419291000,
+        "content": "Bracken archive administrative note 92: insurance paperwork reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d092",
+        "session_id": "noise-92",
+        "timestamp": 1730419292000,
+        "content": "Bracken archive administrative note 93: staff refreshments reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d093",
+        "session_id": "noise-93",
+        "timestamp": 1730419293000,
+        "content": "Bracken archive administrative note 94: publicity leaflets reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d094",
+        "session_id": "noise-94",
+        "timestamp": 1730419294000,
+        "content": "Bracken archive administrative note 95: parking permits reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d095",
+        "session_id": "noise-95",
+        "timestamp": 1730419295000,
+        "content": "Bracken archive administrative note 96: receipt envelopes reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d096",
+        "session_id": "noise-96",
+        "timestamp": 1730419296000,
+        "content": "Bracken archive administrative note 97: inventory labels reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d097",
+        "session_id": "noise-97",
+        "timestamp": 1730419297000,
+        "content": "Bracken archive administrative note 98: visitor badges reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d098",
+        "session_id": "noise-98",
+        "timestamp": 1730419298000,
+        "content": "Bracken archive administrative note 99: cleaning supplies reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d099",
+        "session_id": "noise-99",
+        "timestamp": 1730419299000,
+        "content": "Bracken archive administrative note 100: insurance paperwork reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d100",
+        "session_id": "noise-100",
+        "timestamp": 1730419300000,
+        "content": "Bracken archive administrative note 101: staff refreshments reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d101",
+        "session_id": "noise-101",
+        "timestamp": 1730419301000,
+        "content": "Bracken archive administrative note 102: publicity leaflets reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d102",
+        "session_id": "noise-102",
+        "timestamp": 1730419302000,
+        "content": "Bracken archive administrative note 103: parking permits reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d103",
+        "session_id": "noise-103",
+        "timestamp": 1730419303000,
+        "content": "Bracken archive administrative note 104: receipt envelopes reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d104",
+        "session_id": "noise-104",
+        "timestamp": 1730419304000,
+        "content": "Bracken archive administrative note 105: inventory labels reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d105",
+        "session_id": "noise-105",
+        "timestamp": 1730419305000,
+        "content": "Bracken archive administrative note 106: visitor badges reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d106",
+        "session_id": "noise-106",
+        "timestamp": 1730419306000,
+        "content": "Bracken archive administrative note 107: cleaning supplies reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d107",
+        "session_id": "noise-107",
+        "timestamp": 1730419307000,
+        "content": "Bracken archive administrative note 108: insurance paperwork reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d108",
+        "session_id": "noise-108",
+        "timestamp": 1730419308000,
+        "content": "Bracken archive administrative note 109: staff refreshments reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d109",
+        "session_id": "noise-109",
+        "timestamp": 1730419309000,
+        "content": "Bracken archive administrative note 110: publicity leaflets reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d110",
+        "session_id": "noise-110",
+        "timestamp": 1730419310000,
+        "content": "Bracken archive administrative note 111: parking permits reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d111",
+        "session_id": "noise-111",
+        "timestamp": 1730419311000,
+        "content": "Bracken archive administrative note 112: receipt envelopes reviewed by the office team, batch 14."
+      }
+    ]
+  },
+  {
+    "name": "blind10-cancelled-change",
+    "category": "cancelled_update",
+    "query": "Where will the Solace workshop meet after the relocation was cancelled?",
+    "expected_source_ids": [
+      "original",
+      "cancel"
+    ],
+    "forbidden_source_ids": [],
+    "memories": [
+      {
+        "source_id": "original",
+        "session_id": "original",
+        "timestamp": 1711929600000,
+        "content": "The Solace workshop is booked at Cedar Hall."
+      },
+      {
+        "source_id": "cancel",
+        "session_id": "cancel",
+        "timestamp": 1714521600000,
+        "content": "The proposed move of the Solace workshop to Birch Hall was cancelled; the original venue booking remains valid."
+      },
+      {
+        "source_id": "d000",
+        "session_id": "noise-0",
+        "timestamp": 1730419200000,
+        "content": "Solace workshop administrative note 1: inventory labels reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d001",
+        "session_id": "noise-1",
+        "timestamp": 1730419201000,
+        "content": "Solace workshop administrative note 2: visitor badges reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d002",
+        "session_id": "noise-2",
+        "timestamp": 1730419202000,
+        "content": "Solace workshop administrative note 3: cleaning supplies reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d003",
+        "session_id": "noise-3",
+        "timestamp": 1730419203000,
+        "content": "Solace workshop administrative note 4: insurance paperwork reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d004",
+        "session_id": "noise-4",
+        "timestamp": 1730419204000,
+        "content": "Solace workshop administrative note 5: staff refreshments reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d005",
+        "session_id": "noise-5",
+        "timestamp": 1730419205000,
+        "content": "Solace workshop administrative note 6: publicity leaflets reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d006",
+        "session_id": "noise-6",
+        "timestamp": 1730419206000,
+        "content": "Solace workshop administrative note 7: parking permits reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d007",
+        "session_id": "noise-7",
+        "timestamp": 1730419207000,
+        "content": "Solace workshop administrative note 8: receipt envelopes reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d008",
+        "session_id": "noise-8",
+        "timestamp": 1730419208000,
+        "content": "Solace workshop administrative note 9: inventory labels reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d009",
+        "session_id": "noise-9",
+        "timestamp": 1730419209000,
+        "content": "Solace workshop administrative note 10: visitor badges reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d010",
+        "session_id": "noise-10",
+        "timestamp": 1730419210000,
+        "content": "Solace workshop administrative note 11: cleaning supplies reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d011",
+        "session_id": "noise-11",
+        "timestamp": 1730419211000,
+        "content": "Solace workshop administrative note 12: insurance paperwork reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d012",
+        "session_id": "noise-12",
+        "timestamp": 1730419212000,
+        "content": "Solace workshop administrative note 13: staff refreshments reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d013",
+        "session_id": "noise-13",
+        "timestamp": 1730419213000,
+        "content": "Solace workshop administrative note 14: publicity leaflets reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d014",
+        "session_id": "noise-14",
+        "timestamp": 1730419214000,
+        "content": "Solace workshop administrative note 15: parking permits reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d015",
+        "session_id": "noise-15",
+        "timestamp": 1730419215000,
+        "content": "Solace workshop administrative note 16: receipt envelopes reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d016",
+        "session_id": "noise-16",
+        "timestamp": 1730419216000,
+        "content": "Solace workshop administrative note 17: inventory labels reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d017",
+        "session_id": "noise-17",
+        "timestamp": 1730419217000,
+        "content": "Solace workshop administrative note 18: visitor badges reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d018",
+        "session_id": "noise-18",
+        "timestamp": 1730419218000,
+        "content": "Solace workshop administrative note 19: cleaning supplies reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d019",
+        "session_id": "noise-19",
+        "timestamp": 1730419219000,
+        "content": "Solace workshop administrative note 20: insurance paperwork reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d020",
+        "session_id": "noise-20",
+        "timestamp": 1730419220000,
+        "content": "Solace workshop administrative note 21: staff refreshments reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d021",
+        "session_id": "noise-21",
+        "timestamp": 1730419221000,
+        "content": "Solace workshop administrative note 22: publicity leaflets reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d022",
+        "session_id": "noise-22",
+        "timestamp": 1730419222000,
+        "content": "Solace workshop administrative note 23: parking permits reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d023",
+        "session_id": "noise-23",
+        "timestamp": 1730419223000,
+        "content": "Solace workshop administrative note 24: receipt envelopes reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d024",
+        "session_id": "noise-24",
+        "timestamp": 1730419224000,
+        "content": "Solace workshop administrative note 25: inventory labels reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d025",
+        "session_id": "noise-25",
+        "timestamp": 1730419225000,
+        "content": "Solace workshop administrative note 26: visitor badges reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d026",
+        "session_id": "noise-26",
+        "timestamp": 1730419226000,
+        "content": "Solace workshop administrative note 27: cleaning supplies reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d027",
+        "session_id": "noise-27",
+        "timestamp": 1730419227000,
+        "content": "Solace workshop administrative note 28: insurance paperwork reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d028",
+        "session_id": "noise-28",
+        "timestamp": 1730419228000,
+        "content": "Solace workshop administrative note 29: staff refreshments reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d029",
+        "session_id": "noise-29",
+        "timestamp": 1730419229000,
+        "content": "Solace workshop administrative note 30: publicity leaflets reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d030",
+        "session_id": "noise-30",
+        "timestamp": 1730419230000,
+        "content": "Solace workshop administrative note 31: parking permits reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d031",
+        "session_id": "noise-31",
+        "timestamp": 1730419231000,
+        "content": "Solace workshop administrative note 32: receipt envelopes reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d032",
+        "session_id": "noise-32",
+        "timestamp": 1730419232000,
+        "content": "Solace workshop administrative note 33: inventory labels reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d033",
+        "session_id": "noise-33",
+        "timestamp": 1730419233000,
+        "content": "Solace workshop administrative note 34: visitor badges reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d034",
+        "session_id": "noise-34",
+        "timestamp": 1730419234000,
+        "content": "Solace workshop administrative note 35: cleaning supplies reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d035",
+        "session_id": "noise-35",
+        "timestamp": 1730419235000,
+        "content": "Solace workshop administrative note 36: insurance paperwork reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d036",
+        "session_id": "noise-36",
+        "timestamp": 1730419236000,
+        "content": "Solace workshop administrative note 37: staff refreshments reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d037",
+        "session_id": "noise-37",
+        "timestamp": 1730419237000,
+        "content": "Solace workshop administrative note 38: publicity leaflets reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d038",
+        "session_id": "noise-38",
+        "timestamp": 1730419238000,
+        "content": "Solace workshop administrative note 39: parking permits reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d039",
+        "session_id": "noise-39",
+        "timestamp": 1730419239000,
+        "content": "Solace workshop administrative note 40: receipt envelopes reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d040",
+        "session_id": "noise-40",
+        "timestamp": 1730419240000,
+        "content": "Solace workshop administrative note 41: inventory labels reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d041",
+        "session_id": "noise-41",
+        "timestamp": 1730419241000,
+        "content": "Solace workshop administrative note 42: visitor badges reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d042",
+        "session_id": "noise-42",
+        "timestamp": 1730419242000,
+        "content": "Solace workshop administrative note 43: cleaning supplies reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d043",
+        "session_id": "noise-43",
+        "timestamp": 1730419243000,
+        "content": "Solace workshop administrative note 44: insurance paperwork reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d044",
+        "session_id": "noise-44",
+        "timestamp": 1730419244000,
+        "content": "Solace workshop administrative note 45: staff refreshments reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d045",
+        "session_id": "noise-45",
+        "timestamp": 1730419245000,
+        "content": "Solace workshop administrative note 46: publicity leaflets reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d046",
+        "session_id": "noise-46",
+        "timestamp": 1730419246000,
+        "content": "Solace workshop administrative note 47: parking permits reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d047",
+        "session_id": "noise-47",
+        "timestamp": 1730419247000,
+        "content": "Solace workshop administrative note 48: receipt envelopes reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d048",
+        "session_id": "noise-48",
+        "timestamp": 1730419248000,
+        "content": "Solace workshop administrative note 49: inventory labels reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d049",
+        "session_id": "noise-49",
+        "timestamp": 1730419249000,
+        "content": "Solace workshop administrative note 50: visitor badges reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d050",
+        "session_id": "noise-50",
+        "timestamp": 1730419250000,
+        "content": "Solace workshop administrative note 51: cleaning supplies reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d051",
+        "session_id": "noise-51",
+        "timestamp": 1730419251000,
+        "content": "Solace workshop administrative note 52: insurance paperwork reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d052",
+        "session_id": "noise-52",
+        "timestamp": 1730419252000,
+        "content": "Solace workshop administrative note 53: staff refreshments reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d053",
+        "session_id": "noise-53",
+        "timestamp": 1730419253000,
+        "content": "Solace workshop administrative note 54: publicity leaflets reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d054",
+        "session_id": "noise-54",
+        "timestamp": 1730419254000,
+        "content": "Solace workshop administrative note 55: parking permits reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d055",
+        "session_id": "noise-55",
+        "timestamp": 1730419255000,
+        "content": "Solace workshop administrative note 56: receipt envelopes reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d056",
+        "session_id": "noise-56",
+        "timestamp": 1730419256000,
+        "content": "Solace workshop administrative note 57: inventory labels reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d057",
+        "session_id": "noise-57",
+        "timestamp": 1730419257000,
+        "content": "Solace workshop administrative note 58: visitor badges reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d058",
+        "session_id": "noise-58",
+        "timestamp": 1730419258000,
+        "content": "Solace workshop administrative note 59: cleaning supplies reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d059",
+        "session_id": "noise-59",
+        "timestamp": 1730419259000,
+        "content": "Solace workshop administrative note 60: insurance paperwork reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d060",
+        "session_id": "noise-60",
+        "timestamp": 1730419260000,
+        "content": "Solace workshop administrative note 61: staff refreshments reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d061",
+        "session_id": "noise-61",
+        "timestamp": 1730419261000,
+        "content": "Solace workshop administrative note 62: publicity leaflets reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d062",
+        "session_id": "noise-62",
+        "timestamp": 1730419262000,
+        "content": "Solace workshop administrative note 63: parking permits reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d063",
+        "session_id": "noise-63",
+        "timestamp": 1730419263000,
+        "content": "Solace workshop administrative note 64: receipt envelopes reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d064",
+        "session_id": "noise-64",
+        "timestamp": 1730419264000,
+        "content": "Solace workshop administrative note 65: inventory labels reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d065",
+        "session_id": "noise-65",
+        "timestamp": 1730419265000,
+        "content": "Solace workshop administrative note 66: visitor badges reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d066",
+        "session_id": "noise-66",
+        "timestamp": 1730419266000,
+        "content": "Solace workshop administrative note 67: cleaning supplies reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d067",
+        "session_id": "noise-67",
+        "timestamp": 1730419267000,
+        "content": "Solace workshop administrative note 68: insurance paperwork reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d068",
+        "session_id": "noise-68",
+        "timestamp": 1730419268000,
+        "content": "Solace workshop administrative note 69: staff refreshments reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d069",
+        "session_id": "noise-69",
+        "timestamp": 1730419269000,
+        "content": "Solace workshop administrative note 70: publicity leaflets reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d070",
+        "session_id": "noise-70",
+        "timestamp": 1730419270000,
+        "content": "Solace workshop administrative note 71: parking permits reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d071",
+        "session_id": "noise-71",
+        "timestamp": 1730419271000,
+        "content": "Solace workshop administrative note 72: receipt envelopes reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d072",
+        "session_id": "noise-72",
+        "timestamp": 1730419272000,
+        "content": "Solace workshop administrative note 73: inventory labels reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d073",
+        "session_id": "noise-73",
+        "timestamp": 1730419273000,
+        "content": "Solace workshop administrative note 74: visitor badges reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d074",
+        "session_id": "noise-74",
+        "timestamp": 1730419274000,
+        "content": "Solace workshop administrative note 75: cleaning supplies reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d075",
+        "session_id": "noise-75",
+        "timestamp": 1730419275000,
+        "content": "Solace workshop administrative note 76: insurance paperwork reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d076",
+        "session_id": "noise-76",
+        "timestamp": 1730419276000,
+        "content": "Solace workshop administrative note 77: staff refreshments reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d077",
+        "session_id": "noise-77",
+        "timestamp": 1730419277000,
+        "content": "Solace workshop administrative note 78: publicity leaflets reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d078",
+        "session_id": "noise-78",
+        "timestamp": 1730419278000,
+        "content": "Solace workshop administrative note 79: parking permits reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d079",
+        "session_id": "noise-79",
+        "timestamp": 1730419279000,
+        "content": "Solace workshop administrative note 80: receipt envelopes reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d080",
+        "session_id": "noise-80",
+        "timestamp": 1730419280000,
+        "content": "Solace workshop administrative note 81: inventory labels reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d081",
+        "session_id": "noise-81",
+        "timestamp": 1730419281000,
+        "content": "Solace workshop administrative note 82: visitor badges reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d082",
+        "session_id": "noise-82",
+        "timestamp": 1730419282000,
+        "content": "Solace workshop administrative note 83: cleaning supplies reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d083",
+        "session_id": "noise-83",
+        "timestamp": 1730419283000,
+        "content": "Solace workshop administrative note 84: insurance paperwork reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d084",
+        "session_id": "noise-84",
+        "timestamp": 1730419284000,
+        "content": "Solace workshop administrative note 85: staff refreshments reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d085",
+        "session_id": "noise-85",
+        "timestamp": 1730419285000,
+        "content": "Solace workshop administrative note 86: publicity leaflets reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d086",
+        "session_id": "noise-86",
+        "timestamp": 1730419286000,
+        "content": "Solace workshop administrative note 87: parking permits reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d087",
+        "session_id": "noise-87",
+        "timestamp": 1730419287000,
+        "content": "Solace workshop administrative note 88: receipt envelopes reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d088",
+        "session_id": "noise-88",
+        "timestamp": 1730419288000,
+        "content": "Solace workshop administrative note 89: inventory labels reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d089",
+        "session_id": "noise-89",
+        "timestamp": 1730419289000,
+        "content": "Solace workshop administrative note 90: visitor badges reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d090",
+        "session_id": "noise-90",
+        "timestamp": 1730419290000,
+        "content": "Solace workshop administrative note 91: cleaning supplies reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d091",
+        "session_id": "noise-91",
+        "timestamp": 1730419291000,
+        "content": "Solace workshop administrative note 92: insurance paperwork reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d092",
+        "session_id": "noise-92",
+        "timestamp": 1730419292000,
+        "content": "Solace workshop administrative note 93: staff refreshments reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d093",
+        "session_id": "noise-93",
+        "timestamp": 1730419293000,
+        "content": "Solace workshop administrative note 94: publicity leaflets reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d094",
+        "session_id": "noise-94",
+        "timestamp": 1730419294000,
+        "content": "Solace workshop administrative note 95: parking permits reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d095",
+        "session_id": "noise-95",
+        "timestamp": 1730419295000,
+        "content": "Solace workshop administrative note 96: receipt envelopes reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d096",
+        "session_id": "noise-96",
+        "timestamp": 1730419296000,
+        "content": "Solace workshop administrative note 97: inventory labels reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d097",
+        "session_id": "noise-97",
+        "timestamp": 1730419297000,
+        "content": "Solace workshop administrative note 98: visitor badges reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d098",
+        "session_id": "noise-98",
+        "timestamp": 1730419298000,
+        "content": "Solace workshop administrative note 99: cleaning supplies reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d099",
+        "session_id": "noise-99",
+        "timestamp": 1730419299000,
+        "content": "Solace workshop administrative note 100: insurance paperwork reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d100",
+        "session_id": "noise-100",
+        "timestamp": 1730419300000,
+        "content": "Solace workshop administrative note 101: staff refreshments reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d101",
+        "session_id": "noise-101",
+        "timestamp": 1730419301000,
+        "content": "Solace workshop administrative note 102: publicity leaflets reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d102",
+        "session_id": "noise-102",
+        "timestamp": 1730419302000,
+        "content": "Solace workshop administrative note 103: parking permits reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d103",
+        "session_id": "noise-103",
+        "timestamp": 1730419303000,
+        "content": "Solace workshop administrative note 104: receipt envelopes reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d104",
+        "session_id": "noise-104",
+        "timestamp": 1730419304000,
+        "content": "Solace workshop administrative note 105: inventory labels reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d105",
+        "session_id": "noise-105",
+        "timestamp": 1730419305000,
+        "content": "Solace workshop administrative note 106: visitor badges reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d106",
+        "session_id": "noise-106",
+        "timestamp": 1730419306000,
+        "content": "Solace workshop administrative note 107: cleaning supplies reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d107",
+        "session_id": "noise-107",
+        "timestamp": 1730419307000,
+        "content": "Solace workshop administrative note 108: insurance paperwork reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d108",
+        "session_id": "noise-108",
+        "timestamp": 1730419308000,
+        "content": "Solace workshop administrative note 109: staff refreshments reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d109",
+        "session_id": "noise-109",
+        "timestamp": 1730419309000,
+        "content": "Solace workshop administrative note 110: publicity leaflets reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d110",
+        "session_id": "noise-110",
+        "timestamp": 1730419310000,
+        "content": "Solace workshop administrative note 111: parking permits reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d111",
+        "session_id": "noise-111",
+        "timestamp": 1730419311000,
+        "content": "Solace workshop administrative note 112: receipt envelopes reviewed by the office team, batch 14."
+      }
+    ]
+  },
+  {
+    "name": "blind10-out-of-order-report",
+    "category": "event_vs_ingestion",
+    "query": "Which pump was installed most recently at the Fenwick garden?",
+    "expected_source_ids": [
+      "recent",
+      "late-report"
+    ],
+    "forbidden_source_ids": [],
+    "memories": [
+      {
+        "source_id": "recent",
+        "session_id": "recent",
+        "timestamp": 1724198400000,
+        "content": "The Fenwick garden installed the copper pump on 20 August 2024."
+      },
+      {
+        "source_id": "late-report",
+        "session_id": "late-report",
+        "timestamp": 1725148800000,
+        "content": "Late archive entry: the Fenwick garden installed the silver pump on 3 March 2024."
+      },
+      {
+        "source_id": "d000",
+        "session_id": "noise-0",
+        "timestamp": 1730419200000,
+        "content": "Fenwick garden administrative note 1: inventory labels reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d001",
+        "session_id": "noise-1",
+        "timestamp": 1730419201000,
+        "content": "Fenwick garden administrative note 2: visitor badges reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d002",
+        "session_id": "noise-2",
+        "timestamp": 1730419202000,
+        "content": "Fenwick garden administrative note 3: cleaning supplies reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d003",
+        "session_id": "noise-3",
+        "timestamp": 1730419203000,
+        "content": "Fenwick garden administrative note 4: insurance paperwork reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d004",
+        "session_id": "noise-4",
+        "timestamp": 1730419204000,
+        "content": "Fenwick garden administrative note 5: staff refreshments reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d005",
+        "session_id": "noise-5",
+        "timestamp": 1730419205000,
+        "content": "Fenwick garden administrative note 6: publicity leaflets reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d006",
+        "session_id": "noise-6",
+        "timestamp": 1730419206000,
+        "content": "Fenwick garden administrative note 7: parking permits reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d007",
+        "session_id": "noise-7",
+        "timestamp": 1730419207000,
+        "content": "Fenwick garden administrative note 8: receipt envelopes reviewed by the office team, batch 1."
+      },
+      {
+        "source_id": "d008",
+        "session_id": "noise-8",
+        "timestamp": 1730419208000,
+        "content": "Fenwick garden administrative note 9: inventory labels reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d009",
+        "session_id": "noise-9",
+        "timestamp": 1730419209000,
+        "content": "Fenwick garden administrative note 10: visitor badges reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d010",
+        "session_id": "noise-10",
+        "timestamp": 1730419210000,
+        "content": "Fenwick garden administrative note 11: cleaning supplies reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d011",
+        "session_id": "noise-11",
+        "timestamp": 1730419211000,
+        "content": "Fenwick garden administrative note 12: insurance paperwork reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d012",
+        "session_id": "noise-12",
+        "timestamp": 1730419212000,
+        "content": "Fenwick garden administrative note 13: staff refreshments reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d013",
+        "session_id": "noise-13",
+        "timestamp": 1730419213000,
+        "content": "Fenwick garden administrative note 14: publicity leaflets reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d014",
+        "session_id": "noise-14",
+        "timestamp": 1730419214000,
+        "content": "Fenwick garden administrative note 15: parking permits reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d015",
+        "session_id": "noise-15",
+        "timestamp": 1730419215000,
+        "content": "Fenwick garden administrative note 16: receipt envelopes reviewed by the office team, batch 2."
+      },
+      {
+        "source_id": "d016",
+        "session_id": "noise-16",
+        "timestamp": 1730419216000,
+        "content": "Fenwick garden administrative note 17: inventory labels reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d017",
+        "session_id": "noise-17",
+        "timestamp": 1730419217000,
+        "content": "Fenwick garden administrative note 18: visitor badges reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d018",
+        "session_id": "noise-18",
+        "timestamp": 1730419218000,
+        "content": "Fenwick garden administrative note 19: cleaning supplies reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d019",
+        "session_id": "noise-19",
+        "timestamp": 1730419219000,
+        "content": "Fenwick garden administrative note 20: insurance paperwork reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d020",
+        "session_id": "noise-20",
+        "timestamp": 1730419220000,
+        "content": "Fenwick garden administrative note 21: staff refreshments reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d021",
+        "session_id": "noise-21",
+        "timestamp": 1730419221000,
+        "content": "Fenwick garden administrative note 22: publicity leaflets reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d022",
+        "session_id": "noise-22",
+        "timestamp": 1730419222000,
+        "content": "Fenwick garden administrative note 23: parking permits reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d023",
+        "session_id": "noise-23",
+        "timestamp": 1730419223000,
+        "content": "Fenwick garden administrative note 24: receipt envelopes reviewed by the office team, batch 3."
+      },
+      {
+        "source_id": "d024",
+        "session_id": "noise-24",
+        "timestamp": 1730419224000,
+        "content": "Fenwick garden administrative note 25: inventory labels reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d025",
+        "session_id": "noise-25",
+        "timestamp": 1730419225000,
+        "content": "Fenwick garden administrative note 26: visitor badges reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d026",
+        "session_id": "noise-26",
+        "timestamp": 1730419226000,
+        "content": "Fenwick garden administrative note 27: cleaning supplies reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d027",
+        "session_id": "noise-27",
+        "timestamp": 1730419227000,
+        "content": "Fenwick garden administrative note 28: insurance paperwork reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d028",
+        "session_id": "noise-28",
+        "timestamp": 1730419228000,
+        "content": "Fenwick garden administrative note 29: staff refreshments reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d029",
+        "session_id": "noise-29",
+        "timestamp": 1730419229000,
+        "content": "Fenwick garden administrative note 30: publicity leaflets reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d030",
+        "session_id": "noise-30",
+        "timestamp": 1730419230000,
+        "content": "Fenwick garden administrative note 31: parking permits reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d031",
+        "session_id": "noise-31",
+        "timestamp": 1730419231000,
+        "content": "Fenwick garden administrative note 32: receipt envelopes reviewed by the office team, batch 4."
+      },
+      {
+        "source_id": "d032",
+        "session_id": "noise-32",
+        "timestamp": 1730419232000,
+        "content": "Fenwick garden administrative note 33: inventory labels reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d033",
+        "session_id": "noise-33",
+        "timestamp": 1730419233000,
+        "content": "Fenwick garden administrative note 34: visitor badges reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d034",
+        "session_id": "noise-34",
+        "timestamp": 1730419234000,
+        "content": "Fenwick garden administrative note 35: cleaning supplies reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d035",
+        "session_id": "noise-35",
+        "timestamp": 1730419235000,
+        "content": "Fenwick garden administrative note 36: insurance paperwork reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d036",
+        "session_id": "noise-36",
+        "timestamp": 1730419236000,
+        "content": "Fenwick garden administrative note 37: staff refreshments reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d037",
+        "session_id": "noise-37",
+        "timestamp": 1730419237000,
+        "content": "Fenwick garden administrative note 38: publicity leaflets reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d038",
+        "session_id": "noise-38",
+        "timestamp": 1730419238000,
+        "content": "Fenwick garden administrative note 39: parking permits reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d039",
+        "session_id": "noise-39",
+        "timestamp": 1730419239000,
+        "content": "Fenwick garden administrative note 40: receipt envelopes reviewed by the office team, batch 5."
+      },
+      {
+        "source_id": "d040",
+        "session_id": "noise-40",
+        "timestamp": 1730419240000,
+        "content": "Fenwick garden administrative note 41: inventory labels reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d041",
+        "session_id": "noise-41",
+        "timestamp": 1730419241000,
+        "content": "Fenwick garden administrative note 42: visitor badges reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d042",
+        "session_id": "noise-42",
+        "timestamp": 1730419242000,
+        "content": "Fenwick garden administrative note 43: cleaning supplies reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d043",
+        "session_id": "noise-43",
+        "timestamp": 1730419243000,
+        "content": "Fenwick garden administrative note 44: insurance paperwork reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d044",
+        "session_id": "noise-44",
+        "timestamp": 1730419244000,
+        "content": "Fenwick garden administrative note 45: staff refreshments reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d045",
+        "session_id": "noise-45",
+        "timestamp": 1730419245000,
+        "content": "Fenwick garden administrative note 46: publicity leaflets reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d046",
+        "session_id": "noise-46",
+        "timestamp": 1730419246000,
+        "content": "Fenwick garden administrative note 47: parking permits reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d047",
+        "session_id": "noise-47",
+        "timestamp": 1730419247000,
+        "content": "Fenwick garden administrative note 48: receipt envelopes reviewed by the office team, batch 6."
+      },
+      {
+        "source_id": "d048",
+        "session_id": "noise-48",
+        "timestamp": 1730419248000,
+        "content": "Fenwick garden administrative note 49: inventory labels reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d049",
+        "session_id": "noise-49",
+        "timestamp": 1730419249000,
+        "content": "Fenwick garden administrative note 50: visitor badges reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d050",
+        "session_id": "noise-50",
+        "timestamp": 1730419250000,
+        "content": "Fenwick garden administrative note 51: cleaning supplies reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d051",
+        "session_id": "noise-51",
+        "timestamp": 1730419251000,
+        "content": "Fenwick garden administrative note 52: insurance paperwork reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d052",
+        "session_id": "noise-52",
+        "timestamp": 1730419252000,
+        "content": "Fenwick garden administrative note 53: staff refreshments reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d053",
+        "session_id": "noise-53",
+        "timestamp": 1730419253000,
+        "content": "Fenwick garden administrative note 54: publicity leaflets reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d054",
+        "session_id": "noise-54",
+        "timestamp": 1730419254000,
+        "content": "Fenwick garden administrative note 55: parking permits reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d055",
+        "session_id": "noise-55",
+        "timestamp": 1730419255000,
+        "content": "Fenwick garden administrative note 56: receipt envelopes reviewed by the office team, batch 7."
+      },
+      {
+        "source_id": "d056",
+        "session_id": "noise-56",
+        "timestamp": 1730419256000,
+        "content": "Fenwick garden administrative note 57: inventory labels reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d057",
+        "session_id": "noise-57",
+        "timestamp": 1730419257000,
+        "content": "Fenwick garden administrative note 58: visitor badges reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d058",
+        "session_id": "noise-58",
+        "timestamp": 1730419258000,
+        "content": "Fenwick garden administrative note 59: cleaning supplies reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d059",
+        "session_id": "noise-59",
+        "timestamp": 1730419259000,
+        "content": "Fenwick garden administrative note 60: insurance paperwork reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d060",
+        "session_id": "noise-60",
+        "timestamp": 1730419260000,
+        "content": "Fenwick garden administrative note 61: staff refreshments reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d061",
+        "session_id": "noise-61",
+        "timestamp": 1730419261000,
+        "content": "Fenwick garden administrative note 62: publicity leaflets reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d062",
+        "session_id": "noise-62",
+        "timestamp": 1730419262000,
+        "content": "Fenwick garden administrative note 63: parking permits reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d063",
+        "session_id": "noise-63",
+        "timestamp": 1730419263000,
+        "content": "Fenwick garden administrative note 64: receipt envelopes reviewed by the office team, batch 8."
+      },
+      {
+        "source_id": "d064",
+        "session_id": "noise-64",
+        "timestamp": 1730419264000,
+        "content": "Fenwick garden administrative note 65: inventory labels reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d065",
+        "session_id": "noise-65",
+        "timestamp": 1730419265000,
+        "content": "Fenwick garden administrative note 66: visitor badges reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d066",
+        "session_id": "noise-66",
+        "timestamp": 1730419266000,
+        "content": "Fenwick garden administrative note 67: cleaning supplies reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d067",
+        "session_id": "noise-67",
+        "timestamp": 1730419267000,
+        "content": "Fenwick garden administrative note 68: insurance paperwork reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d068",
+        "session_id": "noise-68",
+        "timestamp": 1730419268000,
+        "content": "Fenwick garden administrative note 69: staff refreshments reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d069",
+        "session_id": "noise-69",
+        "timestamp": 1730419269000,
+        "content": "Fenwick garden administrative note 70: publicity leaflets reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d070",
+        "session_id": "noise-70",
+        "timestamp": 1730419270000,
+        "content": "Fenwick garden administrative note 71: parking permits reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d071",
+        "session_id": "noise-71",
+        "timestamp": 1730419271000,
+        "content": "Fenwick garden administrative note 72: receipt envelopes reviewed by the office team, batch 9."
+      },
+      {
+        "source_id": "d072",
+        "session_id": "noise-72",
+        "timestamp": 1730419272000,
+        "content": "Fenwick garden administrative note 73: inventory labels reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d073",
+        "session_id": "noise-73",
+        "timestamp": 1730419273000,
+        "content": "Fenwick garden administrative note 74: visitor badges reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d074",
+        "session_id": "noise-74",
+        "timestamp": 1730419274000,
+        "content": "Fenwick garden administrative note 75: cleaning supplies reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d075",
+        "session_id": "noise-75",
+        "timestamp": 1730419275000,
+        "content": "Fenwick garden administrative note 76: insurance paperwork reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d076",
+        "session_id": "noise-76",
+        "timestamp": 1730419276000,
+        "content": "Fenwick garden administrative note 77: staff refreshments reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d077",
+        "session_id": "noise-77",
+        "timestamp": 1730419277000,
+        "content": "Fenwick garden administrative note 78: publicity leaflets reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d078",
+        "session_id": "noise-78",
+        "timestamp": 1730419278000,
+        "content": "Fenwick garden administrative note 79: parking permits reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d079",
+        "session_id": "noise-79",
+        "timestamp": 1730419279000,
+        "content": "Fenwick garden administrative note 80: receipt envelopes reviewed by the office team, batch 10."
+      },
+      {
+        "source_id": "d080",
+        "session_id": "noise-80",
+        "timestamp": 1730419280000,
+        "content": "Fenwick garden administrative note 81: inventory labels reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d081",
+        "session_id": "noise-81",
+        "timestamp": 1730419281000,
+        "content": "Fenwick garden administrative note 82: visitor badges reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d082",
+        "session_id": "noise-82",
+        "timestamp": 1730419282000,
+        "content": "Fenwick garden administrative note 83: cleaning supplies reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d083",
+        "session_id": "noise-83",
+        "timestamp": 1730419283000,
+        "content": "Fenwick garden administrative note 84: insurance paperwork reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d084",
+        "session_id": "noise-84",
+        "timestamp": 1730419284000,
+        "content": "Fenwick garden administrative note 85: staff refreshments reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d085",
+        "session_id": "noise-85",
+        "timestamp": 1730419285000,
+        "content": "Fenwick garden administrative note 86: publicity leaflets reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d086",
+        "session_id": "noise-86",
+        "timestamp": 1730419286000,
+        "content": "Fenwick garden administrative note 87: parking permits reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d087",
+        "session_id": "noise-87",
+        "timestamp": 1730419287000,
+        "content": "Fenwick garden administrative note 88: receipt envelopes reviewed by the office team, batch 11."
+      },
+      {
+        "source_id": "d088",
+        "session_id": "noise-88",
+        "timestamp": 1730419288000,
+        "content": "Fenwick garden administrative note 89: inventory labels reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d089",
+        "session_id": "noise-89",
+        "timestamp": 1730419289000,
+        "content": "Fenwick garden administrative note 90: visitor badges reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d090",
+        "session_id": "noise-90",
+        "timestamp": 1730419290000,
+        "content": "Fenwick garden administrative note 91: cleaning supplies reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d091",
+        "session_id": "noise-91",
+        "timestamp": 1730419291000,
+        "content": "Fenwick garden administrative note 92: insurance paperwork reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d092",
+        "session_id": "noise-92",
+        "timestamp": 1730419292000,
+        "content": "Fenwick garden administrative note 93: staff refreshments reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d093",
+        "session_id": "noise-93",
+        "timestamp": 1730419293000,
+        "content": "Fenwick garden administrative note 94: publicity leaflets reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d094",
+        "session_id": "noise-94",
+        "timestamp": 1730419294000,
+        "content": "Fenwick garden administrative note 95: parking permits reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d095",
+        "session_id": "noise-95",
+        "timestamp": 1730419295000,
+        "content": "Fenwick garden administrative note 96: receipt envelopes reviewed by the office team, batch 12."
+      },
+      {
+        "source_id": "d096",
+        "session_id": "noise-96",
+        "timestamp": 1730419296000,
+        "content": "Fenwick garden administrative note 97: inventory labels reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d097",
+        "session_id": "noise-97",
+        "timestamp": 1730419297000,
+        "content": "Fenwick garden administrative note 98: visitor badges reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d098",
+        "session_id": "noise-98",
+        "timestamp": 1730419298000,
+        "content": "Fenwick garden administrative note 99: cleaning supplies reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d099",
+        "session_id": "noise-99",
+        "timestamp": 1730419299000,
+        "content": "Fenwick garden administrative note 100: insurance paperwork reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d100",
+        "session_id": "noise-100",
+        "timestamp": 1730419300000,
+        "content": "Fenwick garden administrative note 101: staff refreshments reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d101",
+        "session_id": "noise-101",
+        "timestamp": 1730419301000,
+        "content": "Fenwick garden administrative note 102: publicity leaflets reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d102",
+        "session_id": "noise-102",
+        "timestamp": 1730419302000,
+        "content": "Fenwick garden administrative note 103: parking permits reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d103",
+        "session_id": "noise-103",
+        "timestamp": 1730419303000,
+        "content": "Fenwick garden administrative note 104: receipt envelopes reviewed by the office team, batch 13."
+      },
+      {
+        "source_id": "d104",
+        "session_id": "noise-104",
+        "timestamp": 1730419304000,
+        "content": "Fenwick garden administrative note 105: inventory labels reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d105",
+        "session_id": "noise-105",
+        "timestamp": 1730419305000,
+        "content": "Fenwick garden administrative note 106: visitor badges reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d106",
+        "session_id": "noise-106",
+        "timestamp": 1730419306000,
+        "content": "Fenwick garden administrative note 107: cleaning supplies reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d107",
+        "session_id": "noise-107",
+        "timestamp": 1730419307000,
+        "content": "Fenwick garden administrative note 108: insurance paperwork reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d108",
+        "session_id": "noise-108",
+        "timestamp": 1730419308000,
+        "content": "Fenwick garden administrative note 109: staff refreshments reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d109",
+        "session_id": "noise-109",
+        "timestamp": 1730419309000,
+        "content": "Fenwick garden administrative note 110: publicity leaflets reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d110",
+        "session_id": "noise-110",
+        "timestamp": 1730419310000,
+        "content": "Fenwick garden administrative note 111: parking permits reviewed by the office team, batch 14."
+      },
+      {
+        "source_id": "d111",
+        "session_id": "noise-111",
+        "timestamp": 1730419311000,
+        "content": "Fenwick garden administrative note 112: receipt envelopes reviewed by the office team, batch 14."
+      }
+    ]
+  },
+  {
+    "name": "blind10-interval-zh",
+    "category": "bounded_history_zh",
+    "query": "2024年五月期间，松岚画廊由谁负责保管钥匙？",
+    "expected_source_ids": [
+      "may",
+      "june"
+    ],
+    "forbidden_source_ids": [],
+    "memories": [
+      {
+        "source_id": "may",
+        "session_id": "may",
+        "timestamp": 1713571200000,
+        "content": "松岚画廊从2024年4月20日至5月31日由沈青保管钥匙。"
+      },
+      {
+        "source_id": "june",
+        "session_id": "june",
+        "timestamp": 1717200000000,
+        "content": "自2024年6月1日起，松岚画廊钥匙改由陆宁保管。"
+      },
+      {
+        "source_id": "d000",
+        "session_id": "noise-0",
+        "timestamp": 1730419200000,
+        "content": "松岚画廊行政记录第1号：标签盘点由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d001",
+        "session_id": "noise-1",
+        "timestamp": 1730419201000,
+        "content": "松岚画廊行政记录第2号：访客登记由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d002",
+        "session_id": "noise-2",
+        "timestamp": 1730419202000,
+        "content": "松岚画廊行政记录第3号：清洁用品由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d003",
+        "session_id": "noise-3",
+        "timestamp": 1730419203000,
+        "content": "松岚画廊行政记录第4号：保险资料由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d004",
+        "session_id": "noise-4",
+        "timestamp": 1730419204000,
+        "content": "松岚画廊行政记录第5号：茶点采购由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d005",
+        "session_id": "noise-5",
+        "timestamp": 1730419205000,
+        "content": "松岚画廊行政记录第6号：宣传页由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d006",
+        "session_id": "noise-6",
+        "timestamp": 1730419206000,
+        "content": "松岚画廊行政记录第7号：停车证由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d007",
+        "session_id": "noise-7",
+        "timestamp": 1730419207000,
+        "content": "松岚画廊行政记录第8号：收据归档由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d008",
+        "session_id": "noise-8",
+        "timestamp": 1730419208000,
+        "content": "松岚画廊行政记录第9号：标签盘点由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d009",
+        "session_id": "noise-9",
+        "timestamp": 1730419209000,
+        "content": "松岚画廊行政记录第10号：访客登记由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d010",
+        "session_id": "noise-10",
+        "timestamp": 1730419210000,
+        "content": "松岚画廊行政记录第11号：清洁用品由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d011",
+        "session_id": "noise-11",
+        "timestamp": 1730419211000,
+        "content": "松岚画廊行政记录第12号：保险资料由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d012",
+        "session_id": "noise-12",
+        "timestamp": 1730419212000,
+        "content": "松岚画廊行政记录第13号：茶点采购由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d013",
+        "session_id": "noise-13",
+        "timestamp": 1730419213000,
+        "content": "松岚画廊行政记录第14号：宣传页由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d014",
+        "session_id": "noise-14",
+        "timestamp": 1730419214000,
+        "content": "松岚画廊行政记录第15号：停车证由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d015",
+        "session_id": "noise-15",
+        "timestamp": 1730419215000,
+        "content": "松岚画廊行政记录第16号：收据归档由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d016",
+        "session_id": "noise-16",
+        "timestamp": 1730419216000,
+        "content": "松岚画廊行政记录第17号：标签盘点由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d017",
+        "session_id": "noise-17",
+        "timestamp": 1730419217000,
+        "content": "松岚画廊行政记录第18号：访客登记由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d018",
+        "session_id": "noise-18",
+        "timestamp": 1730419218000,
+        "content": "松岚画廊行政记录第19号：清洁用品由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d019",
+        "session_id": "noise-19",
+        "timestamp": 1730419219000,
+        "content": "松岚画廊行政记录第20号：保险资料由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d020",
+        "session_id": "noise-20",
+        "timestamp": 1730419220000,
+        "content": "松岚画廊行政记录第21号：茶点采购由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d021",
+        "session_id": "noise-21",
+        "timestamp": 1730419221000,
+        "content": "松岚画廊行政记录第22号：宣传页由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d022",
+        "session_id": "noise-22",
+        "timestamp": 1730419222000,
+        "content": "松岚画廊行政记录第23号：停车证由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d023",
+        "session_id": "noise-23",
+        "timestamp": 1730419223000,
+        "content": "松岚画廊行政记录第24号：收据归档由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d024",
+        "session_id": "noise-24",
+        "timestamp": 1730419224000,
+        "content": "松岚画廊行政记录第25号：标签盘点由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d025",
+        "session_id": "noise-25",
+        "timestamp": 1730419225000,
+        "content": "松岚画廊行政记录第26号：访客登记由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d026",
+        "session_id": "noise-26",
+        "timestamp": 1730419226000,
+        "content": "松岚画廊行政记录第27号：清洁用品由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d027",
+        "session_id": "noise-27",
+        "timestamp": 1730419227000,
+        "content": "松岚画廊行政记录第28号：保险资料由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d028",
+        "session_id": "noise-28",
+        "timestamp": 1730419228000,
+        "content": "松岚画廊行政记录第29号：茶点采购由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d029",
+        "session_id": "noise-29",
+        "timestamp": 1730419229000,
+        "content": "松岚画廊行政记录第30号：宣传页由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d030",
+        "session_id": "noise-30",
+        "timestamp": 1730419230000,
+        "content": "松岚画廊行政记录第31号：停车证由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d031",
+        "session_id": "noise-31",
+        "timestamp": 1730419231000,
+        "content": "松岚画廊行政记录第32号：收据归档由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d032",
+        "session_id": "noise-32",
+        "timestamp": 1730419232000,
+        "content": "松岚画廊行政记录第33号：标签盘点由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d033",
+        "session_id": "noise-33",
+        "timestamp": 1730419233000,
+        "content": "松岚画廊行政记录第34号：访客登记由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d034",
+        "session_id": "noise-34",
+        "timestamp": 1730419234000,
+        "content": "松岚画廊行政记录第35号：清洁用品由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d035",
+        "session_id": "noise-35",
+        "timestamp": 1730419235000,
+        "content": "松岚画廊行政记录第36号：保险资料由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d036",
+        "session_id": "noise-36",
+        "timestamp": 1730419236000,
+        "content": "松岚画廊行政记录第37号：茶点采购由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d037",
+        "session_id": "noise-37",
+        "timestamp": 1730419237000,
+        "content": "松岚画廊行政记录第38号：宣传页由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d038",
+        "session_id": "noise-38",
+        "timestamp": 1730419238000,
+        "content": "松岚画廊行政记录第39号：停车证由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d039",
+        "session_id": "noise-39",
+        "timestamp": 1730419239000,
+        "content": "松岚画廊行政记录第40号：收据归档由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d040",
+        "session_id": "noise-40",
+        "timestamp": 1730419240000,
+        "content": "松岚画廊行政记录第41号：标签盘点由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d041",
+        "session_id": "noise-41",
+        "timestamp": 1730419241000,
+        "content": "松岚画廊行政记录第42号：访客登记由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d042",
+        "session_id": "noise-42",
+        "timestamp": 1730419242000,
+        "content": "松岚画廊行政记录第43号：清洁用品由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d043",
+        "session_id": "noise-43",
+        "timestamp": 1730419243000,
+        "content": "松岚画廊行政记录第44号：保险资料由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d044",
+        "session_id": "noise-44",
+        "timestamp": 1730419244000,
+        "content": "松岚画廊行政记录第45号：茶点采购由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d045",
+        "session_id": "noise-45",
+        "timestamp": 1730419245000,
+        "content": "松岚画廊行政记录第46号：宣传页由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d046",
+        "session_id": "noise-46",
+        "timestamp": 1730419246000,
+        "content": "松岚画廊行政记录第47号：停车证由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d047",
+        "session_id": "noise-47",
+        "timestamp": 1730419247000,
+        "content": "松岚画廊行政记录第48号：收据归档由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d048",
+        "session_id": "noise-48",
+        "timestamp": 1730419248000,
+        "content": "松岚画廊行政记录第49号：标签盘点由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d049",
+        "session_id": "noise-49",
+        "timestamp": 1730419249000,
+        "content": "松岚画廊行政记录第50号：访客登记由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d050",
+        "session_id": "noise-50",
+        "timestamp": 1730419250000,
+        "content": "松岚画廊行政记录第51号：清洁用品由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d051",
+        "session_id": "noise-51",
+        "timestamp": 1730419251000,
+        "content": "松岚画廊行政记录第52号：保险资料由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d052",
+        "session_id": "noise-52",
+        "timestamp": 1730419252000,
+        "content": "松岚画廊行政记录第53号：茶点采购由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d053",
+        "session_id": "noise-53",
+        "timestamp": 1730419253000,
+        "content": "松岚画廊行政记录第54号：宣传页由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d054",
+        "session_id": "noise-54",
+        "timestamp": 1730419254000,
+        "content": "松岚画廊行政记录第55号：停车证由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d055",
+        "session_id": "noise-55",
+        "timestamp": 1730419255000,
+        "content": "松岚画廊行政记录第56号：收据归档由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d056",
+        "session_id": "noise-56",
+        "timestamp": 1730419256000,
+        "content": "松岚画廊行政记录第57号：标签盘点由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d057",
+        "session_id": "noise-57",
+        "timestamp": 1730419257000,
+        "content": "松岚画廊行政记录第58号：访客登记由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d058",
+        "session_id": "noise-58",
+        "timestamp": 1730419258000,
+        "content": "松岚画廊行政记录第59号：清洁用品由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d059",
+        "session_id": "noise-59",
+        "timestamp": 1730419259000,
+        "content": "松岚画廊行政记录第60号：保险资料由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d060",
+        "session_id": "noise-60",
+        "timestamp": 1730419260000,
+        "content": "松岚画廊行政记录第61号：茶点采购由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d061",
+        "session_id": "noise-61",
+        "timestamp": 1730419261000,
+        "content": "松岚画廊行政记录第62号：宣传页由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d062",
+        "session_id": "noise-62",
+        "timestamp": 1730419262000,
+        "content": "松岚画廊行政记录第63号：停车证由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d063",
+        "session_id": "noise-63",
+        "timestamp": 1730419263000,
+        "content": "松岚画廊行政记录第64号：收据归档由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d064",
+        "session_id": "noise-64",
+        "timestamp": 1730419264000,
+        "content": "松岚画廊行政记录第65号：标签盘点由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d065",
+        "session_id": "noise-65",
+        "timestamp": 1730419265000,
+        "content": "松岚画廊行政记录第66号：访客登记由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d066",
+        "session_id": "noise-66",
+        "timestamp": 1730419266000,
+        "content": "松岚画廊行政记录第67号：清洁用品由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d067",
+        "session_id": "noise-67",
+        "timestamp": 1730419267000,
+        "content": "松岚画廊行政记录第68号：保险资料由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d068",
+        "session_id": "noise-68",
+        "timestamp": 1730419268000,
+        "content": "松岚画廊行政记录第69号：茶点采购由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d069",
+        "session_id": "noise-69",
+        "timestamp": 1730419269000,
+        "content": "松岚画廊行政记录第70号：宣传页由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d070",
+        "session_id": "noise-70",
+        "timestamp": 1730419270000,
+        "content": "松岚画廊行政记录第71号：停车证由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d071",
+        "session_id": "noise-71",
+        "timestamp": 1730419271000,
+        "content": "松岚画廊行政记录第72号：收据归档由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d072",
+        "session_id": "noise-72",
+        "timestamp": 1730419272000,
+        "content": "松岚画廊行政记录第73号：标签盘点由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d073",
+        "session_id": "noise-73",
+        "timestamp": 1730419273000,
+        "content": "松岚画廊行政记录第74号：访客登记由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d074",
+        "session_id": "noise-74",
+        "timestamp": 1730419274000,
+        "content": "松岚画廊行政记录第75号：清洁用品由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d075",
+        "session_id": "noise-75",
+        "timestamp": 1730419275000,
+        "content": "松岚画廊行政记录第76号：保险资料由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d076",
+        "session_id": "noise-76",
+        "timestamp": 1730419276000,
+        "content": "松岚画廊行政记录第77号：茶点采购由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d077",
+        "session_id": "noise-77",
+        "timestamp": 1730419277000,
+        "content": "松岚画廊行政记录第78号：宣传页由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d078",
+        "session_id": "noise-78",
+        "timestamp": 1730419278000,
+        "content": "松岚画廊行政记录第79号：停车证由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d079",
+        "session_id": "noise-79",
+        "timestamp": 1730419279000,
+        "content": "松岚画廊行政记录第80号：收据归档由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d080",
+        "session_id": "noise-80",
+        "timestamp": 1730419280000,
+        "content": "松岚画廊行政记录第81号：标签盘点由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d081",
+        "session_id": "noise-81",
+        "timestamp": 1730419281000,
+        "content": "松岚画廊行政记录第82号：访客登记由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d082",
+        "session_id": "noise-82",
+        "timestamp": 1730419282000,
+        "content": "松岚画廊行政记录第83号：清洁用品由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d083",
+        "session_id": "noise-83",
+        "timestamp": 1730419283000,
+        "content": "松岚画廊行政记录第84号：保险资料由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d084",
+        "session_id": "noise-84",
+        "timestamp": 1730419284000,
+        "content": "松岚画廊行政记录第85号：茶点采购由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d085",
+        "session_id": "noise-85",
+        "timestamp": 1730419285000,
+        "content": "松岚画廊行政记录第86号：宣传页由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d086",
+        "session_id": "noise-86",
+        "timestamp": 1730419286000,
+        "content": "松岚画廊行政记录第87号：停车证由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d087",
+        "session_id": "noise-87",
+        "timestamp": 1730419287000,
+        "content": "松岚画廊行政记录第88号：收据归档由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d088",
+        "session_id": "noise-88",
+        "timestamp": 1730419288000,
+        "content": "松岚画廊行政记录第89号：标签盘点由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d089",
+        "session_id": "noise-89",
+        "timestamp": 1730419289000,
+        "content": "松岚画廊行政记录第90号：访客登记由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d090",
+        "session_id": "noise-90",
+        "timestamp": 1730419290000,
+        "content": "松岚画廊行政记录第91号：清洁用品由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d091",
+        "session_id": "noise-91",
+        "timestamp": 1730419291000,
+        "content": "松岚画廊行政记录第92号：保险资料由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d092",
+        "session_id": "noise-92",
+        "timestamp": 1730419292000,
+        "content": "松岚画廊行政记录第93号：茶点采购由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d093",
+        "session_id": "noise-93",
+        "timestamp": 1730419293000,
+        "content": "松岚画廊行政记录第94号：宣传页由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d094",
+        "session_id": "noise-94",
+        "timestamp": 1730419294000,
+        "content": "松岚画廊行政记录第95号：停车证由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d095",
+        "session_id": "noise-95",
+        "timestamp": 1730419295000,
+        "content": "松岚画廊行政记录第96号：收据归档由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d096",
+        "session_id": "noise-96",
+        "timestamp": 1730419296000,
+        "content": "松岚画廊行政记录第97号：标签盘点由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d097",
+        "session_id": "noise-97",
+        "timestamp": 1730419297000,
+        "content": "松岚画廊行政记录第98号：访客登记由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d098",
+        "session_id": "noise-98",
+        "timestamp": 1730419298000,
+        "content": "松岚画廊行政记录第99号：清洁用品由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d099",
+        "session_id": "noise-99",
+        "timestamp": 1730419299000,
+        "content": "松岚画廊行政记录第100号：保险资料由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d100",
+        "session_id": "noise-100",
+        "timestamp": 1730419300000,
+        "content": "松岚画廊行政记录第101号：茶点采购由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d101",
+        "session_id": "noise-101",
+        "timestamp": 1730419301000,
+        "content": "松岚画廊行政记录第102号：宣传页由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d102",
+        "session_id": "noise-102",
+        "timestamp": 1730419302000,
+        "content": "松岚画廊行政记录第103号：停车证由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d103",
+        "session_id": "noise-103",
+        "timestamp": 1730419303000,
+        "content": "松岚画廊行政记录第104号：收据归档由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d104",
+        "session_id": "noise-104",
+        "timestamp": 1730419304000,
+        "content": "松岚画廊行政记录第105号：标签盘点由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d105",
+        "session_id": "noise-105",
+        "timestamp": 1730419305000,
+        "content": "松岚画廊行政记录第106号：访客登记由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d106",
+        "session_id": "noise-106",
+        "timestamp": 1730419306000,
+        "content": "松岚画廊行政记录第107号：清洁用品由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d107",
+        "session_id": "noise-107",
+        "timestamp": 1730419307000,
+        "content": "松岚画廊行政记录第108号：保险资料由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d108",
+        "session_id": "noise-108",
+        "timestamp": 1730419308000,
+        "content": "松岚画廊行政记录第109号：茶点采购由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d109",
+        "session_id": "noise-109",
+        "timestamp": 1730419309000,
+        "content": "松岚画廊行政记录第110号：宣传页由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d110",
+        "session_id": "noise-110",
+        "timestamp": 1730419310000,
+        "content": "松岚画廊行政记录第111号：停车证由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d111",
+        "session_id": "noise-111",
+        "timestamp": 1730419311000,
+        "content": "松岚画廊行政记录第112号：收据归档由行政组复核，批次14。"
+      }
+    ]
+  },
+  {
+    "name": "blind10-sequence-zh",
+    "category": "event_order_zh",
+    "query": "白石剧团先完成服装验收还是先完成灯光测试？",
+    "expected_source_ids": [
+      "costume",
+      "lighting"
+    ],
+    "forbidden_source_ids": [],
+    "memories": [
+      {
+        "source_id": "costume",
+        "session_id": "costume",
+        "timestamp": 1725753600000,
+        "content": "白石剧团于2024年9月8日完成服装验收。"
+      },
+      {
+        "source_id": "lighting",
+        "session_id": "lighting",
+        "timestamp": 1725926400000,
+        "content": "补记：白石剧团于2024年9月3日完成灯光测试。"
+      },
+      {
+        "source_id": "d000",
+        "session_id": "noise-0",
+        "timestamp": 1730419200000,
+        "content": "白石剧团行政记录第1号：标签盘点由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d001",
+        "session_id": "noise-1",
+        "timestamp": 1730419201000,
+        "content": "白石剧团行政记录第2号：访客登记由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d002",
+        "session_id": "noise-2",
+        "timestamp": 1730419202000,
+        "content": "白石剧团行政记录第3号：清洁用品由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d003",
+        "session_id": "noise-3",
+        "timestamp": 1730419203000,
+        "content": "白石剧团行政记录第4号：保险资料由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d004",
+        "session_id": "noise-4",
+        "timestamp": 1730419204000,
+        "content": "白石剧团行政记录第5号：茶点采购由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d005",
+        "session_id": "noise-5",
+        "timestamp": 1730419205000,
+        "content": "白石剧团行政记录第6号：宣传页由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d006",
+        "session_id": "noise-6",
+        "timestamp": 1730419206000,
+        "content": "白石剧团行政记录第7号：停车证由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d007",
+        "session_id": "noise-7",
+        "timestamp": 1730419207000,
+        "content": "白石剧团行政记录第8号：收据归档由行政组复核，批次1。"
+      },
+      {
+        "source_id": "d008",
+        "session_id": "noise-8",
+        "timestamp": 1730419208000,
+        "content": "白石剧团行政记录第9号：标签盘点由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d009",
+        "session_id": "noise-9",
+        "timestamp": 1730419209000,
+        "content": "白石剧团行政记录第10号：访客登记由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d010",
+        "session_id": "noise-10",
+        "timestamp": 1730419210000,
+        "content": "白石剧团行政记录第11号：清洁用品由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d011",
+        "session_id": "noise-11",
+        "timestamp": 1730419211000,
+        "content": "白石剧团行政记录第12号：保险资料由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d012",
+        "session_id": "noise-12",
+        "timestamp": 1730419212000,
+        "content": "白石剧团行政记录第13号：茶点采购由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d013",
+        "session_id": "noise-13",
+        "timestamp": 1730419213000,
+        "content": "白石剧团行政记录第14号：宣传页由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d014",
+        "session_id": "noise-14",
+        "timestamp": 1730419214000,
+        "content": "白石剧团行政记录第15号：停车证由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d015",
+        "session_id": "noise-15",
+        "timestamp": 1730419215000,
+        "content": "白石剧团行政记录第16号：收据归档由行政组复核，批次2。"
+      },
+      {
+        "source_id": "d016",
+        "session_id": "noise-16",
+        "timestamp": 1730419216000,
+        "content": "白石剧团行政记录第17号：标签盘点由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d017",
+        "session_id": "noise-17",
+        "timestamp": 1730419217000,
+        "content": "白石剧团行政记录第18号：访客登记由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d018",
+        "session_id": "noise-18",
+        "timestamp": 1730419218000,
+        "content": "白石剧团行政记录第19号：清洁用品由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d019",
+        "session_id": "noise-19",
+        "timestamp": 1730419219000,
+        "content": "白石剧团行政记录第20号：保险资料由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d020",
+        "session_id": "noise-20",
+        "timestamp": 1730419220000,
+        "content": "白石剧团行政记录第21号：茶点采购由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d021",
+        "session_id": "noise-21",
+        "timestamp": 1730419221000,
+        "content": "白石剧团行政记录第22号：宣传页由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d022",
+        "session_id": "noise-22",
+        "timestamp": 1730419222000,
+        "content": "白石剧团行政记录第23号：停车证由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d023",
+        "session_id": "noise-23",
+        "timestamp": 1730419223000,
+        "content": "白石剧团行政记录第24号：收据归档由行政组复核，批次3。"
+      },
+      {
+        "source_id": "d024",
+        "session_id": "noise-24",
+        "timestamp": 1730419224000,
+        "content": "白石剧团行政记录第25号：标签盘点由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d025",
+        "session_id": "noise-25",
+        "timestamp": 1730419225000,
+        "content": "白石剧团行政记录第26号：访客登记由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d026",
+        "session_id": "noise-26",
+        "timestamp": 1730419226000,
+        "content": "白石剧团行政记录第27号：清洁用品由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d027",
+        "session_id": "noise-27",
+        "timestamp": 1730419227000,
+        "content": "白石剧团行政记录第28号：保险资料由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d028",
+        "session_id": "noise-28",
+        "timestamp": 1730419228000,
+        "content": "白石剧团行政记录第29号：茶点采购由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d029",
+        "session_id": "noise-29",
+        "timestamp": 1730419229000,
+        "content": "白石剧团行政记录第30号：宣传页由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d030",
+        "session_id": "noise-30",
+        "timestamp": 1730419230000,
+        "content": "白石剧团行政记录第31号：停车证由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d031",
+        "session_id": "noise-31",
+        "timestamp": 1730419231000,
+        "content": "白石剧团行政记录第32号：收据归档由行政组复核，批次4。"
+      },
+      {
+        "source_id": "d032",
+        "session_id": "noise-32",
+        "timestamp": 1730419232000,
+        "content": "白石剧团行政记录第33号：标签盘点由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d033",
+        "session_id": "noise-33",
+        "timestamp": 1730419233000,
+        "content": "白石剧团行政记录第34号：访客登记由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d034",
+        "session_id": "noise-34",
+        "timestamp": 1730419234000,
+        "content": "白石剧团行政记录第35号：清洁用品由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d035",
+        "session_id": "noise-35",
+        "timestamp": 1730419235000,
+        "content": "白石剧团行政记录第36号：保险资料由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d036",
+        "session_id": "noise-36",
+        "timestamp": 1730419236000,
+        "content": "白石剧团行政记录第37号：茶点采购由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d037",
+        "session_id": "noise-37",
+        "timestamp": 1730419237000,
+        "content": "白石剧团行政记录第38号：宣传页由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d038",
+        "session_id": "noise-38",
+        "timestamp": 1730419238000,
+        "content": "白石剧团行政记录第39号：停车证由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d039",
+        "session_id": "noise-39",
+        "timestamp": 1730419239000,
+        "content": "白石剧团行政记录第40号：收据归档由行政组复核，批次5。"
+      },
+      {
+        "source_id": "d040",
+        "session_id": "noise-40",
+        "timestamp": 1730419240000,
+        "content": "白石剧团行政记录第41号：标签盘点由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d041",
+        "session_id": "noise-41",
+        "timestamp": 1730419241000,
+        "content": "白石剧团行政记录第42号：访客登记由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d042",
+        "session_id": "noise-42",
+        "timestamp": 1730419242000,
+        "content": "白石剧团行政记录第43号：清洁用品由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d043",
+        "session_id": "noise-43",
+        "timestamp": 1730419243000,
+        "content": "白石剧团行政记录第44号：保险资料由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d044",
+        "session_id": "noise-44",
+        "timestamp": 1730419244000,
+        "content": "白石剧团行政记录第45号：茶点采购由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d045",
+        "session_id": "noise-45",
+        "timestamp": 1730419245000,
+        "content": "白石剧团行政记录第46号：宣传页由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d046",
+        "session_id": "noise-46",
+        "timestamp": 1730419246000,
+        "content": "白石剧团行政记录第47号：停车证由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d047",
+        "session_id": "noise-47",
+        "timestamp": 1730419247000,
+        "content": "白石剧团行政记录第48号：收据归档由行政组复核，批次6。"
+      },
+      {
+        "source_id": "d048",
+        "session_id": "noise-48",
+        "timestamp": 1730419248000,
+        "content": "白石剧团行政记录第49号：标签盘点由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d049",
+        "session_id": "noise-49",
+        "timestamp": 1730419249000,
+        "content": "白石剧团行政记录第50号：访客登记由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d050",
+        "session_id": "noise-50",
+        "timestamp": 1730419250000,
+        "content": "白石剧团行政记录第51号：清洁用品由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d051",
+        "session_id": "noise-51",
+        "timestamp": 1730419251000,
+        "content": "白石剧团行政记录第52号：保险资料由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d052",
+        "session_id": "noise-52",
+        "timestamp": 1730419252000,
+        "content": "白石剧团行政记录第53号：茶点采购由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d053",
+        "session_id": "noise-53",
+        "timestamp": 1730419253000,
+        "content": "白石剧团行政记录第54号：宣传页由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d054",
+        "session_id": "noise-54",
+        "timestamp": 1730419254000,
+        "content": "白石剧团行政记录第55号：停车证由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d055",
+        "session_id": "noise-55",
+        "timestamp": 1730419255000,
+        "content": "白石剧团行政记录第56号：收据归档由行政组复核，批次7。"
+      },
+      {
+        "source_id": "d056",
+        "session_id": "noise-56",
+        "timestamp": 1730419256000,
+        "content": "白石剧团行政记录第57号：标签盘点由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d057",
+        "session_id": "noise-57",
+        "timestamp": 1730419257000,
+        "content": "白石剧团行政记录第58号：访客登记由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d058",
+        "session_id": "noise-58",
+        "timestamp": 1730419258000,
+        "content": "白石剧团行政记录第59号：清洁用品由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d059",
+        "session_id": "noise-59",
+        "timestamp": 1730419259000,
+        "content": "白石剧团行政记录第60号：保险资料由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d060",
+        "session_id": "noise-60",
+        "timestamp": 1730419260000,
+        "content": "白石剧团行政记录第61号：茶点采购由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d061",
+        "session_id": "noise-61",
+        "timestamp": 1730419261000,
+        "content": "白石剧团行政记录第62号：宣传页由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d062",
+        "session_id": "noise-62",
+        "timestamp": 1730419262000,
+        "content": "白石剧团行政记录第63号：停车证由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d063",
+        "session_id": "noise-63",
+        "timestamp": 1730419263000,
+        "content": "白石剧团行政记录第64号：收据归档由行政组复核，批次8。"
+      },
+      {
+        "source_id": "d064",
+        "session_id": "noise-64",
+        "timestamp": 1730419264000,
+        "content": "白石剧团行政记录第65号：标签盘点由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d065",
+        "session_id": "noise-65",
+        "timestamp": 1730419265000,
+        "content": "白石剧团行政记录第66号：访客登记由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d066",
+        "session_id": "noise-66",
+        "timestamp": 1730419266000,
+        "content": "白石剧团行政记录第67号：清洁用品由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d067",
+        "session_id": "noise-67",
+        "timestamp": 1730419267000,
+        "content": "白石剧团行政记录第68号：保险资料由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d068",
+        "session_id": "noise-68",
+        "timestamp": 1730419268000,
+        "content": "白石剧团行政记录第69号：茶点采购由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d069",
+        "session_id": "noise-69",
+        "timestamp": 1730419269000,
+        "content": "白石剧团行政记录第70号：宣传页由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d070",
+        "session_id": "noise-70",
+        "timestamp": 1730419270000,
+        "content": "白石剧团行政记录第71号：停车证由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d071",
+        "session_id": "noise-71",
+        "timestamp": 1730419271000,
+        "content": "白石剧团行政记录第72号：收据归档由行政组复核，批次9。"
+      },
+      {
+        "source_id": "d072",
+        "session_id": "noise-72",
+        "timestamp": 1730419272000,
+        "content": "白石剧团行政记录第73号：标签盘点由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d073",
+        "session_id": "noise-73",
+        "timestamp": 1730419273000,
+        "content": "白石剧团行政记录第74号：访客登记由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d074",
+        "session_id": "noise-74",
+        "timestamp": 1730419274000,
+        "content": "白石剧团行政记录第75号：清洁用品由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d075",
+        "session_id": "noise-75",
+        "timestamp": 1730419275000,
+        "content": "白石剧团行政记录第76号：保险资料由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d076",
+        "session_id": "noise-76",
+        "timestamp": 1730419276000,
+        "content": "白石剧团行政记录第77号：茶点采购由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d077",
+        "session_id": "noise-77",
+        "timestamp": 1730419277000,
+        "content": "白石剧团行政记录第78号：宣传页由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d078",
+        "session_id": "noise-78",
+        "timestamp": 1730419278000,
+        "content": "白石剧团行政记录第79号：停车证由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d079",
+        "session_id": "noise-79",
+        "timestamp": 1730419279000,
+        "content": "白石剧团行政记录第80号：收据归档由行政组复核，批次10。"
+      },
+      {
+        "source_id": "d080",
+        "session_id": "noise-80",
+        "timestamp": 1730419280000,
+        "content": "白石剧团行政记录第81号：标签盘点由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d081",
+        "session_id": "noise-81",
+        "timestamp": 1730419281000,
+        "content": "白石剧团行政记录第82号：访客登记由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d082",
+        "session_id": "noise-82",
+        "timestamp": 1730419282000,
+        "content": "白石剧团行政记录第83号：清洁用品由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d083",
+        "session_id": "noise-83",
+        "timestamp": 1730419283000,
+        "content": "白石剧团行政记录第84号：保险资料由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d084",
+        "session_id": "noise-84",
+        "timestamp": 1730419284000,
+        "content": "白石剧团行政记录第85号：茶点采购由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d085",
+        "session_id": "noise-85",
+        "timestamp": 1730419285000,
+        "content": "白石剧团行政记录第86号：宣传页由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d086",
+        "session_id": "noise-86",
+        "timestamp": 1730419286000,
+        "content": "白石剧团行政记录第87号：停车证由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d087",
+        "session_id": "noise-87",
+        "timestamp": 1730419287000,
+        "content": "白石剧团行政记录第88号：收据归档由行政组复核，批次11。"
+      },
+      {
+        "source_id": "d088",
+        "session_id": "noise-88",
+        "timestamp": 1730419288000,
+        "content": "白石剧团行政记录第89号：标签盘点由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d089",
+        "session_id": "noise-89",
+        "timestamp": 1730419289000,
+        "content": "白石剧团行政记录第90号：访客登记由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d090",
+        "session_id": "noise-90",
+        "timestamp": 1730419290000,
+        "content": "白石剧团行政记录第91号：清洁用品由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d091",
+        "session_id": "noise-91",
+        "timestamp": 1730419291000,
+        "content": "白石剧团行政记录第92号：保险资料由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d092",
+        "session_id": "noise-92",
+        "timestamp": 1730419292000,
+        "content": "白石剧团行政记录第93号：茶点采购由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d093",
+        "session_id": "noise-93",
+        "timestamp": 1730419293000,
+        "content": "白石剧团行政记录第94号：宣传页由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d094",
+        "session_id": "noise-94",
+        "timestamp": 1730419294000,
+        "content": "白石剧团行政记录第95号：停车证由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d095",
+        "session_id": "noise-95",
+        "timestamp": 1730419295000,
+        "content": "白石剧团行政记录第96号：收据归档由行政组复核，批次12。"
+      },
+      {
+        "source_id": "d096",
+        "session_id": "noise-96",
+        "timestamp": 1730419296000,
+        "content": "白石剧团行政记录第97号：标签盘点由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d097",
+        "session_id": "noise-97",
+        "timestamp": 1730419297000,
+        "content": "白石剧团行政记录第98号：访客登记由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d098",
+        "session_id": "noise-98",
+        "timestamp": 1730419298000,
+        "content": "白石剧团行政记录第99号：清洁用品由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d099",
+        "session_id": "noise-99",
+        "timestamp": 1730419299000,
+        "content": "白石剧团行政记录第100号：保险资料由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d100",
+        "session_id": "noise-100",
+        "timestamp": 1730419300000,
+        "content": "白石剧团行政记录第101号：茶点采购由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d101",
+        "session_id": "noise-101",
+        "timestamp": 1730419301000,
+        "content": "白石剧团行政记录第102号：宣传页由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d102",
+        "session_id": "noise-102",
+        "timestamp": 1730419302000,
+        "content": "白石剧团行政记录第103号：停车证由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d103",
+        "session_id": "noise-103",
+        "timestamp": 1730419303000,
+        "content": "白石剧团行政记录第104号：收据归档由行政组复核，批次13。"
+      },
+      {
+        "source_id": "d104",
+        "session_id": "noise-104",
+        "timestamp": 1730419304000,
+        "content": "白石剧团行政记录第105号：标签盘点由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d105",
+        "session_id": "noise-105",
+        "timestamp": 1730419305000,
+        "content": "白石剧团行政记录第106号：访客登记由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d106",
+        "session_id": "noise-106",
+        "timestamp": 1730419306000,
+        "content": "白石剧团行政记录第107号：清洁用品由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d107",
+        "session_id": "noise-107",
+        "timestamp": 1730419307000,
+        "content": "白石剧团行政记录第108号：保险资料由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d108",
+        "session_id": "noise-108",
+        "timestamp": 1730419308000,
+        "content": "白石剧团行政记录第109号：茶点采购由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d109",
+        "session_id": "noise-109",
+        "timestamp": 1730419309000,
+        "content": "白石剧团行政记录第110号：宣传页由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d110",
+        "session_id": "noise-110",
+        "timestamp": 1730419310000,
+        "content": "白石剧团行政记录第111号：停车证由行政组复核，批次14。"
+      },
+      {
+        "source_id": "d111",
+        "session_id": "noise-111",
+        "timestamp": 1730419311000,
+        "content": "白石剧团行政记录第112号：收据归档由行政组复核，批次14。"
+      }
+    ]
+  }
+]
