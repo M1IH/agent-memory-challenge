@@ -1,0 +1,4371 @@
+{
+  "suite": "blind11",
+  "top_k": 100,
+  "cases": 6,
+  "evidence": 12,
+  "hit_at_1": 0.4166666666666667,
+  "hit_at_3": 0.6666666666666666,
+  "hit_at_5": 0.6666666666666666,
+  "mrr": 0.5401785714285714,
+  "categories": {
+    "cancelled_change_zh": 0.5119047619047619,
+    "current_with_historical_comparison": 0.53125,
+    "current_with_historical_comparison_zh": 0.28125,
+    "effective_date": 0.75,
+    "historical_control": 0.6666666666666666,
+    "historical_control_zh": 0.5
+  },
+  "complete_at_1": 0.0,
+  "complete_at_3": 0.3333333333333333,
+  "complete_at_5": 0.3333333333333333,
+  "complete_at_k": 0.8333333333333334,
+  "forbidden_at_5": 0,
+  "evaluation_version": 3,
+  "suite_sha256": "a0229003081a554b0393f4a3f66e28f26e907be66018bba9528ebffc76053064",
+  "retrieval_config": {
+    "lexical_enabled": true,
+    "expansion_enabled": true,
+    "temporal_enabled": true,
+    "linkage_enabled": true,
+    "session_window_enabled": false,
+    "lexical_weight": 1.5,
+    "dense_weight": 0.5
+  },
+  "embedding_model": null,
+  "embedding_identity": null,
+  "runtime": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "fastembed": "0.8.0",
+    "max_context_chars": 1200,
+    "max_add_chars": 200000,
+    "max_search_chars": 200000,
+    "embedding_concurrency": null,
+    "embedding_batch_size": null
+  },
+  "evaluation_code": {
+    "sha256": "5bd96b43259219fabc0b2a57c08238f12e1ad7408485e12413b1bd5c362e4d82",
+    "files": {
+      "app/store.py": "859940a7a81b8f75b8fe77b6815bcab197025d31bf12b1aade112251c2a9ca1e",
+      "app/embedding.py": "60c1be4818caf1fa57bb860c18a35fe43b85850b971fc04870ac037d0218122b",
+      "benchmarks/run_benchmark.py": "2013e98f7e2cc1f43aba322759c450cfea60f7306d8255472062a5d2313c235e",
+      "benchmarks/evidence.py": "7732424715710548999fcc6769a9b146c0357638f9dd157a7ef69f178ac29976",
+      "benchmarks/extended_cases.py": "4054d6853f4834e07f2d090976c90079af8faf1e6e79f78803de1ae8b8c1d871"
+    }
+  },
+  "git": {
+    "production_git_sha": "dfca85b1751154fd72a549be0a77477f45102c3f",
+    "harness_git_sha": "dfca85b1751154fd72a549be0a77477f45102c3f",
+    "dirty": false
+  },
+  "case_traces": [
+    {
+      "name": "blind11-current-comparison-en",
+      "category": "current_with_historical_comparison",
+      "candidate_count": 108,
+      "expected": [
+        "current-anchor",
+        "current-detail"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        16
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_23920f3e350aadc9936b7521",
+          "content": "[2024-06-01T00:00:00Z] user: Maren's ceramics studio changed premises; this is her current studio.",
+          "score": 17.186912,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "current-anchor"
+        },
+        {
+          "id": "mem_f75e4443cbccac14930601c5",
+          "content": "[2024-01-01T00:00:00Z] user: Previously Maren's ceramics studio occupied the old warehouse.",
+          "score": 10.238807,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_92a84ae5b57051d81229654c",
+          "content": "[2024-08-01T00:01:40Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 101.",
+          "score": 2.565315,
+          "created_at": "2024-08-01T00:01:40Z",
+          "source_id": "noise-100"
+        },
+        {
+          "id": "mem_673e7d3d6c8f9cc138192839",
+          "content": "[2024-08-01T00:01:32Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 93.",
+          "score": 2.565315,
+          "created_at": "2024-08-01T00:01:32Z",
+          "source_id": "noise-92"
+        },
+        {
+          "id": "mem_b3c1e5c20e56f008cd2b2ebb",
+          "content": "[2024-08-01T00:01:24Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 85.",
+          "score": 2.565314,
+          "created_at": "2024-08-01T00:01:24Z",
+          "source_id": "noise-84"
+        },
+        {
+          "id": "mem_ae3b99ab79b865b05c777c90",
+          "content": "[2024-08-01T00:01:16Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 77.",
+          "score": 2.565314,
+          "created_at": "2024-08-01T00:01:16Z",
+          "source_id": "noise-76"
+        },
+        {
+          "id": "mem_0bd834dd994db65e1290715d",
+          "content": "[2024-08-01T00:01:08Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 69.",
+          "score": 2.565314,
+          "created_at": "2024-08-01T00:01:08Z",
+          "source_id": "noise-68"
+        },
+        {
+          "id": "mem_1a03fbefe4fed2f3e4d90335",
+          "content": "[2024-08-01T00:01:00Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 61.",
+          "score": 2.565314,
+          "created_at": "2024-08-01T00:01:00Z",
+          "source_id": "noise-60"
+        },
+        {
+          "id": "mem_95545ec3ee557cae8694373b",
+          "content": "[2024-08-01T00:00:52Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 53.",
+          "score": 2.565314,
+          "created_at": "2024-08-01T00:00:52Z",
+          "source_id": "noise-52"
+        },
+        {
+          "id": "mem_fda921366d389884c21dfade",
+          "content": "[2024-08-01T00:00:44Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 45.",
+          "score": 2.565314,
+          "created_at": "2024-08-01T00:00:44Z",
+          "source_id": "noise-44"
+        },
+        {
+          "id": "mem_67047e4aa53158afdf115830",
+          "content": "[2024-08-01T00:00:36Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 37.",
+          "score": 2.565313,
+          "created_at": "2024-08-01T00:00:36Z",
+          "source_id": "noise-36"
+        },
+        {
+          "id": "mem_d74c7a50fb0ca9f31528372c",
+          "content": "[2024-08-01T00:00:28Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 29.",
+          "score": 2.565313,
+          "created_at": "2024-08-01T00:00:28Z",
+          "source_id": "noise-28"
+        },
+        {
+          "id": "mem_aac815cfc832bb0257f7127b",
+          "content": "[2024-08-01T00:00:20Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 21.",
+          "score": 2.565313,
+          "created_at": "2024-08-01T00:00:20Z",
+          "source_id": "noise-20"
+        },
+        {
+          "id": "mem_d4539e8c93b8deb0772824e3",
+          "content": "[2024-08-01T00:00:12Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 13.",
+          "score": 2.565313,
+          "created_at": "2024-08-01T00:00:12Z",
+          "source_id": "noise-12"
+        },
+        {
+          "id": "mem_a30135823d3d327ded4a2806",
+          "content": "[2024-08-01T00:00:04Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 5.",
+          "score": 2.565313,
+          "created_at": "2024-08-01T00:00:04Z",
+          "source_id": "noise-4"
+        },
+        {
+          "id": "mem_32140eb9cfcdb04d46157da9",
+          "content": "[2024-06-01T00:00:01Z] user: The new address is 42 Alder Lane.",
+          "score": 2.555386,
+          "created_at": "2024-06-01T00:00:01Z",
+          "source_id": "current-detail"
+        },
+        {
+          "id": "mem_1e9cc5114cabf3edf2c4c7e6",
+          "content": "[2024-08-01T00:01:43Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 104.",
+          "score": 2.043719,
+          "created_at": "2024-08-01T00:01:43Z",
+          "source_id": "noise-103"
+        },
+        {
+          "id": "mem_9eef27ff2e97acbc1a83d34b",
+          "content": "[2024-08-01T00:01:35Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 96.",
+          "score": 2.043718,
+          "created_at": "2024-08-01T00:01:35Z",
+          "source_id": "noise-95"
+        },
+        {
+          "id": "mem_e943e831ae5b54c50745c9a1",
+          "content": "[2024-08-01T00:01:27Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 88.",
+          "score": 2.043718,
+          "created_at": "2024-08-01T00:01:27Z",
+          "source_id": "noise-87"
+        },
+        {
+          "id": "mem_01f651fa3ff90aa96591979c",
+          "content": "[2024-08-01T00:01:19Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 80.",
+          "score": 2.043718,
+          "created_at": "2024-08-01T00:01:19Z",
+          "source_id": "noise-79"
+        },
+        {
+          "id": "mem_1c4d7e5f070d74b24b98a430",
+          "content": "[2024-08-01T00:01:11Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 72.",
+          "score": 2.043718,
+          "created_at": "2024-08-01T00:01:11Z",
+          "source_id": "noise-71"
+        },
+        {
+          "id": "mem_cbb14a82a35f291c6fed687e",
+          "content": "[2024-08-01T00:01:03Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 64.",
+          "score": 2.043718,
+          "created_at": "2024-08-01T00:01:03Z",
+          "source_id": "noise-63"
+        },
+        {
+          "id": "mem_3a859c8ec836dc2636d70033",
+          "content": "[2024-08-01T00:00:55Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 56.",
+          "score": 2.043718,
+          "created_at": "2024-08-01T00:00:55Z",
+          "source_id": "noise-55"
+        },
+        {
+          "id": "mem_4c2954454a0611b62a77cea4",
+          "content": "[2024-08-01T00:00:47Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 48.",
+          "score": 2.043717,
+          "created_at": "2024-08-01T00:00:47Z",
+          "source_id": "noise-47"
+        },
+        {
+          "id": "mem_af790355721b6315161e33f0",
+          "content": "[2024-08-01T00:00:39Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 40.",
+          "score": 2.043717,
+          "created_at": "2024-08-01T00:00:39Z",
+          "source_id": "noise-39"
+        },
+        {
+          "id": "mem_9dfa71eb43ebef656a5f8493",
+          "content": "[2024-08-01T00:00:31Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 32.",
+          "score": 2.043717,
+          "created_at": "2024-08-01T00:00:31Z",
+          "source_id": "noise-31"
+        },
+        {
+          "id": "mem_162ef55e588c0dcbf36456f8",
+          "content": "[2024-08-01T00:00:23Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 24.",
+          "score": 2.043717,
+          "created_at": "2024-08-01T00:00:23Z",
+          "source_id": "noise-23"
+        },
+        {
+          "id": "mem_e419322caee9fca04c0f6323",
+          "content": "[2024-08-01T00:00:15Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 16.",
+          "score": 2.043717,
+          "created_at": "2024-08-01T00:00:15Z",
+          "source_id": "noise-15"
+        },
+        {
+          "id": "mem_a79b8b33c2572d7e83430f80",
+          "content": "[2024-08-01T00:00:07Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 8.",
+          "score": 2.043717,
+          "created_at": "2024-08-01T00:00:07Z",
+          "source_id": "noise-7"
+        },
+        {
+          "id": "mem_d4e68f40593a9397c0d65ef7",
+          "content": "[2024-08-01T00:01:42Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 103.",
+          "score": 2.002346,
+          "created_at": "2024-08-01T00:01:42Z",
+          "source_id": "noise-102"
+        },
+        {
+          "id": "mem_3a2f7e1b03529ab3bcd66d6e",
+          "content": "[2024-08-01T00:01:34Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 95.",
+          "score": 2.002346,
+          "created_at": "2024-08-01T00:01:34Z",
+          "source_id": "noise-94"
+        },
+        {
+          "id": "mem_81ce1fa4a892aaefd62352d8",
+          "content": "[2024-08-01T00:01:26Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 87.",
+          "score": 2.002346,
+          "created_at": "2024-08-01T00:01:26Z",
+          "source_id": "noise-86"
+        },
+        {
+          "id": "mem_6e5c47a7505d9f42b82447ce",
+          "content": "[2024-08-01T00:01:18Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 79.",
+          "score": 2.002346,
+          "created_at": "2024-08-01T00:01:18Z",
+          "source_id": "noise-78"
+        },
+        {
+          "id": "mem_1fa524830c6dbd444f9dd62f",
+          "content": "[2024-08-01T00:01:10Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 71.",
+          "score": 2.002346,
+          "created_at": "2024-08-01T00:01:10Z",
+          "source_id": "noise-70"
+        },
+        {
+          "id": "mem_5c625f1aceeb58789caf4daa",
+          "content": "[2024-08-01T00:01:02Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 63.",
+          "score": 2.002346,
+          "created_at": "2024-08-01T00:01:02Z",
+          "source_id": "noise-62"
+        },
+        {
+          "id": "mem_32690691823e28698ea99fc7",
+          "content": "[2024-08-01T00:00:54Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 55.",
+          "score": 2.002345,
+          "created_at": "2024-08-01T00:00:54Z",
+          "source_id": "noise-54"
+        },
+        {
+          "id": "mem_09426ad3df015412d883ee70",
+          "content": "[2024-08-01T00:00:46Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 47.",
+          "score": 2.002345,
+          "created_at": "2024-08-01T00:00:46Z",
+          "source_id": "noise-46"
+        },
+        {
+          "id": "mem_e8a1283acfe0d922d33bafae",
+          "content": "[2024-08-01T00:00:38Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 39.",
+          "score": 2.002345,
+          "created_at": "2024-08-01T00:00:38Z",
+          "source_id": "noise-38"
+        },
+        {
+          "id": "mem_2ef6689a6694cfc13c620340",
+          "content": "[2024-08-01T00:00:30Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 31.",
+          "score": 2.002345,
+          "created_at": "2024-08-01T00:00:30Z",
+          "source_id": "noise-30"
+        },
+        {
+          "id": "mem_5a19e99294801efaf1468738",
+          "content": "[2024-08-01T00:00:22Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 23.",
+          "score": 2.002345,
+          "created_at": "2024-08-01T00:00:22Z",
+          "source_id": "noise-22"
+        },
+        {
+          "id": "mem_63b7a926d975c50c2ca7bef3",
+          "content": "[2024-08-01T00:00:14Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 15.",
+          "score": 2.002344,
+          "created_at": "2024-08-01T00:00:14Z",
+          "source_id": "noise-14"
+        },
+        {
+          "id": "mem_c68fb4eb8d5b7bdc9cab8c93",
+          "content": "[2024-08-01T00:00:06Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 7.",
+          "score": 2.002344,
+          "created_at": "2024-08-01T00:00:06Z",
+          "source_id": "noise-6"
+        },
+        {
+          "id": "mem_942c884b36360ef5a0c846e4",
+          "content": "[2024-01-01T00:00:01Z] user: The address was 7 Dock Street.",
+          "score": 1.892383,
+          "created_at": "2024-01-01T00:00:01Z",
+          "source_id": "old-detail"
+        },
+        {
+          "id": "mem_ee687b2937d48cd02e825cc8",
+          "content": "[2024-08-01T00:01:41Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 102.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:41Z",
+          "source_id": "noise-101"
+        },
+        {
+          "id": "mem_398336372f4cb54c7890def6",
+          "content": "[2024-08-01T00:01:39Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 100.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:39Z",
+          "source_id": "noise-99"
+        },
+        {
+          "id": "mem_434d074edf83feb7afa99e81",
+          "content": "[2024-08-01T00:01:36Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 97.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:36Z",
+          "source_id": "noise-96"
+        },
+        {
+          "id": "mem_b641278de38c904e3c4a85ff",
+          "content": "[2024-08-01T00:01:33Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 94.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:33Z",
+          "source_id": "noise-93"
+        },
+        {
+          "id": "mem_b21fff7f0f38c31884719fda",
+          "content": "[2024-08-01T00:01:31Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 92.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:31Z",
+          "source_id": "noise-91"
+        },
+        {
+          "id": "mem_44849272b80ae429f654f8fc",
+          "content": "[2024-08-01T00:01:28Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 89.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:28Z",
+          "source_id": "noise-88"
+        },
+        {
+          "id": "mem_baa21bb0fd4997c7057c2e2c",
+          "content": "[2024-08-01T00:01:25Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 86.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:25Z",
+          "source_id": "noise-85"
+        },
+        {
+          "id": "mem_3f4a66575cb1c3a9a1a3269e",
+          "content": "[2024-08-01T00:01:23Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 84.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:23Z",
+          "source_id": "noise-83"
+        },
+        {
+          "id": "mem_5679f93c0ff4c7df9f562418",
+          "content": "[2024-08-01T00:01:20Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 81.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:20Z",
+          "source_id": "noise-80"
+        },
+        {
+          "id": "mem_12b96ecc25490e5f52239191",
+          "content": "[2024-08-01T00:01:17Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 78.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:17Z",
+          "source_id": "noise-77"
+        },
+        {
+          "id": "mem_f9e708b5646b1515aa010089",
+          "content": "[2024-08-01T00:01:15Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 76.",
+          "score": 0.583278,
+          "created_at": "2024-08-01T00:01:15Z",
+          "source_id": "noise-75"
+        },
+        {
+          "id": "mem_2c338a66180ccf37a99c41e5",
+          "content": "[2024-08-01T00:01:12Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 73.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:01:12Z",
+          "source_id": "noise-72"
+        },
+        {
+          "id": "mem_5c2a1d23cf5814a59b18d82c",
+          "content": "[2024-08-01T00:01:09Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 70.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:01:09Z",
+          "source_id": "noise-69"
+        },
+        {
+          "id": "mem_67a63549e59074adae829c87",
+          "content": "[2024-08-01T00:01:07Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 68.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:01:07Z",
+          "source_id": "noise-67"
+        },
+        {
+          "id": "mem_7af49b6c22a48fcfce466f05",
+          "content": "[2024-08-01T00:01:04Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 65.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:01:04Z",
+          "source_id": "noise-64"
+        },
+        {
+          "id": "mem_828e68eb150dcfe74ed5fced",
+          "content": "[2024-08-01T00:01:01Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 62.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:01:01Z",
+          "source_id": "noise-61"
+        },
+        {
+          "id": "mem_5fa36ca9690009f9ddfd7873",
+          "content": "[2024-08-01T00:00:59Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 60.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:59Z",
+          "source_id": "noise-59"
+        },
+        {
+          "id": "mem_5cb657ef6b7c51865bbbc009",
+          "content": "[2024-08-01T00:00:56Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 57.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:56Z",
+          "source_id": "noise-56"
+        },
+        {
+          "id": "mem_dc69d1f7a65ad5c6d9cfca5a",
+          "content": "[2024-08-01T00:00:53Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 54.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:53Z",
+          "source_id": "noise-53"
+        },
+        {
+          "id": "mem_9be762624337a34262b258fb",
+          "content": "[2024-08-01T00:00:51Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 52.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:51Z",
+          "source_id": "noise-51"
+        },
+        {
+          "id": "mem_b2f8134df4aa2f126b9ca0ec",
+          "content": "[2024-08-01T00:00:48Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 49.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:48Z",
+          "source_id": "noise-48"
+        },
+        {
+          "id": "mem_c2f399fe5a8f155fc4d6bea2",
+          "content": "[2024-08-01T00:00:45Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 46.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:45Z",
+          "source_id": "noise-45"
+        },
+        {
+          "id": "mem_e4edba0e988240949090db1d",
+          "content": "[2024-08-01T00:00:43Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 44.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:43Z",
+          "source_id": "noise-43"
+        },
+        {
+          "id": "mem_d05fd32bea9734d8ab93c44b",
+          "content": "[2024-08-01T00:00:40Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 41.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:40Z",
+          "source_id": "noise-40"
+        },
+        {
+          "id": "mem_29dd08cddf7933b5331748e8",
+          "content": "[2024-08-01T00:00:37Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 38.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:37Z",
+          "source_id": "noise-37"
+        },
+        {
+          "id": "mem_c1fad91ae8bb1b014b7c9d70",
+          "content": "[2024-08-01T00:00:35Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 36.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:35Z",
+          "source_id": "noise-35"
+        },
+        {
+          "id": "mem_7bddfde9d0f79ce894462e88",
+          "content": "[2024-08-01T00:00:32Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 33.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:32Z",
+          "source_id": "noise-32"
+        },
+        {
+          "id": "mem_338972f77d7a63f4d91ba858",
+          "content": "[2024-08-01T00:00:29Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 30.",
+          "score": 0.583277,
+          "created_at": "2024-08-01T00:00:29Z",
+          "source_id": "noise-29"
+        },
+        {
+          "id": "mem_63f053dcc7271e1e4eeae7c3",
+          "content": "[2024-08-01T00:00:27Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 28.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:27Z",
+          "source_id": "noise-27"
+        },
+        {
+          "id": "mem_0f147b9336eca9ee55e79d44",
+          "content": "[2024-08-01T00:00:24Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 25.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:24Z",
+          "source_id": "noise-24"
+        },
+        {
+          "id": "mem_31428c8b6455b25ff0261584",
+          "content": "[2024-08-01T00:00:21Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 22.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:21Z",
+          "source_id": "noise-21"
+        },
+        {
+          "id": "mem_f220f3403eacf2b0ba82eede",
+          "content": "[2024-08-01T00:00:19Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 20.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:19Z",
+          "source_id": "noise-19"
+        },
+        {
+          "id": "mem_df6ee19e1135eaac519320eb",
+          "content": "[2024-08-01T00:00:16Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 17.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:16Z",
+          "source_id": "noise-16"
+        },
+        {
+          "id": "mem_c058e36e8d3001206da1a3d2",
+          "content": "[2024-08-01T00:00:13Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 14.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:13Z",
+          "source_id": "noise-13"
+        },
+        {
+          "id": "mem_9ff4ad0ddd7b250097d96645",
+          "content": "[2024-08-01T00:00:11Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 12.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:11Z",
+          "source_id": "noise-11"
+        },
+        {
+          "id": "mem_7a1519cb75752d4132d8c12e",
+          "content": "[2024-08-01T00:00:08Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 9.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:08Z",
+          "source_id": "noise-8"
+        },
+        {
+          "id": "mem_6e4410fd619ebb90635e73f7",
+          "content": "[2024-08-01T00:00:05Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 6.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:05Z",
+          "source_id": "noise-5"
+        },
+        {
+          "id": "mem_39ebf3226888313469f29bf8",
+          "content": "[2024-08-01T00:00:03Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 4.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:03Z",
+          "source_id": "noise-3"
+        },
+        {
+          "id": "mem_cc1623c6dd2b50bfd10570ab",
+          "content": "[2024-08-01T00:00:00Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 1.",
+          "score": 0.583276,
+          "created_at": "2024-08-01T00:00:00Z",
+          "source_id": "noise-0"
+        },
+        {
+          "id": "mem_08218ea6aba76ca1074e1088",
+          "content": "[2024-08-01T00:01:37Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 98.",
+          "score": 0.581929,
+          "created_at": "2024-08-01T00:01:37Z",
+          "source_id": "noise-97"
+        },
+        {
+          "id": "mem_141cf16a27b772c3ec5ff26a",
+          "content": "[2024-08-01T00:01:29Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 90.",
+          "score": 0.581929,
+          "created_at": "2024-08-01T00:01:29Z",
+          "source_id": "noise-89"
+        },
+        {
+          "id": "mem_4a83c390912e78eb7cf00a6b",
+          "content": "[2024-08-01T00:01:21Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 82.",
+          "score": 0.581929,
+          "created_at": "2024-08-01T00:01:21Z",
+          "source_id": "noise-81"
+        },
+        {
+          "id": "mem_e15a3862391b98149678674a",
+          "content": "[2024-08-01T00:01:13Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 74.",
+          "score": 0.581929,
+          "created_at": "2024-08-01T00:01:13Z",
+          "source_id": "noise-73"
+        },
+        {
+          "id": "mem_79b571904a4eb5192521e85b",
+          "content": "[2024-08-01T00:01:05Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 66.",
+          "score": 0.581929,
+          "created_at": "2024-08-01T00:01:05Z",
+          "source_id": "noise-65"
+        },
+        {
+          "id": "mem_9f4afd4efc343102bb6cbd52",
+          "content": "[2024-08-01T00:00:57Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 58.",
+          "score": 0.581928,
+          "created_at": "2024-08-01T00:00:57Z",
+          "source_id": "noise-57"
+        },
+        {
+          "id": "mem_97c9522719b3c3aeee92d24e",
+          "content": "[2024-08-01T00:00:49Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 50.",
+          "score": 0.581928,
+          "created_at": "2024-08-01T00:00:49Z",
+          "source_id": "noise-49"
+        },
+        {
+          "id": "mem_fb18c19eac35748b63c1ce2a",
+          "content": "[2024-08-01T00:00:41Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 42.",
+          "score": 0.581928,
+          "created_at": "2024-08-01T00:00:41Z",
+          "source_id": "noise-41"
+        },
+        {
+          "id": "mem_768580c758581761158b16a6",
+          "content": "[2024-08-01T00:00:33Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 34.",
+          "score": 0.581928,
+          "created_at": "2024-08-01T00:00:33Z",
+          "source_id": "noise-33"
+        },
+        {
+          "id": "mem_5968651405ed3388a7acee0c",
+          "content": "[2024-08-01T00:00:25Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 26.",
+          "score": 0.581928,
+          "created_at": "2024-08-01T00:00:25Z",
+          "source_id": "noise-25"
+        },
+        {
+          "id": "mem_82dc36e0736412944672ca29",
+          "content": "[2024-08-01T00:00:17Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 18.",
+          "score": 0.581928,
+          "created_at": "2024-08-01T00:00:17Z",
+          "source_id": "noise-17"
+        },
+        {
+          "id": "mem_c9cc044a370fa0b8e81b5d85",
+          "content": "[2024-08-01T00:00:09Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 10.",
+          "score": 0.581927,
+          "created_at": "2024-08-01T00:00:09Z",
+          "source_id": "noise-9"
+        },
+        {
+          "id": "mem_96cbcf886cb5e54f01409924",
+          "content": "[2024-08-01T00:00:01Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 2.",
+          "score": 0.581927,
+          "created_at": "2024-08-01T00:00:01Z",
+          "source_id": "noise-1"
+        },
+        {
+          "id": "mem_91660bfdaed358a6c1e641fb",
+          "content": "[2024-08-01T00:01:38Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 99.",
+          "score": 0.580656,
+          "created_at": "2024-08-01T00:01:38Z",
+          "source_id": "noise-98"
+        },
+        {
+          "id": "mem_ae9117dced13377bb2eca923",
+          "content": "[2024-08-01T00:01:30Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 91.",
+          "score": 0.580656,
+          "created_at": "2024-08-01T00:01:30Z",
+          "source_id": "noise-90"
+        },
+        {
+          "id": "mem_3e3f3dfe3898a1ae545e61c9",
+          "content": "[2024-08-01T00:01:22Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 83.",
+          "score": 0.580656,
+          "created_at": "2024-08-01T00:01:22Z",
+          "source_id": "noise-82"
+        },
+        {
+          "id": "mem_4c843149d2a928f591bf970c",
+          "content": "[2024-08-01T00:01:14Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 75.",
+          "score": 0.580656,
+          "created_at": "2024-08-01T00:01:14Z",
+          "source_id": "noise-74"
+        },
+        {
+          "id": "mem_ceb5de4cbe93767196dbf72c",
+          "content": "[2024-08-01T00:01:06Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 67.",
+          "score": 0.580655,
+          "created_at": "2024-08-01T00:01:06Z",
+          "source_id": "noise-66"
+        }
+      ]
+    },
+    {
+      "name": "blind11-current-comparison-zh",
+      "category": "current_with_historical_comparison_zh",
+      "candidate_count": 108,
+      "expected": [
+        "current-anchor",
+        "current-detail"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        16
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_2f9e22ec7da4ed5bd8f8ee32",
+          "content": "[2024-01-01T00:00:00Z] user: 原来云杉书店登记过新书配送的旧安排。",
+          "score": 37.724642,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_50807fe3458f4745dc5c6be0",
+          "content": "[2024-06-01T00:00:00Z] user: 云杉书店的新书配送后来换成新的合作方，目前按新合同执行。",
+          "score": 34.413912,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "current-anchor"
+        },
+        {
+          "id": "mem_8a2b4903d09fc41a4dca1ec4",
+          "content": "[2024-08-01T00:01:39Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次100。",
+          "score": 6.830091,
+          "created_at": "2024-08-01T00:01:39Z",
+          "source_id": "noise-99"
+        },
+        {
+          "id": "mem_b1d650ff269e48e420efe246",
+          "content": "[2024-08-01T00:01:31Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次92。",
+          "score": 6.830091,
+          "created_at": "2024-08-01T00:01:31Z",
+          "source_id": "noise-91"
+        },
+        {
+          "id": "mem_6edf31fc3f24aa3f6a6d77c9",
+          "content": "[2024-08-01T00:01:23Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次84。",
+          "score": 6.83009,
+          "created_at": "2024-08-01T00:01:23Z",
+          "source_id": "noise-83"
+        },
+        {
+          "id": "mem_60deda92a95d3ef973d42538",
+          "content": "[2024-08-01T00:01:15Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次76。",
+          "score": 6.83009,
+          "created_at": "2024-08-01T00:01:15Z",
+          "source_id": "noise-75"
+        },
+        {
+          "id": "mem_8f6d860a48143ae5a11c7b2a",
+          "content": "[2024-08-01T00:01:07Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次68。",
+          "score": 6.83009,
+          "created_at": "2024-08-01T00:01:07Z",
+          "source_id": "noise-67"
+        },
+        {
+          "id": "mem_f8b9830c9e61a4f818536274",
+          "content": "[2024-08-01T00:00:59Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次60。",
+          "score": 6.83009,
+          "created_at": "2024-08-01T00:00:59Z",
+          "source_id": "noise-59"
+        },
+        {
+          "id": "mem_acc3f0740e57b9e5116ea590",
+          "content": "[2024-08-01T00:00:51Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次52。",
+          "score": 6.83009,
+          "created_at": "2024-08-01T00:00:51Z",
+          "source_id": "noise-51"
+        },
+        {
+          "id": "mem_2af014f637cb3884883e1618",
+          "content": "[2024-08-01T00:00:43Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次44。",
+          "score": 6.83009,
+          "created_at": "2024-08-01T00:00:43Z",
+          "source_id": "noise-43"
+        },
+        {
+          "id": "mem_2deb581c9cca383ab4ed0e41",
+          "content": "[2024-08-01T00:00:35Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次36。",
+          "score": 6.830089,
+          "created_at": "2024-08-01T00:00:35Z",
+          "source_id": "noise-35"
+        },
+        {
+          "id": "mem_ad1949851b89a861430f68c1",
+          "content": "[2024-08-01T00:00:27Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次28。",
+          "score": 6.830089,
+          "created_at": "2024-08-01T00:00:27Z",
+          "source_id": "noise-27"
+        },
+        {
+          "id": "mem_4bb781c8989dea66f57d123b",
+          "content": "[2024-08-01T00:00:19Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次20。",
+          "score": 6.830089,
+          "created_at": "2024-08-01T00:00:19Z",
+          "source_id": "noise-19"
+        },
+        {
+          "id": "mem_11beb7af0b7fc646faabee0f",
+          "content": "[2024-08-01T00:00:11Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次12。",
+          "score": 6.830089,
+          "created_at": "2024-08-01T00:00:11Z",
+          "source_id": "noise-11"
+        },
+        {
+          "id": "mem_46d6c0d12f379d4e1022de6b",
+          "content": "[2024-08-01T00:00:03Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次4。",
+          "score": 6.830089,
+          "created_at": "2024-08-01T00:00:03Z",
+          "source_id": "noise-3"
+        },
+        {
+          "id": "mem_e3770e3ff18dd5fd3d66ff0b",
+          "content": "[2024-06-01T00:00:01Z] user: 合同签给了青鸟物流，由他们送货。",
+          "score": 5.276969,
+          "created_at": "2024-06-01T00:00:01Z",
+          "source_id": "current-detail"
+        },
+        {
+          "id": "mem_1453a020ac4f95db989edc95",
+          "content": "[2024-08-01T00:01:41Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次102。",
+          "score": 2.817052,
+          "created_at": "2024-08-01T00:01:41Z",
+          "source_id": "noise-101"
+        },
+        {
+          "id": "mem_3f268eab9572c9d9dd1fc89c",
+          "content": "[2024-08-01T00:01:33Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次94。",
+          "score": 2.817052,
+          "created_at": "2024-08-01T00:01:33Z",
+          "source_id": "noise-93"
+        },
+        {
+          "id": "mem_ad8dc57db3254c6b8573ffb9",
+          "content": "[2024-08-01T00:01:25Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次86。",
+          "score": 2.817052,
+          "created_at": "2024-08-01T00:01:25Z",
+          "source_id": "noise-85"
+        },
+        {
+          "id": "mem_eff71d92067a8dd96ad6ac1c",
+          "content": "[2024-08-01T00:01:17Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次78。",
+          "score": 2.817052,
+          "created_at": "2024-08-01T00:01:17Z",
+          "source_id": "noise-77"
+        },
+        {
+          "id": "mem_e66482c6d07aa8b15bcf423d",
+          "content": "[2024-08-01T00:01:09Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次70。",
+          "score": 2.817052,
+          "created_at": "2024-08-01T00:01:09Z",
+          "source_id": "noise-69"
+        },
+        {
+          "id": "mem_0aab04f563116b0597aed41a",
+          "content": "[2024-08-01T00:01:01Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次62。",
+          "score": 2.817052,
+          "created_at": "2024-08-01T00:01:01Z",
+          "source_id": "noise-61"
+        },
+        {
+          "id": "mem_9fff79517ffd2c06432ed209",
+          "content": "[2024-08-01T00:00:53Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次54。",
+          "score": 2.817051,
+          "created_at": "2024-08-01T00:00:53Z",
+          "source_id": "noise-53"
+        },
+        {
+          "id": "mem_03b2b1db7bf2f649f8709057",
+          "content": "[2024-08-01T00:00:45Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次46。",
+          "score": 2.817051,
+          "created_at": "2024-08-01T00:00:45Z",
+          "source_id": "noise-45"
+        },
+        {
+          "id": "mem_44342e738c8140d8fd536378",
+          "content": "[2024-08-01T00:00:37Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次38。",
+          "score": 2.817051,
+          "created_at": "2024-08-01T00:00:37Z",
+          "source_id": "noise-37"
+        },
+        {
+          "id": "mem_5d7f505279d3ad38ea882c14",
+          "content": "[2024-08-01T00:00:29Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次30。",
+          "score": 2.817051,
+          "created_at": "2024-08-01T00:00:29Z",
+          "source_id": "noise-29"
+        },
+        {
+          "id": "mem_9000fa1127da074059aa5c54",
+          "content": "[2024-08-01T00:00:21Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次22。",
+          "score": 2.817051,
+          "created_at": "2024-08-01T00:00:21Z",
+          "source_id": "noise-21"
+        },
+        {
+          "id": "mem_4ebdd521b5f1a08b7e9b3286",
+          "content": "[2024-08-01T00:00:13Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次14。",
+          "score": 2.817051,
+          "created_at": "2024-08-01T00:00:13Z",
+          "source_id": "noise-13"
+        },
+        {
+          "id": "mem_5421c6edf1ba9f46cb0e1e6a",
+          "content": "[2024-08-01T00:00:05Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次6。",
+          "score": 2.81705,
+          "created_at": "2024-08-01T00:00:05Z",
+          "source_id": "noise-5"
+        },
+        {
+          "id": "mem_9351ae0ebb3651d5e2deea55",
+          "content": "[2024-08-01T00:01:40Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次101。",
+          "score": 2.800554,
+          "created_at": "2024-08-01T00:01:40Z",
+          "source_id": "noise-100"
+        },
+        {
+          "id": "mem_513df02544631f76b9fb136d",
+          "content": "[2024-08-01T00:01:32Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次93。",
+          "score": 2.800554,
+          "created_at": "2024-08-01T00:01:32Z",
+          "source_id": "noise-92"
+        },
+        {
+          "id": "mem_80b61e8f5399317c84e004a3",
+          "content": "[2024-08-01T00:01:24Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次85。",
+          "score": 2.800553,
+          "created_at": "2024-08-01T00:01:24Z",
+          "source_id": "noise-84"
+        },
+        {
+          "id": "mem_8b27b7ddcfe4f51e69549c58",
+          "content": "[2024-08-01T00:01:16Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次77。",
+          "score": 2.800553,
+          "created_at": "2024-08-01T00:01:16Z",
+          "source_id": "noise-76"
+        },
+        {
+          "id": "mem_8800d3b3878d6951f6599346",
+          "content": "[2024-08-01T00:01:08Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次69。",
+          "score": 2.800553,
+          "created_at": "2024-08-01T00:01:08Z",
+          "source_id": "noise-68"
+        },
+        {
+          "id": "mem_680c2b4260198d1af2889dce",
+          "content": "[2024-08-01T00:01:00Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次61。",
+          "score": 2.800553,
+          "created_at": "2024-08-01T00:01:00Z",
+          "source_id": "noise-60"
+        },
+        {
+          "id": "mem_ecd19ac22a73769e3a471f4f",
+          "content": "[2024-08-01T00:00:52Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次53。",
+          "score": 2.800553,
+          "created_at": "2024-08-01T00:00:52Z",
+          "source_id": "noise-52"
+        },
+        {
+          "id": "mem_3cdcd5d9b3003a8491a3f321",
+          "content": "[2024-08-01T00:00:44Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次45。",
+          "score": 2.800553,
+          "created_at": "2024-08-01T00:00:44Z",
+          "source_id": "noise-44"
+        },
+        {
+          "id": "mem_1f5c467ebf8a3c0cebbe02f9",
+          "content": "[2024-08-01T00:00:36Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次37。",
+          "score": 2.800552,
+          "created_at": "2024-08-01T00:00:36Z",
+          "source_id": "noise-36"
+        },
+        {
+          "id": "mem_46792f6c864eacdeaa6b772e",
+          "content": "[2024-08-01T00:00:28Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次29。",
+          "score": 2.800552,
+          "created_at": "2024-08-01T00:00:28Z",
+          "source_id": "noise-28"
+        },
+        {
+          "id": "mem_a1abebf799c0fe7e84e653d4",
+          "content": "[2024-08-01T00:00:20Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次21。",
+          "score": 2.800552,
+          "created_at": "2024-08-01T00:00:20Z",
+          "source_id": "noise-20"
+        },
+        {
+          "id": "mem_e38b73c7d1ee8a577a36144f",
+          "content": "[2024-08-01T00:00:12Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次13。",
+          "score": 2.800552,
+          "created_at": "2024-08-01T00:00:12Z",
+          "source_id": "noise-12"
+        },
+        {
+          "id": "mem_c43f6408c9396790691b9f51",
+          "content": "[2024-08-01T00:00:04Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次5。",
+          "score": 2.800552,
+          "created_at": "2024-08-01T00:00:04Z",
+          "source_id": "noise-4"
+        },
+        {
+          "id": "mem_d092602035aa323bd8c35132",
+          "content": "[2024-08-01T00:01:36Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次97。",
+          "score": 2.527132,
+          "created_at": "2024-08-01T00:01:36Z",
+          "source_id": "noise-96"
+        },
+        {
+          "id": "mem_af7d48f0be9f1f7efefd3bc8",
+          "content": "[2024-08-01T00:01:28Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次89。",
+          "score": 2.527132,
+          "created_at": "2024-08-01T00:01:28Z",
+          "source_id": "noise-88"
+        },
+        {
+          "id": "mem_e6cd29194d6ee0dded684123",
+          "content": "[2024-08-01T00:01:20Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次81。",
+          "score": 2.527132,
+          "created_at": "2024-08-01T00:01:20Z",
+          "source_id": "noise-80"
+        },
+        {
+          "id": "mem_928bf1e4239bf94251159b69",
+          "content": "[2024-08-01T00:01:12Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次73。",
+          "score": 2.527131,
+          "created_at": "2024-08-01T00:01:12Z",
+          "source_id": "noise-72"
+        },
+        {
+          "id": "mem_6210292d95366d070897e495",
+          "content": "[2024-08-01T00:01:04Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次65。",
+          "score": 2.527131,
+          "created_at": "2024-08-01T00:01:04Z",
+          "source_id": "noise-64"
+        },
+        {
+          "id": "mem_62adac5677197ebeb6264558",
+          "content": "[2024-08-01T00:00:56Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次57。",
+          "score": 2.527131,
+          "created_at": "2024-08-01T00:00:56Z",
+          "source_id": "noise-56"
+        },
+        {
+          "id": "mem_c6c68ff8529e6c3611c0293c",
+          "content": "[2024-08-01T00:00:48Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次49。",
+          "score": 2.527131,
+          "created_at": "2024-08-01T00:00:48Z",
+          "source_id": "noise-48"
+        },
+        {
+          "id": "mem_7b852cefc9c90627e9ffe891",
+          "content": "[2024-08-01T00:00:40Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次41。",
+          "score": 2.527131,
+          "created_at": "2024-08-01T00:00:40Z",
+          "source_id": "noise-40"
+        },
+        {
+          "id": "mem_075ff569bf27e1e5ac07026b",
+          "content": "[2024-08-01T00:00:32Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次33。",
+          "score": 2.527131,
+          "created_at": "2024-08-01T00:00:32Z",
+          "source_id": "noise-32"
+        },
+        {
+          "id": "mem_600472bf90fc3b6013ab79ac",
+          "content": "[2024-08-01T00:00:24Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次25。",
+          "score": 2.52713,
+          "created_at": "2024-08-01T00:00:24Z",
+          "source_id": "noise-24"
+        },
+        {
+          "id": "mem_e8cb04c64313fcda377c997c",
+          "content": "[2024-08-01T00:00:16Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次17。",
+          "score": 2.52713,
+          "created_at": "2024-08-01T00:00:16Z",
+          "source_id": "noise-16"
+        },
+        {
+          "id": "mem_bc13a051b6d2a1347f474aaa",
+          "content": "[2024-08-01T00:00:08Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次9。",
+          "score": 2.52713,
+          "created_at": "2024-08-01T00:00:08Z",
+          "source_id": "noise-8"
+        },
+        {
+          "id": "mem_7be10f14347820028fc7587d",
+          "content": "[2024-08-01T00:00:00Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次1。",
+          "score": 2.52713,
+          "created_at": "2024-08-01T00:00:00Z",
+          "source_id": "noise-0"
+        },
+        {
+          "id": "mem_43bac7a8ac53c4a9241df2ca",
+          "content": "[2024-08-01T00:01:38Z] user: 职员申请复印云杉书店配送的合同。 档案批次99。",
+          "score": 1.166139,
+          "created_at": "2024-08-01T00:01:38Z",
+          "source_id": "noise-98"
+        },
+        {
+          "id": "mem_d8cfaa01588e84681685bdc9",
+          "content": "[2024-08-01T00:01:30Z] user: 职员申请复印云杉书店配送的合同。 档案批次91。",
+          "score": 1.166139,
+          "created_at": "2024-08-01T00:01:30Z",
+          "source_id": "noise-90"
+        },
+        {
+          "id": "mem_6d7f6306579a771db3ff79e5",
+          "content": "[2024-08-01T00:01:22Z] user: 职员申请复印云杉书店配送的合同。 档案批次83。",
+          "score": 1.166139,
+          "created_at": "2024-08-01T00:01:22Z",
+          "source_id": "noise-82"
+        },
+        {
+          "id": "mem_78ea232287be03cef442c6bd",
+          "content": "[2024-08-01T00:01:14Z] user: 职员申请复印云杉书店配送的合同。 档案批次75。",
+          "score": 1.166139,
+          "created_at": "2024-08-01T00:01:14Z",
+          "source_id": "noise-74"
+        },
+        {
+          "id": "mem_c331081fef74322a7688de42",
+          "content": "[2024-08-01T00:01:06Z] user: 职员申请复印云杉书店配送的合同。 档案批次67。",
+          "score": 1.166139,
+          "created_at": "2024-08-01T00:01:06Z",
+          "source_id": "noise-66"
+        },
+        {
+          "id": "mem_b0e724f3ce45186e46895d52",
+          "content": "[2024-08-01T00:00:58Z] user: 职员申请复印云杉书店配送的合同。 档案批次59。",
+          "score": 1.166138,
+          "created_at": "2024-08-01T00:00:58Z",
+          "source_id": "noise-58"
+        },
+        {
+          "id": "mem_b2f09859eb259642f0802433",
+          "content": "[2024-08-01T00:00:50Z] user: 职员申请复印云杉书店配送的合同。 档案批次51。",
+          "score": 1.166138,
+          "created_at": "2024-08-01T00:00:50Z",
+          "source_id": "noise-50"
+        },
+        {
+          "id": "mem_70c55aa071cd1bc0ac0f824c",
+          "content": "[2024-08-01T00:00:42Z] user: 职员申请复印云杉书店配送的合同。 档案批次43。",
+          "score": 1.166138,
+          "created_at": "2024-08-01T00:00:42Z",
+          "source_id": "noise-42"
+        },
+        {
+          "id": "mem_6d963ebd0e2ac1aa0bf1479f",
+          "content": "[2024-08-01T00:00:34Z] user: 职员申请复印云杉书店配送的合同。 档案批次35。",
+          "score": 1.166138,
+          "created_at": "2024-08-01T00:00:34Z",
+          "source_id": "noise-34"
+        },
+        {
+          "id": "mem_fc10aabcf0f7bb3e388ee50e",
+          "content": "[2024-08-01T00:00:26Z] user: 职员申请复印云杉书店配送的合同。 档案批次27。",
+          "score": 1.166138,
+          "created_at": "2024-08-01T00:00:26Z",
+          "source_id": "noise-26"
+        },
+        {
+          "id": "mem_2e54a620471475b959062d43",
+          "content": "[2024-08-01T00:00:18Z] user: 职员申请复印云杉书店配送的合同。 档案批次19。",
+          "score": 1.166138,
+          "created_at": "2024-08-01T00:00:18Z",
+          "source_id": "noise-18"
+        },
+        {
+          "id": "mem_e0461d4d19e1bc1f7f0577e9",
+          "content": "[2024-08-01T00:00:10Z] user: 职员申请复印云杉书店配送的合同。 档案批次11。",
+          "score": 1.166137,
+          "created_at": "2024-08-01T00:00:10Z",
+          "source_id": "noise-10"
+        },
+        {
+          "id": "mem_ba9b491f6850fae636f17a9d",
+          "content": "[2024-08-01T00:00:02Z] user: 职员申请复印云杉书店配送的合同。 档案批次3。",
+          "score": 1.166137,
+          "created_at": "2024-08-01T00:00:02Z",
+          "source_id": "noise-2"
+        },
+        {
+          "id": "mem_a7d7697ba3f266c9579f4b11",
+          "content": "[2024-08-01T00:01:42Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次103。",
+          "score": 1.154234,
+          "created_at": "2024-08-01T00:01:42Z",
+          "source_id": "noise-102"
+        },
+        {
+          "id": "mem_19f998f449a114574c3f2437",
+          "content": "[2024-08-01T00:01:34Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次95。",
+          "score": 1.154233,
+          "created_at": "2024-08-01T00:01:34Z",
+          "source_id": "noise-94"
+        },
+        {
+          "id": "mem_e6225ecbbe4e228624824d37",
+          "content": "[2024-08-01T00:01:26Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次87。",
+          "score": 1.154233,
+          "created_at": "2024-08-01T00:01:26Z",
+          "source_id": "noise-86"
+        },
+        {
+          "id": "mem_0e30c8164012ac8a66e8f9d1",
+          "content": "[2024-08-01T00:01:18Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次79。",
+          "score": 1.154233,
+          "created_at": "2024-08-01T00:01:18Z",
+          "source_id": "noise-78"
+        },
+        {
+          "id": "mem_61c6b358fe7a54dd98823916",
+          "content": "[2024-08-01T00:01:10Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次71。",
+          "score": 1.154233,
+          "created_at": "2024-08-01T00:01:10Z",
+          "source_id": "noise-70"
+        },
+        {
+          "id": "mem_b9879c08c279cdccc7f7cd78",
+          "content": "[2024-08-01T00:01:02Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次63。",
+          "score": 1.154233,
+          "created_at": "2024-08-01T00:01:02Z",
+          "source_id": "noise-62"
+        },
+        {
+          "id": "mem_4c0838192685948de36e06ce",
+          "content": "[2024-08-01T00:00:54Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次55。",
+          "score": 1.154233,
+          "created_at": "2024-08-01T00:00:54Z",
+          "source_id": "noise-54"
+        },
+        {
+          "id": "mem_bc90bbaa8698abfc7cfbd023",
+          "content": "[2024-08-01T00:00:46Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次47。",
+          "score": 1.154232,
+          "created_at": "2024-08-01T00:00:46Z",
+          "source_id": "noise-46"
+        },
+        {
+          "id": "mem_4029dccab6452d3d4248621c",
+          "content": "[2024-08-01T00:00:38Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次39。",
+          "score": 1.154232,
+          "created_at": "2024-08-01T00:00:38Z",
+          "source_id": "noise-38"
+        },
+        {
+          "id": "mem_7982856930c2880bbf24806e",
+          "content": "[2024-08-01T00:00:30Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次31。",
+          "score": 1.154232,
+          "created_at": "2024-08-01T00:00:30Z",
+          "source_id": "noise-30"
+        },
+        {
+          "id": "mem_98e9f05c50338f060bed4559",
+          "content": "[2024-08-01T00:00:22Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次23。",
+          "score": 1.154232,
+          "created_at": "2024-08-01T00:00:22Z",
+          "source_id": "noise-22"
+        },
+        {
+          "id": "mem_d72f1256eb964b19367bade2",
+          "content": "[2024-08-01T00:00:14Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次15。",
+          "score": 1.154232,
+          "created_at": "2024-08-01T00:00:14Z",
+          "source_id": "noise-14"
+        },
+        {
+          "id": "mem_f4d0a525785bdf213bed242b",
+          "content": "[2024-08-01T00:00:06Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次7。",
+          "score": 1.154232,
+          "created_at": "2024-08-01T00:00:06Z",
+          "source_id": "noise-6"
+        },
+        {
+          "id": "mem_90bd9f2a46f2303cb532a275",
+          "content": "[2024-08-01T00:01:37Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次98。",
+          "score": 1.121348,
+          "created_at": "2024-08-01T00:01:37Z",
+          "source_id": "noise-97"
+        },
+        {
+          "id": "mem_6e4cd5611e61be181fe37ce3",
+          "content": "[2024-08-01T00:01:29Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次90。",
+          "score": 1.121348,
+          "created_at": "2024-08-01T00:01:29Z",
+          "source_id": "noise-89"
+        },
+        {
+          "id": "mem_f3fc291d1478b799b2fa1e79",
+          "content": "[2024-08-01T00:01:21Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次82。",
+          "score": 1.121348,
+          "created_at": "2024-08-01T00:01:21Z",
+          "source_id": "noise-81"
+        },
+        {
+          "id": "mem_92107cb14ac6fc3f046e0905",
+          "content": "[2024-08-01T00:01:13Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次74。",
+          "score": 1.121347,
+          "created_at": "2024-08-01T00:01:13Z",
+          "source_id": "noise-73"
+        },
+        {
+          "id": "mem_e5d4f98a1b486ce83c25db95",
+          "content": "[2024-08-01T00:01:05Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次66。",
+          "score": 1.121347,
+          "created_at": "2024-08-01T00:01:05Z",
+          "source_id": "noise-65"
+        },
+        {
+          "id": "mem_345544e8652969ad3fc546c3",
+          "content": "[2024-08-01T00:00:57Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次58。",
+          "score": 1.121347,
+          "created_at": "2024-08-01T00:00:57Z",
+          "source_id": "noise-57"
+        },
+        {
+          "id": "mem_5b5a0b55ff189060745a78e0",
+          "content": "[2024-08-01T00:00:49Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次50。",
+          "score": 1.121347,
+          "created_at": "2024-08-01T00:00:49Z",
+          "source_id": "noise-49"
+        },
+        {
+          "id": "mem_432cdf88e48a61d5d0f8f5af",
+          "content": "[2024-08-01T00:00:41Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次42。",
+          "score": 1.121347,
+          "created_at": "2024-08-01T00:00:41Z",
+          "source_id": "noise-41"
+        },
+        {
+          "id": "mem_f7fb81993ea5b217b14a5e73",
+          "content": "[2024-08-01T00:00:33Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次34。",
+          "score": 1.121347,
+          "created_at": "2024-08-01T00:00:33Z",
+          "source_id": "noise-33"
+        },
+        {
+          "id": "mem_a7502114c74401b78fc58dd0",
+          "content": "[2024-08-01T00:00:25Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次26。",
+          "score": 1.121346,
+          "created_at": "2024-08-01T00:00:25Z",
+          "source_id": "noise-25"
+        },
+        {
+          "id": "mem_648750ab16ae7765a39a406a",
+          "content": "[2024-08-01T00:00:17Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次18。",
+          "score": 1.121346,
+          "created_at": "2024-08-01T00:00:17Z",
+          "source_id": "noise-17"
+        },
+        {
+          "id": "mem_dc5b7e9f532282ba6e052739",
+          "content": "[2024-08-01T00:00:09Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次10。",
+          "score": 1.121346,
+          "created_at": "2024-08-01T00:00:09Z",
+          "source_id": "noise-9"
+        },
+        {
+          "id": "mem_98ebc81fce6189ecac7b11d5",
+          "content": "[2024-08-01T00:00:01Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次2。",
+          "score": 1.121346,
+          "created_at": "2024-08-01T00:00:01Z",
+          "source_id": "noise-1"
+        },
+        {
+          "id": "mem_45ea661395a38dfa67219eed",
+          "content": "[2024-08-01T00:01:43Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次104。",
+          "score": 1.09679,
+          "created_at": "2024-08-01T00:01:43Z",
+          "source_id": "noise-103"
+        },
+        {
+          "id": "mem_cf71ad78a7ef64870b9cbe3a",
+          "content": "[2024-08-01T00:01:35Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次96。",
+          "score": 1.09679,
+          "created_at": "2024-08-01T00:01:35Z",
+          "source_id": "noise-95"
+        },
+        {
+          "id": "mem_7b41c6e81c68d2a968f9a1b3",
+          "content": "[2024-08-01T00:01:27Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次88。",
+          "score": 1.09679,
+          "created_at": "2024-08-01T00:01:27Z",
+          "source_id": "noise-87"
+        },
+        {
+          "id": "mem_99db661a218e7250869b0fa7",
+          "content": "[2024-08-01T00:01:19Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次80。",
+          "score": 1.09679,
+          "created_at": "2024-08-01T00:01:19Z",
+          "source_id": "noise-79"
+        },
+        {
+          "id": "mem_a8b7fc41aea8a8d01dbda1f0",
+          "content": "[2024-08-01T00:01:11Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次72。",
+          "score": 1.096789,
+          "created_at": "2024-08-01T00:01:11Z",
+          "source_id": "noise-71"
+        },
+        {
+          "id": "mem_d2ea850fab779bcfe8818049",
+          "content": "[2024-08-01T00:01:03Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次64。",
+          "score": 1.096789,
+          "created_at": "2024-08-01T00:01:03Z",
+          "source_id": "noise-63"
+        }
+      ]
+    },
+    {
+      "name": "blind11-historical-comparison-en",
+      "category": "historical_control",
+      "candidate_count": 108,
+      "expected": [
+        "old-anchor",
+        "old-detail"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        3
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_409dd9744fb4f2969b3e03a4",
+          "content": "[2024-01-01T00:00:00Z] user: Previously Maren's ceramics studio occupied the old warehouse.",
+          "score": 20.46608,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_6c295c6578ceb4a42f4a81d8",
+          "content": "[2024-06-01T00:00:00Z] user: Maren's ceramics studio changed premises; this is her current studio.",
+          "score": 4.767043,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "current-anchor"
+        },
+        {
+          "id": "mem_80c7a6fa1d78a4d7a16bae55",
+          "content": "[2024-01-01T00:00:01Z] user: The address was 7 Dock Street.",
+          "score": 1.949201,
+          "created_at": "2024-01-01T00:00:01Z",
+          "source_id": "old-detail"
+        },
+        {
+          "id": "mem_cb78bc28a10fe0ce015178fe",
+          "content": "[2024-08-01T00:00:07Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 8.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:07Z",
+          "source_id": "noise-7"
+        },
+        {
+          "id": "mem_94516981651e033aac34b3dc",
+          "content": "[2024-08-01T00:00:15Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 16.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:15Z",
+          "source_id": "noise-15"
+        },
+        {
+          "id": "mem_60c3fe8ed2a9228d68c4d3cb",
+          "content": "[2024-08-01T00:00:23Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 24.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:23Z",
+          "source_id": "noise-23"
+        },
+        {
+          "id": "mem_2545ff9f86bec39ef550b605",
+          "content": "[2024-08-01T00:00:31Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 32.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:31Z",
+          "source_id": "noise-31"
+        },
+        {
+          "id": "mem_394cb038c726f19d0c0b0d1f",
+          "content": "[2024-08-01T00:00:39Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 40.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:39Z",
+          "source_id": "noise-39"
+        },
+        {
+          "id": "mem_6078bc8e223368b4261c90ac",
+          "content": "[2024-08-01T00:00:47Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 48.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:47Z",
+          "source_id": "noise-47"
+        },
+        {
+          "id": "mem_6f676012d0844a4347d8fb13",
+          "content": "[2024-08-01T00:00:55Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 56.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:00:55Z",
+          "source_id": "noise-55"
+        },
+        {
+          "id": "mem_b8f1730374df42bce95cf8a7",
+          "content": "[2024-08-01T00:01:03Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 64.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:01:03Z",
+          "source_id": "noise-63"
+        },
+        {
+          "id": "mem_657e7dd3eb971c0e76a87114",
+          "content": "[2024-08-01T00:01:11Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 72.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:01:11Z",
+          "source_id": "noise-71"
+        },
+        {
+          "id": "mem_4e1d95d7b169cb17455eec88",
+          "content": "[2024-08-01T00:01:19Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 80.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:01:19Z",
+          "source_id": "noise-79"
+        },
+        {
+          "id": "mem_b4b543c9105bbf2f33ffeb6b",
+          "content": "[2024-08-01T00:01:27Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 88.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:01:27Z",
+          "source_id": "noise-87"
+        },
+        {
+          "id": "mem_0d7eb5e20559784de8bc6be5",
+          "content": "[2024-08-01T00:01:35Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 96.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:01:35Z",
+          "source_id": "noise-95"
+        },
+        {
+          "id": "mem_a283521c15cb2fec86ca9f5d",
+          "content": "[2024-08-01T00:01:43Z] user: An unsigned proposal mentions Maren ceramics studio; no decision was recorded. Archive batch 104.",
+          "score": 1.814173,
+          "created_at": "2024-08-01T00:01:43Z",
+          "source_id": "noise-103"
+        },
+        {
+          "id": "mem_ae6cf9ca59328411ae322d11",
+          "content": "[2024-08-01T00:00:06Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 7.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:06Z",
+          "source_id": "noise-6"
+        },
+        {
+          "id": "mem_e0e06ff251a04f8f52bd42ba",
+          "content": "[2024-08-01T00:00:14Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 15.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:14Z",
+          "source_id": "noise-14"
+        },
+        {
+          "id": "mem_9c6626a55b3fe73849ea838f",
+          "content": "[2024-08-01T00:00:22Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 23.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:22Z",
+          "source_id": "noise-22"
+        },
+        {
+          "id": "mem_b774c017cbd11b1f3cc2915d",
+          "content": "[2024-08-01T00:00:30Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 31.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:30Z",
+          "source_id": "noise-30"
+        },
+        {
+          "id": "mem_ce9aaf3f8572e9f3dde79725",
+          "content": "[2024-08-01T00:00:38Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 39.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:38Z",
+          "source_id": "noise-38"
+        },
+        {
+          "id": "mem_c34d66dbcf84826c03f2c8bc",
+          "content": "[2024-08-01T00:00:46Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 47.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:46Z",
+          "source_id": "noise-46"
+        },
+        {
+          "id": "mem_6fdbbd27f54c6083fdf6163f",
+          "content": "[2024-08-01T00:00:54Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 55.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:00:54Z",
+          "source_id": "noise-54"
+        },
+        {
+          "id": "mem_b0740b0b4de9c4befd2fd5fa",
+          "content": "[2024-08-01T00:01:02Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 63.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:01:02Z",
+          "source_id": "noise-62"
+        },
+        {
+          "id": "mem_0deb127d1fee0247197175e6",
+          "content": "[2024-08-01T00:01:10Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 71.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:01:10Z",
+          "source_id": "noise-70"
+        },
+        {
+          "id": "mem_9e3b4bfb11f7eec8057913d0",
+          "content": "[2024-08-01T00:01:18Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 79.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:01:18Z",
+          "source_id": "noise-78"
+        },
+        {
+          "id": "mem_d598d34e649c454a77843f58",
+          "content": "[2024-08-01T00:01:26Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 87.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:01:26Z",
+          "source_id": "noise-86"
+        },
+        {
+          "id": "mem_32652172d374875bb0deef98",
+          "content": "[2024-08-01T00:01:34Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 95.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:01:34Z",
+          "source_id": "noise-94"
+        },
+        {
+          "id": "mem_f3458f6263f9182415241767",
+          "content": "[2024-08-01T00:01:42Z] user: The maintenance budget for Maren ceramics studio was discussed at a meeting. Archive batch 103.",
+          "score": 1.772801,
+          "created_at": "2024-08-01T00:01:42Z",
+          "source_id": "noise-102"
+        },
+        {
+          "id": "mem_107ea77bec3075fe92a06df3",
+          "content": "[2024-08-01T00:00:00Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 1.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:00Z",
+          "source_id": "noise-0"
+        },
+        {
+          "id": "mem_a304f34a64663e9f965f5b0e",
+          "content": "[2024-08-01T00:00:03Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 4.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:03Z",
+          "source_id": "noise-3"
+        },
+        {
+          "id": "mem_2b8bfdeb40ee3d2e9a96b537",
+          "content": "[2024-08-01T00:00:05Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 6.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:05Z",
+          "source_id": "noise-5"
+        },
+        {
+          "id": "mem_3e7059f5616beacb7dfcee92",
+          "content": "[2024-08-01T00:00:08Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 9.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:08Z",
+          "source_id": "noise-8"
+        },
+        {
+          "id": "mem_a5c996afcbd462205ff46eef",
+          "content": "[2024-08-01T00:00:11Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 12.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:11Z",
+          "source_id": "noise-11"
+        },
+        {
+          "id": "mem_fa202c5b7ee3d8cab3d847c9",
+          "content": "[2024-08-01T00:00:13Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 14.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:13Z",
+          "source_id": "noise-13"
+        },
+        {
+          "id": "mem_b00c7a0698099f14c99d2fd1",
+          "content": "[2024-08-01T00:00:16Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 17.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:16Z",
+          "source_id": "noise-16"
+        },
+        {
+          "id": "mem_da292eb9740717647beeac80",
+          "content": "[2024-08-01T00:00:19Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 20.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:19Z",
+          "source_id": "noise-19"
+        },
+        {
+          "id": "mem_22b99df30902d518240f5cbe",
+          "content": "[2024-08-01T00:00:21Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 22.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:21Z",
+          "source_id": "noise-21"
+        },
+        {
+          "id": "mem_fe76d2b0c3f1ca23134babc5",
+          "content": "[2024-08-01T00:00:24Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 25.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:24Z",
+          "source_id": "noise-24"
+        },
+        {
+          "id": "mem_44f72e86aa152513b09e16cc",
+          "content": "[2024-08-01T00:00:27Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 28.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:27Z",
+          "source_id": "noise-27"
+        },
+        {
+          "id": "mem_fee18e9370512aef667219c3",
+          "content": "[2024-08-01T00:00:29Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 30.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:29Z",
+          "source_id": "noise-29"
+        },
+        {
+          "id": "mem_7c6476421bd372ea9ee527b0",
+          "content": "[2024-08-01T00:00:32Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 33.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:32Z",
+          "source_id": "noise-32"
+        },
+        {
+          "id": "mem_ebe669c686e9f712d2d6ef5f",
+          "content": "[2024-08-01T00:00:35Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 36.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:35Z",
+          "source_id": "noise-35"
+        },
+        {
+          "id": "mem_12a503200740dc3b8a117e81",
+          "content": "[2024-08-01T00:00:37Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 38.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:37Z",
+          "source_id": "noise-37"
+        },
+        {
+          "id": "mem_a2461ac298dbb9e08a554774",
+          "content": "[2024-08-01T00:00:40Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 41.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:40Z",
+          "source_id": "noise-40"
+        },
+        {
+          "id": "mem_e8c868f5223164e8534af979",
+          "content": "[2024-08-01T00:00:43Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 44.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:43Z",
+          "source_id": "noise-43"
+        },
+        {
+          "id": "mem_0e36d704d18ed76812570c90",
+          "content": "[2024-08-01T00:00:45Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 46.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:45Z",
+          "source_id": "noise-45"
+        },
+        {
+          "id": "mem_39e31fe4b7c0e66bd9958ecc",
+          "content": "[2024-08-01T00:00:48Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 49.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:48Z",
+          "source_id": "noise-48"
+        },
+        {
+          "id": "mem_1b2c8925909e2d208d3df760",
+          "content": "[2024-08-01T00:00:51Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 52.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:51Z",
+          "source_id": "noise-51"
+        },
+        {
+          "id": "mem_dd944a5171d86b09f88851e3",
+          "content": "[2024-08-01T00:00:53Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 54.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:53Z",
+          "source_id": "noise-53"
+        },
+        {
+          "id": "mem_8ce9d5942a618bae3ccb15af",
+          "content": "[2024-08-01T00:00:56Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 57.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:56Z",
+          "source_id": "noise-56"
+        },
+        {
+          "id": "mem_e9c0fb6753e48aa855ee697a",
+          "content": "[2024-08-01T00:00:59Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 60.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:00:59Z",
+          "source_id": "noise-59"
+        },
+        {
+          "id": "mem_43de1839320a13d48e49a362",
+          "content": "[2024-08-01T00:01:01Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 62.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:01Z",
+          "source_id": "noise-61"
+        },
+        {
+          "id": "mem_2c441ac0191613317b7c5275",
+          "content": "[2024-08-01T00:01:04Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 65.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:04Z",
+          "source_id": "noise-64"
+        },
+        {
+          "id": "mem_c9a174618d7786d0e049607d",
+          "content": "[2024-08-01T00:01:07Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 68.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:07Z",
+          "source_id": "noise-67"
+        },
+        {
+          "id": "mem_a76460cd647958f87548e5da",
+          "content": "[2024-08-01T00:01:09Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 70.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:09Z",
+          "source_id": "noise-69"
+        },
+        {
+          "id": "mem_d10754d53b280002d5d8de72",
+          "content": "[2024-08-01T00:01:12Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 73.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:12Z",
+          "source_id": "noise-72"
+        },
+        {
+          "id": "mem_94dac1129ef42aea2fb98fde",
+          "content": "[2024-08-01T00:01:15Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 76.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:15Z",
+          "source_id": "noise-75"
+        },
+        {
+          "id": "mem_064a6952131dd2420cb645e5",
+          "content": "[2024-08-01T00:01:17Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 78.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:17Z",
+          "source_id": "noise-77"
+        },
+        {
+          "id": "mem_fd8e15ff678615e6edcbedd8",
+          "content": "[2024-08-01T00:01:20Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 81.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:20Z",
+          "source_id": "noise-80"
+        },
+        {
+          "id": "mem_be15e9366799e1cc6007b9a2",
+          "content": "[2024-08-01T00:01:23Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 84.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:23Z",
+          "source_id": "noise-83"
+        },
+        {
+          "id": "mem_c28d10c3dd6f4e65b3986963",
+          "content": "[2024-08-01T00:01:25Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 86.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:25Z",
+          "source_id": "noise-85"
+        },
+        {
+          "id": "mem_b01357afac9430c8cacf389f",
+          "content": "[2024-08-01T00:01:28Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 89.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:28Z",
+          "source_id": "noise-88"
+        },
+        {
+          "id": "mem_a8cb2016daceff5a6735ab58",
+          "content": "[2024-08-01T00:01:31Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 92.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:31Z",
+          "source_id": "noise-91"
+        },
+        {
+          "id": "mem_81006a10117857bed218d328",
+          "content": "[2024-08-01T00:01:33Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 94.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:33Z",
+          "source_id": "noise-93"
+        },
+        {
+          "id": "mem_deae40ab9a756ed55ae1d6c2",
+          "content": "[2024-08-01T00:01:36Z] user: Maren ceramics studio address and delivery records were checked for spelling. Archive batch 97.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:36Z",
+          "source_id": "noise-96"
+        },
+        {
+          "id": "mem_a1650ec251898aff766a869c",
+          "content": "[2024-08-01T00:01:39Z] user: The planning folder contains a comparison table for Maren ceramics studio. Archive batch 100.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:39Z",
+          "source_id": "noise-99"
+        },
+        {
+          "id": "mem_d8266479fe91551d76d0a547",
+          "content": "[2024-08-01T00:01:41Z] user: A printed directory includes Maren ceramics studio but omits contact details. Archive batch 102.",
+          "score": 0.296915,
+          "created_at": "2024-08-01T00:01:41Z",
+          "source_id": "noise-101"
+        },
+        {
+          "id": "mem_df8c0869b82d25d48ef99a20",
+          "content": "[2024-08-01T00:00:01Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 2.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:01Z",
+          "source_id": "noise-1"
+        },
+        {
+          "id": "mem_54019cdd6662c45006e341d3",
+          "content": "[2024-08-01T00:00:04Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 5.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:04Z",
+          "source_id": "noise-4"
+        },
+        {
+          "id": "mem_b654c3ae73649f5297f057e4",
+          "content": "[2024-08-01T00:00:09Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 10.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:09Z",
+          "source_id": "noise-9"
+        },
+        {
+          "id": "mem_45917ada93c4e03d49696a78",
+          "content": "[2024-08-01T00:00:12Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 13.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:12Z",
+          "source_id": "noise-12"
+        },
+        {
+          "id": "mem_59f3390f65ca49334ea4e263",
+          "content": "[2024-08-01T00:00:17Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 18.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:17Z",
+          "source_id": "noise-17"
+        },
+        {
+          "id": "mem_03a0ff2988362889ef800c8b",
+          "content": "[2024-08-01T00:00:20Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 21.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:20Z",
+          "source_id": "noise-20"
+        },
+        {
+          "id": "mem_ca6e501e94b5b6ef73992dd9",
+          "content": "[2024-08-01T00:00:25Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 26.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:25Z",
+          "source_id": "noise-25"
+        },
+        {
+          "id": "mem_ea3ccd3251f4b6ed2f420df1",
+          "content": "[2024-08-01T00:00:28Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 29.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:28Z",
+          "source_id": "noise-28"
+        },
+        {
+          "id": "mem_9cfd6daf1f166827795a6b6a",
+          "content": "[2024-08-01T00:00:33Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 34.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:33Z",
+          "source_id": "noise-33"
+        },
+        {
+          "id": "mem_32d907b62d18cfe84ef19c52",
+          "content": "[2024-08-01T00:00:36Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 37.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:36Z",
+          "source_id": "noise-36"
+        },
+        {
+          "id": "mem_7f01baa7eb5b214bb812cf63",
+          "content": "[2024-08-01T00:00:41Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 42.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:41Z",
+          "source_id": "noise-41"
+        },
+        {
+          "id": "mem_fda7d712da6b5f5b9c91cd8f",
+          "content": "[2024-08-01T00:00:44Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 45.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:44Z",
+          "source_id": "noise-44"
+        },
+        {
+          "id": "mem_e553e4711ab631beeb6aebcc",
+          "content": "[2024-08-01T00:00:49Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 50.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:49Z",
+          "source_id": "noise-49"
+        },
+        {
+          "id": "mem_c3b2fa5a8558a98cf025c70e",
+          "content": "[2024-08-01T00:00:52Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 53.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:52Z",
+          "source_id": "noise-52"
+        },
+        {
+          "id": "mem_5c4efa097fedb070c58722a7",
+          "content": "[2024-08-01T00:00:57Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 58.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:00:57Z",
+          "source_id": "noise-57"
+        },
+        {
+          "id": "mem_66a4304c5b1cfc3d4df40fbb",
+          "content": "[2024-08-01T00:01:00Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 61.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:00Z",
+          "source_id": "noise-60"
+        },
+        {
+          "id": "mem_a346773ba05021b723f01299",
+          "content": "[2024-08-01T00:01:05Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 66.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:05Z",
+          "source_id": "noise-65"
+        },
+        {
+          "id": "mem_127ba5118c1e53ba8a0a1fdf",
+          "content": "[2024-08-01T00:01:08Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 69.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:08Z",
+          "source_id": "noise-68"
+        },
+        {
+          "id": "mem_f818ff1a97760797d83ea308",
+          "content": "[2024-08-01T00:01:13Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 74.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:13Z",
+          "source_id": "noise-73"
+        },
+        {
+          "id": "mem_65d3a38ae220d0085a697e1e",
+          "content": "[2024-08-01T00:01:16Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 77.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:16Z",
+          "source_id": "noise-76"
+        },
+        {
+          "id": "mem_773b33b7e19b4aa2d4197ef0",
+          "content": "[2024-08-01T00:01:21Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 82.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:21Z",
+          "source_id": "noise-81"
+        },
+        {
+          "id": "mem_a098b0182a9182f0e9ef9566",
+          "content": "[2024-08-01T00:01:24Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 85.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:24Z",
+          "source_id": "noise-84"
+        },
+        {
+          "id": "mem_3943476a2a412c3ddabc3932",
+          "content": "[2024-08-01T00:01:29Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 90.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:29Z",
+          "source_id": "noise-89"
+        },
+        {
+          "id": "mem_aec774242c3b29286f1f6ede",
+          "content": "[2024-08-01T00:01:32Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 93.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:32Z",
+          "source_id": "noise-92"
+        },
+        {
+          "id": "mem_e8e644382b30ad96ab727440",
+          "content": "[2024-08-01T00:01:37Z] user: An archive index links Maren ceramics studio to a previous quarterly review. Archive batch 98.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:37Z",
+          "source_id": "noise-97"
+        },
+        {
+          "id": "mem_4835de52105e9d42c5efebb9",
+          "content": "[2024-08-01T00:01:40Z] user: The office is checking whether Maren ceramics studio details need an update. Archive batch 101.",
+          "score": 0.295566,
+          "created_at": "2024-08-01T00:01:40Z",
+          "source_id": "noise-100"
+        },
+        {
+          "id": "mem_910248ac37ada0cc910a98e7",
+          "content": "[2024-08-01T00:00:02Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 3.",
+          "score": 0.294293,
+          "created_at": "2024-08-01T00:00:02Z",
+          "source_id": "noise-2"
+        },
+        {
+          "id": "mem_d0a54dd0abd8292f1d9c7314",
+          "content": "[2024-08-01T00:00:10Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 11.",
+          "score": 0.294293,
+          "created_at": "2024-08-01T00:00:10Z",
+          "source_id": "noise-10"
+        },
+        {
+          "id": "mem_bef0d42219556610f7018bd2",
+          "content": "[2024-08-01T00:00:18Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 19.",
+          "score": 0.294293,
+          "created_at": "2024-08-01T00:00:18Z",
+          "source_id": "noise-18"
+        },
+        {
+          "id": "mem_97de40a6ddd2fc5191650bfc",
+          "content": "[2024-08-01T00:00:26Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 27.",
+          "score": 0.294293,
+          "created_at": "2024-08-01T00:00:26Z",
+          "source_id": "noise-26"
+        },
+        {
+          "id": "mem_c83c541e13ad7fbd438b3270",
+          "content": "[2024-08-01T00:00:34Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 35.",
+          "score": 0.294293,
+          "created_at": "2024-08-01T00:00:34Z",
+          "source_id": "noise-34"
+        },
+        {
+          "id": "mem_af3570fa7988d4e7b9a4f5d2",
+          "content": "[2024-08-01T00:00:42Z] user: A staff member asked for a copy of the Maren ceramics studio contract. Archive batch 43.",
+          "score": 0.294293,
+          "created_at": "2024-08-01T00:00:42Z",
+          "source_id": "noise-42"
+        }
+      ]
+    },
+    {
+      "name": "blind11-historical-comparison-zh",
+      "category": "historical_control_zh",
+      "candidate_count": 108,
+      "expected": [
+        "old-anchor",
+        "old-detail"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        1,
+        null
+      ],
+      "complete_at_k": false,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_fd35d0927aa58e4bfab1b18c",
+          "content": "[2024-01-01T00:00:00Z] user: 最初云杉书店登记过新书配送的旧安排。",
+          "score": 33.575548,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "old-anchor"
+        },
+        {
+          "id": "mem_836e44e13f48d9d20084bb15",
+          "content": "[2024-06-01T00:00:00Z] user: 云杉书店的新书配送后来换成新的合作方，目前按新合同执行。",
+          "score": 10.185118,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "current-anchor"
+        },
+        {
+          "id": "mem_8fb4c9eeb6eb88426f3f6739",
+          "content": "[2024-06-01T00:00:01Z] user: 合同签给了青鸟物流，由他们送货。",
+          "score": 5.293955,
+          "created_at": "2024-06-01T00:00:01Z",
+          "source_id": "current-detail"
+        },
+        {
+          "id": "mem_6afc327d20c4d7117dfc9920",
+          "content": "[2024-08-01T00:00:04Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次5。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:04Z",
+          "source_id": "noise-4"
+        },
+        {
+          "id": "mem_579d183572db4f854aa78892",
+          "content": "[2024-08-01T00:00:12Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次13。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:12Z",
+          "source_id": "noise-12"
+        },
+        {
+          "id": "mem_ed18a0cd1f178d213c7e26eb",
+          "content": "[2024-08-01T00:00:20Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次21。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:20Z",
+          "source_id": "noise-20"
+        },
+        {
+          "id": "mem_b06f0954e766c7f51f3c44cf",
+          "content": "[2024-08-01T00:00:28Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次29。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:28Z",
+          "source_id": "noise-28"
+        },
+        {
+          "id": "mem_5171549c355f8e1c66e1aae4",
+          "content": "[2024-08-01T00:00:36Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次37。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:36Z",
+          "source_id": "noise-36"
+        },
+        {
+          "id": "mem_6b11769d3fae004925f460ae",
+          "content": "[2024-08-01T00:00:44Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次45。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:44Z",
+          "source_id": "noise-44"
+        },
+        {
+          "id": "mem_6fbc668bbc996655e8f8f58f",
+          "content": "[2024-08-01T00:00:52Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次53。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:00:52Z",
+          "source_id": "noise-52"
+        },
+        {
+          "id": "mem_d4336ac7c588f8cc8e30cf77",
+          "content": "[2024-08-01T00:01:00Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次61。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:01:00Z",
+          "source_id": "noise-60"
+        },
+        {
+          "id": "mem_09c0e0e411070cbac487e731",
+          "content": "[2024-08-01T00:01:08Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次69。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:01:08Z",
+          "source_id": "noise-68"
+        },
+        {
+          "id": "mem_9fe67b0c5ade89d5ad4e68e4",
+          "content": "[2024-08-01T00:01:16Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次77。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:01:16Z",
+          "source_id": "noise-76"
+        },
+        {
+          "id": "mem_4961079ff84e72e5130bd4fc",
+          "content": "[2024-08-01T00:01:24Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次85。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:01:24Z",
+          "source_id": "noise-84"
+        },
+        {
+          "id": "mem_0dd5e66855f07ecab95cebc4",
+          "content": "[2024-08-01T00:01:32Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次93。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:01:32Z",
+          "source_id": "noise-92"
+        },
+        {
+          "id": "mem_f7b5a7ed8d23b89807ac421c",
+          "content": "[2024-08-01T00:01:40Z] user: 办公室正在检查云杉书店配送是否需要补充资料。 档案批次101。",
+          "score": 2.493977,
+          "created_at": "2024-08-01T00:01:40Z",
+          "source_id": "noise-100"
+        },
+        {
+          "id": "mem_baad226521e90ef96a9b081b",
+          "content": "[2024-08-01T00:00:00Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次1。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:00Z",
+          "source_id": "noise-0"
+        },
+        {
+          "id": "mem_b670914c6cbf7ee1172413e0",
+          "content": "[2024-08-01T00:00:08Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次9。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:08Z",
+          "source_id": "noise-8"
+        },
+        {
+          "id": "mem_5e4e5f3245384843deb26f0a",
+          "content": "[2024-08-01T00:00:16Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次17。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:16Z",
+          "source_id": "noise-16"
+        },
+        {
+          "id": "mem_7b8379c8cac7c9d03cdc68c1",
+          "content": "[2024-08-01T00:00:24Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次25。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:24Z",
+          "source_id": "noise-24"
+        },
+        {
+          "id": "mem_b953d1ec09a1e338c8dd83ac",
+          "content": "[2024-08-01T00:00:32Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次33。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:32Z",
+          "source_id": "noise-32"
+        },
+        {
+          "id": "mem_0e17358b41702dabedd7e862",
+          "content": "[2024-08-01T00:00:40Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次41。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:40Z",
+          "source_id": "noise-40"
+        },
+        {
+          "id": "mem_c40cde3d07533494eb5d937b",
+          "content": "[2024-08-01T00:00:48Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次49。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:48Z",
+          "source_id": "noise-48"
+        },
+        {
+          "id": "mem_93e92bccabe730a39ce16ad4",
+          "content": "[2024-08-01T00:00:56Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次57。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:00:56Z",
+          "source_id": "noise-56"
+        },
+        {
+          "id": "mem_9ef2a19250c4027bd0ef3edc",
+          "content": "[2024-08-01T00:01:04Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次65。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:01:04Z",
+          "source_id": "noise-64"
+        },
+        {
+          "id": "mem_3076f913e47e5febc67749a5",
+          "content": "[2024-08-01T00:01:12Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次73。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:01:12Z",
+          "source_id": "noise-72"
+        },
+        {
+          "id": "mem_ccb4b8197ae4cd489b08097d",
+          "content": "[2024-08-01T00:01:20Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次81。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:01:20Z",
+          "source_id": "noise-80"
+        },
+        {
+          "id": "mem_a5a819406e9f8fffbc8b51d2",
+          "content": "[2024-08-01T00:01:28Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次89。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:01:28Z",
+          "source_id": "noise-88"
+        },
+        {
+          "id": "mem_60424140b9df454d4e31d598",
+          "content": "[2024-08-01T00:01:36Z] user: 云杉书店配送的地址和配送记录正在校对文字。 档案批次97。",
+          "score": 0.509642,
+          "created_at": "2024-08-01T00:01:36Z",
+          "source_id": "noise-96"
+        },
+        {
+          "id": "mem_d92a935104f815d32ccf06e7",
+          "content": "[2024-08-01T00:00:02Z] user: 职员申请复印云杉书店配送的合同。 档案批次3。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:02Z",
+          "source_id": "noise-2"
+        },
+        {
+          "id": "mem_154c8566aabc8a134c2da0de",
+          "content": "[2024-08-01T00:00:10Z] user: 职员申请复印云杉书店配送的合同。 档案批次11。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:10Z",
+          "source_id": "noise-10"
+        },
+        {
+          "id": "mem_19e35032b2e2249019327665",
+          "content": "[2024-08-01T00:00:18Z] user: 职员申请复印云杉书店配送的合同。 档案批次19。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:18Z",
+          "source_id": "noise-18"
+        },
+        {
+          "id": "mem_f86f71c839a7e87ed2000de0",
+          "content": "[2024-08-01T00:00:26Z] user: 职员申请复印云杉书店配送的合同。 档案批次27。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:26Z",
+          "source_id": "noise-26"
+        },
+        {
+          "id": "mem_c8bd0d2f68eaf5290f0ff093",
+          "content": "[2024-08-01T00:00:34Z] user: 职员申请复印云杉书店配送的合同。 档案批次35。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:34Z",
+          "source_id": "noise-34"
+        },
+        {
+          "id": "mem_401ea5ee0a988616c61a3789",
+          "content": "[2024-08-01T00:00:42Z] user: 职员申请复印云杉书店配送的合同。 档案批次43。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:42Z",
+          "source_id": "noise-42"
+        },
+        {
+          "id": "mem_d5da6695844a0ed51793b857",
+          "content": "[2024-08-01T00:00:50Z] user: 职员申请复印云杉书店配送的合同。 档案批次51。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:50Z",
+          "source_id": "noise-50"
+        },
+        {
+          "id": "mem_4957014f28dc7e5fea1e0005",
+          "content": "[2024-08-01T00:00:58Z] user: 职员申请复印云杉书店配送的合同。 档案批次59。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:00:58Z",
+          "source_id": "noise-58"
+        },
+        {
+          "id": "mem_8005a3e408d2efacc42740aa",
+          "content": "[2024-08-01T00:01:06Z] user: 职员申请复印云杉书店配送的合同。 档案批次67。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:01:06Z",
+          "source_id": "noise-66"
+        },
+        {
+          "id": "mem_5ca226b100647b53fb848e73",
+          "content": "[2024-08-01T00:01:14Z] user: 职员申请复印云杉书店配送的合同。 档案批次75。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:01:14Z",
+          "source_id": "noise-74"
+        },
+        {
+          "id": "mem_1e475f5120d3537aab1d6b0a",
+          "content": "[2024-08-01T00:01:22Z] user: 职员申请复印云杉书店配送的合同。 档案批次83。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:01:22Z",
+          "source_id": "noise-82"
+        },
+        {
+          "id": "mem_d796858c90d55b36650fc661",
+          "content": "[2024-08-01T00:01:30Z] user: 职员申请复印云杉书店配送的合同。 档案批次91。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:01:30Z",
+          "source_id": "noise-90"
+        },
+        {
+          "id": "mem_6bf278f048ba653cf73855ee",
+          "content": "[2024-08-01T00:01:38Z] user: 职员申请复印云杉书店配送的合同。 档案批次99。",
+          "score": 0.50712,
+          "created_at": "2024-08-01T00:01:38Z",
+          "source_id": "noise-98"
+        },
+        {
+          "id": "mem_5fbf28156415d82188cfcc31",
+          "content": "[2024-08-01T00:00:06Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次7。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:06Z",
+          "source_id": "noise-6"
+        },
+        {
+          "id": "mem_025f3677ea829d6f15dd662e",
+          "content": "[2024-08-01T00:00:14Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次15。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:14Z",
+          "source_id": "noise-14"
+        },
+        {
+          "id": "mem_1389eb795de14f14eef0f384",
+          "content": "[2024-08-01T00:00:22Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次23。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:22Z",
+          "source_id": "noise-22"
+        },
+        {
+          "id": "mem_c5c145fb07966ea4826305ad",
+          "content": "[2024-08-01T00:00:30Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次31。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:30Z",
+          "source_id": "noise-30"
+        },
+        {
+          "id": "mem_df0c0686a17a53ca967156d0",
+          "content": "[2024-08-01T00:00:38Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次39。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:38Z",
+          "source_id": "noise-38"
+        },
+        {
+          "id": "mem_b12012eb836375a94eb21899",
+          "content": "[2024-08-01T00:00:46Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次47。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:46Z",
+          "source_id": "noise-46"
+        },
+        {
+          "id": "mem_ec761981190d88550f470719",
+          "content": "[2024-08-01T00:00:54Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次55。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:00:54Z",
+          "source_id": "noise-54"
+        },
+        {
+          "id": "mem_cae3ba3d4979377d33ebbf6e",
+          "content": "[2024-08-01T00:01:02Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次63。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:01:02Z",
+          "source_id": "noise-62"
+        },
+        {
+          "id": "mem_ca751cad14e6ccfca7b7b6ad",
+          "content": "[2024-08-01T00:01:10Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次71。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:01:10Z",
+          "source_id": "noise-70"
+        },
+        {
+          "id": "mem_2d3d36808589922d6d408dc5",
+          "content": "[2024-08-01T00:01:18Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次79。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:01:18Z",
+          "source_id": "noise-78"
+        },
+        {
+          "id": "mem_e9aa1940cddb40e5228ce00c",
+          "content": "[2024-08-01T00:01:26Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次87。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:01:26Z",
+          "source_id": "noise-86"
+        },
+        {
+          "id": "mem_a2d48f9a14360981721b1c75",
+          "content": "[2024-08-01T00:01:34Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次95。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:01:34Z",
+          "source_id": "noise-94"
+        },
+        {
+          "id": "mem_a40a9d62dc65bbf59ae2fc2e",
+          "content": "[2024-08-01T00:01:42Z] user: 会议讨论了云杉书店配送的维护预算。 档案批次103。",
+          "score": 0.502077,
+          "created_at": "2024-08-01T00:01:42Z",
+          "source_id": "noise-102"
+        },
+        {
+          "id": "mem_65dd3f4e7f0dec93a4169bbf",
+          "content": "[2024-08-01T00:00:03Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次4。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:03Z",
+          "source_id": "noise-3"
+        },
+        {
+          "id": "mem_717ea9a0d4b0d07834381107",
+          "content": "[2024-08-01T00:00:11Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次12。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:11Z",
+          "source_id": "noise-11"
+        },
+        {
+          "id": "mem_091547aa389b4d07a29e41f6",
+          "content": "[2024-08-01T00:00:19Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次20。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:19Z",
+          "source_id": "noise-19"
+        },
+        {
+          "id": "mem_9d0e1d8cbcb76fe67064301d",
+          "content": "[2024-08-01T00:00:27Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次28。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:27Z",
+          "source_id": "noise-27"
+        },
+        {
+          "id": "mem_990770d43cf3f063fb61e737",
+          "content": "[2024-08-01T00:00:35Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次36。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:35Z",
+          "source_id": "noise-35"
+        },
+        {
+          "id": "mem_e6efa632751bb5853a8f7420",
+          "content": "[2024-08-01T00:00:43Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次44。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:43Z",
+          "source_id": "noise-43"
+        },
+        {
+          "id": "mem_0135989788b57d03e337112e",
+          "content": "[2024-08-01T00:00:51Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次52。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:51Z",
+          "source_id": "noise-51"
+        },
+        {
+          "id": "mem_324acb9a549dd66c06e527ac",
+          "content": "[2024-08-01T00:00:59Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次60。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:00:59Z",
+          "source_id": "noise-59"
+        },
+        {
+          "id": "mem_7555d01dd70c355ce3076649",
+          "content": "[2024-08-01T00:01:07Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次68。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:01:07Z",
+          "source_id": "noise-67"
+        },
+        {
+          "id": "mem_dd5ec33cd45fbf3ba20a6aab",
+          "content": "[2024-08-01T00:01:15Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次76。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:01:15Z",
+          "source_id": "noise-75"
+        },
+        {
+          "id": "mem_edb1176281f2253939cb9cbb",
+          "content": "[2024-08-01T00:01:23Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次84。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:01:23Z",
+          "source_id": "noise-83"
+        },
+        {
+          "id": "mem_85b04ddfd36c2c7f645a7475",
+          "content": "[2024-08-01T00:01:31Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次92。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:01:31Z",
+          "source_id": "noise-91"
+        },
+        {
+          "id": "mem_15d42eabd103c5cbc6365b33",
+          "content": "[2024-08-01T00:01:39Z] user: 规划文件夹保存了云杉书店配送的对比表。 档案批次100。",
+          "score": 0.492604,
+          "created_at": "2024-08-01T00:01:39Z",
+          "source_id": "noise-99"
+        },
+        {
+          "id": "mem_585b11d3abca8b08d6d0ff08",
+          "content": "[2024-08-01T00:00:01Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次2。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:01Z",
+          "source_id": "noise-1"
+        },
+        {
+          "id": "mem_09795bbafca458321d28ebf8",
+          "content": "[2024-08-01T00:00:05Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次6。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:05Z",
+          "source_id": "noise-5"
+        },
+        {
+          "id": "mem_fd8aed3f0ccc092560774c6d",
+          "content": "[2024-08-01T00:00:09Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次10。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:09Z",
+          "source_id": "noise-9"
+        },
+        {
+          "id": "mem_fd93724e4df3772a11c91813",
+          "content": "[2024-08-01T00:00:13Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次14。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:13Z",
+          "source_id": "noise-13"
+        },
+        {
+          "id": "mem_384ea115a172da685a23a839",
+          "content": "[2024-08-01T00:00:17Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次18。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:17Z",
+          "source_id": "noise-17"
+        },
+        {
+          "id": "mem_92ed9a4153b7c7051e2743ab",
+          "content": "[2024-08-01T00:00:21Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次22。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:21Z",
+          "source_id": "noise-21"
+        },
+        {
+          "id": "mem_cc91d36471d7272d0ad736e7",
+          "content": "[2024-08-01T00:00:25Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次26。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:25Z",
+          "source_id": "noise-25"
+        },
+        {
+          "id": "mem_7eb3d1326328c0b6c69b4d92",
+          "content": "[2024-08-01T00:00:29Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次30。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:29Z",
+          "source_id": "noise-29"
+        },
+        {
+          "id": "mem_06eba21a2c802b65284cf414",
+          "content": "[2024-08-01T00:00:33Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次34。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:33Z",
+          "source_id": "noise-33"
+        },
+        {
+          "id": "mem_3d8c1f0f992a00596eebd890",
+          "content": "[2024-08-01T00:00:37Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次38。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:37Z",
+          "source_id": "noise-37"
+        },
+        {
+          "id": "mem_37ee17270680bd6533945058",
+          "content": "[2024-08-01T00:00:41Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次42。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:41Z",
+          "source_id": "noise-41"
+        },
+        {
+          "id": "mem_8cb178b29df1da1393dcd0d6",
+          "content": "[2024-08-01T00:00:45Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次46。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:45Z",
+          "source_id": "noise-45"
+        },
+        {
+          "id": "mem_4842683a62b31f4f2ac06bb2",
+          "content": "[2024-08-01T00:00:49Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次50。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:49Z",
+          "source_id": "noise-49"
+        },
+        {
+          "id": "mem_e596b4e9cfbecac3d33c08ce",
+          "content": "[2024-08-01T00:00:53Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次54。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:53Z",
+          "source_id": "noise-53"
+        },
+        {
+          "id": "mem_b91ffe4f5112433728aa5cf4",
+          "content": "[2024-08-01T00:00:57Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次58。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:00:57Z",
+          "source_id": "noise-57"
+        },
+        {
+          "id": "mem_65f43e4f6a577c1e4a5a4224",
+          "content": "[2024-08-01T00:01:01Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次62。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:01Z",
+          "source_id": "noise-61"
+        },
+        {
+          "id": "mem_95d97196a3e6f70f9ef029e5",
+          "content": "[2024-08-01T00:01:05Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次66。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:05Z",
+          "source_id": "noise-65"
+        },
+        {
+          "id": "mem_6e8375978bdbf962aa09d1bd",
+          "content": "[2024-08-01T00:01:09Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次70。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:09Z",
+          "source_id": "noise-69"
+        },
+        {
+          "id": "mem_41dc6a0b9768dc839b118a89",
+          "content": "[2024-08-01T00:01:13Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次74。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:13Z",
+          "source_id": "noise-73"
+        },
+        {
+          "id": "mem_29d43a3793c05ea104901d7a",
+          "content": "[2024-08-01T00:01:17Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次78。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:17Z",
+          "source_id": "noise-77"
+        },
+        {
+          "id": "mem_745997a3cf2b9173f94509c6",
+          "content": "[2024-08-01T00:01:21Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次82。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:21Z",
+          "source_id": "noise-81"
+        },
+        {
+          "id": "mem_fb1891ff75e49588f5c6d897",
+          "content": "[2024-08-01T00:01:25Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次86。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:25Z",
+          "source_id": "noise-85"
+        },
+        {
+          "id": "mem_9f719f62e061861c56e5649b",
+          "content": "[2024-08-01T00:01:29Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次90。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:29Z",
+          "source_id": "noise-89"
+        },
+        {
+          "id": "mem_4aec2abd005541f0811301ea",
+          "content": "[2024-08-01T00:01:33Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次94。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:33Z",
+          "source_id": "noise-93"
+        },
+        {
+          "id": "mem_3ef21d1886ad379eb11762ed",
+          "content": "[2024-08-01T00:01:37Z] user: 档案索引关联了云杉书店配送上季度的复核。 档案批次98。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:37Z",
+          "source_id": "noise-97"
+        },
+        {
+          "id": "mem_2c12d6af9d58c4e40a223936",
+          "content": "[2024-08-01T00:01:41Z] user: 印刷目录列出云杉书店配送但没有联系方式。 档案批次102。",
+          "score": 0.488149,
+          "created_at": "2024-08-01T00:01:41Z",
+          "source_id": "noise-101"
+        },
+        {
+          "id": "mem_6c6fbb5986023aabd50cfda4",
+          "content": "[2024-08-01T00:00:07Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次8。",
+          "score": 0.477748,
+          "created_at": "2024-08-01T00:00:07Z",
+          "source_id": "noise-7"
+        },
+        {
+          "id": "mem_861da8b54c7210964fb17c01",
+          "content": "[2024-08-01T00:00:15Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次16。",
+          "score": 0.477748,
+          "created_at": "2024-08-01T00:00:15Z",
+          "source_id": "noise-15"
+        },
+        {
+          "id": "mem_ccc6c2a78ba6518a53f170df",
+          "content": "[2024-08-01T00:00:23Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次24。",
+          "score": 0.477748,
+          "created_at": "2024-08-01T00:00:23Z",
+          "source_id": "noise-23"
+        },
+        {
+          "id": "mem_8c6b116702c07672b3d5a155",
+          "content": "[2024-08-01T00:00:31Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次32。",
+          "score": 0.477748,
+          "created_at": "2024-08-01T00:00:31Z",
+          "source_id": "noise-31"
+        },
+        {
+          "id": "mem_b6cffaa63d6b087d812dfcf3",
+          "content": "[2024-08-01T00:00:39Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次40。",
+          "score": 0.477748,
+          "created_at": "2024-08-01T00:00:39Z",
+          "source_id": "noise-39"
+        },
+        {
+          "id": "mem_fce62b7e68d9c2a6f6ff1b50",
+          "content": "[2024-08-01T00:00:47Z] user: 一份未签字的建议涉及云杉书店配送，没有作出决定。 档案批次48。",
+          "score": 0.477748,
+          "created_at": "2024-08-01T00:00:47Z",
+          "source_id": "noise-47"
+        }
+      ]
+    },
+    {
+      "name": "blind11-future-effective",
+      "category": "effective_date",
+      "candidate_count": 107,
+      "expected": [
+        "valid",
+        "future"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        2,
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_f903fc87359934a4641a8cb7",
+          "content": "[2024-05-15T00:00:00Z] user: Rowan laboratory key holder changed in the published schedule: Tomas takes over on 1 June 2024, not before that date.",
+          "score": 18.206408,
+          "created_at": "2024-05-15T00:00:00Z",
+          "source_id": "future"
+        },
+        {
+          "id": "mem_e26d9b1b2c1439adf82843ac",
+          "content": "[2024-05-01T00:00:00Z] user: Elena holds the Rowan laboratory key through 31 May 2024.",
+          "score": 15.688136,
+          "created_at": "2024-05-01T00:00:00Z",
+          "source_id": "valid"
+        },
+        {
+          "id": "mem_f331dc02a654b5107c98b51d",
+          "content": "[2024-08-01T00:00:14Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 15.",
+          "score": 5.639099,
+          "created_at": "2024-08-01T00:00:14Z",
+          "source_id": "noise-14"
+        },
+        {
+          "id": "mem_94b4656d3b8ac6deca359a81",
+          "content": "[2024-08-01T00:01:37Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 98.",
+          "score": 2.741532,
+          "created_at": "2024-08-01T00:01:37Z",
+          "source_id": "noise-97"
+        },
+        {
+          "id": "mem_a177e5f53b43041402f549a2",
+          "content": "[2024-08-01T00:01:29Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 90.",
+          "score": 2.741532,
+          "created_at": "2024-08-01T00:01:29Z",
+          "source_id": "noise-89"
+        },
+        {
+          "id": "mem_85e6adf1031b8cd7934d60d1",
+          "content": "[2024-08-01T00:01:21Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 82.",
+          "score": 2.741532,
+          "created_at": "2024-08-01T00:01:21Z",
+          "source_id": "noise-81"
+        },
+        {
+          "id": "mem_babb0f21f9f3b012ee2774f8",
+          "content": "[2024-08-01T00:01:13Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 74.",
+          "score": 2.741532,
+          "created_at": "2024-08-01T00:01:13Z",
+          "source_id": "noise-73"
+        },
+        {
+          "id": "mem_72f207916dd583c45c309781",
+          "content": "[2024-08-01T00:01:05Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 66.",
+          "score": 2.741531,
+          "created_at": "2024-08-01T00:01:05Z",
+          "source_id": "noise-65"
+        },
+        {
+          "id": "mem_6cc2aba306b4b0136596c74e",
+          "content": "[2024-08-01T00:00:57Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 58.",
+          "score": 2.741531,
+          "created_at": "2024-08-01T00:00:57Z",
+          "source_id": "noise-57"
+        },
+        {
+          "id": "mem_f60392835b0305f4c24c7598",
+          "content": "[2024-08-01T00:00:49Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 50.",
+          "score": 2.741531,
+          "created_at": "2024-08-01T00:00:49Z",
+          "source_id": "noise-49"
+        },
+        {
+          "id": "mem_5ad38839df717257826cf19f",
+          "content": "[2024-08-01T00:00:41Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 42.",
+          "score": 2.741531,
+          "created_at": "2024-08-01T00:00:41Z",
+          "source_id": "noise-41"
+        },
+        {
+          "id": "mem_bc84406635bbd5d2d95610c9",
+          "content": "[2024-08-01T00:00:33Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 34.",
+          "score": 2.741531,
+          "created_at": "2024-08-01T00:00:33Z",
+          "source_id": "noise-33"
+        },
+        {
+          "id": "mem_2764da2ca7c0516365f9a005",
+          "content": "[2024-08-01T00:00:25Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 26.",
+          "score": 2.741531,
+          "created_at": "2024-08-01T00:00:25Z",
+          "source_id": "noise-25"
+        },
+        {
+          "id": "mem_6a88586ef3b932e16c25ce10",
+          "content": "[2024-08-01T00:00:17Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 18.",
+          "score": 2.74153,
+          "created_at": "2024-08-01T00:00:17Z",
+          "source_id": "noise-17"
+        },
+        {
+          "id": "mem_0c751c4c90446ff3e9b04b8b",
+          "content": "[2024-08-01T00:00:09Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 10.",
+          "score": 2.74153,
+          "created_at": "2024-08-01T00:00:09Z",
+          "source_id": "noise-9"
+        },
+        {
+          "id": "mem_132367ffaef2dd76c3296f00",
+          "content": "[2024-08-01T00:00:01Z] user: An archive index links Rowan laboratory key to a previous quarterly review. Archive batch 2.",
+          "score": 2.74153,
+          "created_at": "2024-08-01T00:00:01Z",
+          "source_id": "noise-1"
+        },
+        {
+          "id": "mem_a5b99d49880fb86e9b85382f",
+          "content": "[2024-08-01T00:01:39Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 100.",
+          "score": 1.364148,
+          "created_at": "2024-08-01T00:01:39Z",
+          "source_id": "noise-99"
+        },
+        {
+          "id": "mem_dcfe36ff1140253c0d40a79c",
+          "content": "[2024-08-01T00:01:31Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 92.",
+          "score": 1.364148,
+          "created_at": "2024-08-01T00:01:31Z",
+          "source_id": "noise-91"
+        },
+        {
+          "id": "mem_290982c390ae5b525745f0d1",
+          "content": "[2024-08-01T00:01:23Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 84.",
+          "score": 1.364148,
+          "created_at": "2024-08-01T00:01:23Z",
+          "source_id": "noise-83"
+        },
+        {
+          "id": "mem_78f0b422f8f3d67564d91dbe",
+          "content": "[2024-08-01T00:01:15Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 76.",
+          "score": 1.364148,
+          "created_at": "2024-08-01T00:01:15Z",
+          "source_id": "noise-75"
+        },
+        {
+          "id": "mem_b82b739f11b1625dc2d70efc",
+          "content": "[2024-08-01T00:01:07Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 68.",
+          "score": 1.364148,
+          "created_at": "2024-08-01T00:01:07Z",
+          "source_id": "noise-67"
+        },
+        {
+          "id": "mem_7071387cdf5a16477a30102d",
+          "content": "[2024-08-01T00:00:59Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 60.",
+          "score": 1.364147,
+          "created_at": "2024-08-01T00:00:59Z",
+          "source_id": "noise-59"
+        },
+        {
+          "id": "mem_401a0814eed165110b51d3db",
+          "content": "[2024-08-01T00:00:51Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 52.",
+          "score": 1.364147,
+          "created_at": "2024-08-01T00:00:51Z",
+          "source_id": "noise-51"
+        },
+        {
+          "id": "mem_581384e59a14fa3bf5f58ec2",
+          "content": "[2024-08-01T00:00:43Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 44.",
+          "score": 1.364147,
+          "created_at": "2024-08-01T00:00:43Z",
+          "source_id": "noise-43"
+        },
+        {
+          "id": "mem_e5d486c86adc6cb6fb59a4bc",
+          "content": "[2024-08-01T00:00:35Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 36.",
+          "score": 1.364147,
+          "created_at": "2024-08-01T00:00:35Z",
+          "source_id": "noise-35"
+        },
+        {
+          "id": "mem_df565f7aa514d7c6c42a04f2",
+          "content": "[2024-08-01T00:00:27Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 28.",
+          "score": 1.364147,
+          "created_at": "2024-08-01T00:00:27Z",
+          "source_id": "noise-27"
+        },
+        {
+          "id": "mem_f6b8556362fac0b806a8e884",
+          "content": "[2024-08-01T00:00:19Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 20.",
+          "score": 1.364146,
+          "created_at": "2024-08-01T00:00:19Z",
+          "source_id": "noise-19"
+        },
+        {
+          "id": "mem_1651d055a9477c1188c41742",
+          "content": "[2024-08-01T00:00:11Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 12.",
+          "score": 1.364146,
+          "created_at": "2024-08-01T00:00:11Z",
+          "source_id": "noise-11"
+        },
+        {
+          "id": "mem_c4e1bfe16db1fae55628f4b0",
+          "content": "[2024-08-01T00:00:03Z] user: The planning folder contains a comparison table for Rowan laboratory key. Archive batch 4.",
+          "score": 1.364146,
+          "created_at": "2024-08-01T00:00:03Z",
+          "source_id": "noise-3"
+        },
+        {
+          "id": "mem_3781c9a6449e0b20c32b5844",
+          "content": "[2024-08-01T00:01:42Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 103.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:42Z",
+          "source_id": "noise-102"
+        },
+        {
+          "id": "mem_4549b701cedc9b0f95877869",
+          "content": "[2024-08-01T00:01:40Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 101.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:40Z",
+          "source_id": "noise-100"
+        },
+        {
+          "id": "mem_e5617443fd1e8842ffd627e3",
+          "content": "[2024-08-01T00:01:34Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 95.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:34Z",
+          "source_id": "noise-94"
+        },
+        {
+          "id": "mem_d948c24633d6b495e637608e",
+          "content": "[2024-08-01T00:01:32Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 93.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:32Z",
+          "source_id": "noise-92"
+        },
+        {
+          "id": "mem_8937f368359464e9ec525733",
+          "content": "[2024-08-01T00:01:26Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 87.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:26Z",
+          "source_id": "noise-86"
+        },
+        {
+          "id": "mem_f9b6dbe1dc1400a952759e9e",
+          "content": "[2024-08-01T00:01:24Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 85.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:24Z",
+          "source_id": "noise-84"
+        },
+        {
+          "id": "mem_63eb0d4e644d6f70f989ae55",
+          "content": "[2024-08-01T00:01:18Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 79.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:18Z",
+          "source_id": "noise-78"
+        },
+        {
+          "id": "mem_9473686893d930e5c57da606",
+          "content": "[2024-08-01T00:01:16Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 77.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:16Z",
+          "source_id": "noise-76"
+        },
+        {
+          "id": "mem_667e79e373fafbf46bdea396",
+          "content": "[2024-08-01T00:01:10Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 71.",
+          "score": 1.344423,
+          "created_at": "2024-08-01T00:01:10Z",
+          "source_id": "noise-70"
+        },
+        {
+          "id": "mem_fd09bf54a813a2f0a2f119e6",
+          "content": "[2024-08-01T00:01:08Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 69.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:01:08Z",
+          "source_id": "noise-68"
+        },
+        {
+          "id": "mem_9ca22658f61f5d078b36c1b9",
+          "content": "[2024-08-01T00:01:02Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 63.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:01:02Z",
+          "source_id": "noise-62"
+        },
+        {
+          "id": "mem_cde005e64fd2700818e4753e",
+          "content": "[2024-08-01T00:01:00Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 61.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:01:00Z",
+          "source_id": "noise-60"
+        },
+        {
+          "id": "mem_7078a2e857109288ac9cc378",
+          "content": "[2024-08-01T00:00:54Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 55.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:54Z",
+          "source_id": "noise-54"
+        },
+        {
+          "id": "mem_c773431cd34db4bc9237cc8d",
+          "content": "[2024-08-01T00:00:52Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 53.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:52Z",
+          "source_id": "noise-52"
+        },
+        {
+          "id": "mem_14f089ba8032d7b511299a99",
+          "content": "[2024-08-01T00:00:46Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 47.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:46Z",
+          "source_id": "noise-46"
+        },
+        {
+          "id": "mem_c1658f29ed1ccd89c5cbf2b9",
+          "content": "[2024-08-01T00:00:44Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 45.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:44Z",
+          "source_id": "noise-44"
+        },
+        {
+          "id": "mem_2d4cdd6080b0b02a7df8220e",
+          "content": "[2024-08-01T00:00:38Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 39.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:38Z",
+          "source_id": "noise-38"
+        },
+        {
+          "id": "mem_7115eb9496f1ad0487a56e05",
+          "content": "[2024-08-01T00:00:36Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 37.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:36Z",
+          "source_id": "noise-36"
+        },
+        {
+          "id": "mem_aff7880a49098b414242c08c",
+          "content": "[2024-08-01T00:00:30Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 31.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:30Z",
+          "source_id": "noise-30"
+        },
+        {
+          "id": "mem_3060ccab657f87f1d48aeaea",
+          "content": "[2024-08-01T00:00:28Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 29.",
+          "score": 1.344422,
+          "created_at": "2024-08-01T00:00:28Z",
+          "source_id": "noise-28"
+        },
+        {
+          "id": "mem_4848e5833c38f9e35b792739",
+          "content": "[2024-08-01T00:00:22Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 23.",
+          "score": 1.344421,
+          "created_at": "2024-08-01T00:00:22Z",
+          "source_id": "noise-22"
+        },
+        {
+          "id": "mem_d40e859ca30b6c90c53f9bab",
+          "content": "[2024-08-01T00:00:20Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 21.",
+          "score": 1.344421,
+          "created_at": "2024-08-01T00:00:20Z",
+          "source_id": "noise-20"
+        },
+        {
+          "id": "mem_4845f8718d68b57fef3044f8",
+          "content": "[2024-08-01T00:00:12Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 13.",
+          "score": 1.344421,
+          "created_at": "2024-08-01T00:00:12Z",
+          "source_id": "noise-12"
+        },
+        {
+          "id": "mem_3970314651ec0ecb51ee6d44",
+          "content": "[2024-08-01T00:00:06Z] user: The maintenance budget for Rowan laboratory key was discussed at a meeting. Archive batch 7.",
+          "score": 1.344421,
+          "created_at": "2024-08-01T00:00:06Z",
+          "source_id": "noise-6"
+        },
+        {
+          "id": "mem_ec2a5d67db8dc4dc71cb9c3d",
+          "content": "[2024-08-01T00:00:04Z] user: The office is checking whether Rowan laboratory key details need an update. Archive batch 5.",
+          "score": 1.344421,
+          "created_at": "2024-08-01T00:00:04Z",
+          "source_id": "noise-4"
+        },
+        {
+          "id": "mem_f3f29d17cfe55847f73a92b7",
+          "content": "[2024-08-01T00:01:38Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 99.",
+          "score": 1.325792,
+          "created_at": "2024-08-01T00:01:38Z",
+          "source_id": "noise-98"
+        },
+        {
+          "id": "mem_30bccb56f21cb5c1aeb323d5",
+          "content": "[2024-08-01T00:01:30Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 91.",
+          "score": 1.325792,
+          "created_at": "2024-08-01T00:01:30Z",
+          "source_id": "noise-90"
+        },
+        {
+          "id": "mem_f9a2cceb55c98b199d5189d3",
+          "content": "[2024-08-01T00:01:22Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 83.",
+          "score": 1.325792,
+          "created_at": "2024-08-01T00:01:22Z",
+          "source_id": "noise-82"
+        },
+        {
+          "id": "mem_cde75cbd499abebc9f81bcbd",
+          "content": "[2024-08-01T00:01:14Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 75.",
+          "score": 1.325792,
+          "created_at": "2024-08-01T00:01:14Z",
+          "source_id": "noise-74"
+        },
+        {
+          "id": "mem_676072f344cecf0dd9158a0c",
+          "content": "[2024-08-01T00:01:06Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 67.",
+          "score": 1.325792,
+          "created_at": "2024-08-01T00:01:06Z",
+          "source_id": "noise-66"
+        },
+        {
+          "id": "mem_b7774ce4a98ebfa1769c4eca",
+          "content": "[2024-08-01T00:00:58Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 59.",
+          "score": 1.325791,
+          "created_at": "2024-08-01T00:00:58Z",
+          "source_id": "noise-58"
+        },
+        {
+          "id": "mem_cb427362c30a19cd0e10a274",
+          "content": "[2024-08-01T00:00:50Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 51.",
+          "score": 1.325791,
+          "created_at": "2024-08-01T00:00:50Z",
+          "source_id": "noise-50"
+        },
+        {
+          "id": "mem_be9ba95361037ae9b000f328",
+          "content": "[2024-08-01T00:00:42Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 43.",
+          "score": 1.325791,
+          "created_at": "2024-08-01T00:00:42Z",
+          "source_id": "noise-42"
+        },
+        {
+          "id": "mem_94089137d87024d5369a6a17",
+          "content": "[2024-08-01T00:00:34Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 35.",
+          "score": 1.325791,
+          "created_at": "2024-08-01T00:00:34Z",
+          "source_id": "noise-34"
+        },
+        {
+          "id": "mem_6e4b613aa6479a732ae94c6b",
+          "content": "[2024-08-01T00:00:26Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 27.",
+          "score": 1.325791,
+          "created_at": "2024-08-01T00:00:26Z",
+          "source_id": "noise-26"
+        },
+        {
+          "id": "mem_1836f8703b293faebb73080e",
+          "content": "[2024-08-01T00:00:18Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 19.",
+          "score": 1.325791,
+          "created_at": "2024-08-01T00:00:18Z",
+          "source_id": "noise-18"
+        },
+        {
+          "id": "mem_951364d8b0b470e1d0fec62c",
+          "content": "[2024-08-01T00:00:10Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 11.",
+          "score": 1.32579,
+          "created_at": "2024-08-01T00:00:10Z",
+          "source_id": "noise-10"
+        },
+        {
+          "id": "mem_63484b33ab96e06d71546e29",
+          "content": "[2024-08-01T00:00:02Z] user: A staff member asked for a copy of the Rowan laboratory key contract. Archive batch 3.",
+          "score": 1.32579,
+          "created_at": "2024-08-01T00:00:02Z",
+          "source_id": "noise-2"
+        },
+        {
+          "id": "mem_5c41f19c037eb5037f62796d",
+          "content": "[2024-01-01T00:00:00Z] user: Previously Vera held the Rowan laboratory key, until April ended.",
+          "score": 1.056175,
+          "created_at": "2024-01-01T00:00:00Z",
+          "source_id": "prior"
+        },
+        {
+          "id": "mem_f9844b9dfd4c155a04052eb8",
+          "content": "[2024-08-01T00:01:43Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 104.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:43Z",
+          "source_id": "noise-103"
+        },
+        {
+          "id": "mem_7126f9a7fe0b9d566fbd74bf",
+          "content": "[2024-08-01T00:01:41Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 102.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:41Z",
+          "source_id": "noise-101"
+        },
+        {
+          "id": "mem_3e49504398b789148c05c148",
+          "content": "[2024-08-01T00:01:36Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 97.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:36Z",
+          "source_id": "noise-96"
+        },
+        {
+          "id": "mem_2115d5a108dab9815ddc8b53",
+          "content": "[2024-08-01T00:01:35Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 96.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:35Z",
+          "source_id": "noise-95"
+        },
+        {
+          "id": "mem_14130a5050fb7205d5935144",
+          "content": "[2024-08-01T00:01:33Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 94.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:33Z",
+          "source_id": "noise-93"
+        },
+        {
+          "id": "mem_fa3efccdf8a4dc6ae359d9ac",
+          "content": "[2024-08-01T00:01:28Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 89.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:28Z",
+          "source_id": "noise-88"
+        },
+        {
+          "id": "mem_30e52dc3e878d82657f7c4de",
+          "content": "[2024-08-01T00:01:27Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 88.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:27Z",
+          "source_id": "noise-87"
+        },
+        {
+          "id": "mem_7dea47361e28c6520caa0a24",
+          "content": "[2024-08-01T00:01:25Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 86.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:25Z",
+          "source_id": "noise-85"
+        },
+        {
+          "id": "mem_7df0d7e58a9173f087d7a2f3",
+          "content": "[2024-08-01T00:01:20Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 81.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:20Z",
+          "source_id": "noise-80"
+        },
+        {
+          "id": "mem_72f46f33c50de16b3f89814c",
+          "content": "[2024-08-01T00:01:19Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 80.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:19Z",
+          "source_id": "noise-79"
+        },
+        {
+          "id": "mem_fc25839226bf428589ab1b89",
+          "content": "[2024-08-01T00:01:17Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 78.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:17Z",
+          "source_id": "noise-77"
+        },
+        {
+          "id": "mem_ac6a5278757015daa12a77db",
+          "content": "[2024-08-01T00:01:12Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 73.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:12Z",
+          "source_id": "noise-72"
+        },
+        {
+          "id": "mem_54336ed9a90a58230a15aaf3",
+          "content": "[2024-08-01T00:01:11Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 72.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:11Z",
+          "source_id": "noise-71"
+        },
+        {
+          "id": "mem_ae976903748d311c0006562a",
+          "content": "[2024-08-01T00:01:09Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 70.",
+          "score": 0.618707,
+          "created_at": "2024-08-01T00:01:09Z",
+          "source_id": "noise-69"
+        },
+        {
+          "id": "mem_207f57d00c1acc7fff4939f7",
+          "content": "[2024-08-01T00:01:04Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 65.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:01:04Z",
+          "source_id": "noise-64"
+        },
+        {
+          "id": "mem_ac6bf458d3393334d7563b50",
+          "content": "[2024-08-01T00:01:03Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 64.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:01:03Z",
+          "source_id": "noise-63"
+        },
+        {
+          "id": "mem_3b1d06d649c904c000e3af28",
+          "content": "[2024-08-01T00:01:01Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 62.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:01:01Z",
+          "source_id": "noise-61"
+        },
+        {
+          "id": "mem_7921af29dd59d772130abc27",
+          "content": "[2024-08-01T00:00:56Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 57.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:56Z",
+          "source_id": "noise-56"
+        },
+        {
+          "id": "mem_fecff1d60b748191b691aa89",
+          "content": "[2024-08-01T00:00:55Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 56.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:55Z",
+          "source_id": "noise-55"
+        },
+        {
+          "id": "mem_aa42abb0c458472910ce2895",
+          "content": "[2024-08-01T00:00:53Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 54.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:53Z",
+          "source_id": "noise-53"
+        },
+        {
+          "id": "mem_6cf8c24963985dd399936b46",
+          "content": "[2024-08-01T00:00:48Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 49.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:48Z",
+          "source_id": "noise-48"
+        },
+        {
+          "id": "mem_dbb877ef27f06c44a5b11205",
+          "content": "[2024-08-01T00:00:47Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 48.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:47Z",
+          "source_id": "noise-47"
+        },
+        {
+          "id": "mem_bf6c4f037e7cee67c90a4233",
+          "content": "[2024-08-01T00:00:45Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 46.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:45Z",
+          "source_id": "noise-45"
+        },
+        {
+          "id": "mem_bafb22fe8b979dd013262648",
+          "content": "[2024-08-01T00:00:40Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 41.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:40Z",
+          "source_id": "noise-40"
+        },
+        {
+          "id": "mem_1837d34d37a02f834f72797a",
+          "content": "[2024-08-01T00:00:39Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 40.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:39Z",
+          "source_id": "noise-39"
+        },
+        {
+          "id": "mem_ab77ada9fda9ca76138a5448",
+          "content": "[2024-08-01T00:00:37Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 38.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:37Z",
+          "source_id": "noise-37"
+        },
+        {
+          "id": "mem_161bc3bbc8fbe9dadc894e1b",
+          "content": "[2024-08-01T00:00:32Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 33.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:32Z",
+          "source_id": "noise-32"
+        },
+        {
+          "id": "mem_f96e9f6456c0e6949724c7df",
+          "content": "[2024-08-01T00:00:31Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 32.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:31Z",
+          "source_id": "noise-31"
+        },
+        {
+          "id": "mem_88731dab48cfec392b2578f5",
+          "content": "[2024-08-01T00:00:29Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 30.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:29Z",
+          "source_id": "noise-29"
+        },
+        {
+          "id": "mem_3216b758a6f20de8095d7863",
+          "content": "[2024-08-01T00:00:24Z] user: Rowan laboratory key address and delivery records were checked for spelling. Archive batch 25.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:24Z",
+          "source_id": "noise-24"
+        },
+        {
+          "id": "mem_566058cb9dc3cdcda9704d65",
+          "content": "[2024-08-01T00:00:23Z] user: An unsigned proposal mentions Rowan laboratory key; no decision was recorded. Archive batch 24.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:23Z",
+          "source_id": "noise-23"
+        },
+        {
+          "id": "mem_2ceb8f98d9e09255fcc0db1d",
+          "content": "[2024-08-01T00:00:21Z] user: A printed directory includes Rowan laboratory key but omits contact details. Archive batch 22.",
+          "score": 0.618706,
+          "created_at": "2024-08-01T00:00:21Z",
+          "source_id": "noise-21"
+        }
+      ]
+    },
+    {
+      "name": "blind11-cancelled-change-zh",
+      "category": "cancelled_change_zh",
+      "candidate_count": 107,
+      "expected": [
+        "valid",
+        "cancel"
+      ],
+      "matching": "source_id",
+      "ranks": [
+        42,
+        1
+      ],
+      "complete_at_k": true,
+      "forbidden_ranks": [],
+      "results": [
+        {
+          "id": "mem_eb79ba7705d17965616902a9",
+          "content": "[2024-06-01T00:00:00Z] user: 岚川合唱团撤销了搬迁计划，目前仍在银杏厅排练，不去枫树厅。",
+          "score": 37.34558,
+          "created_at": "2024-06-01T00:00:00Z",
+          "source_id": "cancel"
+        },
+        {
+          "id": "mem_5a88733c5268599f288b3b66",
+          "content": "[2024-05-01T00:00:00Z] user: 岚川合唱团计划把排练换成枫树厅，等待最终批准。",
+          "score": 10.42229,
+          "created_at": "2024-05-01T00:00:00Z",
+          "source_id": "plan"
+        },
+        {
+          "id": "mem_61acc440084b8aea963b72d5",
+          "content": "[2024-08-01T00:01:41Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次102。",
+          "score": 2.736393,
+          "created_at": "2024-08-01T00:01:41Z",
+          "source_id": "noise-101"
+        },
+        {
+          "id": "mem_f1b8ab4eeda6251ec9934835",
+          "content": "[2024-08-01T00:01:33Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次94。",
+          "score": 2.736393,
+          "created_at": "2024-08-01T00:01:33Z",
+          "source_id": "noise-93"
+        },
+        {
+          "id": "mem_75c9bc6ffb95e5601e2574a4",
+          "content": "[2024-08-01T00:01:25Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次86。",
+          "score": 2.736393,
+          "created_at": "2024-08-01T00:01:25Z",
+          "source_id": "noise-85"
+        },
+        {
+          "id": "mem_2bcf2f7354bb2dcca86f2236",
+          "content": "[2024-08-01T00:01:17Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次78。",
+          "score": 2.736393,
+          "created_at": "2024-08-01T00:01:17Z",
+          "source_id": "noise-77"
+        },
+        {
+          "id": "mem_0319c6830d6493533f662e63",
+          "content": "[2024-08-01T00:01:09Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次70。",
+          "score": 2.736392,
+          "created_at": "2024-08-01T00:01:09Z",
+          "source_id": "noise-69"
+        },
+        {
+          "id": "mem_1c57c07c668d65694eabddd5",
+          "content": "[2024-08-01T00:01:01Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次62。",
+          "score": 2.736392,
+          "created_at": "2024-08-01T00:01:01Z",
+          "source_id": "noise-61"
+        },
+        {
+          "id": "mem_78d605f4ab11b2b58dd205bf",
+          "content": "[2024-08-01T00:00:53Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次54。",
+          "score": 2.736392,
+          "created_at": "2024-08-01T00:00:53Z",
+          "source_id": "noise-53"
+        },
+        {
+          "id": "mem_22010adc7f5d81bf532e38e2",
+          "content": "[2024-08-01T00:00:45Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次46。",
+          "score": 2.736391,
+          "created_at": "2024-08-01T00:00:45Z",
+          "source_id": "noise-45"
+        },
+        {
+          "id": "mem_c63cf1237e03f2b73acbc06d",
+          "content": "[2024-08-01T00:00:37Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次38。",
+          "score": 2.736391,
+          "created_at": "2024-08-01T00:00:37Z",
+          "source_id": "noise-37"
+        },
+        {
+          "id": "mem_4d7c03f2bbc7485a6395514d",
+          "content": "[2024-08-01T00:00:29Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次30。",
+          "score": 2.736391,
+          "created_at": "2024-08-01T00:00:29Z",
+          "source_id": "noise-29"
+        },
+        {
+          "id": "mem_90d2fb73133dffe8d3b228e7",
+          "content": "[2024-08-01T00:00:21Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次22。",
+          "score": 2.73639,
+          "created_at": "2024-08-01T00:00:21Z",
+          "source_id": "noise-21"
+        },
+        {
+          "id": "mem_3006af4669a7d2233fc9ba18",
+          "content": "[2024-08-01T00:00:13Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次14。",
+          "score": 2.73639,
+          "created_at": "2024-08-01T00:00:13Z",
+          "source_id": "noise-13"
+        },
+        {
+          "id": "mem_eb5dc88c67cf625a12309356",
+          "content": "[2024-08-01T00:00:05Z] user: 印刷目录列出岚川合唱团排练但没有联系方式。 档案批次6。",
+          "score": 2.73639,
+          "created_at": "2024-08-01T00:00:05Z",
+          "source_id": "noise-5"
+        },
+        {
+          "id": "mem_154a79cf9209690cb8e8dffd",
+          "content": "[2024-08-01T00:01:36Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次97。",
+          "score": 2.039657,
+          "created_at": "2024-08-01T00:01:36Z",
+          "source_id": "noise-96"
+        },
+        {
+          "id": "mem_5f8f7ff34c06a57124890cce",
+          "content": "[2024-08-01T00:01:28Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次89。",
+          "score": 2.039657,
+          "created_at": "2024-08-01T00:01:28Z",
+          "source_id": "noise-88"
+        },
+        {
+          "id": "mem_c36fb72fc794c0a99ad3541f",
+          "content": "[2024-08-01T00:01:20Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次81。",
+          "score": 2.039656,
+          "created_at": "2024-08-01T00:01:20Z",
+          "source_id": "noise-80"
+        },
+        {
+          "id": "mem_95b72c9ce1932754479380a8",
+          "content": "[2024-08-01T00:01:12Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次73。",
+          "score": 2.039656,
+          "created_at": "2024-08-01T00:01:12Z",
+          "source_id": "noise-72"
+        },
+        {
+          "id": "mem_63ab2a303949e4b4b818bb2d",
+          "content": "[2024-08-01T00:01:04Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次65。",
+          "score": 2.039656,
+          "created_at": "2024-08-01T00:01:04Z",
+          "source_id": "noise-64"
+        },
+        {
+          "id": "mem_d83c9aecb7ced0f56f40d515",
+          "content": "[2024-08-01T00:00:56Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次57。",
+          "score": 2.039656,
+          "created_at": "2024-08-01T00:00:56Z",
+          "source_id": "noise-56"
+        },
+        {
+          "id": "mem_89555b890da5aaf85170907f",
+          "content": "[2024-08-01T00:00:48Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次49。",
+          "score": 2.039655,
+          "created_at": "2024-08-01T00:00:48Z",
+          "source_id": "noise-48"
+        },
+        {
+          "id": "mem_674170bd12217cfd02e51a7f",
+          "content": "[2024-08-01T00:00:40Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次41。",
+          "score": 2.039655,
+          "created_at": "2024-08-01T00:00:40Z",
+          "source_id": "noise-40"
+        },
+        {
+          "id": "mem_a21348136c4ac66903dfd408",
+          "content": "[2024-08-01T00:00:32Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次33。",
+          "score": 2.039655,
+          "created_at": "2024-08-01T00:00:32Z",
+          "source_id": "noise-32"
+        },
+        {
+          "id": "mem_48bc0b4aa0102e5f821f62b1",
+          "content": "[2024-08-01T00:00:24Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次25。",
+          "score": 2.039654,
+          "created_at": "2024-08-01T00:00:24Z",
+          "source_id": "noise-24"
+        },
+        {
+          "id": "mem_68424f5604661d3c2823b7d6",
+          "content": "[2024-08-01T00:00:16Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次17。",
+          "score": 2.039654,
+          "created_at": "2024-08-01T00:00:16Z",
+          "source_id": "noise-16"
+        },
+        {
+          "id": "mem_70eb0712e06211be55e20d38",
+          "content": "[2024-08-01T00:00:08Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次9。",
+          "score": 2.039654,
+          "created_at": "2024-08-01T00:00:08Z",
+          "source_id": "noise-8"
+        },
+        {
+          "id": "mem_8bc5304c47a0841c485693bd",
+          "content": "[2024-08-01T00:00:00Z] user: 岚川合唱团排练的地址和配送记录正在校对文字。 档案批次1。",
+          "score": 2.039653,
+          "created_at": "2024-08-01T00:00:00Z",
+          "source_id": "noise-0"
+        },
+        {
+          "id": "mem_606b35b621ecbd485a67eb1d",
+          "content": "[2024-08-01T00:01:40Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次101。",
+          "score": 2.015012,
+          "created_at": "2024-08-01T00:01:40Z",
+          "source_id": "noise-100"
+        },
+        {
+          "id": "mem_6b7b9e4ca2089f7a07f9ba6a",
+          "content": "[2024-08-01T00:01:32Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次93。",
+          "score": 2.015011,
+          "created_at": "2024-08-01T00:01:32Z",
+          "source_id": "noise-92"
+        },
+        {
+          "id": "mem_e8c45f9aa897128f154d4439",
+          "content": "[2024-08-01T00:01:24Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次85。",
+          "score": 2.015011,
+          "created_at": "2024-08-01T00:01:24Z",
+          "source_id": "noise-84"
+        },
+        {
+          "id": "mem_9241a5627b12bb2ec8ba35ce",
+          "content": "[2024-08-01T00:01:16Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次77。",
+          "score": 2.015011,
+          "created_at": "2024-08-01T00:01:16Z",
+          "source_id": "noise-76"
+        },
+        {
+          "id": "mem_ef85099d9a4ddb588a8b43b1",
+          "content": "[2024-08-01T00:01:08Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次69。",
+          "score": 2.01501,
+          "created_at": "2024-08-01T00:01:08Z",
+          "source_id": "noise-68"
+        },
+        {
+          "id": "mem_7995b489225200ef404a5c05",
+          "content": "[2024-08-01T00:01:00Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次61。",
+          "score": 2.01501,
+          "created_at": "2024-08-01T00:01:00Z",
+          "source_id": "noise-60"
+        },
+        {
+          "id": "mem_460d4de0978cc944feb72878",
+          "content": "[2024-08-01T00:00:52Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次53。",
+          "score": 2.01501,
+          "created_at": "2024-08-01T00:00:52Z",
+          "source_id": "noise-52"
+        },
+        {
+          "id": "mem_f4ecf5038209900ac568af59",
+          "content": "[2024-08-01T00:00:44Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次45。",
+          "score": 2.015009,
+          "created_at": "2024-08-01T00:00:44Z",
+          "source_id": "noise-44"
+        },
+        {
+          "id": "mem_1b46a83cc9a7c696210c9f82",
+          "content": "[2024-08-01T00:00:36Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次37。",
+          "score": 2.015009,
+          "created_at": "2024-08-01T00:00:36Z",
+          "source_id": "noise-36"
+        },
+        {
+          "id": "mem_e49ba80934b1c3c640a5de33",
+          "content": "[2024-08-01T00:00:28Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次29。",
+          "score": 2.015009,
+          "created_at": "2024-08-01T00:00:28Z",
+          "source_id": "noise-28"
+        },
+        {
+          "id": "mem_99e5075894dcc9bf3d33b616",
+          "content": "[2024-08-01T00:00:20Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次21。",
+          "score": 2.015008,
+          "created_at": "2024-08-01T00:00:20Z",
+          "source_id": "noise-20"
+        },
+        {
+          "id": "mem_9903356169828b8aa70e1e4f",
+          "content": "[2024-08-01T00:00:12Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次13。",
+          "score": 2.015008,
+          "created_at": "2024-08-01T00:00:12Z",
+          "source_id": "noise-12"
+        },
+        {
+          "id": "mem_7c78b58ee7f4dcf6441b77b6",
+          "content": "[2024-08-01T00:00:04Z] user: 办公室正在检查岚川合唱团排练是否需要补充资料。 档案批次5。",
+          "score": 2.015008,
+          "created_at": "2024-08-01T00:00:04Z",
+          "source_id": "noise-4"
+        },
+        {
+          "id": "mem_c96b04f4a5ce03479b27d6b3",
+          "content": "[2024-04-01T00:00:00Z] user: 岚川合唱团原定在银杏厅排练，场地租约一直有效。",
+          "score": 1.762913,
+          "created_at": "2024-04-01T00:00:00Z",
+          "source_id": "valid"
+        },
+        {
+          "id": "mem_6f8f5696912e0ac6b4f922e9",
+          "content": "[2024-08-01T00:01:38Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次99。",
+          "score": 0.726524,
+          "created_at": "2024-08-01T00:01:38Z",
+          "source_id": "noise-98"
+        },
+        {
+          "id": "mem_22dd87e1d90b9cf48c9ec4fe",
+          "content": "[2024-08-01T00:01:30Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次91。",
+          "score": 0.726524,
+          "created_at": "2024-08-01T00:01:30Z",
+          "source_id": "noise-90"
+        },
+        {
+          "id": "mem_40fbfaea7e718314c1c8493a",
+          "content": "[2024-08-01T00:01:22Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次83。",
+          "score": 0.726524,
+          "created_at": "2024-08-01T00:01:22Z",
+          "source_id": "noise-82"
+        },
+        {
+          "id": "mem_d60f26b74ac50d08e9552d7f",
+          "content": "[2024-08-01T00:01:14Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次75。",
+          "score": 0.726524,
+          "created_at": "2024-08-01T00:01:14Z",
+          "source_id": "noise-74"
+        },
+        {
+          "id": "mem_d3a167091a05ab21e0055a06",
+          "content": "[2024-08-01T00:01:06Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次67。",
+          "score": 0.726523,
+          "created_at": "2024-08-01T00:01:06Z",
+          "source_id": "noise-66"
+        },
+        {
+          "id": "mem_ed0d510e9ef1384ad6d30edc",
+          "content": "[2024-08-01T00:00:58Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次59。",
+          "score": 0.726523,
+          "created_at": "2024-08-01T00:00:58Z",
+          "source_id": "noise-58"
+        },
+        {
+          "id": "mem_8b3c37be34744e121eda2349",
+          "content": "[2024-08-01T00:00:50Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次51。",
+          "score": 0.726523,
+          "created_at": "2024-08-01T00:00:50Z",
+          "source_id": "noise-50"
+        },
+        {
+          "id": "mem_3a9e04ddbc51f4a36d614a09",
+          "content": "[2024-08-01T00:00:42Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次43。",
+          "score": 0.726522,
+          "created_at": "2024-08-01T00:00:42Z",
+          "source_id": "noise-42"
+        },
+        {
+          "id": "mem_50d4e0693c50d023db214565",
+          "content": "[2024-08-01T00:00:34Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次35。",
+          "score": 0.726522,
+          "created_at": "2024-08-01T00:00:34Z",
+          "source_id": "noise-34"
+        },
+        {
+          "id": "mem_0970d0bae28db92d846a85fe",
+          "content": "[2024-08-01T00:00:26Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次27。",
+          "score": 0.726522,
+          "created_at": "2024-08-01T00:00:26Z",
+          "source_id": "noise-26"
+        },
+        {
+          "id": "mem_5b59ada89b7a4525bc739f6a",
+          "content": "[2024-08-01T00:00:18Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次19。",
+          "score": 0.726521,
+          "created_at": "2024-08-01T00:00:18Z",
+          "source_id": "noise-18"
+        },
+        {
+          "id": "mem_aa9cb9df75a3075b21cf4985",
+          "content": "[2024-08-01T00:00:10Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次11。",
+          "score": 0.726521,
+          "created_at": "2024-08-01T00:00:10Z",
+          "source_id": "noise-10"
+        },
+        {
+          "id": "mem_58bab47bd4c0b23505ccbfd0",
+          "content": "[2024-08-01T00:00:02Z] user: 职员申请复印岚川合唱团排练的合同。 档案批次3。",
+          "score": 0.726521,
+          "created_at": "2024-08-01T00:00:02Z",
+          "source_id": "noise-2"
+        },
+        {
+          "id": "mem_cb0b5ffc85eb9abf4b252672",
+          "content": "[2024-08-01T00:01:42Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次103。",
+          "score": 0.723337,
+          "created_at": "2024-08-01T00:01:42Z",
+          "source_id": "noise-102"
+        },
+        {
+          "id": "mem_aa579d189a4e886c54e2c0aa",
+          "content": "[2024-08-01T00:01:34Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次95。",
+          "score": 0.723337,
+          "created_at": "2024-08-01T00:01:34Z",
+          "source_id": "noise-94"
+        },
+        {
+          "id": "mem_a0580fb052227b36b18b2dc9",
+          "content": "[2024-08-01T00:01:26Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次87。",
+          "score": 0.723336,
+          "created_at": "2024-08-01T00:01:26Z",
+          "source_id": "noise-86"
+        },
+        {
+          "id": "mem_fec00caebb2340fe6cd06782",
+          "content": "[2024-08-01T00:01:18Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次79。",
+          "score": 0.723336,
+          "created_at": "2024-08-01T00:01:18Z",
+          "source_id": "noise-78"
+        },
+        {
+          "id": "mem_8a9b4a591faf59d047b896db",
+          "content": "[2024-08-01T00:01:10Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次71。",
+          "score": 0.723336,
+          "created_at": "2024-08-01T00:01:10Z",
+          "source_id": "noise-70"
+        },
+        {
+          "id": "mem_6f56ed11d76e1f8874f651e3",
+          "content": "[2024-08-01T00:01:02Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次63。",
+          "score": 0.723336,
+          "created_at": "2024-08-01T00:01:02Z",
+          "source_id": "noise-62"
+        },
+        {
+          "id": "mem_5d3fc9c1bbf7a25e101cbcb1",
+          "content": "[2024-08-01T00:00:54Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次55。",
+          "score": 0.723335,
+          "created_at": "2024-08-01T00:00:54Z",
+          "source_id": "noise-54"
+        },
+        {
+          "id": "mem_3122e28ec0ad427a813b5d92",
+          "content": "[2024-08-01T00:00:46Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次47。",
+          "score": 0.723335,
+          "created_at": "2024-08-01T00:00:46Z",
+          "source_id": "noise-46"
+        },
+        {
+          "id": "mem_9918b376e588379e7096c728",
+          "content": "[2024-08-01T00:00:38Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次39。",
+          "score": 0.723335,
+          "created_at": "2024-08-01T00:00:38Z",
+          "source_id": "noise-38"
+        },
+        {
+          "id": "mem_a881ccdc79feb1d1217ace66",
+          "content": "[2024-08-01T00:00:30Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次31。",
+          "score": 0.723334,
+          "created_at": "2024-08-01T00:00:30Z",
+          "source_id": "noise-30"
+        },
+        {
+          "id": "mem_948ac8b8ccefbadfe3de0d65",
+          "content": "[2024-08-01T00:00:22Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次23。",
+          "score": 0.723334,
+          "created_at": "2024-08-01T00:00:22Z",
+          "source_id": "noise-22"
+        },
+        {
+          "id": "mem_af28dcd8c6e7d61ff7459cba",
+          "content": "[2024-08-01T00:00:14Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次15。",
+          "score": 0.723334,
+          "created_at": "2024-08-01T00:00:14Z",
+          "source_id": "noise-14"
+        },
+        {
+          "id": "mem_ece9275c1a3dfc4da667f3c0",
+          "content": "[2024-08-01T00:00:06Z] user: 会议讨论了岚川合唱团排练的维护预算。 档案批次7。",
+          "score": 0.723333,
+          "created_at": "2024-08-01T00:00:06Z",
+          "source_id": "noise-6"
+        },
+        {
+          "id": "mem_ad2b6d37c0f01181dca7aa54",
+          "content": "[2024-08-01T00:01:39Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次100。",
+          "score": 0.721077,
+          "created_at": "2024-08-01T00:01:39Z",
+          "source_id": "noise-99"
+        },
+        {
+          "id": "mem_c77e50ee61fed5791f20a20a",
+          "content": "[2024-08-01T00:01:31Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次92。",
+          "score": 0.721077,
+          "created_at": "2024-08-01T00:01:31Z",
+          "source_id": "noise-91"
+        },
+        {
+          "id": "mem_d3b0ddb5fb5d5f02799e36b4",
+          "content": "[2024-08-01T00:01:23Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次84。",
+          "score": 0.721077,
+          "created_at": "2024-08-01T00:01:23Z",
+          "source_id": "noise-83"
+        },
+        {
+          "id": "mem_59b230bf4da93e2dab127efd",
+          "content": "[2024-08-01T00:01:15Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次76。",
+          "score": 0.721076,
+          "created_at": "2024-08-01T00:01:15Z",
+          "source_id": "noise-75"
+        },
+        {
+          "id": "mem_0e38544b2d0ebeb8c2aa436b",
+          "content": "[2024-08-01T00:01:07Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次68。",
+          "score": 0.721076,
+          "created_at": "2024-08-01T00:01:07Z",
+          "source_id": "noise-67"
+        },
+        {
+          "id": "mem_e21ee073d9098732797ffa51",
+          "content": "[2024-08-01T00:00:59Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次60。",
+          "score": 0.721076,
+          "created_at": "2024-08-01T00:00:59Z",
+          "source_id": "noise-59"
+        },
+        {
+          "id": "mem_2962d359f0d3f3e8c9c361cc",
+          "content": "[2024-08-01T00:00:51Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次52。",
+          "score": 0.721075,
+          "created_at": "2024-08-01T00:00:51Z",
+          "source_id": "noise-51"
+        },
+        {
+          "id": "mem_18a3db99d5407d580f2c0e6c",
+          "content": "[2024-08-01T00:00:43Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次44。",
+          "score": 0.721075,
+          "created_at": "2024-08-01T00:00:43Z",
+          "source_id": "noise-43"
+        },
+        {
+          "id": "mem_0b0eb43557d7e04bbc4f2aa5",
+          "content": "[2024-08-01T00:00:35Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次36。",
+          "score": 0.721075,
+          "created_at": "2024-08-01T00:00:35Z",
+          "source_id": "noise-35"
+        },
+        {
+          "id": "mem_53bc1c24c2885bfed8462841",
+          "content": "[2024-08-01T00:00:27Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次28。",
+          "score": 0.721075,
+          "created_at": "2024-08-01T00:00:27Z",
+          "source_id": "noise-27"
+        },
+        {
+          "id": "mem_b91783fcaf19d98676e4149b",
+          "content": "[2024-08-01T00:00:19Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次20。",
+          "score": 0.721074,
+          "created_at": "2024-08-01T00:00:19Z",
+          "source_id": "noise-19"
+        },
+        {
+          "id": "mem_d7c2d47865825675f650a6a9",
+          "content": "[2024-08-01T00:00:11Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次12。",
+          "score": 0.721074,
+          "created_at": "2024-08-01T00:00:11Z",
+          "source_id": "noise-11"
+        },
+        {
+          "id": "mem_7927ed366a2cde56a0eaa9cc",
+          "content": "[2024-08-01T00:00:03Z] user: 规划文件夹保存了岚川合唱团排练的对比表。 档案批次4。",
+          "score": 0.721074,
+          "created_at": "2024-08-01T00:00:03Z",
+          "source_id": "noise-3"
+        },
+        {
+          "id": "mem_4421ee7c6fe2dca9febf754a",
+          "content": "[2024-08-01T00:01:37Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次98。",
+          "score": 0.720011,
+          "created_at": "2024-08-01T00:01:37Z",
+          "source_id": "noise-97"
+        },
+        {
+          "id": "mem_5127504c9b8acd4a8033ccee",
+          "content": "[2024-08-01T00:01:29Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次90。",
+          "score": 0.720011,
+          "created_at": "2024-08-01T00:01:29Z",
+          "source_id": "noise-89"
+        },
+        {
+          "id": "mem_eb277f0be599f7f86300202e",
+          "content": "[2024-08-01T00:01:21Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次82。",
+          "score": 0.720011,
+          "created_at": "2024-08-01T00:01:21Z",
+          "source_id": "noise-81"
+        },
+        {
+          "id": "mem_799b01ac0a467d244b01df43",
+          "content": "[2024-08-01T00:01:13Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次74。",
+          "score": 0.72001,
+          "created_at": "2024-08-01T00:01:13Z",
+          "source_id": "noise-73"
+        },
+        {
+          "id": "mem_5fa28ab1812c4949209cb124",
+          "content": "[2024-08-01T00:01:05Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次66。",
+          "score": 0.72001,
+          "created_at": "2024-08-01T00:01:05Z",
+          "source_id": "noise-65"
+        },
+        {
+          "id": "mem_db1747c3bfc24f63ba2a0770",
+          "content": "[2024-08-01T00:00:57Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次58。",
+          "score": 0.72001,
+          "created_at": "2024-08-01T00:00:57Z",
+          "source_id": "noise-57"
+        },
+        {
+          "id": "mem_a0367550c0ea1b0cb05ba8d9",
+          "content": "[2024-08-01T00:00:49Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次50。",
+          "score": 0.72001,
+          "created_at": "2024-08-01T00:00:49Z",
+          "source_id": "noise-49"
+        },
+        {
+          "id": "mem_463223e1c9fc54a30539a706",
+          "content": "[2024-08-01T00:00:41Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次42。",
+          "score": 0.720009,
+          "created_at": "2024-08-01T00:00:41Z",
+          "source_id": "noise-41"
+        },
+        {
+          "id": "mem_5b5047da49bd96d2bb849701",
+          "content": "[2024-08-01T00:00:33Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次34。",
+          "score": 0.720009,
+          "created_at": "2024-08-01T00:00:33Z",
+          "source_id": "noise-33"
+        },
+        {
+          "id": "mem_e860f9b2cbb8e13749a2253a",
+          "content": "[2024-08-01T00:00:25Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次26。",
+          "score": 0.720009,
+          "created_at": "2024-08-01T00:00:25Z",
+          "source_id": "noise-25"
+        },
+        {
+          "id": "mem_af26251d022c1520b9c2f1f1",
+          "content": "[2024-08-01T00:00:17Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次18。",
+          "score": 0.720008,
+          "created_at": "2024-08-01T00:00:17Z",
+          "source_id": "noise-17"
+        },
+        {
+          "id": "mem_ab5e28e21db589df0602685e",
+          "content": "[2024-08-01T00:00:09Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次10。",
+          "score": 0.720008,
+          "created_at": "2024-08-01T00:00:09Z",
+          "source_id": "noise-9"
+        },
+        {
+          "id": "mem_4ccf4c6eace46c19920d8c18",
+          "content": "[2024-08-01T00:00:01Z] user: 档案索引关联了岚川合唱团排练上季度的复核。 档案批次2。",
+          "score": 0.720008,
+          "created_at": "2024-08-01T00:00:01Z",
+          "source_id": "noise-1"
+        },
+        {
+          "id": "mem_5fee348ab39c318e544d21ed",
+          "content": "[2024-08-01T00:01:43Z] user: 一份未签字的建议涉及岚川合唱团排练，没有作出决定。 档案批次104。",
+          "score": 0.717516,
+          "created_at": "2024-08-01T00:01:43Z",
+          "source_id": "noise-103"
+        },
+        {
+          "id": "mem_2eb78c59e6a77a09763ba486",
+          "content": "[2024-08-01T00:01:35Z] user: 一份未签字的建议涉及岚川合唱团排练，没有作出决定。 档案批次96。",
+          "score": 0.717515,
+          "created_at": "2024-08-01T00:01:35Z",
+          "source_id": "noise-95"
+        },
+        {
+          "id": "mem_49a7008772c65ff7342ae141",
+          "content": "[2024-08-01T00:01:27Z] user: 一份未签字的建议涉及岚川合唱团排练，没有作出决定。 档案批次88。",
+          "score": 0.717515,
+          "created_at": "2024-08-01T00:01:27Z",
+          "source_id": "noise-87"
+        },
+        {
+          "id": "mem_4889f2e88dd991d0cf1df718",
+          "content": "[2024-08-01T00:01:19Z] user: 一份未签字的建议涉及岚川合唱团排练，没有作出决定。 档案批次80。",
+          "score": 0.717515,
+          "created_at": "2024-08-01T00:01:19Z",
+          "source_id": "noise-79"
+        },
+        {
+          "id": "mem_9bc322ae739e4963acbcaf0f",
+          "content": "[2024-08-01T00:01:11Z] user: 一份未签字的建议涉及岚川合唱团排练，没有作出决定。 档案批次72。",
+          "score": 0.717514,
+          "created_at": "2024-08-01T00:01:11Z",
+          "source_id": "noise-71"
+        },
+        {
+          "id": "mem_fff38cfdcd87f2004dd2684f",
+          "content": "[2024-08-01T00:01:03Z] user: 一份未签字的建议涉及岚川合唱团排练，没有作出决定。 档案批次64。",
+          "score": 0.717514,
+          "created_at": "2024-08-01T00:01:03Z",
+          "source_id": "noise-63"
+        }
+      ]
+    }
+  ]
+}
