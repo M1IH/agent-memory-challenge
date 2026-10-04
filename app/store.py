@@ -1191,9 +1191,21 @@ class MemoryStore:
         query_entities = entity_terms(query)
         # The time ablation must remove historical seed and inheritance biases
         # while preserving ordinary same-session context expansion.
-        historical_query = temporal_enabled and has_marker(query, _HISTORICAL_MARKERS)
+        historical_query = (
+            temporal_enabled
+            and not has_marker(query, _CURRENT_MARKERS)
+            and has_marker(query, _HISTORICAL_MARKERS)
+        )
+        current_query = temporal_enabled and has_marker(query, _CURRENT_MARKERS)
         seed_pool = scores[:3]
-        if historical_query:
+        if current_query:
+            current_seeds = [
+                item for item in scores[:10]
+                if has_marker(item[1].content, _CURRENT_MARKERS)
+                or has_marker(item[1].content, _UPDATE_MARKERS)
+            ]
+            seed_pool = current_seeds or scores[:3]
+        elif historical_query:
             historical_seeds = [
                 item for item in scores[:10]
                 if has_marker(item[1].content, _HISTORICAL_MARKERS)

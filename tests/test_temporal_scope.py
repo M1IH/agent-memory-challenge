@@ -6,6 +6,58 @@ from app.store import MemoryStore, RetrievalConfig
 
 
 class TemporalScopeTests(unittest.TestCase):
+    def test_current_comparison_query_uses_current_session_seed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = MemoryStore(Path(directory) / "test.db", embedder=False)
+            rows = [
+                ("old", "Previously Maren's ceramics studio occupied the old warehouse."),
+                ("old", "The address was 7 Dock Street."),
+                ("new", "Maren's ceramics studio changed premises; this is her current studio."),
+                ("new", "The new address is 42 Alder Lane."),
+            ]
+            for index, (session, content) in enumerate(rows):
+                store.add(str(index), "u", session, [{
+                    "role": "user", "content": content, "timestamp": 1000 + index,
+                }])
+            for index in range(8):
+                store.add(f"noise-{index}", "u", f"noise-{index}", [{
+                    "role": "user", "content": f"Unrelated archive note {index}.",
+                }])
+
+            results = store.search(
+                "u",
+                "Where is Maren's ceramics studio now, compared with where it was previously?",
+                2,
+            )
+
+            self.assertIn("current studio", results[0]["content"])
+            self.assertIn("42 Alder Lane", results[1]["content"])
+
+    def test_chinese_current_comparison_uses_current_session_seed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = MemoryStore(Path(directory) / "test.db", embedder=False)
+            rows = [
+                ("old", "原来云杉书店登记过新书配送的旧安排。"),
+                ("old", "当时交给远山物流运输。"),
+                ("new", "云杉书店的新书配送后来换成新的合作方，目前按新合同执行。"),
+                ("new", "合同签给了青鸟物流，由他们送货。"),
+            ]
+            for index, (session, content) in enumerate(rows):
+                store.add(str(index), "u", session, [{
+                    "role": "user", "content": content, "timestamp": 1000 + index,
+                }])
+            for index in range(8):
+                store.add(f"noise-{index}", "u", f"noise-{index}", [{
+                    "role": "user", "content": f"无关档案记录{index}。",
+                }])
+
+            results = store.search(
+                "u", "对比原来的安排，云杉书店目前由哪家公司配送新书？", 3,
+            )
+
+            self.assertTrue(any("青鸟物流" in item["content"] for item in results[:2]))
+            self.assertFalse(any("远山物流" in item["content"] for item in results[:2]))
+
     def test_temporal_ablation_keeps_session_window_without_historical_seed_bias(self):
         with tempfile.TemporaryDirectory() as directory:
             database = Path(directory) / "test.db"
