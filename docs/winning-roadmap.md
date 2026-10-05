@@ -38,7 +38,7 @@
 1. [x] 明确路线 B、历史分数基线、官方提交边界和恢复规则。
 2. [x] 定义统一公开评测样例格式：对话/记忆、问题、答案、证据来源、能力标签、
    时间点、语言、数据许可和原始样例标识。
-3. [ ] 建立数据集登记表，逐一核验 PersonaMem、LoCoMo/LoCoMo-Refined、CLBench、
+3. [~] 建立数据集登记表，逐一核验 PersonaMem、LoCoMo/LoCoMo-Refined、CLBench、
    BEAM、LongMemEval、ScriptMem 的公开地址、许可证、任务字段、可重复下载方式和
    与本赛道的适配边界；无法核实的集合不得纳入。
 4. [ ] 为每个可用集合编写只做格式转换的适配器，保存来源版本和内容哈希；不改写
@@ -149,7 +149,11 @@
 
 - 已完成任务 2 的首版 schema、校验和测试，实现在 `benchmarks/public_eval_schema.py`。
 - 任务 3 已完成首轮 GitHub 核验并登记在 `docs/public-eval-registry.md`：LongMemEval
-  最适合首个适配器；BEAM 需固定小规模子集；LoCoMo-Refined 需进一步核实数据许可；
-  PersonaMem、ScriptMem、CLBench 尚不得使用。
-- 正在继续任务 3：核验数据卡和数据本身的许可证，而不是把仓库许可证等同于数据许可。
+  的固定清洗数据已确认 MIT，最适合首个适配器；BEAM 固定数据 revision 已确认
+  CC BY-SA 4.0，需固定小规模子集；LoCoMo-Refined 已确认 CC BY-NC 4.0，奖金参赛
+  适用性仍待确认；PersonaMem、ScriptMem、CLBench 尚不得使用。
+- 正在继续任务 3：反查 PersonaMem、ScriptMem、CLBench 的作者一手来源，并完成
+  LongMemEval/BEAM 固定文件哈希。2026-10-05 官网实时核验还发现“学术榜”模型规则与
+  Open-source Methods Full 检查项的措辞不一致；在主办方确认前，本地 BGE 对奖金榜的
+  合规性按 P0 待确认处理，不启动新的正式评测。
 - 当前候选 `2a8ee86` 保持隔离，不进入 main、Railway 或官方 Smoke。
