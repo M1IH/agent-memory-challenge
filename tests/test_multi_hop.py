@@ -247,3 +247,36 @@ class MultiHopRetrievalTests(unittest.TestCase):
         store.add("b", "u", "s", [{"role": "user", "content": "Priya Nair holds her team check-in every Thursday."}])
         results = store.search("u", "When is my manager's weekly review?", 1)
         self.assertNotIn("Thursday", results[0]["content"])
+
+    def test_second_hop_has_an_explicit_ablation_limit(self):
+        store = MemoryStore(
+            Path(self.directory.name) / "one-hop.db", embedder=False,
+            retrieval_config=RetrievalConfig(linkage_max_hops=1),
+        )
+        for index, content in enumerate([
+            "修好我蓝色机械键盘的师傅叫许舟。",
+            "许舟寄回键盘时使用了云帆快递。",
+            "云帆快递统一投放到东区三号取件柜。",
+            "蓝色机械键盘使用青轴。",
+        ]):
+            store.add(str(index), "u", "s", [{"role": "user", "content": content}])
+        results = store.search(
+            "u", "给我修蓝色机械键盘的师傅把它送到了哪个取件柜？", 3
+        )
+        contents = "\n".join(result["content"] for result in results)
+        self.assertIn("师傅叫许舟", contents)
+        self.assertNotIn("东区三号取件柜", contents)
+
+    def test_evidence_group_budgets_fail_closed(self):
+        invalid = [
+            {"linkage_max_hops": 0},
+            {"linkage_max_hops": 3},
+            {"linkage_seed_budget": 0},
+            {"linkage_branch_budget": 9},
+            {"session_neighbor_budget": -1},
+            {"session_neighbor_budget": 5},
+            {"linkage_seed_budget": True},
+        ]
+        for values in invalid:
+            with self.subTest(values=values), self.assertRaises(ValueError):
+                RetrievalConfig(**values)

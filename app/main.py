@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from .store import MemoryStore, PayloadTooLargeError, RequestConflictError
 
@@ -119,6 +119,13 @@ class Message(BaseModel):
     role: str = Field(min_length=1, max_length=32)
     content: str = Field(min_length=1, max_length=100_000)
     timestamp: int | None = None
+    observed_at: int | None = None
+    valid_from: int | None = None
+    valid_to: int | None = None
+    retracted_at: int | None = None
+    fact_subject: str | None = Field(default=None, max_length=10_000)
+    fact_relation: str | None = Field(default=None, max_length=10_000)
+    fact_object: str | None = Field(default=None, max_length=100_000)
 
     @field_validator("role")
     @classmethod
@@ -135,15 +142,61 @@ class Message(BaseModel):
             raise ValueError("content must not be blank")
         return value
 
-    @field_validator("timestamp")
+    @field_validator("timestamp", "observed_at", "valid_from", "valid_to", "retracted_at")
     @classmethod
-    def timestamp_must_be_representable(cls, value: int | None) -> int | None:
+    def temporal_fields_must_be_representable(cls, value: int | None) -> int | None:
         if value is not None:
             try:
                 datetime.fromtimestamp(value / 1000, tz=timezone.utc)
             except (OverflowError, OSError, ValueError) as exc:
                 raise ValueError("timestamp is outside the supported range") from exc
         return value
+
+    @model_validator(mode="after")
+    def temporal_interval_must_be_consistent(self) -> "Message":
+        if (
+            self.timestamp is not None
+            and self.observed_at is not None
+            and self.timestamp != self.observed_at
+        ):
+            raise ValueError("timestamp and observed_at must match when both are provided")
+        if (
+            self.valid_from is not None
+            and self.valid_to is not None
+            and self.valid_to < self.valid_from
+        ):
+            raise ValueError("valid_to must not precede valid_from")
+        effective_observed_at = (
+            self.observed_at if self.observed_at is not None else self.timestamp
+        )
+        if (
+            self.retracted_at is not None
+            and effective_observed_at is not None
+            and self.retracted_at < effective_observed_at
+        ):
+            raise ValueError("retracted_at must not precede observed_at")
+        fact_fields = (self.fact_subject, self.fact_relation, self.fact_object)
+        if any(value is not None for value in fact_fields):
+            if any(value is None or not value.strip() for value in fact_fields):
+                raise ValueError(
+                    "fact_subject, fact_relation, and fact_object must be provided together"
+                )
+        return self
+
+    def storage_payload(self) -> dict[str, str | int | None]:
+        payload: dict[str, str | int | None] = {
+            "role": self.role,
+            "content": self.content,
+            "timestamp": self.timestamp,
+        }
+        for field_name in (
+            "observed_at", "valid_from", "valid_to", "retracted_at",
+            "fact_subject", "fact_relation", "fact_object",
+        ):
+            value = getattr(self, field_name)
+            if value is not None:
+                payload[field_name] = value
+        return payload
 
 
 class AddRequest(BaseModel):
@@ -172,6 +225,17 @@ class SearchRequest(BaseModel):
     options: list[str] | None = Field(default=None, max_length=1000)
     user_id: str = Field(min_length=1, max_length=512)
     top_k: int = Field(ge=1, le=1000)
+    query_timestamp: int | None = None
+
+    @field_validator("query_timestamp")
+    @classmethod
+    def query_timestamp_must_be_representable(cls, value: int | None) -> int | None:
+        if value is not None:
+            try:
+                datetime.fromtimestamp(value / 1000, tz=timezone.utc)
+            except (OverflowError, OSError, ValueError) as exc:
+                raise ValueError("query_timestamp is outside the supported range") from exc
+        return value
 
     @field_validator("query", "user_id")
     @classmethod
@@ -248,7 +312,7 @@ def add_memory(request: AddRequest) -> AddResponse:
             request_id=request.request_id,
             user_id=request.user_id,
             session_id=request.session_id,
-            messages=[message.model_dump() for message in request.messages],
+            messages=[message.storage_payload() for message in request.messages],
         )
     except RequestConflictError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
@@ -271,6 +335,7 @@ def search_memory(request: SearchRequest) -> SearchResponse:
                 query=request.query,
                 options=request.options,
                 top_k=request.top_k,
+                query_at_ms=request.query_timestamp,
             )
         )
     except PayloadTooLargeError as exc:

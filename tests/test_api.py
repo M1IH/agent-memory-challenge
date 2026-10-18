@@ -95,12 +95,13 @@ class ApiContractTests(unittest.TestCase):
 
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
+        self.store = MemoryStore(
+            Path(self.temp_dir.name) / "api-test.db",
+            embedder=False,
+        )
         self.store_patch = patch(
             "app.main.store",
-            MemoryStore(
-                Path(self.temp_dir.name) / "api-test.db",
-                embedder=False,
-            ),
+            self.store,
         )
         self.store_patch.start()
         self.client = TestClient(app)
@@ -381,6 +382,94 @@ class ApiContractTests(unittest.TestCase):
         )
         self.assertEqual(422, blank.status_code)
         self.assertEqual(422, bad_time.status_code)
+
+    def test_temporal_state_and_query_time_are_distinct_optional_fields(self):
+        payload = {
+            "request_id": "req-temporal-state",
+            "user_id": "alice",
+            "session_id": "session-1",
+            "messages": [{
+                "role": "user",
+                "content": "The office change was announced.",
+                "observed_at": 1704067200000,
+                "valid_from": 1706745600000,
+                "valid_to": 1738368000000,
+                "retracted_at": 1738454400000,
+            }],
+        }
+        self.assertEqual(200, self.client.post("/add", json=payload).status_code)
+        memory = self.store._load_user_memories("alice")[0]
+        self.assertEqual(1704067200000, memory.observed_at_ms)
+        self.assertEqual(1706745600000, memory.valid_from_ms)
+        response = self.client.post(
+            "/search",
+            json={
+                "query": "Which office change was announced?",
+                "user_id": "alice",
+                "top_k": 1,
+                "query_timestamp": 1705000000000,
+            },
+        )
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.json()["data"]))
+
+    def test_structured_fact_identity_is_optional_and_requires_complete_triple(self):
+        response = self.client.post(
+            "/add",
+            json={
+                "request_id": "req-fact-triple",
+                "user_id": "fact-user",
+                "session_id": "fact-session",
+                "messages": [{
+                    "role": "user",
+                    "content": "The project office is Harbor Tower.",
+                    "observed_at": 10,
+                    "fact_subject": "project office",
+                    "fact_relation": "located at",
+                    "fact_object": "Harbor Tower",
+                }],
+            },
+        )
+        self.assertEqual(200, response.status_code)
+        memory = self.store._load_user_memories("fact-user")[0]
+        self.assertEqual("project office", memory.fact_subject)
+        self.assertEqual("located at", memory.fact_relation)
+        self.assertEqual("Harbor Tower", memory.fact_object)
+
+        invalid = self.client.post(
+            "/add",
+            json={
+                "request_id": "req-partial-fact",
+                "user_id": "fact-user",
+                "session_id": "fact-session",
+                "messages": [{
+                    "role": "user", "content": "Incomplete fact.",
+                    "fact_subject": "project office",
+                }],
+            },
+        )
+        self.assertEqual(422, invalid.status_code)
+
+    def test_invalid_temporal_intervals_and_query_time_are_rejected(self):
+        base = {
+            "request_id": "req-invalid-temporal",
+            "user_id": "alice",
+            "session_id": "session-1",
+        }
+        invalid_messages = (
+            {"role": "user", "content": "x", "timestamp": 10, "observed_at": 11},
+            {"role": "user", "content": "x", "valid_from": 20, "valid_to": 19},
+            {"role": "user", "content": "x", "observed_at": 20, "retracted_at": 19},
+        )
+        for message in invalid_messages:
+            with self.subTest(message=message):
+                response = self.client.post("/add", json={**base, "messages": [message]})
+                self.assertEqual(422, response.status_code)
+        response = self.client.post(
+            "/search",
+            json={"query": "x", "user_id": "alice", "top_k": 1, "query_timestamp": 10**30},
+        )
+        self.assertEqual(422, response.status_code)
 
     def test_request_id_reuse_with_different_payload_is_rejected(self):
         base = {

@@ -9,6 +9,7 @@ import re
 import sqlite3
 import sys
 import threading
+import time
 from collections import OrderedDict
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -22,6 +23,9 @@ from .embedding import EmbeddingBackend
 
 
 logger = logging.getLogger(__name__)
+
+
+_SQLITE_BUSY_RETRY_DELAYS = (0.01, 0.02, 0.04, 0.08, 0.16, 0.25, 0.25)
 
 
 _LATIN_WORD = re.compile(r"[a-z0-9]+(?:['_-][a-z0-9]+)*", re.I)
@@ -67,7 +71,10 @@ _CONCEPT_GROUPS = (
         "locker", "lockers", "storage locker", "storage unit",
     ),
 )
-_CURRENT_MARKERS = ("现在", "目前", "最近", "如今", "当前", "latest", "current", "now")
+_CURRENT_MARKERS = (
+    "现在", "目前", "最近", "如今", "当前",
+    "latest", "current", "currently", "now",
+)
 _HISTORICAL_MARKERS = (
     "以前", "过去", "原来", "曾经", "当时", "最初", "之前", "最早",
     "used to", "formerly", "previously", "originally", "at first", "at that time",
@@ -194,6 +201,64 @@ def positive_payload_chars(value: str, variable: str) -> int:
     return parsed
 
 
+def temporal_state(message: dict) -> tuple[int | None, int | None, int | None, int | None]:
+    """Validate and normalize explicit temporal state without inferring validity."""
+    timestamp_ms = message.get("timestamp")
+    observed_at_ms = message.get("observed_at", timestamp_ms)
+    valid_from_ms = message.get("valid_from")
+    valid_to_ms = message.get("valid_to")
+    retracted_at_ms = message.get("retracted_at")
+    values = {
+        "timestamp": timestamp_ms,
+        "observed_at": observed_at_ms,
+        "valid_from": valid_from_ms,
+        "valid_to": valid_to_ms,
+        "retracted_at": retracted_at_ms,
+    }
+    for name, value in values.items():
+        if value is not None:
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise ValueError(f"{name} must be an integer or null")
+            try:
+                datetime.fromtimestamp(value / 1000, tz=timezone.utc)
+            except (OverflowError, OSError, ValueError) as exc:
+                raise ValueError(f"{name} is outside the supported range") from exc
+    if (
+        timestamp_ms is not None
+        and "observed_at" in message
+        and observed_at_ms != timestamp_ms
+    ):
+        raise ValueError("timestamp and observed_at must match when both are provided")
+    if valid_from_ms is not None and valid_to_ms is not None and valid_to_ms < valid_from_ms:
+        raise ValueError("valid_to must not precede valid_from")
+    if (
+        retracted_at_ms is not None
+        and observed_at_ms is not None
+        and retracted_at_ms < observed_at_ms
+    ):
+        raise ValueError("retracted_at must not precede observed_at")
+    return observed_at_ms, valid_from_ms, valid_to_ms, retracted_at_ms
+
+
+def temporal_validity(memory: Memory, query_at_ms: int | None) -> str:
+    """Classify explicit fact validity at query time without text inference."""
+    if query_at_ms is None:
+        return "unknown"
+    if memory.retracted_at_ms is not None and query_at_ms >= memory.retracted_at_ms:
+        return "retracted"
+    if memory.valid_from_ms is not None and query_at_ms < memory.valid_from_ms:
+        return "not_yet_valid"
+    if memory.valid_to_ms is not None and query_at_ms >= memory.valid_to_ms:
+        return "expired"
+    if (
+        memory.valid_from_ms is not None
+        or memory.valid_to_ms is not None
+        or memory.retracted_at_ms is not None
+    ):
+        return "valid"
+    return "unknown"
+
+
 def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
     """Estimate retained Python and vector-buffer bytes for cache admission."""
     total = sys.getsizeof(memories)
@@ -206,6 +271,13 @@ def memory_snapshot_size_bytes(memories: list[Memory]) -> int:
         total += sys.getsizeof(memory.content)
         total += sys.getsizeof(memory.created_at)
         total += sys.getsizeof(memory.timestamp_ms)
+        total += sys.getsizeof(memory.observed_at_ms)
+        total += sys.getsizeof(memory.valid_from_ms)
+        total += sys.getsizeof(memory.valid_to_ms)
+        total += sys.getsizeof(memory.retracted_at_ms)
+        total += sys.getsizeof(memory.fact_subject)
+        total += sys.getsizeof(memory.fact_relation)
+        total += sys.getsizeof(memory.fact_object)
         total += sys.getsizeof(memory.terms)
         total += sum(sys.getsizeof(term) for term in memory.terms)
         total += sys.getsizeof(memory.term_counts)
@@ -284,8 +356,13 @@ class RetrievalConfig:
     lexical_enabled: bool = True
     expansion_enabled: bool = True
     temporal_enabled: bool = True
+    conflict_enabled: bool = True
     linkage_enabled: bool = True
     session_window_enabled: bool = True
+    linkage_max_hops: int = 2
+    linkage_seed_budget: int = 10
+    linkage_branch_budget: int = 4
+    session_neighbor_budget: int = 2
     lexical_weight: float = 1.5
     dense_weight: float = 0.5
 
@@ -293,6 +370,17 @@ class RetrievalConfig:
         for weight in (self.lexical_weight, self.dense_weight):
             if not math.isfinite(weight) or weight <= 0:
                 raise ValueError("RRF weights must be finite and positive; use channel switches to disable retrieval")
+        budgets = {
+            "linkage_max_hops": (self.linkage_max_hops, 1, 2),
+            "linkage_seed_budget": (self.linkage_seed_budget, 1, 32),
+            "linkage_branch_budget": (self.linkage_branch_budget, 1, 8),
+            "session_neighbor_budget": (self.session_neighbor_budget, 0, 4),
+        }
+        for name, (value, minimum, maximum) in budgets.items():
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise ValueError(f"{name} must be an integer")
+            if not minimum <= value <= maximum:
+                raise ValueError(f"{name} must be between {minimum} and {maximum}")
 
 
 def tokenize(text: str) -> list[str]:
@@ -328,6 +416,13 @@ class Memory:
     content: str
     created_at: str
     timestamp_ms: int | None
+    observed_at_ms: int | None
+    valid_from_ms: int | None
+    valid_to_ms: int | None
+    retracted_at_ms: int | None
+    fact_subject: str | None
+    fact_relation: str | None
+    fact_object: str | None
     terms: list[str]
     term_counts: dict[str, int]
     embedding: np.ndarray | None
@@ -413,7 +508,19 @@ class MemoryStore:
         connection = sqlite3.connect(self.path, timeout=30)
         try:
             connection.row_factory = sqlite3.Row
-            connection.execute("PRAGMA journal_mode=WAL")
+            connection.execute("PRAGMA busy_timeout=30000")
+            for attempt in range(len(_SQLITE_BUSY_RETRY_DELAYS) + 1):
+                try:
+                    connection.execute("PRAGMA journal_mode=WAL")
+                    break
+                except sqlite3.OperationalError as exc:
+                    busy = any(
+                        marker in str(exc).casefold()
+                        for marker in ("database is locked", "database table is locked", "database is busy")
+                    )
+                    if not busy or attempt == len(_SQLITE_BUSY_RETRY_DELAYS):
+                        raise
+                    time.sleep(_SQLITE_BUSY_RETRY_DELAYS[attempt])
             connection.execute("PRAGMA foreign_keys=ON")
         except BaseException:
             connection.close()
@@ -441,6 +548,13 @@ class MemoryStore:
                     role TEXT NOT NULL,
                     content TEXT NOT NULL,
                     timestamp_ms INTEGER,
+                    observed_at_ms INTEGER,
+                    valid_from_ms INTEGER,
+                    valid_to_ms INTEGER,
+                    retracted_at_ms INTEGER,
+                    fact_subject TEXT,
+                    fact_relation TEXT,
+                    fact_object TEXT,
                     created_at TEXT NOT NULL,
                     terms TEXT NOT NULL,
                     embedding BLOB
@@ -482,6 +596,33 @@ class MemoryStore:
             }
             if "embedding" not in columns:
                 connection.execute("ALTER TABLE memories ADD COLUMN embedding BLOB")
+            temporal_columns = {
+                "observed_at_ms": "INTEGER",
+                "valid_from_ms": "INTEGER",
+                "valid_to_ms": "INTEGER",
+                "retracted_at_ms": "INTEGER",
+            }
+            for column, data_type in temporal_columns.items():
+                if column not in columns:
+                    connection.execute(
+                        f"ALTER TABLE memories ADD COLUMN {column} {data_type}"
+                    )
+            fact_columns = {
+                "fact_subject": "TEXT",
+                "fact_relation": "TEXT",
+                "fact_object": "TEXT",
+            }
+            for column, data_type in fact_columns.items():
+                if column not in columns:
+                    connection.execute(
+                        f"ALTER TABLE memories ADD COLUMN {column} {data_type}"
+                    )
+            connection.execute(
+                """
+                UPDATE memories SET observed_at_ms = timestamp_ms
+                WHERE observed_at_ms IS NULL AND timestamp_ms IS NOT NULL
+                """
+            )
             self._verify_embedding_identity(connection)
 
     def check_health(self) -> None:
@@ -606,16 +747,41 @@ class MemoryStore:
         ):
             role = message["role"]
             timestamp_ms = message.get("timestamp")
+            observed_at_ms, valid_from_ms, valid_to_ms, retracted_at_ms = temporal_state(message)
+            fact_subject = message.get("fact_subject")
+            fact_relation = message.get("fact_relation")
+            fact_object = message.get("fact_object")
+            fact_values = (fact_subject, fact_relation, fact_object)
+            if any(value is not None for value in fact_values):
+                if any(not isinstance(value, str) or not value.strip() for value in fact_values):
+                    raise ValueError(
+                        "fact_subject, fact_relation, and fact_object must be provided together"
+                    )
+            extended_temporal_input = any(
+                key in message
+                for key in ("observed_at", "valid_from", "valid_to", "retracted_at")
+            )
+            digest_values = [
+                request_id, user_id, session_id, index, role, timestamp_ms, content
+            ]
+            if extended_temporal_input:
+                digest_values.extend([
+                    observed_at_ms, valid_from_ms, valid_to_ms, retracted_at_ms,
+                ])
+            if fact_subject is not None:
+                digest_values.extend([fact_subject, fact_relation, fact_object])
             digest = hashlib.sha256(
                 json.dumps(
-                    [request_id, user_id, session_id, index, role, timestamp_ms, content],
+                    digest_values,
                     ensure_ascii=False, separators=(",", ":"),
                 ).encode("utf-8")
             ).hexdigest()[:24]
             rows.append(
                 (
                     f"mem_{digest}", request_id, user_id, session_id,
-                    role, display_content, timestamp_ms, now,
+                    role, display_content, timestamp_ms, observed_at_ms,
+                    valid_from_ms, valid_to_ms, retracted_at_ms, now,
+                    fact_subject, fact_relation, fact_object,
                     " ".join(tokenize(index_content)),
                     None if embedding is None else embedding.tobytes(),
                 )
@@ -653,8 +819,10 @@ class MemoryStore:
                 """
                 INSERT INTO memories
                 (id, request_id, user_id, session_id, role, content,
-                 timestamp_ms, created_at, terms, embedding)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 timestamp_ms, observed_at_ms, valid_from_ms, valid_to_ms,
+                 retracted_at_ms, created_at, fact_subject, fact_relation,
+                 fact_object, terms, embedding)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 rows,
             )
@@ -728,7 +896,9 @@ class MemoryStore:
                 db_rows = connection.execute(
                     """
                     SELECT rowid AS storage_order, id, request_id, session_id,
-                           content, timestamp_ms, created_at, terms, embedding
+                           content, timestamp_ms, observed_at_ms, valid_from_ms,
+                           valid_to_ms, retracted_at_ms, created_at, fact_subject,
+                           fact_relation, fact_object, terms, embedding
                     FROM memories WHERE user_id = ?
                     """,
                     (user_id,),
@@ -753,6 +923,12 @@ class MemoryStore:
                     session_id=row["session_id"], storage_order=row["storage_order"],
                     content=row["content"],
                     timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
+                    observed_at_ms=row["observed_at_ms"],
+                    valid_from_ms=row["valid_from_ms"], valid_to_ms=row["valid_to_ms"],
+                    retracted_at_ms=row["retracted_at_ms"],
+                    fact_subject=row["fact_subject"],
+                    fact_relation=row["fact_relation"],
+                    fact_object=row["fact_object"],
                     terms=terms, term_counts=term_counts, embedding=embedding,
                 ))
             if self.memory_cache_users:
@@ -790,6 +966,7 @@ class MemoryStore:
         query: str,
         top_k: int,
         options: list[str] | None = None,
+        query_at_ms: int | None = None,
     ) -> list[dict]:
         if len(query) + sum(len(option) for option in (options or [])) > self.max_search_chars:
             raise PayloadTooLargeError(
@@ -867,6 +1044,9 @@ class MemoryStore:
             )
         )
         temporal_ids: set[str] = set()
+        validity_by_id = {
+            memory.id: temporal_validity(memory, query_at_ms) for memory in memories
+        }
         if config.temporal_enabled and asks_for_current:
             query_topics = topic_terms(query)
             memory_topics = {memory.id: topic_terms(memory.content) for memory in memories}
@@ -890,6 +1070,65 @@ class MemoryStore:
                     for term in memory_topics[memory.id]
                 ):
                     temporal_ids.add(memory.id)
+
+        conflict_bonus_by_id: dict[str, float] = {}
+        if config.conflict_enabled:
+            groups: dict[tuple[str, str], list[Memory]] = {}
+            for memory in memories:
+                if not (
+                    memory.fact_subject
+                    and memory.fact_relation
+                    and memory.fact_object
+                ):
+                    continue
+                key = (
+                    " ".join(memory.fact_subject.casefold().split()),
+                    " ".join(memory.fact_relation.casefold().split()),
+                )
+                groups.setdefault(key, []).append(memory)
+            query_term_set = set(query_terms)
+            comparison_query = (
+                has_marker(query, _CURRENT_MARKERS)
+                and has_marker(query, _HISTORICAL_MARKERS)
+            )
+            for (subject, relation), group in groups.items():
+                objects = {
+                    " ".join(memory.fact_object.casefold().split())
+                    for memory in group
+                    if memory.fact_object
+                }
+                if len(objects) < 2:
+                    continue
+                identity_terms = set(tokenize(f"{subject} {relation}"))
+                if not query_term_set.intersection(identity_terms):
+                    continue
+                candidates = group
+                if query_at_ms is not None:
+                    valid = [
+                        memory for memory in group
+                        if validity_by_id[memory.id] == "valid"
+                    ]
+                    if valid:
+                        candidates = valid
+                dated = [
+                    memory for memory in candidates
+                    if memory.observed_at_ms is not None
+                ]
+                if not dated:
+                    continue
+                if asks_for_historical and query_at_ms is None:
+                    preferred = min(
+                        dated, key=lambda memory: (memory.observed_at_ms, memory.id)
+                    )
+                else:
+                    preferred = max(
+                        dated, key=lambda memory: (memory.observed_at_ms, memory.id)
+                    )
+                if asks_for_current or asks_for_historical or comparison_query:
+                    conflict_bonus_by_id[preferred.id] = 7.0
+                    if comparison_query:
+                        for memory in group:
+                            conflict_bonus_by_id.setdefault(memory.id, 3.0)
         # A total order makes ties independent of SQLite insertion order and
         # Python's randomized set iteration across worker processes.
         def rank_key(item):
@@ -943,6 +1182,11 @@ class MemoryStore:
                     )
                 if has_marker(memory.content, _UPDATE_MARKERS):
                     score += 10.0
+            # Explicit validity is a bounded ranking signal, never a hard
+            # filter. Unknown and out-of-window evidence remain available.
+            if config.temporal_enabled and validity_by_id[memory.id] == "valid":
+                score += 8.0
+            score += conflict_bonus_by_id.get(memory.id, 0.0)
             if config.lexical_enabled:
                 lexical_candidates.append((score, memory))
                 if score > 0:
@@ -990,7 +1234,7 @@ class MemoryStore:
             if not seed_entities and not _CJK_RUN.search(query):
                 return self._finish_search(
                     query, memories, lexical_scores, rank_key, config, top_k,
-                    rare_query_identifiers,
+                    rare_query_identifiers, validity_by_id, conflict_bonus_by_id,
                 )
             entity_frequency: dict[str, int] = {}
             entities_by_id = {
@@ -1003,6 +1247,7 @@ class MemoryStore:
             def linked_ranking(
                 candidates: list[tuple[float, Memory]], active_seeds: list[Memory]
             ) -> list[tuple[float, Memory]]:
+                active_seeds = active_seeds[:config.linkage_seed_budget]
                 active_seed_ids = {seed.id for seed in active_seeds}
                 seed_bodies = {
                     re.sub(
@@ -1019,9 +1264,20 @@ class MemoryStore:
                     for entity in entities_by_id[seed.id] - query_entities
                     if 1 < entity_frequency.get(entity, 0) <= 4
                 }
+                ordered_candidates = sorted(candidates, key=rank_key)
+                branch_ids: dict[str, set[str]] = {}
+                for term in bridge_terms:
+                    branch_ids[term] = set([
+                        memory.id
+                        for _score, memory in ordered_candidates
+                        if term in entities_by_id[memory.id]
+                    ][:config.linkage_branch_budget])
                 linked_scores = []
                 for score, memory in candidates:
-                    shared = bridge_terms & entities_by_id[memory.id]
+                    shared = {
+                        term for term in bridge_terms & entities_by_id[memory.id]
+                        if memory.id in branch_ids[term]
+                    }
                     body = re.sub(
                         r"^(?:\[[^\]]+\]\s+)?(?:user|assistant|system):\s*",
                         "",
@@ -1047,7 +1303,9 @@ class MemoryStore:
             # Limit the second hop to ten seeds and CJK queries only. The wider
             # seed window is needed because a bridge statement can rank below
             # surface-form distractors before linkage is applied.
-            first_hop = [memory for _, memory in lexical_scores[:10]]
+            first_hop = [
+                memory for _, memory in lexical_scores[:config.linkage_seed_budget]
+            ]
             if asks_for_current:
                 current_first_hop = [
                     memory for memory in first_hop
@@ -1064,13 +1322,17 @@ class MemoryStore:
                 _IDENTIFIER_TOKEN.fullmatch(entity) is not None
                 for memory in first_hop for entity in entities_by_id[memory.id]
             )
-            if _CJK_RUN.search(query) or has_cjk_bridge or has_identifier_bridge:
+            if config.linkage_max_hops >= 2 and (
+                _CJK_RUN.search(query)
+                or has_cjk_bridge
+                or has_identifier_bridge
+            ):
                 lexical_scores = linked_ranking(
                     lexical_scores, first_hop
                 )
         return self._finish_search(
             query, memories, lexical_scores, rank_key, config, top_k,
-            rare_query_identifiers,
+            rare_query_identifiers, validity_by_id, conflict_bonus_by_id,
         )
 
     def _finish_search(
@@ -1082,6 +1344,8 @@ class MemoryStore:
         config: RetrievalConfig,
         top_k: int,
         rare_query_identifiers: set[str],
+        validity_by_id: dict[str, str],
+        conflict_bonus_by_id: dict[str, float],
     ) -> list[dict]:
         if self._embedder is None or not any(memory.embedding is not None for memory in memories):
             scores = lexical_scores
@@ -1146,6 +1410,13 @@ class MemoryStore:
                 # lexical channel without letting raw BM25 scale dominate fusion.
                 if config.lexical_weight > 0 and lexical_raw.get(memory_id, 0.0) >= 8.0:
                     score += 0.002
+                if (
+                    config.temporal_enabled
+                    and validity_by_id.get(memory_id) == "valid"
+                ):
+                    score += 0.012
+                if memory_id in conflict_bonus_by_id:
+                    score += 0.001 * conflict_bonus_by_id[memory_id]
                 # RRF intentionally discards raw-score magnitude, but for the
                 # narrow packing/confirmation intents above that would also
                 # discard explicit completed-versus-negated evidence. Preserve
@@ -1173,6 +1444,7 @@ class MemoryStore:
         if config.session_window_enabled:
             scores = self._session_window_scores(
                 query, scores, memories, rank_key, temporal_enabled=config.temporal_enabled,
+                neighbor_budget=config.session_neighbor_budget,
             )
         return self._results(scores, top_k)
 
@@ -1184,6 +1456,7 @@ class MemoryStore:
         rank_key: Callable[[tuple[float, Memory]], tuple[float, int, str]],
         *,
         temporal_enabled: bool = True,
+        neighbor_budget: int = 2,
     ) -> list[tuple[float, Memory]]:
         """Promote at most two messages adjacent to the strongest session seed."""
         if not scores or scores[0][0] <= 0:
@@ -1236,7 +1509,7 @@ class MemoryStore:
             return scores
 
         promoted = {memory.id: (score, memory) for score, memory in scores}
-        for distance in (1, 2):
+        for distance in range(1, neighbor_budget + 1):
             for index in (seed_index - distance, seed_index + distance):
                 if not 0 <= index < len(session):
                     continue

@@ -383,6 +383,45 @@ class StoreSafetyTests(unittest.TestCase):
                 store._connect()
         connection.close.assert_called_once()
 
+    def test_connection_retries_transient_wal_lock_and_keeps_foreign_keys(self):
+        store = MemoryStore(self.path, embedder=False)
+        connection = Mock()
+        wal_attempts = 0
+
+        def execute(statement):
+            nonlocal wal_attempts
+            if statement == "PRAGMA journal_mode=WAL":
+                wal_attempts += 1
+                if wal_attempts < 3:
+                    raise sqlite3.OperationalError("database is locked")
+            return Mock()
+
+        connection.execute.side_effect = execute
+        with (
+            patch("app.store.sqlite3.connect", return_value=connection),
+            patch("app.store.time.sleep") as sleep,
+        ):
+            self.assertIs(connection, store._connect())
+
+        self.assertEqual(3, wal_attempts)
+        self.assertEqual([unittest.mock.call(0.01), unittest.mock.call(0.02)], sleep.call_args_list)
+        connection.execute.assert_any_call("PRAGMA busy_timeout=30000")
+        connection.execute.assert_any_call("PRAGMA foreign_keys=ON")
+        connection.close.assert_not_called()
+
+    def test_connection_does_not_retry_non_busy_sqlite_error(self):
+        store = MemoryStore(self.path, embedder=False)
+        connection = Mock()
+        connection.execute.side_effect = sqlite3.OperationalError("disk I/O error")
+        with (
+            patch("app.store.sqlite3.connect", return_value=connection),
+            patch("app.store.time.sleep") as sleep,
+            self.assertRaisesRegex(sqlite3.OperationalError, "disk I/O error"),
+        ):
+            store._connect()
+        sleep.assert_not_called()
+        connection.close.assert_called_once()
+
     def test_corrupt_database_fails_closed_at_startup(self):
         self.path.write_bytes(b"not a sqlite database")
 
