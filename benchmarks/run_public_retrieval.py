@@ -55,6 +55,8 @@ def main() -> None:
     cases = [case for case in suite["cases"] if case["split"] == "development"][: args.limit]
     if not cases:
         raise ValueError("suite has no development cases")
+    if any("evidence_memory_ids" not in case for case in cases):
+        raise ValueError("source-level retrieval requires evidence_memory_ids")
     rows = []
     with tempfile.TemporaryDirectory() as temp_dir:
         store = MemoryStore(Path(temp_dir) / "public-eval.db", embedder=None if args.embeddings else False)

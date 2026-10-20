@@ -24,13 +24,13 @@
 ### P0：第四版可审计基线
 
 1. [x] 核实第四次官方成绩、版本、ID、完成状态和分项；只记录允许保留的聚合指标。
-2. [ ] 核对 `c0001f8` 对应的 Railway deployment、OCI revision、镜像 digest、运行配置和在线服务。版本名中的 SHA 后缀只是线索。当前开发分支是该提交的祖先；提分实验须以第四版代码为对照。
+2. [~] Railway 历史 deployment `4104da89-4fd5-4112-9737-7fd6befcbc37` 的 CLI 元数据标示 `deploy c0001f84709ae134f3b5221574f3965f2f3f55c9`、镜像 digest `sha256:0cbaa45155a0954e46bae03a2fd4aa9ab06da42d60b0e4a6701f4405d543ce11`、单副本、挂载 `/data`，与第四次版本名一致。旧部署于 2026-10-20 被移除；账户状态为 Hobby/INACTIVE。经用户要求选用 Free 套餐后，2026-10-20 从隔离检出的精确提交 `c0001f84709ae134f3b5221574f3965f2f3f55c9` 上传，新 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832` 为 SUCCESS，镜像 digest `sha256:477dd2980de939e1d008e4fd0881ddd17dc63b06e7aba91aa3d65d6988927afb`，单副本、挂载原 `/data`。新镜像 digest 与旧版不同，不能仅凭提交和功能检查声称逐位相同；仍需 OCI revision/构建输入核验。
 3. [ ] 只读核对官网实时 Smoke/Full 次数、模型规则和服务稳定性。第四次超过旧最佳不自动触发 Full；Full 的独立授权和正式容量门禁仍须满足。
 
 ### P0：公开端到端评测
 
 4. [x] 固定 LongMemEval `s_cleaned` 的来源 revision、文件哈希、格式适配和拆分；oracle 只用于证据字段核对，因其缺少大量干扰会话，不作检索主基线。真实检索与答题基线仍属任务 6–7。
-5. [ ] 完成第二个不同来源的数据适配器，优先 PersonaMem 32K；许可、版本、字段和连接键须可核查。留出集优先按官方划分，否则固定哈希拆分并冻结。
+5. [x] 完成第二来源 PersonaMem-v1 32K 格式适配：固定官方 revision、双文件哈希、MIT 许可和 `shared_context_id` 连接键；以共享上下文为单位固定哈希拆分为 414 development / 175 frozen_holdout，互不重叠。上游 system turn 含合成 persona，全部排除；上游无证据来源标注，因此只用于后续多选答案级评测，不用于检索来源指标。来源清单见 `benchmarks/personamem-v1-32k-source.json`。
 6. [~] 统一检索指标与第四版纯词法发展集基线已实现；结果见 [公开检索基线](public-eval-baseline-2026-10-20.md)。下一步记录冲突来源顺序、Top-100 去重覆盖和字符预算，并对照真实 BGE。
 7. [ ] 固定回答器、提示词哈希和答案评分，记录“无检索 / BM25 / 第四版 / 候选”同题对照。最终答题准确率是候选准入主指标；单独的证据召回提升不足以启动 Smoke。
 
@@ -45,14 +45,16 @@
 ### P0：发布与下一次官方评测
 
 13. [ ] 在第四版基线上通过完整测试、10k 多用户 Top-100 负载、故障恢复、秘密扫描、精确 SHA CI、镜像与部署身份核验。
+    **服务恢复状态：**Free 订阅已 ACTIVE，公网 `/health` 为 200，未带密钥的 Add/Search 均为 401；带密钥 Add/Search、跨用户隔离、容器重启后的检索持久化通过。重启后 Railway 指标显示内存当前约 56.7 MB、15 分钟峰值约 63.7 MB，Free 上限约 524 MB；这只是轻量冒烟，不证明正式负载容量。持久卷仍约 63.4/500 MB。Free 每月 $1 额度和 0.5 GB RAM 上限要求持续监测使用量；容量门禁未通过前不能安排第五次 Smoke 或 Full。
 14. [ ] 只对独立公开端到端指标净提升的唯一候选考虑第五次 Smoke；若下降，先回到错误分类，不连续试分。
 15. [ ] 首次 Full 需单独决策包：第四次成绩、公开证据、官方模型合规答复、正式规模容量与服务连续性、预计费用、剩余机会和失败处理。获得用户明确授权后才能启动；评测期间冻结部署和配置。
 
 ## 本轮已开始的迭代
 
-- 已新增 `benchmarks/public_eval_metrics.py` 与真实检索运行器，重复来源占用 Top-K 位置但不增加证据覆盖，未知来源直接报错。Python 3.13 环境下完整 230 项测试通过。这仅证明本地工程回归。
+- 已新增 `benchmarks/public_eval_metrics.py` 与真实检索运行器，重复来源占用 Top-K 位置但不增加证据覆盖，未知来源直接报错。加入 PersonaMem 适配后，Python 3.13 环境下完整 235 项测试通过。这仅证明本地工程回归。
 - LongMemEval 作者数据 revision `98d7416c24c778c2fee6e6f3006e7a073259d48f` 已取得固定文件：`longmemeval_oracle.json` 15,388,478 字节、SHA-256 `821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c`；`longmemeval_s_cleaned.json` 277,383,467 字节、SHA-256 `d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442`。两者含 500 个相同问题 ID，后者每题约 45–50 个会话。原始文件在忽略版本控制的 `data/`，不提交仓库。
 - 当前工作分支 `codex/smoke4-iteration` 从第四版 `c0001f8` 出发；新增评测代码不改变线上 Add/Search。已在相同代码基线上完成纯词法公开 development 390 题检索基线；尚无最终答题指标，不根据截图推断隐藏样本。
 - `benchmarks/adapt_longmemeval.py` 已对固定 `s_cleaned` 全量适配并通过 schema 校验：500 题，390 development / 110 frozen_holdout；输出 SHA-256 `ebe9672a76d0b1b0c28c1cf8020e94b939d1d47d8610a792b7e415024fbe4141`。原始数据中 13 题存在重复的非答案会话 ID，适配器加稳定序号并保留原 ID；32 题参考答案为整数，保留原始数值同时以字符串供本地 Exact Match 代理使用；无 `has_answer` 标记泄漏到检索输入。
 - 第四版纯词法公开 development 390 题：Hit@100 1.000、Complete@100 0.987、Complete@5 0.585；multi-session Complete@5 0.330、temporal-reasoning 0.465、preference Hit@1 0.333。逐题报告仅在忽略版本控制的 `data/`；这不是答案级或官方成绩。
 - 162 个 Complete@5 失败中，48 个受同会话重复片段占位影响，109 个必要来源在不同来源排名 6–100，5 个在 Top-100 消息中缺失。该分类是会话来源层面的诊断，不代表最终答案一定错误。
+- 第二来源 PersonaMem-v1 32K 已固定：官方 Hugging Face revision `a8076d5608c93ba2a28983cd78aa99b01a163ae7`，589 题、37 个共享上下文，标准化文件 SHA-256 `0f4a1d1536f196d5986b240bb6cddbcb55ee72d0f1055abec7694731189bd0f0`。未运行答案模型，不报告准确率；原始与标准化数据留在忽略版本控制的 `data/`。

@@ -1,0 +1,21 @@
+{
+  "dataset": "PersonaMem-v1 32K",
+  "official_repository": "https://huggingface.co/datasets/bowen-upenn/PersonaMem-v1",
+  "revision": "a8076d5608c93ba2a28983cd78aa99b01a163ae7",
+  "license": "MIT",
+  "files": {
+    "questions_32k.csv": {
+      "bytes": 1305366,
+      "sha256": "cccd34cf53e0bc4d9536c04cff5ca045156d9a4e227e83327112482840bbc93c"
+    },
+    "shared_contexts_32k.jsonl": {
+      "bytes": 5613210,
+      "sha256": "217247ebfec9e8442fc53570c795ab69f21aad08745f7de78d9beab51b122d4a"
+    }
+  },
+  "normalized_sha256": "0f4a1d1536f196d5986b240bb6cddbcb55ee72d0f1055abec7694731189bd0f0",
+  "split_unit": "shared_context_id",
+  "development_cases": 414,
+  "frozen_holdout_cases": 175,
+  "notes": "Upstream system turns contain synthetic persona descriptions; the adapter excludes them. No evidence labels are supplied, so source retrieval metrics do not apply."
+}

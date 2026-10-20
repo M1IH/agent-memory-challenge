@@ -80,7 +80,10 @@ def validate_case(case: dict[str, Any]) -> None:
         raise CaseValidationError("memory_id values must be unique within a case")
 
     evidence_ids = case.get("evidence_memory_ids")
-    if (
+    if evidence_ids is None:
+        if case["scorer"] != "multiple_choice":
+            raise CaseValidationError("evidence_memory_ids required for non-multiple-choice cases")
+    elif (
         not isinstance(evidence_ids, list)
         or not evidence_ids
         or any(not isinstance(item, str) or not item for item in evidence_ids)

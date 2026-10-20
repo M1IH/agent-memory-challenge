@@ -44,6 +44,18 @@ class PublicEvalSchemaTests(unittest.TestCase):
         with self.assertRaisesRegex(CaseValidationError, "match a choice"):
             validate_case(case)
 
+    def test_multiple_choice_can_omit_unannotated_evidence(self):
+        case = valid_case()
+        case.update({"scorer": "multiple_choice", "choices": ["(a) B", "(b) A"], "reference_answers": ["(a) B"]})
+        del case["evidence_memory_ids"]
+        validate_case(case)
+
+    def test_non_multiple_choice_cannot_omit_evidence(self):
+        case = valid_case()
+        del case["evidence_memory_ids"]
+        with self.assertRaisesRegex(CaseValidationError, "evidence_memory_ids required"):
+            validate_case(case)
+
     def test_frozen_split_name_is_explicit(self):
         case = valid_case()
         case["split"] = "test"
