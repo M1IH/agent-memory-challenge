@@ -1,5 +1,7 @@
 # AML Memory Entry
 
+> **最新评测与迭代入口（2026-10-20）：**第四次官方文本 Smoke `teval_4c0a22f3456a888c` 成功，总分 **63.68**，版本 `v1.3.0-temporal-c0001f8`。详细分项、失分优先级及新版任务规划见 [Smoke 满分目标任务规划](docs/smoke-full-score-iteration-2026-10-20.md)。下方“阶段检查点”保留前三次的历史记录，不能作为当前成绩或下一次 Smoke 编号的依据。
+
 个人参赛的 Agent Memory Challenge 文本赛道开源基线系统。
 
 本项目采用 [MIT License](LICENSE)。
