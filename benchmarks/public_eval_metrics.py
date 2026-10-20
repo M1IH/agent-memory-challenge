@@ -16,20 +16,17 @@ def score_retrieval(case: dict[str, Any], ranked_memory_ids: Iterable[str]) -> d
     """Score one case using the first occurrence of each ranked memory ID.
 
     Unknown IDs are rejected so an adapter cannot silently count evidence from
-    a different case. Duplicates are ignored because repeated snippets do not
-    add new source coverage.
+    a different case. Repeated snippets occupy result slots but do not add new
+    source coverage.
     """
 
     known = {memory["memory_id"] for memory in case["memories"]}
     required = set(case["evidence_memory_ids"])
     ranked: list[str] = []
-    seen: set[str] = set()
     for memory_id in ranked_memory_ids:
         if memory_id not in known:
             raise ValueError(f"unknown ranked memory ID: {memory_id}")
-        if memory_id not in seen:
-            seen.add(memory_id)
-            ranked.append(memory_id)
+        ranked.append(memory_id)
 
     metrics: dict[str, float] = {}
     for k in K_VALUES:

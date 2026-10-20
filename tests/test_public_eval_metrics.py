@@ -27,6 +27,11 @@ class PublicEvalMetricsTests(unittest.TestCase):
         self.assertEqual(0.5, score["recall_at_3"])
         self.assertEqual(0.0, score["complete_at_100"])
 
+    def test_duplicate_sources_still_consume_top_k_slots(self):
+        score = score_retrieval(CASE, ["old", "old", "bridge", "answer"])
+        self.assertEqual(0.0, score["complete_at_3"])
+        self.assertEqual(1.0, score["complete_at_5"])
+
     def test_unknown_source_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "unknown ranked memory ID"):
             score_retrieval(CASE, ["other-user-memory"])
