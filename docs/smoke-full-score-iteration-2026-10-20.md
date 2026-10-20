@@ -57,4 +57,5 @@
 - `benchmarks/adapt_longmemeval.py` 已对固定 `s_cleaned` 全量适配并通过 schema 校验：500 题，390 development / 110 frozen_holdout；输出 SHA-256 `ebe9672a76d0b1b0c28c1cf8020e94b939d1d47d8610a792b7e415024fbe4141`。原始数据中 13 题存在重复的非答案会话 ID，适配器加稳定序号并保留原 ID；32 题参考答案为整数，保留原始数值同时以字符串供本地 Exact Match 代理使用；无 `has_answer` 标记泄漏到检索输入。
 - 第四版纯词法公开 development 390 题：Hit@100 1.000、Complete@100 0.987、Complete@5 0.585；multi-session Complete@5 0.330、temporal-reasoning 0.465、preference Hit@1 0.333。逐题报告仅在忽略版本控制的 `data/`；这不是答案级或官方成绩。
 - 162 个 Complete@5 失败中，48 个受同会话重复片段占位影响，109 个必要来源在不同来源排名 6–100，5 个在 Top-100 消息中缺失。该分类是会话来源层面的诊断，不代表最终答案一定错误。
-- 第二来源 PersonaMem-v1 32K 已固定：官方 Hugging Face revision `a8076d5608c93ba2a28983cd78aa99b01a163ae7`，589 题、37 个共享上下文，标准化文件 SHA-256 `0f4a1d1536f196d5986b240bb6cddbcb55ee72d0f1055abec7694731189bd0f0`。未运行答案模型，不报告准确率；原始与标准化数据留在忽略版本控制的 `data/`。
+- 第二来源 PersonaMem-v1 32K 已固定：官方 Hugging Face revision `a8076d5608c93ba2a28983cd78aa99b01a163ae7`，589 题、37 个共享上下文，标准化文件 SHA-256 `0f4a1d1536f196d5986b240bb6cddbcb55ee72d0f1055abec7694731189bd0f0`。未运行固定生成模型，不报告其答案准确率；原始与标准化数据留在忽略版本控制的 `data/`。
+- PersonaMem 414 个 development 样本的词法选项启发式探针为 175/414（42.27%），固定选择第一个选项为 98/414（23.67%）；其中 `recall_user_shared_facts` 仅 18/95。方法和限制见 [PersonaMem 词法选项诊断](personamem-choice-probe-2026-10-20.md)。这是无生成模型的本地诊断，不能当成任务 7 所需的固定回答器答案成绩或官方分数。
