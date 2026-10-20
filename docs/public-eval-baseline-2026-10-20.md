@@ -1,0 +1,33 @@
+# LongMemEval-S 第四版检索基线（2026-10-20）
+
+## 可复现身份
+
+- 生产检索代码基线：`c0001f8` 的后继提交 `a80468302edc034d18c0cebf139bf9ef7a01033d`；该后继只增加评测代码、文档和测试，未改动 `app/`。运行时 Git 工作区为 clean。
+- 数据：`longmemeval_s_cleaned.json`，作者固定 revision `98d7416c24c778c2fee6e6f3006e7a073259d48f`，原文件 SHA-256 `d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442`。
+- 标准化文件 SHA-256 `ebe9672a76d0b1b0c28c1cf8020e94b939d1d47d8610a792b7e415024fbe4141`；报告 SHA-256 `a1f30cc78b076b39a4a549009a28f3214ff953a7a1d0f8d5f4f0e82a3664e0d0`。原始数据、标准化文件和逐题报告在忽略版本控制的 `data/`，不提交仓库。
+- 命令：`py -3.13 -m benchmarks.run_public_retrieval --suite data\longmemeval-s-normalized.json --output data\longmemeval-s-dev-lexical-390.json --limit 390 --top-k 100`。
+- 只运行 development 390 题；frozen_holdout 110 题未用于这次诊断。关闭 embedding，沿用第四版默认词法、扩展、时间、冲突、关系和会话窗口设置。每题独立 user_id，逐会话重放原始 turn，Search Top-K 100，再按来源会话聚合排名。
+
+## 检索结果
+
+| 题型 | 题数 | Hit@1 | Complete@5 | Complete@100 | MRR |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 全部 | 390 | 0.713 | 0.585 | 0.987 | 0.768 |
+| knowledge-update | 58 | 0.879 | 0.793 | 1.000 | 0.911 |
+| multi-session | 106 | 0.717 | 0.330 | 0.972 | 0.778 |
+| single-session-assistant | 44 | 0.841 | 0.909 | 1.000 | 0.878 |
+| single-session-preference | 24 | 0.333 | 0.542 | 1.000 | 0.428 |
+| single-session-user | 57 | 0.667 | 0.825 | 1.000 | 0.729 |
+| temporal-reasoning | 101 | 0.673 | 0.465 | 0.980 | 0.731 |
+
+全体 Hit@100 为 1.000，但 Complete@5 仅 0.585。当前公开发展集的主要检索现象是多段证据进入 Top-100 后没有完整进入前五；多会话、时序和偏好表现最弱。该观察支持下一步研究证据覆盖与排序，不证明官方 G4、F1 或 C1/C2 的具体失败原因。不同题型与官方能力分类没有一一映射，不能直接用这些数字预测 Smoke 分数。
+
+把 162 个 Complete@5 失败与逐题来源排名对照：48 题在去掉同会话重复片段后，必要来源均落入前五个**不同来源**；30 题的必要来源位于不同来源排名 6–10；79 题位于 11–100；5 题在返回的 Top-100 消息中仍缺必要来源。前一组说明重复来源占位值得测量，但简单地从输出中删掉同会话的其他片段可能丢失同一会话内的必要上下文，不能直接作为生产修复。
+
+## 下一步实验
+
+1. 对 development 中未 Complete@5 的多会话与时序题继续诊断“历史/当前反转”“跨会话桥缺失”以及同会话片段是否各自携带必要上下文；不看 frozen_holdout 答案。
+2. 在相同 390 题上做第四版 lexical 与真实 BGE 的对照，随后只尝试一个有界证据去冗余/分组候选；每次同时检验答案级正确率、其他类别回退与延迟/内存。
+3. 完成第二来源 PersonaMem 和固定回答器后，再用冻结留出验证候选；单纯 Complete@5 提升不得作为第五次官方 Smoke 的充分理由。
+
+此报告不是 LongMemEval 官方成绩：目前只测检索来源，没有运行官方答案 judge，也没有最终答题评测。

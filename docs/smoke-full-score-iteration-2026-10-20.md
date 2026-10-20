@@ -31,7 +31,7 @@
 
 4. [x] 固定 LongMemEval `s_cleaned` 的来源 revision、文件哈希、格式适配和拆分；oracle 只用于证据字段核对，因其缺少大量干扰会话，不作检索主基线。真实检索与答题基线仍属任务 6–7。
 5. [ ] 完成第二个不同来源的数据适配器，优先 PersonaMem 32K；许可、版本、字段和连接键须可核查。留出集优先按官方划分，否则固定哈希拆分并冻结。
-6. [~] 统一检索指标：Hit/Recall/Complete@1/3/5/10/100 与 MRR 已实现；下一步接入真实检索结果，记录冲突来源顺序、Top-100 去重覆盖和字符预算。
+6. [~] 统一检索指标与第四版纯词法发展集基线已实现；结果见 [公开检索基线](public-eval-baseline-2026-10-20.md)。下一步记录冲突来源顺序、Top-100 去重覆盖和字符预算，并对照真实 BGE。
 7. [ ] 固定回答器、提示词哈希和答案评分，记录“无检索 / BM25 / 第四版 / 候选”同题对照。最终答题准确率是候选准入主指标；单独的证据召回提升不足以启动 Smoke。
 
 ### P0：按错误簇迭代
@@ -50,7 +50,9 @@
 
 ## 本轮已开始的迭代
 
-- 已新增 `benchmarks/public_eval_metrics.py`，重复来源不重复计数，未知来源直接报错。Python 3.13 环境下完整 203 项测试通过。这仅证明本地工程回归。
+- 已新增 `benchmarks/public_eval_metrics.py` 与真实检索运行器，重复来源占用 Top-K 位置但不增加证据覆盖，未知来源直接报错。Python 3.13 环境下完整 230 项测试通过。这仅证明本地工程回归。
 - LongMemEval 作者数据 revision `98d7416c24c778c2fee6e6f3006e7a073259d48f` 已取得固定文件：`longmemeval_oracle.json` 15,388,478 字节、SHA-256 `821a2034d219ab45846873dd14c14f12cfe7776e73527a483f9dac095d38620c`；`longmemeval_s_cleaned.json` 277,383,467 字节、SHA-256 `d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442`。两者含 500 个相同问题 ID，后者每题约 45–50 个会话。原始文件在忽略版本控制的 `data/`，不提交仓库。
-- 当前分支与第四版 `c0001f8` 的代码差异尚未并入；本地指标模块不改变线上 Add/Search。下一项先完成适配器和第四版对照，不根据截图推断隐藏样本。
+- 当前工作分支 `codex/smoke4-iteration` 从第四版 `c0001f8` 出发；新增评测代码不改变线上 Add/Search。已在相同代码基线上完成纯词法公开 development 390 题检索基线；尚无最终答题指标，不根据截图推断隐藏样本。
 - `benchmarks/adapt_longmemeval.py` 已对固定 `s_cleaned` 全量适配并通过 schema 校验：500 题，390 development / 110 frozen_holdout；输出 SHA-256 `ebe9672a76d0b1b0c28c1cf8020e94b939d1d47d8610a792b7e415024fbe4141`。原始数据中 13 题存在重复的非答案会话 ID，适配器加稳定序号并保留原 ID；32 题参考答案为整数，保留原始数值同时以字符串供本地 Exact Match 代理使用；无 `has_answer` 标记泄漏到检索输入。
+- 第四版纯词法公开 development 390 题：Hit@100 1.000、Complete@100 0.987、Complete@5 0.585；multi-session Complete@5 0.330、temporal-reasoning 0.465、preference Hit@1 0.333。逐题报告仅在忽略版本控制的 `data/`；这不是答案级或官方成绩。
+- 162 个 Complete@5 失败中，48 个受同会话重复片段占位影响，109 个必要来源在不同来源排名 6–100，5 个在 Top-100 消息中缺失。该分类是会话来源层面的诊断，不代表最终答案一定错误。
