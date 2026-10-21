@@ -12,7 +12,7 @@
 | 数据集 | 上游与核验版本 | 已确认许可 | 与本项目的价值 | 当前决定 |
 | --- | --- | --- | --- | --- |
 | LongMemEval | `xiaowu0162/LongMemEval@9e0b455f4ef0e2ab8f2e582289761153549043fc`；作者数据 `xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f` | 仓库 MIT；Hugging Face 数据卡明确标注 MIT、公开且非 gated | 500 道题；字段包含 `question_id/question_type/question/answer/question_date/haystack_session_ids/haystack_dates/haystack_sessions/answer_session_ids`，覆盖信息提取、多会话推理、知识更新、时序和拒答 | 首选候选，但尚未进入适配设计。必须先对固定 revision 的 `longmemeval_oracle.json`、`longmemeval_s_cleaned.json`、`longmemeval_m_cleaned.json` 验证下载并逐文件记录 SHA-256；之后才可按官方 evidence session/turn 标注设计适配，不得改写答案 |
-| BEAM | `mohammadtavakoli78/BEAM@b2da22eac88bb0874c64665f13457eb99835774a`；作者数据 `Mohammadta/BEAM@3205395e897e7318c7b094ef4e6047b9b82dbb03` | 仓库 MIT；Hugging Face 数据卡明确标注 CC BY-SA 4.0、公开且非 gated | README 描述 2,000 道题及冲突、事件排序、更新、多会话、偏好、指令和时序能力；数据卡列出 `100K-00000-of-00001.parquet`、`500K-00000-of-00001.parquet`、`1M-00000-of-00001.parquet`，但本轮尚未核实 Parquet 实际字段 | 仅为部分核实候选，尚未进入适配设计。先验证最小文件下载、字段和 SHA-256；若采用固定子集，必须保存选择规则和样例 ID，并明确标为 BEAM 子集，不得称为完整 BEAM 成绩 |
+| BEAM | `mohammadtavakoli78/BEAM@b2da22eac88bb0874c64665f13457eb99835774a`；作者数据 `Mohammadta/BEAM@3205395e897e7318c7b094ef4e6047b9b82dbb03` | 仓库 MIT；Hugging Face 数据卡明确标注 CC BY-SA 4.0、公开且非 gated | 固定 100K Parquet 为 20 段对话、400 道探针题；10 类各 40 题。字段为 `conversation_id/conversation_seed/narratives/user_profile/conversation_plan/user_questions/chat/probing_questions`。仅 `chat` 是作者转换出的历史消息；探针另从 `probing_questions` 解析。 | 可作**BEAM 100K 子集**的公开长历史代理。只把 `chat` 写入记忆，用探针 `question` 查询；`source_chat_ids` 仅作离线证据核对，`rubric` 和理想答案仅用于评分。作者答案级评估依赖 LLM rubric，不能以自制精确匹配冒称 BEAM 官方成绩。固定文件 5,429,768 字节、SHA-256 `c0519be25907005ba873c927c50877471d550873039d96c041554d0075a78ace`，原始文件置于忽略目录 `data/beam-100k.parquet`。 |
 | PersonaMem | `bowen-upenn/PersonaMem@d07e6ade22e85e0e5d562247323a9c3e07553226`；作者数据 `bowen-upenn/PersonaMem-v1@a8076d5608c93ba2a28983cd78aa99b01a163ae7` | 代码仓库 MIT；Hugging Face 数据卡明确标注 MIT、公开且非 gated | 作者 README 说明公开问题、答案、上下文和元数据；固定数据 revision 含 32K/128K/1M 三档的 `questions_*.csv` 与 `shared_contexts_*.jsonl`。32K 上下文文件约 5.6 MB，适合下一轮低成本字段与适配边界核验 | 可进入第二个适配器的固定文件门禁。先只下载 32K 档，记录逐文件 SHA-256 并确认问题与共享上下文的连接键；不得把 v2/v3 混入 v1 结果 |
 
 ## 条件可用，许可证或来源身份仍需确认
@@ -36,7 +36,7 @@
 
 1. 核对并恢复当前分支缺失的 LongMemEval 固定文件哈希、下载清单和首个适配器产物；在产物可审计前不继续切分。
 2. PersonaMem-v1 32K 档两个固定文件的实际字段、连接键、下载大小与逐文件 SHA-256；不提交原始数据。
-3. BEAM 最小规模文件的实际字段、下载大小与逐文件 SHA-256；不提交原始数据。
+3. BEAM 100K 子集的历史消息格式与证据 ID 已核验。下一步固定独立开发对话，先测 `chat` 检索证据覆盖，再决定是否接入作者 LLM rubric；不提交原始数据。
 4. LoCoMo-Refined 的原始 LoCoMo 条款，以及 CC BY-NC 4.0 对奖金参赛用途的适用性。
 
 ## 官方模型规则：2026-10-05 实时核验
