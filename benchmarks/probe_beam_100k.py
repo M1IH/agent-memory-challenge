@@ -15,7 +15,7 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
-from app.store import MemoryStore
+from app.store import MemoryStore, RetrievalConfig
 
 
 SOURCE_REVISION = "3205395e897e7318c7b094ef4e6047b9b82dbb03"
@@ -109,6 +109,9 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--development-conversations", type=int, default=14)
     parser.add_argument("--top-k", type=int, default=100)
+    parser.add_argument("--disable-linkage", action="store_true")
+    parser.add_argument("--disable-expansion", action="store_true")
+    parser.add_argument("--disable-temporal", action="store_true")
     args = parser.parse_args()
     if args.development_conversations not in range(1, 15) or args.top_k < 1:
         parser.error("development-conversations must be 1..14 and top-k positive")
@@ -117,8 +120,13 @@ def main() -> None:
         raise ValueError("expected exactly 20 BEAM 100K conversations")
     source_rows.sort(key=lambda item: int(item["conversation_id"]))
     rows = []
+    config = RetrievalConfig(
+        linkage_enabled=not args.disable_linkage,
+        expansion_enabled=not args.disable_expansion,
+        temporal_enabled=not args.disable_temporal,
+    )
     with tempfile.TemporaryDirectory() as directory:
-        store = MemoryStore(Path(directory) / "beam.db", embedder=False)
+        store = MemoryStore(Path(directory) / "beam.db", embedder=False, retrieval_config=config)
         for conversation in source_rows[: args.development_conversations]:
             rows.extend(run_conversation(store, conversation, top_k=args.top_k))
     groups = defaultdict(list)
@@ -142,6 +150,11 @@ def main() -> None:
         "split": "conversation IDs 1..14 development; 15..20 untouched holdout",
         "development_conversations_run": args.development_conversations,
         "top_k": args.top_k,
+        "retrieval_config": {
+            "linkage_enabled": config.linkage_enabled,
+            "expansion_enabled": config.expansion_enabled,
+            "temporal_enabled": config.temporal_enabled,
+        },
         "case_count": len(rows),
         "aggregate": aggregate,
         "rows": rows,
