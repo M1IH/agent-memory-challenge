@@ -32,7 +32,7 @@
 4. [x] 固定 LongMemEval `s_cleaned` 的来源 revision、文件哈希、格式适配和拆分；oracle 只用于证据字段核对，因其缺少大量干扰会话，不作检索主基线。真实检索与答题基线仍属任务 6–7。
 5. [x] 完成第二来源 PersonaMem-v1 32K 格式适配：固定官方 revision、双文件哈希、MIT 许可和 `shared_context_id` 连接键；以共享上下文为单位固定哈希拆分为 414 development / 175 frozen_holdout，互不重叠。上游 system turn 含合成 persona，全部排除；上游无证据来源标注，因此只用于后续多选答案级评测，不用于检索来源指标。来源清单见 `benchmarks/personamem-v1-32k-source.json`。
 6. [~] 统一检索指标与第四版纯词法发展集基线已实现；结果见 [公开检索基线](public-eval-baseline-2026-10-20.md)。真实 BGE 前 10 题同题对照的 Hit@1 为 8/10、Complete@5 为 9/10，比词法各多 1 题，但不足以判断整体增益。Top-100 内容诊断也已完成：390 题中位数 138,049 字符、33 个不同会话来源、67 个重复来源位置；必要来源进入第 6–100 条共 157 题、Top-100 仍缺 5 题。字符不是官方 tokenizer 的 token 数，且命中会话不代表命中必要片段。下一步记录冲突来源顺序，在独立公开答案集上验证会话组织候选，优化 BGE 评测吞吐后分层扩大对照。
-7. [~] 已实现独立预测文件的公开答案评分器 `benchmarks/score_public_answers.py`。固定本机 Qwen 4B 的 PersonaMem 414 题原版多选路径（`options` 实际传入 Search）为 224/414；离线 `balanced_union` 为 240/414，但已打开的 175 题留出上原版为 **97/175**、候选仅 **92/175**，故候选淘汰、线上不改。最初把 `options=None` 的 81/175 当成原版留出基线属于协议失配，详见 [本地答案级口径审计](personamem-local-answerer-2026-10-21.md)。该留出已使用，不能再当新盲测。官方 API Guide 已确认选择题会传 `options`、正式 Top-K 为 100；本地 Top-5/Qwen 小上下文只作诊断。下一步按正式 Top-100 的内容预算和另一个独立来源验证能力级候选，不能把本机模型结果写成官方分数。
+7. [~] 已实现独立预测文件的公开答案评分器 `benchmarks/score_public_answers.py`。固定本机 Qwen 4B 的 PersonaMem 414 题原版多选路径（`options` 实际传入 Search）为 224/414；离线 `balanced_union` 为 240/414，但已打开的 175 题留出上原版为 **97/175**、候选仅 **92/175**，故候选淘汰、线上不改。最初把 `options=None` 的 81/175 当成原版留出基线属于协议失配，详见 [本地答案级口径审计](personamem-local-answerer-2026-10-21.md)。该留出已使用，不能再当新盲测。另在独立来源 LongMemEval development 每类前 5 题建立本地答案诊断：无记忆严格 EM 0/30，词法 Top-5 后 5/30；19 题必要会话来源进入 Top-5，其中 14 题仍未达到严格 EM，见 [LongMemEval 本地答案诊断](longmemeval-local-answerer-2026-10-21.md)。官方 API Guide 已确认选择题会传 `options`、正式 Top-K 为 100；本地 Top-5/Qwen 小上下文只作诊断。下一步分离片段未覆盖、模型回答失败和评分格式问题，再按正式 Top-100 内容预算验证单一候选，不能把本机模型结果写成官方分数。
 
 ### P0：按错误簇迭代
 
@@ -45,7 +45,7 @@
 ### P0：发布与下一次官方评测
 
 13. [ ] 在第四版基线上通过完整测试、10k 多用户 Top-100 负载、故障恢复、秘密扫描、精确 SHA CI、镜像与部署身份核验。
-    **服务恢复与容量状态：**Free 订阅已 ACTIVE，公网 `/health` 为 200，未带密钥的 Add/Search 均为 401；带密钥 Add/Search、跨用户隔离、容器重启后的检索持久化通过。Railway 于 2026-10-21 显示服务 `Sleeping`，一次 `/health` 冷启动约 7.8 秒。持久卷约 63/500 MB。按 10k 记忆、8 用户、32 路 Top-100 Search 在 Windows 本机重测：默认缓存关闭峰值 RSS 540.2 MB，超过 Free 524.3 MB 阈值；`AML_MEMORY_CACHE_USERS=4` 候选为 440.3 MB，96/96 检索正确且隔离无泄漏。详情见 [Free 容量诊断](free-tier-capacity-2026-10-21.md)。生产配置尚未改动，本机通过不代表 Railway Linux 容器通过；Free 每月 $1 额度、冷启动和实际 RSS 仍需核验。容量门禁未通过前不能安排第五次 Smoke 或 Full。
+    **服务恢复与容量状态：**Free 订阅已 ACTIVE，公网 `/health` 为 200，未带密钥的 Add/Search 均为 401；带密钥 Add/Search、跨用户隔离、容器重启后的检索持久化通过。Railway 于 2026-10-21 显示服务 `Sleeping`，一次 `/health` 冷启动约 7.8 秒；最近 1 小时轻量请求内存峰值 86 MB，卷约 65/500 MB。只读核对发现当前生产为 `AML_EMBED_ENABLED=false`、`AML_MEMORY_CACHE_USERS=1`。按这个设置在 Windows 本机重测 10k 记忆、8 用户、32 路 Top-100 Search：峰值 RSS 72.8 MB，96/96 检索正确且隔离无泄漏。先前 540.2 MB 超限来自**假设启用 BGE 且关闭缓存**的实验，不能归因于当前生产；BGE 加 4 用户缓存的本机峰值为 440.3 MB。详情见 [Free 容量诊断](free-tier-capacity-2026-10-21.md)。生产配置尚未改动，本机通过不代表 Railway Linux 容器通过；Free 每月 $1 额度、冷启动和实际 RSS 仍需核验。容量门禁未通过前不能安排第五次 Smoke 或 Full。
 14. [ ] 只对独立公开端到端指标净提升的唯一候选考虑第五次 Smoke；若下降，先回到错误分类，不连续试分。
 15. [ ] 首次 Full 需单独决策包：第四次成绩、公开证据、官方模型合规答复、正式规模容量与服务连续性、预计费用、剩余机会和失败处理。获得用户明确授权后才能启动；评测期间冻结部署和配置。
 
