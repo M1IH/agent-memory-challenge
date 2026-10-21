@@ -2,6 +2,8 @@
 
 > **2026-10-20 实施更新：**LongMemEval-S cleaned 的固定 277,383,467 字节文件已按 revision `98d7416c24c778c2fee6e6f3006e7a073259d48f` 下载并核对 SHA-256，来源清单见 `benchmarks/longmemeval-s-source.json`，纯格式适配器见 `benchmarks/adapt_longmemeval.py`。完整 500 题标准化已通过；当前表格中“尚未进入适配设计”是历史状态。真实检索与最终答题基线尚未完成。
 
+> **2026-10-21 实施更新：**CLBench 一手仓库已在固定 SHA `5f8c50e` 隔离检出。对 `database_exploration` 的 50 个公开问题只做了[规则卡检索代理](clbench-schema-memory-proxy-2026-10-21.md)；未运行其容器化交互任务或原生评分器，不称为 CLBench 成绩。下表早期“排除出静态文本适配器范围”的判断仍成立。
+
 > 首次核验：2026-10-04；最近核验：2026-10-05。仓库和许可证会变化；下载或发布适配器前必须重新核对。
 > “仓库许可证”不自动等于“数据许可证”，两者都要有明确依据。
 
