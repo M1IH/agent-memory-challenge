@@ -29,6 +29,10 @@ CARDS = {
     "COL_DIFF": "Product groups may have missing or extra columns and tables. Do not assume a column discovered in one group exists in the others.",
     "DRIFT": "After a database migration, old schema knowledge may be stale: prices, table names, timestamp fields, and soft-delete behavior can change. Reinspect affected columns and prefer current fields.",
 }
+STAGE_NOTICE = (
+    "NOTICE: The live database schema or contents may have changed since your earlier exploration. "
+    "Inspect current metadata and data before relying on prior assumptions."
+)
 
 
 def score_dependencies(required: list[str], ranked: list[str], k: int) -> dict:
@@ -54,6 +58,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--stage-cue", action="store_true", help="prepend public stage metadata to post-migration queries")
+    parser.add_argument("--persist-stage-notice", action="store_true", help="Add the original one-time migration notice before post-migration queries")
     args = parser.parse_args()
     if args.top_k < 1:
         parser.error("top-k must be positive")
@@ -76,6 +81,19 @@ def main() -> None:
                 for row in connection.execute("SELECT id, session_id FROM memories WHERE user_id = ?", (user_id,))
             }
         for stage, path in files.items():
+            if stage == "post_migration" and args.persist_stage_notice:
+                store.add(
+                    request_id="stage-change-notice", user_id=user_id, session_id="STAGE_NOTICE",
+                    messages=[{"role": "user", "content": STAGE_NOTICE}],
+                )
+                with store._connection() as connection:
+                    source_by_id.update({
+                        row["id"]: row["session_id"]
+                        for row in connection.execute(
+                            "SELECT id, session_id FROM memories WHERE user_id = ? AND session_id = ?",
+                            (user_id, "STAGE_NOTICE"),
+                        )
+                    })
             for case in json.loads(path.read_text(encoding="utf-8")):
                 required = case["knowledge_dependencies"]
                 query = question_query(case, stage, args.stage_cue)
@@ -85,6 +103,7 @@ def main() -> None:
                 rows.append({
                     "stage": stage, "question_id": case["question_id"],
                     "required_count": len(required), "ranked_card_labels": ranked,
+                    "stage_notice_in_top_k": "STAGE_NOTICE" in ranked,
                     "recall_at_k": scored["recall"], "complete_at_k": scored["complete"],
                 })
     report = {
@@ -95,6 +114,7 @@ def main() -> None:
         "store_sha256": hashlib.sha256(Path("app/store.py").read_bytes()).hexdigest(),
         "card_count": len(CARDS), "top_k": args.top_k, "case_count": len(rows),
         "stage_cue": args.stage_cue,
+        "persist_stage_notice": args.persist_stage_notice,
         "mean_recall_at_k": sum(row["recall_at_k"] for row in rows) / len(rows),
         "complete_at_k": sum(row["complete_at_k"] for row in rows),
         "rows": rows,
