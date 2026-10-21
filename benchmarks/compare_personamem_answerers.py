@@ -26,6 +26,9 @@ def compare(base: dict, candidate: dict, suite: dict) -> dict:
     cases = {case["case_id"]: case for case in suite["cases"]}
     if not base_rows.keys() <= cases.keys():
         raise ValueError("report contains unknown cases")
+    split = base.get("split", "development")
+    if any(cases[case_id]["split"] != split for case_id in base_rows):
+        raise ValueError("report case split does not match report metadata")
     paired = Counter()
     grouped: dict[str, list[tuple[bool, bool]]] = defaultdict(list)
     parsed = Counter()
@@ -42,6 +45,7 @@ def compare(base: dict, candidate: dict, suite: dict) -> dict:
             parsed[label] += bool(answer and score_answer(case, answer))
     return {
         "case_count": len(base_rows),
+        "split": split,
         "baseline_correct": sum(row["with_memory_correct"] for row in base_rows.values()),
         "candidate_correct": sum(row["with_memory_correct"] for row in candidate_rows.values()),
         "baseline_parsed_correct": parsed["baseline"],
@@ -61,7 +65,7 @@ def compare(base: dict, candidate: dict, suite: dict) -> dict:
             }
             for name, values in sorted(grouped.items())
         },
-        "note": "Paired public development comparison under one local model; not official AML score.",
+        "note": f"Paired public {split} comparison under one local model; not official AML score.",
     }
 
 

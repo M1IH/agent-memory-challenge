@@ -84,6 +84,8 @@ def run_case(store: MemoryStore, case: dict, *, top_k: int, retrieval_mode: str)
     if retrieval_mode == "question_and_choices":
         query += "\n" + "\n".join(case["choices"])
         retrieved = store.search(user_id=user_id, query=query, options=None, top_k=top_k)
+    elif retrieval_mode == "native_options":
+        retrieved = store.search(user_id=user_id, query=query, options=case["choices"], top_k=top_k)
     elif retrieval_mode == "balanced_union":
         question_results = store.search(user_id=user_id, query=query, options=None, top_k=top_k)
         option_query = query + "\n" + "\n".join(case["choices"])
@@ -121,7 +123,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=10)
     parser.add_argument("--per-capability", type=int, default=None)
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--retrieval-mode", choices=("question", "question_and_choices", "balanced_union"), default="question")
+    parser.add_argument("--retrieval-mode", choices=("question", "native_options", "question_and_choices", "balanced_union"), default="question")
     parser.add_argument("--split", choices=("development", "frozen_holdout"), default="development")
     parser.add_argument("--allow-frozen-holdout", action="store_true")
     args = parser.parse_args()

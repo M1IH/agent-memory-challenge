@@ -40,6 +40,7 @@
   固定 Commit、鉴权和容量声明，以及既有工作署名与方法变化说明。
 - 正式 Search 固定使用 `top_k=100`。每个 Key、每个赛道最多两次 Full；第二次需在
   第一次完成 30 天后解锁。官方遇到 `429` 时最多按 `Retry-After` 等待 60 秒。
+- 2026-10-21 重核 [官方 API Guide](https://agentmemoryleaderboard.ai/api-guide)：选择题（含 Streaming）在 Search 顶层传入 `options` 文本数组，开放题不发送；不得用金标答案替换原始 `query`。平台按返回顺序保留候选，正式评测 `top_k=100`，Answer 输入窗口预算为 117,760 tokens。公开本地多选评测必须传入 `options` 才能称为生产同构路径；Top-5 小模型答题仅是诊断。
 - 评测数据必须保密，并在评测任务结束后的 30 天内删除。
 
 ## 因此采用的工程决策

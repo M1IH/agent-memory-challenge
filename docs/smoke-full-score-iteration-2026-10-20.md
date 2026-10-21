@@ -32,7 +32,7 @@
 4. [x] 固定 LongMemEval `s_cleaned` 的来源 revision、文件哈希、格式适配和拆分；oracle 只用于证据字段核对，因其缺少大量干扰会话，不作检索主基线。真实检索与答题基线仍属任务 6–7。
 5. [x] 完成第二来源 PersonaMem-v1 32K 格式适配：固定官方 revision、双文件哈希、MIT 许可和 `shared_context_id` 连接键；以共享上下文为单位固定哈希拆分为 414 development / 175 frozen_holdout，互不重叠。上游 system turn 含合成 persona，全部排除；上游无证据来源标注，因此只用于后续多选答案级评测，不用于检索来源指标。来源清单见 `benchmarks/personamem-v1-32k-source.json`。
 6. [~] 统一检索指标与第四版纯词法发展集基线已实现；结果见 [公开检索基线](public-eval-baseline-2026-10-20.md)。真实 BGE 前 10 题同题对照的 Hit@1 为 8/10、Complete@5 为 9/10，比词法各多 1 题，但不足以判断整体增益。下一步记录冲突来源顺序、Top-100 去重覆盖和字符预算，优化 BGE 评测吞吐后分层扩大对照。
-7. [~] 已实现独立预测文件的公开答案评分器 `benchmarks/score_public_answers.py`：默认只评分 development，按 case ID 严格检查漏题/重题/多题。固定本机 Qwen 4B、提示词哈希和参数的 PersonaMem 414 题结果：无记忆 161/414、第四版问题查询 Top-5 为 224/414、冻结的 `balanced_union` 候选为 240/414（严格格式），见 [本地答案级基线](personamem-local-answerer-2026-10-21.md)。接下来只用尚未使用的 175 题冻结留出验收，不据留出调参；之后仍须另一个来源和正式容量验证。本机模型不是官方平台侧回答器，不能把本地结果写成官方分数。
+7. [~] 已实现独立预测文件的公开答案评分器 `benchmarks/score_public_answers.py`。固定本机 Qwen 4B 的 PersonaMem 414 题原版多选路径（`options` 实际传入 Search）为 224/414；离线 `balanced_union` 为 240/414，但已打开的 175 题留出上原版为 **97/175**、候选仅 **92/175**，故候选淘汰、线上不改。最初把 `options=None` 的 81/175 当成原版留出基线属于协议失配，详见 [本地答案级口径审计](personamem-local-answerer-2026-10-21.md)。该留出已使用，不能再当新盲测。官方 API Guide 已确认选择题会传 `options`、正式 Top-K 为 100；本地 Top-5/Qwen 小上下文只作诊断。下一步按正式 Top-100 的内容预算和另一个独立来源验证能力级候选，不能把本机模型结果写成官方分数。
 
 ### P0：按错误簇迭代
 

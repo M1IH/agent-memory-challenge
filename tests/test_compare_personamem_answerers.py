@@ -25,7 +25,7 @@ class PairedComparisonTests(unittest.TestCase):
     def setUp(self):
         self.suite = {
             "file_sha256": "suite-hash",
-            "cases": [{"case_id": "personamem:1", "reference_answers": ["(b) correct"], "scorer": "multiple_choice"}],
+            "cases": [{"case_id": "personamem:1", "split": "development", "reference_answers": ["(b) correct"], "scorer": "multiple_choice"}],
         }
 
     def test_improvement_is_paired_and_parsed_separately(self):
@@ -39,6 +39,14 @@ class PairedComparisonTests(unittest.TestCase):
         candidate["model_digest"] = "different-model"
         with self.assertRaisesRegex(ValueError, "model_digest"):
             compare(report(False), candidate, self.suite)
+
+    def test_report_cannot_claim_different_split(self):
+        candidate = report(True)
+        baseline = report(False)
+        baseline["split"] = "frozen_holdout"
+        candidate["split"] = "frozen_holdout"
+        with self.assertRaisesRegex(ValueError, "case split"):
+            compare(baseline, candidate, self.suite)
 
 
 if __name__ == "__main__":
