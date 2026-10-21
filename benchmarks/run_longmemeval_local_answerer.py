@@ -16,6 +16,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from app.store import MemoryStore
+from benchmarks.probe_session_round_robin import session_round_robin
 from benchmarks.public_eval_schema import load_suite
 from benchmarks.run_personamem_local_answerer import MODEL, OLLAMA_URL, model_digest
 from benchmarks.score_public_answers import score_answer
@@ -58,7 +59,7 @@ def select_cases(suite: dict, per_capability: int) -> list[dict]:
     return selected
 
 
-def run_case(store: MemoryStore, case: dict, top_k: int) -> dict:
+def run_case(store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "native") -> dict:
     user_id = f"longmemeval-answer:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
         store.add(
@@ -71,7 +72,18 @@ def run_case(store: MemoryStore, case: dict, top_k: int) -> dict:
             ],
         )
     without, without_seconds = ask(case["question"], [])
-    results = store.search(user_id=user_id, query=case["question"], options=None, top_k=top_k)
+    results = store.search(
+        user_id=user_id, query=case["question"], options=None,
+        top_k=100 if retrieval_mode == "session_round_robin" else top_k,
+    )
+    if retrieval_mode == "session_round_robin":
+        with store._connection() as connection:
+            sources = {
+                row["id"]: row["session_id"]
+                for row in connection.execute("SELECT id, session_id FROM memories WHERE user_id = ?", (user_id,))
+            }
+        results, _ = session_round_robin(results, [sources[result["id"]] for result in results])
+        results = results[:top_k]
     with_memory, with_seconds = ask(
         case["question"], [f"[{index + 1}] {result['content']}" for index, result in enumerate(results)],
     )
@@ -101,6 +113,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--per-capability", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin"), default="native")
     args = parser.parse_args()
     if args.per_capability < 1 or args.top_k < 1:
         parser.error("per-capability and top-k must be positive")
@@ -111,7 +124,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as directory:
         store = MemoryStore(Path(directory) / "answerer.db", embedder=False)
         for case in cases:
-            rows.append(run_case(store, case, args.top_k))
+            rows.append(run_case(store, case, args.top_k, args.retrieval_mode))
     report = {
         "kind": "longmemeval_local_answerer_development",
         "suite_sha256": suite["file_sha256"],
@@ -122,6 +135,7 @@ def main() -> None:
         "options": OPTIONS,
         "selection": f"first-{args.per_capability}-per-capability-source-order",
         "top_k": args.top_k,
+        "retrieval_mode": args.retrieval_mode,
         "case_count": len(rows),
         "without_exact": sum(row["without_exact"] for row in rows),
         "with_exact": sum(row["with_exact"] for row in rows),
