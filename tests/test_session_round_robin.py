@@ -1,6 +1,6 @@
 import unittest
 
-from benchmarks.probe_session_round_robin import complete_rank, literal_rank, session_round_robin
+from benchmarks.probe_session_round_robin import complete_rank, literal_rank, session_cap_two, session_round_robin
 
 
 class SessionRoundRobinTests(unittest.TestCase):
@@ -23,6 +23,13 @@ class SessionRoundRobinTests(unittest.TestCase):
         self.assertEqual(3, complete_rank({"a", "b", "c"}, reranked_sources))
         self.assertEqual(2, literal_rank({"a"}, ["Kyoto"], results, sources))
         self.assertEqual(4, literal_rank({"a"}, ["Kyoto"], reranked, reranked_sources))
+
+    def test_cap_two_preserves_second_hit_before_deferring_third(self):
+        results = [{"id": str(i), "content": str(i)} for i in range(7)]
+        sources = ["a", "a", "a", "b", "b", "b", "c"]
+        reranked, reranked_sources = session_cap_two(results, sources)
+        self.assertEqual(["0", "1", "3", "4", "6", "2", "5"], [item["id"] for item in reranked])
+        self.assertEqual(["a", "a", "b", "b", "c", "a", "b"], reranked_sources)
 
 
 if __name__ == "__main__":

@@ -35,6 +35,20 @@ def session_round_robin(results: list[dict], source_ids: list[str]) -> tuple[lis
     return reranked, reranked_sources
 
 
+def session_cap_two(results: list[dict], source_ids: list[str]) -> tuple[list[dict], list[str]]:
+    """Keep each session's first two hits before deferring later hits."""
+    if len(results) != len(source_ids):
+        raise ValueError("results and source IDs differ in length")
+    counts: dict[str, int] = {}
+    first_pass = []
+    deferred = []
+    for result, source in zip(results, source_ids, strict=True):
+        counts[source] = counts.get(source, 0) + 1
+        (first_pass if counts[source] <= 2 else deferred).append((result, source))
+    ordered = first_pass + deferred
+    return [result for result, _ in ordered], [source for _, source in ordered]
+
+
 def complete_rank(required: set[str], sources: list[str]) -> int | None:
     seen: set[str] = set()
     for rank, source in enumerate(sources, 1):
@@ -53,7 +67,7 @@ def literal_rank(
     ), None)
 
 
-def run_case(store: MemoryStore, case: dict) -> dict:
+def run_case(store: MemoryStore, case: dict, mode: str = "round_robin") -> dict:
     user_id = f"session-rr:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
         store.add(
@@ -71,7 +85,8 @@ def run_case(store: MemoryStore, case: dict) -> dict:
             for row in connection.execute("SELECT id, session_id FROM memories WHERE user_id = ?", (user_id,))
         }
     sources = [source_by_id[result["id"]] for result in results]
-    candidate, candidate_sources = session_round_robin(results, sources)
+    reranker = session_cap_two if mode == "cap_two" else session_round_robin
+    candidate, candidate_sources = reranker(results, sources)
     required = set(case["evidence_memory_ids"])
     eligible = [answer for answer in case["reference_answers"] if eligible_literal(answer)]
     required_text = "\n".join(
@@ -95,6 +110,7 @@ def main() -> None:
     parser.add_argument("--suite", type=Path, default=Path("data/longmemeval-s-normalized.json"))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=390)
+    parser.add_argument("--mode", choices=("round_robin", "cap_two"), default="round_robin")
     args = parser.parse_args()
     if args.limit < 1:
         parser.error("limit must be positive")
@@ -104,9 +120,10 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as directory:
         store = MemoryStore(Path(directory) / "session-rr.db", embedder=False)
         for case in cases:
-            rows.append(run_case(store, case))
+            rows.append(run_case(store, case, args.mode))
     report = {
-        "kind": "offline_session_round_robin_development",
+        "kind": "offline_session_rerank_development",
+        "mode": args.mode,
         "suite_sha256": suite["file_sha256"],
         "runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "store_sha256": hashlib.sha256(Path("app/store.py").read_bytes()).hexdigest(),
