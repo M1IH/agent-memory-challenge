@@ -39,8 +39,10 @@ class LongMemEvalFragmentTests(unittest.TestCase):
             with patch.object(store, "search", side_effect=source_only):
                 row = analyze_case(store, case, top_k=1)
         self.assertTrue(row["required_source_complete"])
+        self.assertEqual(1, row["required_source_complete_rank"])
         self.assertTrue(row["literal_in_required_source"])
         self.assertFalse(row["literal_in_required_source_snippet"])
+        self.assertIsNone(row["literal_first_rank_required"])
 
 
 if __name__ == "__main__":
