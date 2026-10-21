@@ -14,7 +14,39 @@ from benchmarks.public_eval_metrics import aggregate_retrieval, score_retrieval
 from benchmarks.public_eval_schema import load_suite
 
 
-def run_case(store: MemoryStore, case: dict, *, top_k: int) -> tuple[dict[str, float], list[str]]:
+def content_diagnostics(case: dict, ranked_sources: list[str], results: list[dict]) -> dict:
+    """Measure returned content and evidence placement without estimating tokens."""
+    required = set(case["evidence_memory_ids"])
+    seen: set[str] = set()
+    covered: set[str] = set()
+    cumulative_chars = 0
+    first_evidence_rank = None
+    complete_evidence_rank = None
+    prefixes = {}
+    for rank, (source, result) in enumerate(zip(ranked_sources, results, strict=True), 1):
+        cumulative_chars += len(result["content"])
+        seen.add(source)
+        covered.update(required.intersection({source}))
+        if source in required and first_evidence_rank is None:
+            first_evidence_rank = rank
+        if covered == required and complete_evidence_rank is None:
+            complete_evidence_rank = rank
+        if rank in (5, 10, 20, 50, 100):
+            prefixes[str(rank)] = {"chars": cumulative_chars, "distinct_sources": len(seen),
+                                   "evidence_sources": len(covered)}
+    return {
+        "result_count": len(results),
+        "total_chars": cumulative_chars,
+        "distinct_sources": len(seen),
+        "duplicate_source_slots": len(results) - len(seen),
+        "required_sources": len(required),
+        "first_evidence_rank": first_evidence_rank,
+        "complete_evidence_rank": complete_evidence_rank,
+        "prefixes": prefixes,
+    }
+
+
+def run_case(store: MemoryStore, case: dict, *, top_k: int, include_content: bool = False) -> tuple:
     user_id = f"public-eval:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
         messages = [
@@ -34,7 +66,10 @@ def run_case(store: MemoryStore, case: dict, *, top_k: int) -> tuple[dict[str, f
     source_by_id = {row["id"]: row["session_id"] for row in rows}
     results = store.search(user_id=user_id, query=case["question"], options=None, top_k=top_k)
     ranked_sources = [source_by_id[result["id"]] for result in results]
-    return score_retrieval(case, ranked_sources), ranked_sources
+    metrics = score_retrieval(case, ranked_sources)
+    if include_content:
+        return metrics, ranked_sources, content_diagnostics(case, ranked_sources, results)
+    return metrics, ranked_sources
 
 
 def _git(*args: str) -> str:
@@ -48,6 +83,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=5, help="first N development cases in source order")
     parser.add_argument("--top-k", type=int, default=100)
     parser.add_argument("--embeddings", action="store_true", help="load pinned local BGE model")
+    parser.add_argument("--content-diagnostics", action="store_true", help="record content character counts and source placement")
     args = parser.parse_args()
     if args.limit < 1 or args.top_k < 1:
         parser.error("limit and top-k must be positive")
@@ -61,13 +97,17 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         store = MemoryStore(Path(temp_dir) / "public-eval.db", embedder=None if args.embeddings else False)
         for case in cases:
-            metrics, ranked_sources = run_case(store, case, top_k=args.top_k)
-            rows.append({
+            result = run_case(store, case, top_k=args.top_k, include_content=args.content_diagnostics)
+            metrics, ranked_sources = result[:2]
+            row = {
                 "case_id": case["case_id"],
                 "capabilities": case["capabilities"],
                 "metrics": metrics,
                 "ranked_source_ids": list(dict.fromkeys(ranked_sources)),
-            })
+            }
+            if args.content_diagnostics:
+                row["content_diagnostics"] = result[2]
+            rows.append(row)
     report = {
         "kind": "public_retrieval_development",
         "source_sha256": suite["source_sha256"],
@@ -86,6 +126,7 @@ def main() -> None:
         },
         "top_k": args.top_k,
         "embeddings": args.embeddings,
+        "content_diagnostics": args.content_diagnostics,
         "case_count": len(rows),
         "aggregate": aggregate_retrieval(row["metrics"] for row in rows),
         "cases": rows,
