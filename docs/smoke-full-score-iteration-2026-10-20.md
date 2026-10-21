@@ -32,7 +32,7 @@
 4. [x] 固定 LongMemEval `s_cleaned` 的来源 revision、文件哈希、格式适配和拆分；oracle 只用于证据字段核对，因其缺少大量干扰会话，不作检索主基线。真实检索与答题基线仍属任务 6–7。
 5. [x] 完成第二来源 PersonaMem-v1 32K 格式适配：固定官方 revision、双文件哈希、MIT 许可和 `shared_context_id` 连接键；以共享上下文为单位固定哈希拆分为 414 development / 175 frozen_holdout，互不重叠。上游 system turn 含合成 persona，全部排除；上游无证据来源标注，因此只用于后续多选答案级评测，不用于检索来源指标。来源清单见 `benchmarks/personamem-v1-32k-source.json`。
 6. [~] 统一检索指标与第四版纯词法发展集基线已实现；结果见 [公开检索基线](public-eval-baseline-2026-10-20.md)。真实 BGE 前 10 题同题对照的 Hit@1 为 8/10、Complete@5 为 9/10，比词法各多 1 题，但不足以判断整体增益。下一步记录冲突来源顺序、Top-100 去重覆盖和字符预算，优化 BGE 评测吞吐后分层扩大对照。
-7. [~] 已实现独立预测文件的公开答案评分器 `benchmarks/score_public_answers.py`：默认只评分 development，按 case ID 严格检查漏题/重题/多题，多选只接受确切选项或标签，LongMemEval 使用明确标注的标准化 Exact Match 代理。下一步仍须固定回答器、提示词哈希和推理参数，生成“无检索 / BM25 / 第四版 / 候选”的同题预测；未有真实答案准确率。最终答题准确率是候选准入主指标；单独的证据召回提升不足以启动 Smoke。
+7. [~] 已实现独立预测文件的公开答案评分器 `benchmarks/score_public_answers.py`：默认只评分 development，按 case ID 严格检查漏题/重题/多题。固定本机 Qwen 4B、提示词哈希和参数的 PersonaMem 414 题结果：无记忆 161/414、第四版问题查询 Top-5 为 224/414、冻结的 `balanced_union` 候选为 240/414（严格格式），见 [本地答案级基线](personamem-local-answerer-2026-10-21.md)。接下来只用尚未使用的 175 题冻结留出验收，不据留出调参；之后仍须另一个来源和正式容量验证。本机模型不是官方平台侧回答器，不能把本地结果写成官方分数。
 
 ### P0：按错误簇迭代
 

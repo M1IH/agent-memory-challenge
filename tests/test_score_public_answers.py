@@ -2,7 +2,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from benchmarks.score_public_answers import load_predictions, score_answer, score_suite
+from benchmarks.score_public_answers import (
+    extract_leading_choice_label,
+    load_predictions,
+    score_answer,
+    score_suite,
+)
 
 
 def case(case_id, *, split="development", scorer="multiple_choice"):
@@ -16,6 +21,12 @@ def case(case_id, *, split="development", scorer="multiple_choice"):
 
 
 class PublicAnswerScoringTests(unittest.TestCase):
+    def test_leading_label_parser_accepts_option_text_but_not_embedded_label(self):
+        self.assertEqual("(c)", extract_leading_choice_label("  (C) I remember your preference."))
+        self.assertEqual("(b)", extract_leading_choice_label("(b)"))
+        self.assertIsNone(extract_leading_choice_label("I choose (b)"))
+        self.assertIsNone(extract_leading_choice_label("(a)(b)"))
+
     def test_multiple_choice_accepts_exact_label_or_full_choice_only(self):
         item = case("a")
         self.assertTrue(score_answer(item, "(b)"))

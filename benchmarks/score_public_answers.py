@@ -17,6 +17,13 @@ from benchmarks.public_eval_schema import load_suite
 
 
 CHOICE_LABEL = re.compile(r"^\(([a-z])\)$", re.IGNORECASE)
+LEADING_CHOICE_LABEL = re.compile(r"^\s*(\([a-d]\))(?=$|[\s.:;,])", re.IGNORECASE)
+
+
+def extract_leading_choice_label(value: str) -> str | None:
+    """Read a model's unambiguous first option label for diagnostic scoring."""
+    match = LEADING_CHOICE_LABEL.match(value)
+    return match.group(1).lower() if match else None
 
 
 def normalize_text(value: str) -> str:

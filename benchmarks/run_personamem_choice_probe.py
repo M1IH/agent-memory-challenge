@@ -18,18 +18,27 @@ from benchmarks.public_eval_schema import load_suite
 from benchmarks.score_public_answers import score_answer
 
 
-def choose(store: MemoryStore, user_id: str, choices: list[str]) -> str:
+def choose(store: MemoryStore, user_id: str, choices: list[str]) -> tuple[str, list[dict]]:
     ranked = []
+    details = []
     for index, option in enumerate(choices):
         text = option.split(" ", 1)[1] if " " in option else option
         results = store.search(user_id=user_id, query=text, options=None, top_k=3)
-        score = max((result["score"] or 0.0 for result in results), default=0.0)
-        score /= math.sqrt(max(1, len(set(tokenize(text)))))
+        raw_score = max((result["score"] or 0.0 for result in results), default=0.0)
+        distinct_terms = max(1, len(set(tokenize(text))))
+        score = raw_score / math.sqrt(distinct_terms)
+        details.append({
+            "label": option.split(" ", 1)[0],
+            "score": score,
+            "raw_score": raw_score,
+            "distinct_terms": distinct_terms,
+            "top_result_id": results[0]["id"] if results else None,
+        })
         ranked.append((score, -index, option))
-    return max(ranked)[2]
+    return max(ranked)[2], details
 
 
-def run_case(store: MemoryStore, case: dict) -> bool:
+def run_case(store: MemoryStore, case: dict) -> dict:
     user_id = "choice-probe:" + case["case_id"]
     for index, memory in enumerate(case["memories"]):
         store.add(
@@ -38,7 +47,15 @@ def run_case(store: MemoryStore, case: dict) -> bool:
             session_id=memory["memory_id"],
             messages=[{"role": turn["role"], "content": turn["content"]} for turn in memory["turns"]],
         )
-    return score_answer(case, choose(store, user_id, case["choices"]))
+    prediction, scores = choose(store, user_id, case["choices"])
+    return {
+        "case_id": case["case_id"],
+        "capability": case["capabilities"][0],
+        "correct": score_answer(case, prediction),
+        "predicted_label": prediction.split(" ", 1)[0],
+        "reference_label": case["source_answer_raw"],
+        "scores": scores,
+    }
 
 
 def main() -> None:
@@ -55,7 +72,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as directory:
         store = MemoryStore(Path(directory) / "choice-probe.db", embedder=False)
         for case in cases:
-            rows.append({"case_id": case["case_id"], "correct": run_case(store, case), "capability": case["capabilities"][0]})
+            rows.append(run_case(store, case))
     report = {
         "kind": "personamem_lexical_choice_probe",
         "suite_sha256": suite["file_sha256"],
