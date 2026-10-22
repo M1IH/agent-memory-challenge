@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import tempfile
 import time
 import urllib.request
@@ -77,7 +78,7 @@ def run_case(
     without, without_seconds = (None, 0.0) if skip_without else ask(case["question"], [])
     results = store.search(
         user_id=user_id, query=case["question"], options=None,
-        top_k=100 if retrieval_mode == "session_round_robin" else top_k,
+        top_k=100 if retrieval_mode in ("session_round_robin", "user_role_boost") else top_k,
     )
     if retrieval_mode == "session_round_robin":
         with store._connection() as connection:
@@ -87,6 +88,19 @@ def run_case(
             }
         results, _ = session_round_robin(results, [sources[result["id"]] for result in results])
         results = results[:top_k]
+    elif retrieval_mode == "user_role_boost":
+        results = [
+            result for _, result in sorted(
+                enumerate(results),
+                key=lambda item: (
+                    -(
+                        item[1]["score"]
+                        + 2.0 * bool(re.match(r"^(?:\[[^]]+\] )?user:", item[1]["content"]))
+                    ),
+                    item[0],
+                ),
+            )[:top_k]
+        ]
     with_memory, with_seconds = ask(
         case["question"], [f"[{index + 1}] {result['content']}" for index, result in enumerate(results)],
     )
@@ -116,7 +130,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--per-capability", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin"), default="native")
+    parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost"), default="native")
     parser.add_argument("--disable-linkage", action="store_true", help="offline entity-linkage ablation")
     parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
     args = parser.parse_args()
