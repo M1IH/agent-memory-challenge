@@ -65,27 +65,40 @@ def load_rows(path: Path) -> list[dict]:
     return parquet.read_table(path).to_pylist()
 
 
-def run_conversation(store: MemoryStore, conversation: dict, *, top_k: int) -> list[dict]:
+def run_conversation(
+    store: MemoryStore, conversation: dict, *, top_k: int,
+    ranking_diagnostics: bool = False,
+    candidate_pool: int | None = None, user_quota: int | None = None,
+    assistant_chunk_chars: int | None = None,
+    dedup_source: bool = False,
+) -> list[dict]:
     conversation_id = str(conversation["conversation_id"])
     user_id = f"beam-100k:{conversation_id}"
     chat = conversation["chat"]
     original_ids = set()
+    role_by_source = {}
     for batch_index, batch in enumerate(chat):
         for message in batch:
             message_id = message["id"]
             if message_id in original_ids:
                 raise ValueError(f"duplicate message ID {conversation_id}:{message_id}")
             original_ids.add(message_id)
+            role_by_source[message_id] = message["role"]
             content = message["content"]
             # One source message can exceed the production Add payload bound.
             # Split losslessly and map each stored chunk back to the source ID.
-            for chunk_index, start in enumerate(range(0, len(content), store.max_add_chars)):
+            chunk_chars = (
+                min(assistant_chunk_chars, store.max_add_chars)
+                if message["role"] == "assistant" and assistant_chunk_chars is not None
+                else store.max_add_chars
+            )
+            for chunk_index, start in enumerate(range(0, len(content), chunk_chars)):
                 store.add(
                     request_id=f"chat:{message_id}:{chunk_index}", user_id=user_id,
                     session_id=f"batch:{batch_index + 1}",
                     messages=[{
                         "role": message["role"],
-                        "content": content[start:start + store.max_add_chars],
+                        "content": content[start:start + chunk_chars],
                     }],
                 )
     with store._connection() as connection:
@@ -106,10 +119,39 @@ def run_conversation(store: MemoryStore, conversation: dict, *, top_k: int) -> l
             if not required or not required <= original_ids:
                 raise ValueError(f"invalid evidence IDs for {conversation_id}:{category}:{question_index}")
             results = store.search(
-                user_id=user_id, query=item["question"], options=None, top_k=top_k,
+                user_id=user_id, query=item["question"], options=None,
+                top_k=candidate_pool or top_k,
             )
+            if dedup_source:
+                seen_sources = set()
+                unique_results = []
+                for result in results:
+                    source_id = id_by_memory[result["id"]]
+                    if source_id not in seen_sources:
+                        seen_sources.add(source_id)
+                        unique_results.append(result)
+                results = unique_results
+            if user_quota is not None:
+                prefix_count = min(5, top_k)
+                prefix = list(range(min(prefix_count, len(results))))
+                remaining = list(range(len(prefix), len(results)))
+                user_slots = max(0, user_quota - sum(
+                    role_by_source[id_by_memory[results[index]["id"]]] == "user"
+                    for index in prefix
+                ))
+                user_indices = [
+                    index for index in remaining
+                    if role_by_source[id_by_memory[results[index]["id"]]] == "user"
+                ][:user_slots]
+                user_set = set(user_indices)
+                other_indices = [
+                    index for index in remaining if index not in user_set
+                ][:max(0, top_k - len(prefix) - len(user_indices))]
+                selected = set(prefix + user_indices + other_indices)
+                results = [result for index, result in enumerate(results) if index in selected]
+            results = results[:top_k]
             ranked = [id_by_memory[result["id"]] for result in results]
-            rows.append({
+            row = {
                 "conversation_id": conversation_id,
                 "category": category,
                 "question_index": question_index,
@@ -119,7 +161,12 @@ def run_conversation(store: MemoryStore, conversation: dict, *, top_k: int) -> l
                 "complete_at_100": required <= set(ranked[:100]),
                 "required_ranks": {str(i): ranked.index(i) + 1 if i in ranked else None for i in sorted(required)},
                 "result_count": len(ranked),
-            })
+            }
+            if ranking_diagnostics:
+                row["ranked_message_ids"] = ranked
+                row["ranked_result_chars"] = [len(result["content"]) for result in results]
+                row["ranked_scores"] = [result["score"] for result in results]
+            rows.append(row)
     return rows
 
 
@@ -133,9 +180,24 @@ def main() -> None:
     parser.add_argument("--disable-expansion", action="store_true")
     parser.add_argument("--disable-temporal", action="store_true")
     parser.add_argument("--filter-english-entities", action="store_true")
+    parser.add_argument("--ranking-diagnostics", action="store_true")
+    parser.add_argument("--candidate-pool", type=int, default=None)
+    parser.add_argument("--user-quota", type=int, default=None)
+    parser.add_argument("--assistant-chunk-chars", type=int, default=None)
+    parser.add_argument("--dedup-source", action="store_true")
     args = parser.parse_args()
     if args.development_conversations not in range(1, 15) or args.top_k < 1:
         parser.error("development-conversations must be 1..14 and top-k positive")
+    if args.user_quota is not None and (
+        not 0 <= args.user_quota <= args.top_k
+        or args.candidate_pool is None
+        or args.candidate_pool < args.top_k
+    ):
+        parser.error("user-quota requires candidate-pool >= top-k and quota within top-k")
+    if args.assistant_chunk_chars is not None and args.assistant_chunk_chars < 1:
+        parser.error("assistant-chunk-chars must be positive")
+    if args.dedup_source and (args.candidate_pool is None or args.candidate_pool < args.top_k):
+        parser.error("dedup-source requires candidate-pool >= top-k")
     source_rows = load_rows(args.source)
     if len(source_rows) != 20:
         raise ValueError("expected exactly 20 BEAM 100K conversations")
@@ -151,7 +213,13 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as directory:
         store = MemoryStore(Path(directory) / "beam.db", embedder=False, retrieval_config=config)
         for conversation in source_rows[: args.development_conversations]:
-            rows.extend(run_conversation(store, conversation, top_k=args.top_k))
+            rows.extend(run_conversation(
+                store, conversation, top_k=args.top_k,
+                ranking_diagnostics=args.ranking_diagnostics,
+                candidate_pool=args.candidate_pool, user_quota=args.user_quota,
+                assistant_chunk_chars=args.assistant_chunk_chars,
+                dedup_source=args.dedup_source,
+            ))
     groups = defaultdict(list)
     for row in rows:
         groups[row["category"]].append(row)
@@ -179,6 +247,11 @@ def main() -> None:
             "temporal_enabled": config.temporal_enabled,
         },
         "filter_english_entities": args.filter_english_entities,
+        "ranking_diagnostics": args.ranking_diagnostics,
+        "candidate_pool": args.candidate_pool,
+        "user_quota": args.user_quota,
+        "assistant_chunk_chars": args.assistant_chunk_chars,
+        "dedup_source": args.dedup_source,
         "case_count": len(rows),
         "aggregate": aggregate,
         "rows": rows,
