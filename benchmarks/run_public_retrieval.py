@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from app.store import MemoryStore
+from app.store import MemoryStore, RetrievalConfig
 from benchmarks.public_eval_metrics import aggregate_retrieval, score_retrieval
 from benchmarks.public_eval_schema import load_suite
 
@@ -84,6 +84,7 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=100)
     parser.add_argument("--embeddings", action="store_true", help="load pinned local BGE model")
     parser.add_argument("--content-diagnostics", action="store_true", help="record content character counts and source placement")
+    parser.add_argument("--disable-linkage", action="store_true", help="offline ablation of entity linkage")
     args = parser.parse_args()
     if args.limit < 1 or args.top_k < 1:
         parser.error("limit and top-k must be positive")
@@ -95,7 +96,11 @@ def main() -> None:
         raise ValueError("source-level retrieval requires evidence_memory_ids")
     rows = []
     with tempfile.TemporaryDirectory() as temp_dir:
-        store = MemoryStore(Path(temp_dir) / "public-eval.db", embedder=None if args.embeddings else False)
+        store = MemoryStore(
+            Path(temp_dir) / "public-eval.db",
+            embedder=None if args.embeddings else False,
+            retrieval_config=RetrievalConfig(linkage_enabled=not args.disable_linkage),
+        )
         for case in cases:
             result = run_case(store, case, top_k=args.top_k, include_content=args.content_diagnostics)
             metrics, ranked_sources = result[:2]
@@ -126,6 +131,7 @@ def main() -> None:
         },
         "top_k": args.top_k,
         "embeddings": args.embeddings,
+        "linkage_enabled": not args.disable_linkage,
         "content_diagnostics": args.content_diagnostics,
         "case_count": len(rows),
         "aggregate": aggregate_retrieval(row["metrics"] for row in rows),

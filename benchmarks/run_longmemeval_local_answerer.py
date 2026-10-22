@@ -15,7 +15,7 @@ import urllib.request
 from collections import defaultdict
 from pathlib import Path
 
-from app.store import MemoryStore
+from app.store import MemoryStore, RetrievalConfig
 from benchmarks.probe_session_round_robin import session_round_robin
 from benchmarks.public_eval_schema import load_suite
 from benchmarks.run_personamem_local_answerer import MODEL, OLLAMA_URL, model_digest
@@ -59,7 +59,10 @@ def select_cases(suite: dict, per_capability: int) -> list[dict]:
     return selected
 
 
-def run_case(store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "native") -> dict:
+def run_case(
+    store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "native",
+    *, skip_without: bool = False,
+) -> dict:
     user_id = f"longmemeval-answer:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
         store.add(
@@ -71,7 +74,7 @@ def run_case(store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "
                 for turn in memory["turns"]
             ],
         )
-    without, without_seconds = ask(case["question"], [])
+    without, without_seconds = (None, 0.0) if skip_without else ask(case["question"], [])
     results = store.search(
         user_id=user_id, query=case["question"], options=None,
         top_k=100 if retrieval_mode == "session_round_robin" else top_k,
@@ -97,7 +100,7 @@ def run_case(store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "
         "case_id": case["case_id"],
         "capability": case["capabilities"][0],
         "without_answer": without,
-        "without_exact": score_answer(case, without),
+        "without_exact": None if without is None else score_answer(case, without),
         "with_answer": with_memory,
         "with_exact": score_answer(case, with_memory),
         "evidence_source_complete": set(case["evidence_memory_ids"]) <= returned_sources,
@@ -114,6 +117,8 @@ def main() -> None:
     parser.add_argument("--per-capability", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin"), default="native")
+    parser.add_argument("--disable-linkage", action="store_true", help="offline entity-linkage ablation")
+    parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
     args = parser.parse_args()
     if args.per_capability < 1 or args.top_k < 1:
         parser.error("per-capability and top-k must be positive")
@@ -122,9 +127,15 @@ def main() -> None:
     cases = select_cases(suite, args.per_capability)
     rows = []
     with tempfile.TemporaryDirectory() as directory:
-        store = MemoryStore(Path(directory) / "answerer.db", embedder=False)
+        store = MemoryStore(
+            Path(directory) / "answerer.db", embedder=False,
+            retrieval_config=RetrievalConfig(linkage_enabled=not args.disable_linkage),
+        )
         for case in cases:
-            rows.append(run_case(store, case, args.top_k, args.retrieval_mode))
+            rows.append(run_case(
+                store, case, args.top_k, args.retrieval_mode,
+                skip_without=args.skip_without,
+            ))
     report = {
         "kind": "longmemeval_local_answerer_development",
         "suite_sha256": suite["file_sha256"],
@@ -136,8 +147,10 @@ def main() -> None:
         "selection": f"first-{args.per_capability}-per-capability-source-order",
         "top_k": args.top_k,
         "retrieval_mode": args.retrieval_mode,
+        "linkage_enabled": not args.disable_linkage,
+        "skip_without": args.skip_without,
         "case_count": len(rows),
-        "without_exact": sum(row["without_exact"] for row in rows),
+        "without_exact": None if args.skip_without else sum(row["without_exact"] for row in rows),
         "with_exact": sum(row["with_exact"] for row in rows),
         "rows": rows,
         "note": "Exploratory strict exact match; not official LongMemEval or AML score.",

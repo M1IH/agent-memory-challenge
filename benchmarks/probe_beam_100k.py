@@ -11,16 +11,36 @@ import argparse
 import ast
 import hashlib
 import json
+import re
 import tempfile
 from collections import defaultdict
 from pathlib import Path
 
 from app.store import MemoryStore, RetrievalConfig
+import app.store as store_module
 
 
 SOURCE_REVISION = "3205395e897e7318c7b094ef4e6047b9b82dbb03"
 SOURCE_SHA256 = "c0519be25907005ba873c927c50877471d550873039d96c041554d0075a78ace"
 TARGET_CATEGORIES = ("summarization", "multi_session_reasoning", "knowledge_update")
+_TITLE_TOKEN = re.compile(r"(?<![\w-])[A-Z][a-z]+(?:-[A-Z]?[a-z]+)?")
+_ORIGINAL_ENTITY_TERMS = store_module.entity_terms
+
+
+def noninitial_entity_terms(text: str) -> set[str]:
+    """Experimental: remove English sentence/list starters from link entities."""
+    candidates = _ORIGINAL_ENTITY_TERMS(text)
+    retained = {item for item in candidates if not item.isascii()}
+    for match in _TITLE_TOKEN.finditer(text):
+        term = match.group().lower()
+        if term not in candidates:
+            continue
+        preceding = text[:match.start()]
+        last_boundary = max(preceding.rfind(mark) for mark in ".?!:\n")
+        clause_prefix = preceding[last_boundary + 1:].strip(" \t\r-*0123456789.)")
+        if clause_prefix:
+            retained.add(term)
+    return retained
 
 
 def flatten_source_ids(value: object) -> list[int]:
@@ -112,6 +132,7 @@ def main() -> None:
     parser.add_argument("--disable-linkage", action="store_true")
     parser.add_argument("--disable-expansion", action="store_true")
     parser.add_argument("--disable-temporal", action="store_true")
+    parser.add_argument("--filter-english-entities", action="store_true")
     args = parser.parse_args()
     if args.development_conversations not in range(1, 15) or args.top_k < 1:
         parser.error("development-conversations must be 1..14 and top-k positive")
@@ -120,6 +141,8 @@ def main() -> None:
         raise ValueError("expected exactly 20 BEAM 100K conversations")
     source_rows.sort(key=lambda item: int(item["conversation_id"]))
     rows = []
+    if args.filter_english_entities:
+        store_module.entity_terms = noninitial_entity_terms
     config = RetrievalConfig(
         linkage_enabled=not args.disable_linkage,
         expansion_enabled=not args.disable_expansion,
@@ -155,6 +178,7 @@ def main() -> None:
             "expansion_enabled": config.expansion_enabled,
             "temporal_enabled": config.temporal_enabled,
         },
+        "filter_english_entities": args.filter_english_entities,
         "case_count": len(rows),
         "aggregate": aggregate,
         "rows": rows,
@@ -163,6 +187,8 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"case_count": len(rows), "aggregate": aggregate}))
+    if args.filter_english_entities:
+        store_module.entity_terms = _ORIGINAL_ENTITY_TERMS
 
 
 if __name__ == "__main__":
