@@ -34,3 +34,9 @@
 1. 实现与具体基准文本无关的环境/规则版本边界识别，先只在离线候选中启用；明确误触发与无通知的回退行为。
 2. 在原生 CLBench 运行或等价的公开交互回放中，比较答案正确率和探索查询数；不能用表名命中代替 reward。
 3. 用 LongMemEval、PersonaMem、本项目多跳/时序回归与 Railway Free 容量测试候选；无独立答案级净收益不部署、不发第五次 Smoke。
+
+## 原生答案级运行准备（2026-10-22）
+
+已在隔离检出的仓库用 `uv sync --no-dev --extra database_exploration` 安装本地环境，`clbench list` 能发现 `database_exploration`。LiteLLM 到本机 Ollama `qwen3-vl:4b-instruct` 的结构化 JSON 通路可调用，但一次简单示例返回的内容并不可靠；它最多可作同模型配对诊断，不能预测官方模型表现。该任务的 SQLite 实现不要求 Docker；本机 Docker daemon 当前未启动也不是这个任务的直接障碍。
+
+原生数据库仓库 `continual-learning-bench/database-exploration@a0cc57eeb9a54f01c0490a1b46cb705b4e05aa19` 公布 `products.db` 397,910,016 字节、LFS SHA-256 `edf8ee80ff125de0bfd6c37a1d185efa9e3037ce28eb1bd1d32ae0829bd264a6`，`products_drifted.db` 432,148,480 字节、LFS SHA-256 `a53d523f70604be0e4328f3722417895250ac35e1127cc504b609576aee70fad`。首次下载在缓存预分配后停滞，客户端把 `products.db` 标为完成，但实际 SHA-256 为 `ebf75abba86abb8bcfd7ec753db21ca951c785a8f70e25949a3975110e834e9d`，SQLite 打开返回 `file is not a database`；该无效文件已在忽略目录改名隔离为 `products.db.invalid-download`。第二个文件没有取得有效内容，直连公开 resolve URL 也超时。**原生答案/探索成本评测未运行**。下一次必须取得两份逐文件哈希吻合且 SQLite `quick_check` 通过的固定数据，再谈原生小样本。
