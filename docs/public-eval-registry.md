@@ -39,7 +39,11 @@
 3. BEAM 100K 子集的历史消息格式与证据 ID 已核验。下一步固定独立开发对话，先测 `chat` 检索证据覆盖，再决定是否接入作者 LLM rubric；不提交原始数据。
 4. LoCoMo-Refined 的原始 LoCoMo 条款，以及 CC BY-NC 4.0 对奖金参赛用途的适用性。
 
-## 官方模型规则：2026-10-05 实时核验
+## 官方模型规则：2026-10-23 复核
+
+2026-10-23 官网 `/rules` 的英文原文已明确将 “Open-source Methods (Academic)” 对应，并要求此赛道 embeddings 使用 `text-embedding-v4`、LLM 相关组件使用 `gpt-4o-mini`，Reranker 不限；“Commercial Products (Industry)” 不受该模型限制。下方 10 月 5 日记录里的“学术榜与开源方法榜对应不明”已过时。当前生产记录为 `AML_EMBED_ENABLED=false`，纯词法检索是否满足开源方法榜的模型规则需主办方明确；不能把没有调用 embedding 自行解释为合规证明，也不能把旧歧义作为启动 Full 的理由。应先核对实际参赛赛道并取得规则确认。
+
+### 10 月 5 日历史核验记录（已被上述新证据部分取代）
 
 - 赛事 FAQ 的“学术榜可以使用哪些模型”写明：Embedding 必须使用
   `text-embedding-v4`，LLM 相关组件必须使用 `gpt-4o-mini`，Reranker 不限制；使用
