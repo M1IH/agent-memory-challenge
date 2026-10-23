@@ -40,3 +40,9 @@
 已在隔离检出的仓库用 `uv sync --no-dev --extra database_exploration` 安装本地环境，`clbench list` 能发现 `database_exploration`。LiteLLM 到本机 Ollama `qwen3-vl:4b-instruct` 的结构化 JSON 通路可调用，但一次简单示例返回的内容并不可靠；它最多可作同模型配对诊断，不能预测官方模型表现。该任务的 SQLite 实现不要求 Docker；本机 Docker daemon 当前未启动也不是这个任务的直接障碍。
 
 原生数据库仓库 `continual-learning-bench/database-exploration@a0cc57eeb9a54f01c0490a1b46cb705b4e05aa19` 公布 `products.db` 397,910,016 字节、LFS SHA-256 `edf8ee80ff125de0bfd6c37a1d185efa9e3037ce28eb1bd1d32ae0829bd264a6`，`products_drifted.db` 432,148,480 字节、LFS SHA-256 `a53d523f70604be0e4328f3722417895250ac35e1127cc504b609576aee70fad`。首次下载在缓存预分配后停滞，客户端把 `products.db` 标为完成，但实际 SHA-256 为 `ebf75abba86abb8bcfd7ec753db21ca951c785a8f70e25949a3975110e834e9d`，SQLite 打开返回 `file is not a database`；该无效文件已在忽略目录改名隔离为 `products.db.invalid-download`。第二个文件没有取得有效内容，直连公开 resolve URL 也超时。**原生答案/探索成本评测未运行**。下一次必须取得两份逐文件哈希吻合且 SQLite `quick_check` 通过的固定数据，再谈原生小样本。
+
+## 通用通知边界识别的离线验证（2026-10-22）
+
+在轨迹运行器中加入 `is_environment_change_notice`：仅接受至多 500 字符、`user` 角色、显式 `NOTICE`/`IMPORTANT`/`UPDATE` 类前缀，并同时含环境对象词及变更词的通知。词表不包含第 21 题、表名或原通知整句；实际通知仍按原生轨迹在迁移处一次性 Add，后续阶段由这条消息是否匹配决定，不再无条件递增。普通讨论、工具输出和与环境无关的通知有单元测试保护。
+
+五条公开轨迹各检测到一次通知；重放后的 aggregate 和逐题 rows 均与原先手工阶段标记完全一致，包括迁移后同阶段可复用表 Top-5 完整覆盖 54/85。另以固定 LongMemEval 公开历史检查误触发：去重后 199,067 条消息中 0 条匹配。这只能说明该公开语料未见误触发；短通知格式外的真正环境变化可能漏检，恶意伪装通知也需防护。识别器仍仅在离线评测代码，未修改生产检索。2026-10-22 再试固定数据库的 Hugging Face 直连 HEAD，443 连接约 21 秒超时；原生答案级门禁仍不能运行。

@@ -25,6 +25,22 @@ NOTICE = (
     "earlier exploration. Inspect current metadata and data before relying on "
     "prior assumptions."
 )
+NOTICE_PREFIX = re.compile(r"^\s*(?:notice|important|update|system update|policy update)\s*:", re.I)
+CHANGE_TERMS = re.compile(r"\b(?:changed|updated|migrated|replaced|no longer|new version)\b", re.I)
+ENVIRONMENT_TERMS = re.compile(
+    r"\b(?:schema|database|environment|rules|policy|configuration|api|tool|data|contents)\b", re.I
+)
+
+
+def is_environment_change_notice(role: str, content: str) -> bool:
+    """Conservatively identify a short, explicit user-supplied version notice."""
+    return (
+        role == "user"
+        and len(content) <= 500
+        and NOTICE_PREFIX.search(content) is not None
+        and CHANGE_TERMS.search(content) is not None
+        and ENVIRONMENT_TERMS.search(content) is not None
+    )
 
 
 def _sha256(path: Path) -> str:
@@ -90,13 +106,16 @@ def main() -> None:
         source_by_memory = {}
         observations = {}
         current_epoch = 0
+        detected_notices = 0
         for episode_index, interactions in enumerate(episodes):
             if episode_index == 20 and args.persist_notice:
                 store.add(
                     request_id="stage-notice", user_id=user_id, session_id="notice",
                     messages=[{"role": "user", "content": NOTICE}],
                 )
-                current_epoch += 1
+                if is_environment_change_notice("user", NOTICE):
+                    current_epoch += 1
+                    detected_notices += 1
             question_id = interactions[0]["query"]["metadata"]["question_id"]
             question = questions[question_id]
             query = question["question"]
@@ -203,6 +222,7 @@ def main() -> None:
         "persist_notice": args.persist_notice,
         "stage_cue": args.stage_cue,
         "prefer_current_stage": args.prefer_current_stage,
+        "detected_notices": detected_notices,
         "table_vocabulary_size": len(all_tables),
         "aggregate": aggregate,
         "rows": rows,
