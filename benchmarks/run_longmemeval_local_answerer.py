@@ -21,6 +21,7 @@ from benchmarks.probe_session_round_robin import session_round_robin
 from benchmarks.public_eval_schema import load_suite
 from benchmarks.run_personamem_local_answerer import MODEL, OLLAMA_URL, model_digest
 from benchmarks.score_public_answers import score_answer
+from benchmarks.probe_temporal_clause_retrieval import clause_balanced
 
 
 SYSTEM_PROMPT = (
@@ -78,7 +79,7 @@ def run_case(
     without, without_seconds = (None, 0.0) if skip_without else ask(case["question"], [])
     results = store.search(
         user_id=user_id, query=case["question"], options=None,
-        top_k=100 if retrieval_mode in ("session_round_robin", "user_role_boost") else top_k,
+        top_k=100 if retrieval_mode in ("session_round_robin", "user_role_boost", "temporal_clause") else top_k,
     )
     if retrieval_mode == "session_round_robin":
         with store._connection() as connection:
@@ -101,6 +102,8 @@ def run_case(
                 ),
             )[:top_k]
         ]
+    elif retrieval_mode == "temporal_clause":
+        results = clause_balanced(results, case["question"])[:top_k]
     with_memory, with_seconds = ask(
         case["question"], [f"[{index + 1}] {result['content']}" for index, result in enumerate(results)],
     )
@@ -130,7 +133,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--per-capability", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost"), default="native")
+    parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost", "temporal_clause"), default="native")
     parser.add_argument("--disable-linkage", action="store_true", help="offline entity-linkage ablation")
     parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
     args = parser.parse_args()
