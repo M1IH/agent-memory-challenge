@@ -23,3 +23,14 @@ py -3.13 -m benchmarks.probe_public_volume_growth --limit-messages 5000 --output
 **条件风险量化：**若官网所称 300M tokens 全部成为同一次 Add 历史、平均至少形成 1 UTF-8 字节/token，且生产存储放大率不低于本次样本最小的 2.273×，则粗下界为约 **682 MB SQLite**，已超过 500 MB 卷；按 4 字节/token 的情景为约 2.73–3.93 GB。是否全部进入 Add、真实字节/token、是否有平台侧复用或分批，以及生产当前卷占用均未知，所以不能把这些情景写成确定的 Full 用量。若按旧 65 MB 已用，剩余约 435 MB；按 4 字节/token 情景，只有约 11–16% 的 300M tokens 能在该卷内持久化。这个门槛应在 Full 前用官网工作量说明和生产同构 Linux/线上容量复核，不应用短句 10k 压测替代。
 
 下一步最短验证：先在 1 vCPU/512 MiB 的 Linux 容器上按当前词法配置回放公开长消息，并量 `DB+WAL+SHM`、cgroup RSS/OOM、Add/Search 延迟和重启恢复；再只读核对 Railway 当前卷实际余量、信用额度与正式部署身份。没有这些证据，Free 正式容量门禁保持未通过。
+
+## 扩大到 20,000 条的线性复核
+
+2026-10-24 再以同一脚本、固定来源和独立数据库运行 `py -3.13 -m benchmarks.probe_public_volume_growth --limit-messages 20000 --output data/public-volume-growth-20000.json`。报告 SHA-256 `2a9de755b5da58a7792134079a54ab807c7c1f669bce35ee60373fb4bd261d48`。BEAM development 仅有 3,791 条，因此其结果与上表相同。
+
+| 公开开发集 | 5,000 条放大率 | 20,000 条放大率 | 20,000 条 DB+WAL+SHM 采样峰值 | 20,000 条每条 SQLite 增量 |
+| --- | ---: | ---: | ---: | ---: |
+| LongMemEval-S | 2.950× | 2.888× | 56,197,120 B | 2,807.8 B |
+| PersonaMem-v1 32K | 3.277× | 3.440× | 55,521,280 B | 2,774.0 B |
+
+两组在 5,000→20,000 条时每条数据库增量基本稳定，未发现能把 500 MB 卷风险解释为小样本固定开销的证据。20,000 条仍远小于官网所述总 token 规模；它也不证明正式 Full 全量 Add、Linux cgroup RSS、并发 WAL 或线上余额。Railway 控制台同日确认 Free 当前用量约 `$0.85/$1.00`、卷 **Max 500 MB**；卷曲线没有可读精确值。Linux Docker daemon 当前未运行，正式容量门禁继续保持未通过。
