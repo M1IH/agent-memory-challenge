@@ -21,3 +21,7 @@ Railway CLI 显示第四版 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、
 ## 决策
 
 当前词法生产配置在 Windows 本机同规模负载下留有较大内存余量；BGE 两次是未来可能启用 embedding 时的条件实验，不能据此说当前生产超限，也无需为了当前容量把缓存从 1 改为 4。Windows 进程 RSS 不是 Railway Linux 容器的峰值。生产仍需核验实际 RSS、重启后缓存冷加载、Top-100 并发、延迟、持久卷增量和 Sleeping 冷启动；若容器超限或冷启动影响评测，应调整资源档位或部署策略。当前不把本机通过写成正式容量门禁通过，也不据此发起第五次 Smoke 或 Full。
+
+## 2026-10-24 线上复核
+
+长时间空闲后生产 `/health` 返回 HTTP 200 用时 7.67 秒，紧接的热请求 HTTP 200 用时 0.79 秒；再次观察到 Sleeping 冷启动延迟。Railway CLI `whoami` 与 `status --json` 仍为 `Unauthorized`，实际 RSS、卷、Free 额度与 OCI 镜像身份尚无最新 CLI 证明。10 月 23 日 Edge 项目页可见当前 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、`restore c0001f84709ae134f3b5221574f3965f2f3f55c9`、单副本与卷，Metrics 页显示资源上限 1 vCPU/0.5 GB RAM，但没有正式负载峰值。[Railway 状态页](https://status.railway.com/) 10 月 23 日 22:03 UTC 的公告说明故障涉及社区支持站点 `station.railway.com` 与新注册，现有 dashboard、API、builds、deployments 不受影响；不能将项目页横幅当作本服务宕机证据。
