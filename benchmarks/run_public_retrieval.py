@@ -85,6 +85,7 @@ def main() -> None:
     parser.add_argument("--embeddings", action="store_true", help="load pinned local BGE model")
     parser.add_argument("--content-diagnostics", action="store_true", help="record content character counts and source placement")
     parser.add_argument("--disable-linkage", action="store_true", help="offline ablation of entity linkage")
+    parser.add_argument("--compress-text", action="store_true", help="offline SQLite text compression candidate")
     args = parser.parse_args()
     if args.limit < 1 or args.top_k < 1:
         parser.error("limit and top-k must be positive")
@@ -100,6 +101,7 @@ def main() -> None:
             Path(temp_dir) / "public-eval.db",
             embedder=None if args.embeddings else False,
             retrieval_config=RetrievalConfig(linkage_enabled=not args.disable_linkage),
+            compress_text=args.compress_text,
         )
         for case in cases:
             result = run_case(store, case, top_k=args.top_k, include_content=args.content_diagnostics)
@@ -131,6 +133,7 @@ def main() -> None:
         },
         "top_k": args.top_k,
         "embeddings": args.embeddings,
+        "compress_text": args.compress_text,
         "linkage_enabled": not args.disable_linkage,
         "content_diagnostics": args.content_diagnostics,
         "case_count": len(rows),

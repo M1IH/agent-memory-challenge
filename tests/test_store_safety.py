@@ -46,6 +46,27 @@ class StoreSafetyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "filesystem path"):
             MemoryStore(":memory:", embedder=False)
 
+    def test_mixed_compressed_and_plain_rows_keep_search_and_reopen_behavior(self):
+        plain = MemoryStore(self.path, embedder=False)
+        plain.add("old", "alice", "one", [
+            {"role": "user", "content": "The summer trip is to Kyoto."},
+        ])
+        compressed = MemoryStore(self.path, embedder=False, compress_text=True)
+        compressed.add("new", "alice", "two", [
+            {"role": "user", "content": "The winter trip is to Sapporo."},
+        ])
+        with compressed._connection() as connection:
+            stored = connection.execute(
+                "SELECT request_id, content, terms FROM memories ORDER BY rowid"
+            ).fetchall()
+        self.assertIsInstance(stored[0]["content"], str)
+        self.assertIsInstance(stored[1]["content"], bytes)
+        self.assertIsInstance(stored[1]["terms"], bytes)
+        reopened = MemoryStore(self.path, embedder=False)
+        self.assertIn("Kyoto", reopened.search("alice", "summer trip", 1)[0]["content"])
+        self.assertIn("Sapporo", reopened.search("alice", "winter trip", 1)[0]["content"])
+        self.assertEqual([], reopened.search("bob", "winter trip", 10))
+
     def test_payload_character_limits_must_be_positive_integers(self):
         self.assertEqual(200000, positive_payload_chars("200000", "LIMIT"))
         for value in ("0", "-1", "invalid"):

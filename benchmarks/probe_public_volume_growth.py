@@ -131,10 +131,11 @@ def replay(
     *,
     data_dir: Path,
     limit_messages: int,
+    compress_text: bool = False,
 ) -> dict:
     with tempfile.TemporaryDirectory(prefix=f"volume-{name}-", dir=data_dir) as temp_dir:
         path = Path(temp_dir) / "memory.db"
-        store = MemoryStore(path, embedder=False)
+        store = MemoryStore(path, embedder=False, compress_text=compress_text)
         initial = disk_sizes(path)
         max_total = initial["total"]
         message_count = 0
@@ -208,6 +209,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--limit-messages", type=int, default=5000)
+    parser.add_argument("--compress-text", action="store_true")
     parser.add_argument("--output", type=Path, default=Path("data/public-volume-growth.json"))
     args = parser.parse_args()
     if args.limit_messages < 100:
@@ -223,11 +225,16 @@ def main() -> None:
         ("BEAM 100K development conversations 1-14", beam_batches(data_dir)),
     )
     results = [
-        replay(name, batches, data_dir=data_dir, limit_messages=args.limit_messages)
+        replay(
+            name, batches, data_dir=data_dir,
+            limit_messages=args.limit_messages,
+            compress_text=args.compress_text,
+        )
         for name, batches in sources
     ]
     report = {
         "method": "MemoryStore.add, lexical, one-user cache; separate temporary SQLite DB per source; max 20 messages and 200000 characters per Add; development histories only; no Search",
+        "compress_text": args.compress_text,
         "source_sha256": SOURCE_HASHES,
         "output_scope": "aggregate metrics only; raw histories and temporary DBs not retained",
         "volume_limit_bytes_decimal": 500_000_000,

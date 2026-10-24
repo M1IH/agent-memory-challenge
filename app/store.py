@@ -10,6 +10,7 @@ import sqlite3
 import sys
 import threading
 import time
+import zlib
 from collections import OrderedDict
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -453,6 +454,7 @@ class MemoryStore:
         path: str | Path,
         embedder: Encoder | bool | None = None,
         retrieval_config: RetrievalConfig | None = None,
+        compress_text: bool = False,
     ):
         self.path = str(path)
         if self.path == ":memory:":
@@ -463,6 +465,7 @@ class MemoryStore:
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._retrieval = retrieval_config or RetrievalConfig()
+        self._compress_text = compress_text
         if embedder is False:
             self._embedder = None
         elif embedder is not None:
@@ -779,10 +782,14 @@ class MemoryStore:
             rows.append(
                 (
                     f"mem_{digest}", request_id, user_id, session_id,
-                    role, display_content, timestamp_ms, observed_at_ms,
+                    role,
+                    zlib.compress(display_content.encode("utf-8"))
+                    if self._compress_text else display_content,
+                    timestamp_ms, observed_at_ms,
                     valid_from_ms, valid_to_ms, retracted_at_ms, now,
                     fact_subject, fact_relation, fact_object,
-                    " ".join(tokenize(index_content)),
+                    zlib.compress(" ".join(tokenize(index_content)).encode("utf-8"))
+                    if self._compress_text else " ".join(tokenize(index_content)),
                     None if embedding is None else embedding.tobytes(),
                 )
             )
@@ -914,14 +921,20 @@ class MemoryStore:
                         embedding = None
                     if embedding is not None and not np.all(np.isfinite(embedding)):
                         embedding = None
-                terms = row["terms"].split()
+                stored_terms = row["terms"]
+                if isinstance(stored_terms, bytes):
+                    stored_terms = zlib.decompress(stored_terms).decode("utf-8")
+                stored_content = row["content"]
+                if isinstance(stored_content, bytes):
+                    stored_content = zlib.decompress(stored_content).decode("utf-8")
+                terms = stored_terms.split()
                 term_counts: dict[str, int] = {}
                 for term in terms:
                     term_counts[term] = term_counts.get(term, 0) + 1
                 memories.append(Memory(
                     id=row["id"], request_id=row["request_id"],
                     session_id=row["session_id"], storage_order=row["storage_order"],
-                    content=row["content"],
+                    content=stored_content,
                     timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
                     observed_at_ms=row["observed_at_ms"],
                     valid_from_ms=row["valid_from_ms"], valid_to_ms=row["valid_to_ms"],
