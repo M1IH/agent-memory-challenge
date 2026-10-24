@@ -33,3 +33,11 @@ Railway CLI 显示第四版 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、
 按样本线性外推，500 MB 空卷约容纳 **10.0–18.0 万条同分布消息**；若沿用 10 月 21 日约 65 MB 已用的旧读数，新增约 **8.7–15.7 万条**。这些是本机样本估计，不能换算为官方 Full 完成率。官网[赛事页](https://agentmemoryleaderboard.ai/competition/)写文本赛道有 6,000 余评测实例、数据规模近 300M tokens，**没有说明这些 token 是否都在同一次 Full 写入 Add**。如果全部累计写入，甚至按每 token 仅 1 个 UTF-8 字节和本次最低 2.273 倍扩张率，SQLite 也约为 682 MB，超过 Free 500 MB 卷；这是条件风险，不能当作已发生的 Full 用量。公开 API 无逐实例 Delete，当前应用也没有自动清除路径。
 
 下一步须核对官网实际 Add 工作量与 Railway 当前卷余量，并在 1 vCPU、512 MiB Linux 容器中用公开长消息回放，记录 `DB+WAL+SHM` 峰值、cgroup RSS/OOM、正式并发延迟和重启恢复。在这些数据齐全前，Free 正式容量门禁仍未通过。
+
+## 2026-10-24 16 时左右 Railway 控制台只读复核
+
+已登录 Edge 的 Railway 用量页显示工作区为 **Free**，周期栏为 `Sep 19 - Nov 20`，`Current Usage $0.85`、`Current Bill $0.85`、月度赠额 `$1.00`，项目成本 `$0.8524`；页面同时显示 `Estimated Bill $0.17` 和侧栏 `0 days or $1.00 left`。这些字段口径并不完全一致，不能擅自推断已欠费、还可连续运行多久或赠额自动续期。以 `$0.85/$1.00` 粗看，本周期已耗约 85% 赠额；正式评测前必须核实计费限制和可持续运行时长。
+
+同一时刻项目页显示服务 `Sleeping`，当前 deployment 仍为 `e42eb7f9-bf7f-4863-be1b-a425df6e7832`，CLI 上传标签 `restore c0001f84709ae134f3b5221574f3965f2f3f55c9`，单副本，挂载 `api-volume`。卷 Metrics 标示 **Max 500 MB**；当前曲线在 100 MB 刻度下方，但图表没有可读的精确值，不能把视觉估计当作验收数据。服务资源限制仍是 1 vCPU、0.5 GB RAM。公网 `/health` 此次从 Sleeping 唤醒后返回 HTTP 200、`{"status":"ok"}`，墙钟 **8.16 秒**，控制台随后显示 Online。唤醒证明服务可用，也再次证实冷启动延迟；没有正式规模 Add/Search 的 RSS、卷峰值和吞吐证据。
+
+当前精确部署身份在页面上仍只到 CLI 标签、deployment ID 和 Dockerfile 配置；控制台 Details 未显示 OCI digest 或构建 revision。Railway CLI 继续返回 `Unauthorized`。因此预算、正式卷、Linux 负载、镜像身份及评测期连续性均未过门禁。
