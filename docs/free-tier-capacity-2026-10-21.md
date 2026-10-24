@@ -25,3 +25,11 @@ Railway CLI 显示第四版 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、
 ## 2026-10-24 线上复核
 
 长时间空闲后生产 `/health` 返回 HTTP 200 用时 7.67 秒，紧接的热请求 HTTP 200 用时 0.79 秒；再次观察到 Sleeping 冷启动延迟。Railway CLI `whoami` 与 `status --json` 仍为 `Unauthorized`，实际 RSS、卷、Free 额度与 OCI 镜像身份尚无最新 CLI 证明。10 月 23 日 Edge 项目页可见当前 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、`restore c0001f84709ae134f3b5221574f3965f2f3f55c9`、单副本与卷，Metrics 页显示资源上限 1 vCPU/0.5 GB RAM，但没有正式负载峰值。[Railway 状态页](https://status.railway.com/) 10 月 23 日 22:03 UTC 的公告说明故障涉及社区支持站点 `station.railway.com` 与新注册，现有 dashboard、API、builds、deployments 不受影响；不能将项目页横幅当作本服务宕机证据。
+
+## 2026-10-24 公开历史的卷增长测量
+
+在第四版不变的 `MemoryStore.add`、纯词法和 1 用户缓存下，使用固定来源的公开开发集历史分别写入本机临时 SQLite；问题、答案和评分标注均未写入。LongMemEval-S 的 5,000 条消息使 SQLite 增长 **14.04 MB**（输入文本的 2.950 倍）；PersonaMem-v1 的 5,000 条增长 **13.89 MB**（3.277 倍）；BEAM 100K 的 3,791 条增长 **18.87 MB**（2.273 倍）。`content` 可携带上一条上下文，`terms` 又保存词项副本，这解释了部分放大。完整命令、逐数据哈希、检查点和边界见[卷增长报告](railway-volume-growth-2026-10-24.md)；运行器为 `benchmarks/probe_public_volume_growth.py`。
+
+按样本线性外推，500 MB 空卷约容纳 **10.0–18.0 万条同分布消息**；若沿用 10 月 21 日约 65 MB 已用的旧读数，新增约 **8.7–15.7 万条**。这些是本机样本估计，不能换算为官方 Full 完成率。官网[赛事页](https://agentmemoryleaderboard.ai/competition/)写文本赛道有 6,000 余评测实例、数据规模近 300M tokens，**没有说明这些 token 是否都在同一次 Full 写入 Add**。如果全部累计写入，甚至按每 token 仅 1 个 UTF-8 字节和本次最低 2.273 倍扩张率，SQLite 也约为 682 MB，超过 Free 500 MB 卷；这是条件风险，不能当作已发生的 Full 用量。公开 API 无逐实例 Delete，当前应用也没有自动清除路径。
+
+下一步须核对官网实际 Add 工作量与 Railway 当前卷余量，并在 1 vCPU、512 MiB Linux 容器中用公开长消息回放，记录 `DB+WAL+SHM` 峰值、cgroup RSS/OOM、正式并发延迟和重启恢复。在这些数据齐全前，Free 正式容量门禁仍未通过。
