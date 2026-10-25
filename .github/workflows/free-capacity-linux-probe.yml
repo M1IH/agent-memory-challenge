@@ -1,0 +1,84 @@
+name: free-capacity-linux-probe
+
+on:
+  push:
+    branches: [codex/smoke4-iteration]
+    paths: [.github/workflows/free-capacity-linux-probe.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  long-message-capacity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Build exact branch image
+        run: docker build --build-arg VCS_REF="$GITHUB_SHA" -t aml-free-capacity:ci .
+      - name: Run 10k long-message lexical workload under Free limits
+        shell: bash
+        run: |
+          set +e
+          docker run --name aml-free-capacity --network none \
+            --cpus 1 --memory 512m --memory-swap 512m --pids-limit 256 \
+            -e AML_EMBED_ENABLED=false -e AML_MEMORY_CACHE_USERS=1 \
+            -v "$PWD:/workspace:ro" -w /workspace \
+            --entrypoint /bin/sh aml-free-capacity:ci -c '
+              python -m benchmarks.run_load_test \
+                --add-requests 500 --messages-per-request 20 \
+                --message-padding-chars 900 --users 8 \
+                --add-workers 64 --search-requests 96 --search-workers 32 \
+                --top-k 100 --no-embeddings \
+                --max-rss-bytes 524288000 \
+                --max-add-p95-seconds 45 --max-search-p95-seconds 15 \
+                --json-output /tmp/capacity-report.json;
+              result=$?;
+              printf "cgroup memory.max="; cat /sys/fs/cgroup/memory.max;
+              printf "cgroup memory.peak="; cat /sys/fs/cgroup/memory.peak;
+              printf "cgroup cpu.max="; cat /sys/fs/cgroup/cpu.max;
+              cat /sys/fs/cgroup/memory.events;
+              exit "$result"
+            ' > capacity-stdout.log 2>&1
+          status=$?
+          set -e
+          docker inspect aml-free-capacity > docker-inspect.json
+          docker cp aml-free-capacity:/tmp/capacity-report.json capacity-report.json || true
+          docker rm aml-free-capacity
+          tail -n 20 capacity-stdout.log
+          if [ -f capacity-report.json ]; then
+            python - <<'PY'
+          import json
+          report = json.load(open('capacity-report.json', encoding='utf-8'))
+          print(json.dumps({
+              'messages': report['config']['actual_final_memory_count'],
+              'add_errors': report['add']['errors'],
+              'search_errors': report['search']['errors'],
+              'top_1_correct': report['search']['top_1_correct'],
+              'add_p95_seconds': report['add']['p95_seconds'],
+              'search_p95_seconds': report['search']['p95_seconds'],
+              'peak_process_rss_bytes': report['memory']['peak_rss_bytes'],
+              'db_wal_shm_bytes_at_completion': report['storage']['db_wal_shm_bytes_at_completion'],
+          }))
+          PY
+          fi
+          python - <<'PY'
+          import json
+          container = json.load(open('docker-inspect.json', encoding='utf-8'))[0]
+          assert container['HostConfig']['Memory'] == 512 * 1024 * 1024
+          assert container['HostConfig']['NanoCpus'] == 1_000_000_000
+          assert not container['State']['OOMKilled']
+          PY
+          exit "$status"
+      - name: Preserve capacity evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: free-capacity-${{ github.sha }}
+          path: |
+            capacity-report.json
+            capacity-stdout.log
+            docker-inspect.json
+          if-no-files-found: warn
+          retention-days: 30
