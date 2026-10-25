@@ -48,13 +48,15 @@ def ask(question: str, evidence: list[str]) -> tuple[str, float]:
     return answer, time.perf_counter() - started
 
 
-def select_cases(suite: dict, per_capability: int) -> list[dict]:
+def select_cases(suite: dict, per_capability: int, capability_filter: str | None = None) -> list[dict]:
     selected = []
     counts: dict[str, int] = defaultdict(int)
     for case in suite["cases"]:
         if case["split"] != "development":
             continue
         capability = case["capabilities"][0]
+        if capability_filter is not None and capability != capability_filter:
+            continue
         if counts[capability] < per_capability:
             selected.append(case)
             counts[capability] += 1
@@ -133,15 +135,20 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--per-capability", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--capability", help="run one development capability only")
+    parser.add_argument("--num-ctx", type=int, default=OPTIONS["num_ctx"])
     parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost", "temporal_clause"), default="native")
     parser.add_argument("--disable-linkage", action="store_true", help="offline entity-linkage ablation")
     parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
     args = parser.parse_args()
-    if args.per_capability < 1 or args.top_k < 1:
-        parser.error("per-capability and top-k must be positive")
+    if args.per_capability < 1 or args.top_k < 1 or args.num_ctx < 1:
+        parser.error("per-capability, top-k and num-ctx must be positive")
+    OPTIONS["num_ctx"] = args.num_ctx
     suite = load_suite(args.suite)
     digest = model_digest()
-    cases = select_cases(suite, args.per_capability)
+    cases = select_cases(suite, args.per_capability, args.capability)
+    if not cases:
+        parser.error("no development cases matched the requested capability")
     rows = []
     with tempfile.TemporaryDirectory() as directory:
         store = MemoryStore(
@@ -162,6 +169,7 @@ def main() -> None:
         "model_digest": digest,
         "options": OPTIONS,
         "selection": f"first-{args.per_capability}-per-capability-source-order",
+        "capability_filter": args.capability,
         "top_k": args.top_k,
         "retrieval_mode": args.retrieval_mode,
         "linkage_enabled": not args.disable_linkage,

@@ -16,6 +16,7 @@ class LongMemEvalLocalAnswererTests(unittest.TestCase):
             {"case_id": "d", "split": "development", "capabilities": ["multi"]},
         ]}
         self.assertEqual(["a", "d"], [case["case_id"] for case in select_cases(suite, 1)])
+        self.assertEqual(["a"], [case["case_id"] for case in select_cases(suite, 1, "temporal")])
 
     def test_replays_history_and_reports_evidence_source(self):
         case = {
