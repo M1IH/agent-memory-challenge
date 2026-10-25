@@ -18,6 +18,17 @@ class LongMemEvalLocalAnswererTests(unittest.TestCase):
         self.assertEqual(["a", "d"], [case["case_id"] for case in select_cases(suite, 1)])
         self.assertEqual(["a"], [case["case_id"] for case in select_cases(suite, 1, "temporal")])
 
+    def test_abstention_suffix_selection_keeps_holdout_excluded(self):
+        suite = {"cases": [
+            {"case_id": "one_abs", "split": "development", "capabilities": ["single"]},
+            {"case_id": "two_abs", "split": "frozen_holdout", "capabilities": ["single"]},
+            {"case_id": "three", "split": "development", "capabilities": ["single"]},
+        ]}
+        self.assertEqual(
+            ["one_abs"],
+            [case["case_id"] for case in select_cases(suite, 100, case_id_suffix="_abs")],
+        )
+
     def test_replays_history_and_reports_evidence_source(self):
         case = {
             "case_id": "fixture", "question": "Where is the festival?",

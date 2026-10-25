@@ -49,11 +49,16 @@ def ask(question: str, evidence: list[str], *, question_date: str | None = None)
     return answer, time.perf_counter() - started
 
 
-def select_cases(suite: dict, per_capability: int, capability_filter: str | None = None) -> list[dict]:
+def select_cases(
+    suite: dict, per_capability: int, capability_filter: str | None = None,
+    case_id_suffix: str | None = None,
+) -> list[dict]:
     selected = []
     counts: dict[str, int] = defaultdict(int)
     for case in suite["cases"]:
         if case["split"] != "development":
+            continue
+        if case_id_suffix is not None and not case["case_id"].endswith(case_id_suffix):
             continue
         capability = case["capabilities"][0]
         if capability_filter is not None and capability != capability_filter:
@@ -141,6 +146,7 @@ def main() -> None:
     parser.add_argument("--per-capability", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--capability", help="run one development capability only")
+    parser.add_argument("--case-id-suffix", help="select a documented case ID suffix, such as _abs")
     parser.add_argument("--num-ctx", type=int, default=OPTIONS["num_ctx"])
     parser.add_argument("--include-query-time", action="store_true", help="provide the public query date to the local answerer")
     parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost", "temporal_clause"), default="native")
@@ -152,7 +158,7 @@ def main() -> None:
     OPTIONS["num_ctx"] = args.num_ctx
     suite = load_suite(args.suite)
     digest = model_digest()
-    cases = select_cases(suite, args.per_capability, args.capability)
+    cases = select_cases(suite, args.per_capability, args.capability, args.case_id_suffix)
     if not cases:
         parser.error("no development cases matched the requested capability")
     rows = []
@@ -174,7 +180,8 @@ def main() -> None:
         "model": MODEL,
         "model_digest": digest,
         "options": OPTIONS,
-        "selection": f"first-{args.per_capability}-per-capability-source-order",
+        "selection": f"first-{args.per_capability}-per-capability-source-order"
+                     + (f"-case-id-suffix:{args.case_id_suffix}" if args.case_id_suffix else ""),
         "capability_filter": args.capability,
         "top_k": args.top_k,
         "retrieval_mode": args.retrieval_mode,
