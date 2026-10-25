@@ -32,12 +32,13 @@ SYSTEM_PROMPT = (
 OPTIONS = {"temperature": 0, "seed": 0, "num_predict": 80, "num_ctx": 8192}
 
 
-def ask(question: str, evidence: list[str]) -> tuple[str, float]:
+def ask(question: str, evidence: list[str], *, question_date: str | None = None) -> tuple[str, float]:
     history = "\n\n".join(evidence) if evidence else "No conversation history is provided."
+    date_context = f"Question date: {question_date}\n" if question_date else ""
     payload = json.dumps({
         "model": MODEL,
         "system": SYSTEM_PROMPT,
-        "prompt": f"Conversation history:\n{history}\n\nQuestion: {question}\nAnswer:",
+        "prompt": f"Conversation history:\n{history}\n\n{date_context}Question: {question}\nAnswer:",
         "stream": False,
         "options": OPTIONS,
     }).encode()
@@ -65,7 +66,7 @@ def select_cases(suite: dict, per_capability: int, capability_filter: str | None
 
 def run_case(
     store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "native",
-    *, skip_without: bool = False,
+    *, skip_without: bool = False, include_query_time: bool = False,
 ) -> dict:
     user_id = f"longmemeval-answer:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
@@ -78,7 +79,10 @@ def run_case(
                 for turn in memory["turns"]
             ],
         )
-    without, without_seconds = (None, 0.0) if skip_without else ask(case["question"], [])
+    question_date = case.get("source_question_date_text") if include_query_time else None
+    without, without_seconds = (None, 0.0) if skip_without else ask(
+        case["question"], [], question_date=question_date,
+    )
     results = store.search(
         user_id=user_id, query=case["question"], options=None,
         top_k=100 if retrieval_mode in ("session_round_robin", "user_role_boost", "temporal_clause") else top_k,
@@ -108,6 +112,7 @@ def run_case(
         results = clause_balanced(results, case["question"])[:top_k]
     with_memory, with_seconds = ask(
         case["question"], [f"[{index + 1}] {result['content']}" for index, result in enumerate(results)],
+        question_date=question_date,
     )
     with store._connection() as connection:
         sources = {
@@ -137,6 +142,7 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--capability", help="run one development capability only")
     parser.add_argument("--num-ctx", type=int, default=OPTIONS["num_ctx"])
+    parser.add_argument("--include-query-time", action="store_true", help="provide the public query date to the local answerer")
     parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost", "temporal_clause"), default="native")
     parser.add_argument("--disable-linkage", action="store_true", help="offline entity-linkage ablation")
     parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
@@ -158,7 +164,7 @@ def main() -> None:
         for case in cases:
             rows.append(run_case(
                 store, case, args.top_k, args.retrieval_mode,
-                skip_without=args.skip_without,
+                skip_without=args.skip_without, include_query_time=args.include_query_time,
             ))
     report = {
         "kind": "longmemeval_local_answerer_development",
@@ -174,6 +180,7 @@ def main() -> None:
         "retrieval_mode": args.retrieval_mode,
         "linkage_enabled": not args.disable_linkage,
         "skip_without": args.skip_without,
+        "include_query_time": args.include_query_time,
         "case_count": len(rows),
         "without_exact": None if args.skip_without else sum(row["without_exact"] for row in rows),
         "with_exact": sum(row["with_exact"] for row in rows),

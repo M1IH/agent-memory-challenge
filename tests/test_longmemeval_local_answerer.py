@@ -38,6 +38,19 @@ class LongMemEvalLocalAnswererTests(unittest.TestCase):
         self.assertEqual(2, ask.call_count)
         self.assertIn("festival", ask.call_args_list[1].args[1][0])
 
+    def test_query_date_is_forwarded_only_when_requested(self):
+        case = {
+            "case_id": "dated", "question": "How many weeks ago?",
+            "source_question_date_text": "2023/04/01 (Sat) 08:09",
+            "scorer": "exact_match", "reference_answers": ["4"],
+            "evidence_memory_ids": [], "capabilities": ["temporal"], "memories": [],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            store = MemoryStore(Path(directory) / "test.db", embedder=False)
+            with patch("benchmarks.run_longmemeval_local_answerer.ask", return_value=("4", 0.1)) as ask:
+                run_case(store, case, 5, skip_without=True, include_query_time=True)
+        self.assertEqual("2023/04/01 (Sat) 08:09", ask.call_args.kwargs["question_date"])
+
 
 if __name__ == "__main__":
     unittest.main()
