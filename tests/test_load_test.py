@@ -8,6 +8,7 @@ from unittest.mock import patch
 from benchmarks.run_load_test import (
     current_rss_bytes,
     latency_summary,
+    load_message_content,
     main,
     mixed_schedule,
     nonnegative_float,
@@ -22,6 +23,13 @@ from benchmarks.compare_load_reports import comparison, workload_mismatches
 
 
 class LoadTestTests(unittest.TestCase):
+    def test_long_message_padding_preserves_retrieval_identifier(self):
+        baseline = load_message_content(2, 3)
+        padded = load_message_content(2, 3, 900)
+        self.assertTrue(padded.startswith(baseline))
+        self.assertEqual(len(baseline) + 900, len(padded))
+        self.assertIn("project-code-2-3", padded)
+
     def test_load_report_comparison_rejects_different_workloads(self):
         baseline = {"config": {"top_k": 10, "add_workers": 8}}
         candidate = {"config": {"top_k": 100, "add_workers": 64}}

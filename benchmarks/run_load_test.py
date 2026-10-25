@@ -96,6 +96,18 @@ def nonnegative_float(value: str) -> float:
     return parsed
 
 
+def load_message_content(request_index: int, message_index: int, padding_chars: int = 0) -> str:
+    base = (
+        f"Project code project-code-{request_index}-{message_index} "
+        f"belongs to test record {request_index}."
+    )
+    filler = (
+        f" Context for project-code-{request_index}-{message_index} "
+        "about planning decisions and project history."
+    )
+    return base + (filler * math.ceil(padding_chars / len(filler)))[:padding_chars]
+
+
 def database_storage_bytes(path: Path) -> int:
     return sum(
         candidate.stat().st_size
@@ -152,6 +164,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run a configurable local Add/Search load test.")
     parser.add_argument("--add-requests", type=positive_int, default=48)
     parser.add_argument("--messages-per-request", type=positive_int, default=20)
+    parser.add_argument("--message-padding-chars", type=nonnegative_int, default=0)
     parser.add_argument("--search-requests", type=positive_int, default=96)
     parser.add_argument("--add-workers", type=positive_int, default=64)
     parser.add_argument("--search-workers", type=positive_int, default=32)
@@ -193,9 +206,8 @@ def main() -> None:
                         {
                             "role": "user" if message_index % 2 == 0 else "assistant",
                             "timestamp": 1704067200000 + request_index * 100000 + message_index,
-                            "content": (
-                                f"Project code project-code-{request_index}-{message_index} "
-                                f"belongs to test record {request_index}."
+                            "content": load_message_content(
+                                request_index, message_index, args.message_padding_chars,
                             ),
                         }
                         for message_index in range(args.messages_per_request)
@@ -499,6 +511,7 @@ def main() -> None:
                 )
             }
         rss_at_completion, peak_rss_bytes = process_rss_bytes()
+        database_bytes_at_completion = database_storage_bytes(database_path)
 
     rss_limit_passed = (
         args.max_rss_bytes is None
@@ -520,6 +533,7 @@ def main() -> None:
         "config": {
             "add_requests": args.add_requests,
             "messages_per_request": args.messages_per_request,
+            "message_padding_chars": args.message_padding_chars,
             "memory_count": memory_count,
             "preloaded_memory_count": successful_messages,
             "expected_final_memory_count": (
@@ -568,6 +582,7 @@ def main() -> None:
             "estimated_cached_snapshot_bytes": store._memory_cache_bytes,
             "cache": store.memory_cache_stats(),
         },
+        "storage": {"db_wal_shm_bytes_at_completion": database_bytes_at_completion},
         "add": {
             "wall_seconds": add_wall,
             "successful_messages": successful_messages,
