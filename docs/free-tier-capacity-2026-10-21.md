@@ -51,3 +51,5 @@ Railway CLI 显示第四版 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、
 **同日稍后重试：**公网 `/health` 再次返回 HTTP 200、`{"status":"ok"}`，墙钟 **7.52 秒**。Railway CLI 的 `whoami` 与 `status --json` 均返回 `Unauthorized`；已连接 Edge 的 Railway 用量标签读取超时，没有取得新的计费或卷占用数字。上一段 `$0.8529` 是此前页面快照，不能当成此刻实时余额。冷启动仍可用，但正式连续运行、真实负载和剩余额度均未验收。
 
 **长消息本机补测：**10,000 条合成记忆在生产意图相同的词法与 1 用户缓存配置下，每条追加 900 字符后 Search p95 为 11.813 秒，短消息为 0.789 秒；两组 Top-1 均 96/96，长消息进程峰值 RSS 117 MB、完成时 SQLite 约 41.8 MB。这是 Windows 进程和重复合成文本，不是 Railway Linux 正式容量；详见[长消息容量对照](long-message-load-probe-2026-10-25.md)。Docker Desktop Linux 引擎仍未就绪，不能用本机通过解除正式门禁。
+
+**GitHub Linux 补测：**1 vCPU/512 MiB 容器对同类 10,000 条长消息做两档并发。64 Add/32 Search 的两次 Search p95 为 14.654/19.091 秒，第二次超过 15 秒本地门槛；16/16 为 11.076/4.768 秒，两次通过。四次均零请求错误、Top-1 96/96、无 OOM，cgroup 峰值 161.7–169.3 MB。官网表单允许 Add/Search 最低 16/16，但正式 Free 容量仍缺线上余额、卷峰值、真实工作量和持续运行证据；详见[Linux 压测](linux-free-capacity-probe-2026-10-25.md)。
