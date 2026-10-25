@@ -12,7 +12,7 @@
 | HTTPS Endpoint | `https://api-production-40d75.up.railway.app/add`、`https://api-production-40d75.up.railway.app/search`、`https://api-production-40d75.up.railway.app/health` | 10 月 24 日两次冷启动 `/health` 均为 200，约 7.67/8.16 秒；正式提交前核验带密钥读写、持久化及稳定性。 |
 | 鉴权 | `Authorization: Bearer <Memory System Key>` | 真实 Key 仅通过官网指定字段传递，不复制到本草稿。 |
 | 方法说明 | 见下方可粘贴正文。 | 最近记录的生产变量为 `AML_EMBED_ENABLED=false`、`AML_MEMORY_CACHE_USERS=1`；提交前复核实际线上配置。 |
-| 容量声明 | 单副本、挂载 `/data`；本机 Windows 词法同构测试：10,000 条记忆、8 用户、500 次 Add/96 次 Search，32 路 Search，Top-100，峰值 RSS 72,757,248 字节，96/96 检索正确。 | 这只是本机代理，**不能填写为 Railway 正式容量**。需取 Railway Free 当前额度、Linux 实际 RSS/CPU/卷、正式并发负载和部署身份后给出保守声明；见下方待填模板。 |
+| 容量声明 | 单副本、挂载 `/data`；GitHub Linux 临时容器在 1 vCPU/512 MiB 下完成 10,000 条合成长消息、8 用户、500 次 Add/96 次 Top-100 Search。16/16 并发两次零错误，Search p95 为 11.076/4.768 秒；64/32 重复测试一次为 19.091 秒，超过本地 15 秒门槛。 | 这是临时容器的合成负载，**不能填写为 Railway 正式容量**。需取 Railway Free 实时额度、正式 Full 写入量与卷峰值、线上最终镜像和持续运行证据；见下方待填模板。 |
 | 回退版本 | 第四版精确提交 `c0001f84709ae134f3b5221574f3965f2f3f55c9`；恢复 deployment 历史 ID `e42eb7f9-bf7f-4863-be1b-a425df6e7832`。 | 10 月 24 日 Railway 控制台仍显示该 deployment；OCI revision 与镜像 digest 未验。 |
 | 联系方式、机构/团队、允许公开内容 | **由参赛者填写** | 不从本机资料猜测或自动提交。 |
 
@@ -52,7 +52,7 @@
 ## 提交前四个停止点
 
 1. **资格：**官网当前明确开源方法榜 embeddings 须 `text-embedding-v4`、LLM 相关组件须 `gpt-4o-mini`。当前纯词法线上配置及镜像内禁用 BGE 的审查口径待主办方书面确认。
-2. **线上：**Railway Free 本周期已显示 `$0.85/$1.00` 用量，卷 500 MB；CLI 登录失效，尚无精确卷余量、正式并发容量与 OCI 镜像身份的实时证明。健康检查 200 不能替代带密钥读写、持久化和负载验收。本机 Docker Linux daemon 未就绪，启动服务需要系统权限；不能把 Windows 20k 写入回放当作正式 Linux 验收。
+2. **线上：**Railway Free 最近显示约 `$0.8529/$1.00` 用量，卷上限 500 MB；CLI 登录失效，尚无实时余额、精确卷余量、正式并发容量与 OCI 镜像身份的证明。健康检查 200 不能替代带密钥读写、持久化和负载验收。本机 Docker Linux daemon 未就绪；GitHub Linux 临时容器已完成 16/16 合成压测，但不能把它或 Windows 20k 写入回放当作 Railway 正式验收。
 3. **材料：**初始学术榜申请审核已通过，四次 Smoke 也已成功；仍不能证明第四版完整材料已经更新并通过最终审查。需在已有 Key 下核对 `v1.3.0-temporal-c0001f8` 的版本 ID、赛道/组别、审核和绑定状态、固定提交、接口、容量、署名与允许公开字段，并保存脱敏回执；不要误申请新 Key。
 4. **版本：**第五版尚无通过公开答案级净收益、跨能力回退、Free 正式容量与精确 SHA 门禁的候选。若最迟 10 月 27 日仍未全部通过，以第四版为材料基线；若换版，固定提交、CI、镜像、Railway deployment 和官网版本必须重新一致，并等新版本审核绑定。
 
