@@ -5,6 +5,17 @@ on:
     branches: [codex/smoke4-iteration]
     paths: [.github/workflows/free-capacity-linux-probe.yml]
   workflow_dispatch:
+    inputs:
+      add_workers:
+        description: Add worker count (official form allows 16-64)
+        required: true
+        default: 16
+        type: number
+      search_workers:
+        description: Search worker count (official form allows 16-256)
+        required: true
+        default: 16
+        type: number
 
 permissions:
   contents: read
@@ -29,7 +40,8 @@ jobs:
               python -m benchmarks.run_load_test \
                 --add-requests 500 --messages-per-request 20 \
                 --message-padding-chars 900 --users 8 \
-                --add-workers 64 --search-requests 96 --search-workers 32 \
+                --add-workers ${{ inputs.add_workers || 16 }} \
+                --search-requests 96 --search-workers ${{ inputs.search_workers || 16 }} \
                 --top-k 100 --no-embeddings \
                 --max-rss-bytes 524288000 \
                 --max-add-p95-seconds 45 --max-search-p95-seconds 15 \
