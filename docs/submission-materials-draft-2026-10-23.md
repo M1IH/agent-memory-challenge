@@ -1,4 +1,4 @@
-# 第二期第四版保底提交材料草稿（2026-10-24）
+# 第二期第四版保底提交材料草稿（2026-10-26 更新）
 
 这是供参赛者在官网逐项核对的草稿，**尚未提交**。材料截止为 **2026-10-31 23:59（北京时间）**，评测于 **2026-11-04 23:59（北京时间）**停止。以第四次 Smoke 已完成的 `v1.3.0-temporal-c0001f8` 为保底版本；若有通过全部门禁的新版，代码、镜像、容量与官网版本材料须整套重核。初始学术榜申请获批不等于第四版最终材料完整提交。填写前先读[提交就绪审计](submission-readiness-audit-2026-10-23.md)。身份证明、联系资料、Memory System Key 与其他凭证只能在官网指定安全字段由用户填写，不写入仓库或公开截图。
 
@@ -7,13 +7,13 @@
 | 系统名称 | `Nagasaki soyo's memory`（用户提供的初始申请审核通过邮件） | 核对当前官网绑定名称；若变更，以官网现值为准。 |
 | 类型与赛道 | Textual；初始审核邮件明确为学术榜，即当前官网所称开源方法榜 | 初始资格已通过；继续核对第四版材料和模型合规书面口径。 |
 | 系统版本 | 第四次 Smoke 标签 `v1.3.0-temporal-c0001f8` | 核对官网版本 ID、Railway 当前部署及镜像 digest；最终候选若变化，所有材料同步。 |
-| 公开仓库 | `https://github.com/M1IH/agent-memory-challenge` | 默认 `main` 仍显示第三版，不可仅给仓库根链接作为第四版证明。 |
+| 公开仓库 | `https://github.com/M1IH/agent-memory-challenge` | 10 月 26 日实时核对默认 `main` 为 `246b638126d2f5245ef07b407f8460f80ffaf9f8`，仍显示第三版，并称 BGE 检索为当前实现；不能仅给仓库根链接作为第四版或线上纯词法配置证明。 |
 | **第四版精确提交** | `https://github.com/M1IH/agent-memory-challenge/commit/c0001f84709ae134f3b5221574f3965f2f3f55c9` | 公开分支 `codex/task34-new-candidate` 可读；该 SHA 的 Actions run `39182694263` 成功，但不是当前生产身份的实时证明。 |
 | HTTPS Endpoint | `https://api-production-40d75.up.railway.app/add`、`https://api-production-40d75.up.railway.app/search`、`https://api-production-40d75.up.railway.app/health` | 10 月 24 日两次冷启动 `/health` 均为 200，约 7.67/8.16 秒；正式提交前核验带密钥读写、持久化及稳定性。 |
 | 鉴权 | `Authorization: Bearer <Memory System Key>` | 真实 Key 仅通过官网指定字段传递，不复制到本草稿。 |
 | 方法说明 | 见下方可粘贴正文。 | 最近记录的生产变量为 `AML_EMBED_ENABLED=false`、`AML_MEMORY_CACHE_USERS=1`；提交前复核实际线上配置。 |
 | 容量声明 | 单副本、挂载 `/data`；GitHub Linux 临时容器在 1 vCPU/512 MiB 下完成 10,000 条合成长消息、8 用户、500 次 Add/96 次 Top-100 Search。16/16 并发两次零错误，Search p95 为 11.076/4.768 秒；64/32 重复测试一次为 19.091 秒，超过本地 15 秒门槛。 | 这是临时容器的合成负载，**不能填写为 Railway 正式容量**。需取 Railway Free 实时额度、正式 Full 写入量与卷峰值、线上最终镜像和持续运行证据；见下方待填模板。 |
-| 回退版本 | 第四版精确提交 `c0001f84709ae134f3b5221574f3965f2f3f55c9`；恢复 deployment 历史 ID `e42eb7f9-bf7f-4863-be1b-a425df6e7832`。 | 10 月 24 日 Railway 控制台仍显示该 deployment；OCI revision 与镜像 digest 未验。 |
+| 回退版本 | 第四版精确提交 `c0001f84709ae134f3b5221574f3965f2f3f55c9`；恢复 deployment 历史 ID `e42eb7f9-bf7f-4863-be1b-a425df6e7832`。 | 10 月 26 日 Railway 控制台仍显示该 deployment 为 Sleeping；Details 页只有 CLI 标签，Build Logs 为空，当前 OCI revision 与镜像 digest 未验。 |
 | 联系方式、机构/团队、允许公开内容 | **由参赛者填写** | 不从本机资料猜测或自动提交。 |
 
 ## 可粘贴的方法说明
@@ -39,7 +39,7 @@
 | 官网容量字段 | 提交前证据状态 |
 | --- | --- |
 | 当前 deployment ID、OCI revision、镜像 digest 与固定提交的对应 | **待实时核验**。历史标签 `restore c0001f8` 不足以证明当前镜像身份。 |
-| Railway Free 当前余额、CPU/RAM/卷容量及使用量 | 10 月 24 日只读控制台：周期用量 `$0.85`、赠额 `$1.00`、单副本上限 1 vCPU/0.5 GB RAM、卷上限 500 MB。卷图表未给可读精确用量；`Estimated Bill $0.17` 与侧栏 `0 days or $1.00 left` 口径不一致，剩余运行时间不能确认。正式提交前必须重新核对。 |
+| Railway Free 当前余额、CPU/RAM/卷容量及使用量 | 10 月 26 日只读控制台：项目成本 `$0.8539`、赠额 `$1.00`、单副本上限 1 vCPU/0.5 GB RAM、项目卷上限 **500 MB**。卷图表未给可读精确用量；Free 套餐页的 `1 GB Disk` 不表示项目卷已扩容，侧栏 `0 days or $1.00 left` 与费用细项口径不一致，剩余运行时间不能确认。正式提交前必须重新核对。 |
 | 按官方规模测得的 Add/Search 并发、Top-100、语料和用户数 | **未验收**。10 月 25 日官网表单实际显示 Add 可填 16–64、Search 可填 16–256，二者默认 16；先前“默认 Add 64、Search 32”表述已过时。GitHub Linux 合成 10k 长消息 16/16 两次通过、64/32 一过一败，但均不覆盖正式 Full 数据量或 Railway 持续运行，详见[Linux 容量报告](linux-free-capacity-probe-2026-10-25.md)。 |
 | Linux 容器 RSS/cgroup 峰值、CPU、卷增量、错误率、Add/Search p95 | **待最终镜像实测**，并记录测试日期与负载。 |
 | 冷启动、持续可用性、重启后检索持久化 | `/health` 冷/热约 7.67/0.79 秒；最终镜像的读写、持续运行和重启恢复仍待复核。 |
@@ -52,8 +52,8 @@
 ## 提交前四个停止点
 
 1. **资格：**官网当前明确开源方法榜 embeddings 须 `text-embedding-v4`、LLM 相关组件须 `gpt-4o-mini`。当前纯词法线上配置及镜像内禁用 BGE 的审查口径待主办方书面确认。
-2. **线上：**Railway Free 最近显示约 `$0.8529/$1.00` 用量，卷上限 500 MB；CLI 登录失效，尚无实时余额、精确卷余量、正式并发容量与 OCI 镜像身份的证明。健康检查 200 不能替代带密钥读写、持久化和负载验收。本机 Docker Linux daemon 未就绪；GitHub Linux 临时容器已完成 16/16 合成压测，但不能把它或 Windows 20k 写入回放当作 Railway 正式验收。
-3. **材料：**初始学术榜申请审核已通过，四次 Smoke 也已成功；仍不能证明第四版完整材料已经更新并通过最终审查。需在已有 Key 下核对 `v1.3.0-temporal-c0001f8` 的版本 ID、赛道/组别、审核和绑定状态、固定提交、接口、容量、署名与允许公开字段，并保存脱敏回执；不要误申请新 Key。
+2. **线上：**Railway Free 10 月 26 日快照显示项目成本 `$0.8539/$1.00` 赠额、卷上限 500 MB；CLI 登录失效，尚无精确卷余量、正式并发容量与 OCI 镜像身份的证明。健康检查 200 不能替代带密钥读写、持久化和负载验收。本机 Docker Linux daemon 未就绪；GitHub Linux 临时容器已完成 16/16 合成压测，但不能把它或 Windows 20k 写入回放当作 Railway 正式验收。
+3. **材料：**初始学术榜申请审核已通过，四次 Smoke 也已成功；仍不能证明第四版完整材料已经更新并通过最终审查。需在已有 Key 下核对 `v1.3.0-temporal-c0001f8` 的版本 ID、赛道/组别、审核和绑定状态、固定提交、接口、容量、署名与允许公开字段，并保存脱敏回执。默认 `main` 是旧版，官网材料必须明确引用第四版精确提交，不能只贴仓库根 URL；不要误申请新 Key。
 4. **版本：**第五版尚无通过公开答案级净收益、跨能力回退、Free 正式容量与精确 SHA 门禁的候选。若最迟 10 月 27 日仍未全部通过，以第四版为材料基线；若换版，固定提交、CI、镜像、Railway deployment 和官网版本必须重新一致，并等新版本审核绑定。
 
 ## 截止倒排（北京时间）
