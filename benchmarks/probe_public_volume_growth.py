@@ -173,6 +173,12 @@ def replay(
         with closing(sqlite3.connect(path)) as connection:
             rows = connection.execute("SELECT COUNT(*) FROM memories").fetchone()[0]
             requests = connection.execute("SELECT COUNT(*) FROM add_requests").fetchone()[0]
+            content_bytes, terms_bytes, embedding_bytes = connection.execute(
+                """SELECT COALESCE(SUM(LENGTH(CAST(content AS BLOB))), 0),
+                          COALESCE(SUM(LENGTH(CAST(terms AS BLOB))), 0),
+                          COALESCE(SUM(LENGTH(embedding)), 0)
+                   FROM memories"""
+            ).fetchone()
             page_size = connection.execute("PRAGMA page_size").fetchone()[0]
             page_count = connection.execute("PRAGMA page_count").fetchone()[0]
             checkpoint_result = connection.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
@@ -196,6 +202,11 @@ def replay(
             "peak_sampled_db_wal_shm_bytes": max_total,
             "sqlite_page_size": page_size,
             "sqlite_page_count": page_count,
+            "stored_column_bytes": {
+                "content": content_bytes,
+                "terms": terms_bytes,
+                "embedding": embedding_bytes,
+            },
             "wal_checkpoint_truncate": checkpoint_result,
             "incremental_bytes": incremental,
             "incremental_bytes_per_message": per_message,

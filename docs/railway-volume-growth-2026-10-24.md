@@ -34,3 +34,15 @@ py -3.13 -m benchmarks.probe_public_volume_growth --limit-messages 5000 --output
 | PersonaMem-v1 32K | 3.277× | 3.440× | 55,521,280 B | 2,774.0 B |
 
 两组在 5,000→20,000 条时每条数据库增量基本稳定，未发现能把 500 MB 卷风险解释为小样本固定开销的证据。20,000 条仍远小于官网所述总 token 规模；它也不证明正式 Full 全量 Add、Linux cgroup RSS、并发 WAL 或线上余额。Railway 控制台同日确认 Free 当前用量约 `$0.85/$1.00`、卷 **Max 500 MB**；卷曲线没有可读精确值。Linux Docker daemon 当前未运行，正式容量门禁继续保持未通过。
+
+## 2026-10-26 存储字段拆解
+
+在同一固定公开历史和未压缩词法配置下，给[容量脚本](../benchmarks/probe_public_volume_growth.py)增加 SQLite `LENGTH(CAST(... AS BLOB))` 汇总，再跑 5,000 条上限（BEAM 仅 3,791 条）。这些是各列负载的 UTF-8/BLOB 字节总和，**不能与 SQLite 文件大小简单相加**，因为文件还包含行、页和索引开销。
+
+| 来源 | SQLite 增量 | `content` 字节 | `terms` 字节 | 两列合计占增量约 |
+| --- | ---: | ---: | ---: | ---: |
+| LongMemEval-S | 14,041,088 | 5,305,803 | 4,927,945 | 72.9% |
+| PersonaMem-v1 | 13,885,440 | 4,338,680 | 4,254,554 | 61.9% |
+| BEAM 100K | 18,866,176 | 8,331,011 | 7,058,715 | 81.6% |
+
+三组的 `embedding` 字节均为 0，符合当前词法配置。输入 UTF-8 分别为 4,759,651、4,237,569、8,299,794 字节；两列重复保存展示文本与词项确实是主要容量来源，`terms` 单列与 `content` 同量级。固定报告 `data/public-volume-growth-5000-columns-2026-10-26.json` 的 SHA-256 为 `3a06b506bd2fd68072a6f2e425dbb4e2a29d8bbb157e2a18207bb890b7089f22`，运行脚本 SHA-256 为 `70d7512b5df0bf433bafc7f1cb8603c7a3dc82dcd192482f52bc8d3a66b616f3`；报告位于 Git 忽略的 `data/`。此拆解解释压缩实验的空间收益，却没有解除旧版读取压缩 BLOB 的回滚缺口，也没有证明 Railway 500 MB 能容纳正式 Full。容量改动继续保持离线，不能作为第五次 Smoke 得分候选。
