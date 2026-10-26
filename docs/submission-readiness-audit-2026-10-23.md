@@ -76,3 +76,5 @@
 **2026-10-26 10:40（北京时间）部署身份追查：**在上述 deployment 的 Details 页，只能看到 `Deployed via CLI restore c0001f84709ae134f3b5221574f3965f2f3f55c9`、Dockerfile 构建、`/health` 健康检查和单副本等配置；Build Logs 页明确显示该 deployment 没有构建日志。页面均未给出 OCI revision 或镜像 digest。同次本机 `railway whoami` 返回 Unauthorized。故恢复部署与第四版源码的精确镜像对应仍不能由当前可见页面证明；下一次需从已认证 Railway 元数据或可核对的镜像清单取得，而不能复用旧 deployment 的 digest。未改线上状态。
 
 **2026-10-26 18:22（北京时间）CLI 登录恢复后纠正：**只读 `railway status --json` 直接给出当前部署 `e42eb7f9-bf7f-4863-be1b-a425df6e7832` 的镜像 digest `sha256:477dd2980de939e1d008e4fd0881ddd17dc63b06e7aba91aa3d65d6988927afb`，卷 **63.414272/500 MB**；但没有 OCI revision/Git commit 元数据，上传标签不能单独证明精确源码构建。`railway usage --period current --json` 和项目明细一致显示当前账期 **10 月 20 日–11 月 20 日**、用量 **`$0.0041518244`**，与早上网页旧账期 `$0.8539` 不可混算。旧“余额约 $0.1461”不再是当前阻塞。正式规模写入量、卷峰值、持续运行及新得分候选仍未验收；详见[容量诊断](free-tier-capacity-2026-10-21.md)。
+
+**2026-10-26 晚间运行代码比对：**通过临时 Railway SSH 密钥只读核对当前容器 `/app/app` 全部四个 Python 文件；其 SHA-256 均与第四版 `c0001f84709ae134f3b5221574f3965f2f3f55c9` 的 Git blob 按 CRLF 工作树换行转换后相符，详见[逐文件哈希](free-tier-capacity-2026-10-21.md)。临时密钥已从账户与本机删除。此证据把**当前运行的应用代码**关联到第四版精确提交，比 CLI 上传标签更强；镜像依赖层和 OCI revision 标签仍未验，未来第五版必须重新建立同样的身份链。
