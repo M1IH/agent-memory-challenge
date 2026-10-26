@@ -59,3 +59,9 @@ Railway CLI 显示第四版 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、
 Railway production 的 `api` 服务仍显示 `Sleeping`、US West、1 Replica，公网域名不变，挂载 `api-volume`。当前 deployment 仍为 `e42eb7f9-bf7f-4863-be1b-a425df6e7832`，页面标签 `restore c0001f84709ae134f3b5221574f3965f2f3f55c9`。该标签是上传说明，**不是** OCI revision 或镜像 digest；后两项仍未取得。卷指标页明确显示当前卷 **Max 500 MB**，图表无可读的精确当前占用值。Free 套餐用量页另列 `1 GB Disk`，它是套餐说明，不可替代此项目卷的 500 MB 实际上限。
 
 同一用量页显示周期 `Sep 19–Nov 20`、`Current Usage $0.85`、`Current Bill $0.85`、项目 `Current Cost $0.8539`、月赠额 `$1.00`；按项目展示数与赠额作算术差值约 `$0.1461`。内存、CPU、卷费用分别为 `$0.8138`、`$0.0292`、`$0.0105`。侧栏同时显示 `0 days or $1.00 left`，与细项口径不一致；不据此推断停机时刻。该数值只是 10:32 快照，尚无 Full 连续运行费用、卷峰值和正式负载证据。**Railway Free 正式容量与稳定性门禁仍未通过。**
+
+## 2026-10-26 18:22（北京时间）认证 CLI 复核
+
+重新完成 Railway CLI 账户登录后，`railway status --project dfc22392-37a1-406a-bf07-418175007f46 --environment production --json` 显示 production 的 `api` deployment 仍为 `e42eb7f9-bf7f-4863-be1b-a425df6e7832`、`SLEEPING`、单副本、挂载 `/data`；当前镜像 digest 为 **`sha256:477dd2980de939e1d008e4fd0881ddd17dc63b06e7aba91aa3d65d6988927afb`**。卷实例状态 `READY`，当前占用 **63.414272 MB / 500 MB**。这是当前部署镜像身份与卷的直接平台元数据；部署 `meta` 未提供 OCI revision 或 Git commit 字段，`cliMessage` 中的第四版 SHA 仍只是上传标签。不能把已取得的 digest 当成源码到镜像的完整溯源证明。
+
+同一工作区 `railway usage --period current --json` 与 `usage projects --period current --json` 均显示**当前账期为 2026-10-20 17:53 至 2026-11-20 17:53 北京时间**、唯一项目当前用量 **`$0.0041518244`**；此前 Edge 页面 `Sep 19–Nov 20` 的 `$0.8539` 是另一账期口径的旧快照，不再作为当前剩余额度。Free 赠额仍按页面所列每月 `$1.00` 理解，但实际计费限制和 Full 持续负载成本仍须确认。CLI `railway metrics --since 24h --cpu --memory --json` 显示 CPU 峰值 0.00417 vCPU、内存峰值约 148.79 MB（上限 1 vCPU / 524.288 MB）；该 24 小时窗口仅含轻量活动，**不能当作正式 Add/Search 容量验收**。预算近耗尽的旧判断已解除，500 MB 卷与正式工作量/稳定性门禁仍未通过。未部署或改服务配置。
