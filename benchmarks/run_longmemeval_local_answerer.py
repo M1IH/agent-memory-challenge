@@ -53,6 +53,7 @@ def ask(question: str, evidence: list[str], *, question_date: str | None = None)
 def select_cases(
     suite: dict, per_capability: int, capability_filter: str | None = None,
     case_id_suffix: str | None = None,
+    question_regex: str | None = None, total_limit: int | None = None,
 ) -> list[dict]:
     selected = []
     counts: dict[str, int] = defaultdict(int)
@@ -61,12 +62,16 @@ def select_cases(
             continue
         if case_id_suffix is not None and not case["case_id"].endswith(case_id_suffix):
             continue
+        if question_regex is not None and re.search(question_regex, case["question"], re.I) is None:
+            continue
         capability = case["capabilities"][0]
         if capability_filter is not None and capability != capability_filter:
             continue
         if counts[capability] < per_capability:
             selected.append(case)
             counts[capability] += 1
+            if total_limit is not None and len(selected) >= total_limit:
+                break
     return selected
 
 
@@ -150,6 +155,8 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--capability", help="run one development capability only")
     parser.add_argument("--case-id-suffix", help="select a documented case ID suffix, such as _abs")
+    parser.add_argument("--question-regex", help="fixed, case-insensitive question filter")
+    parser.add_argument("--total-limit", type=int, help="first N matching development cases in source order")
     parser.add_argument("--num-ctx", type=int, default=OPTIONS["num_ctx"])
     parser.add_argument("--include-query-time", action="store_true", help="provide the public query date to the local answerer")
     parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost", "temporal_clause"), default="native")
@@ -157,12 +164,13 @@ def main() -> None:
     parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
     parser.add_argument("--context-mode", choices=("native", "no_assistant_to_user"), default="native")
     args = parser.parse_args()
-    if args.per_capability < 1 or args.top_k < 1 or args.num_ctx < 1:
+    if args.per_capability < 1 or args.top_k < 1 or args.num_ctx < 1 or (args.total_limit is not None and args.total_limit < 1):
         parser.error("per-capability, top-k and num-ctx must be positive")
     OPTIONS["num_ctx"] = args.num_ctx
     suite = load_suite(args.suite)
     digest = model_digest()
-    cases = select_cases(suite, args.per_capability, args.capability, args.case_id_suffix)
+    cases = select_cases(suite, args.per_capability, args.capability, args.case_id_suffix,
+                         args.question_regex, args.total_limit)
     if not cases:
         parser.error("no development cases matched the requested capability")
     rows = []
@@ -186,7 +194,9 @@ def main() -> None:
         "model_digest": digest,
         "options": OPTIONS,
         "selection": f"first-{args.per_capability}-per-capability-source-order"
-                     + (f"-case-id-suffix:{args.case_id_suffix}" if args.case_id_suffix else ""),
+                     + (f"-case-id-suffix:{args.case_id_suffix}" if args.case_id_suffix else "")
+                     + (f"-question-regex:{args.question_regex}" if args.question_regex else "")
+                     + (f"-total-limit:{args.total_limit}" if args.total_limit else ""),
         "capability_filter": args.capability,
         "top_k": args.top_k,
         "retrieval_mode": args.retrieval_mode,
