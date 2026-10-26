@@ -70,3 +70,5 @@
 **沟通决定（2026-10-25）：**用户决定暂不发送询问纯词法 Add 与镜像内禁用 BGE 是否符合学术榜模型规则的邮件。不得代发；模型规则仍属未确认的提交风险，也不能因此勾选 Full 合规项。后续优先用官网公开规则和本地实现证据核对，并继续准备其他材料与容量证据。
 
 **2026-10-25 23:43（北京时间）只读复核：**公网 `/health` 返回 200，冷唤醒约 7.66 秒；`railway whoami` 仍返回 `Unauthorized. Please login with railway login`。已连接 Edge 的 Railway dashboard 标签可见，但自动化附着返回 `Debugger unattached`，因此本轮未取得实时 Free 余额、卷余量、变量、OCI revision 或镜像 digest。健康检查只能证明探测时服务可回应，不能解除正式容量和部署身份门禁；没有部署或运行官方评测。
+
+**2026-10-26 10:32（北京时间）只读更新：**Edge 已登录 Railway 控制台显示第四版恢复 deployment `e42eb7f9-bf7f-4863-be1b-a425df6e7832` 仍为 Sleeping，单副本并挂卷；卷 Metrics 的项目实际上限为 **500 MB**，但当前精确占用不可读。Free 用量页显示项目成本 `$0.8539` / 月赠额 `$1.00`，算术差值约 `$0.1461`；套餐说明的 `1 GB Disk` 不代表项目卷已扩至 1 GB。OCI revision/digest、正式负载卷峰值及 Full 持续运行费用未验。详见[容量诊断](free-tier-capacity-2026-10-21.md)。第五次 Smoke 的容量与精确部署身份门禁仍未解除；本次未改部署、变量或官方评测。
