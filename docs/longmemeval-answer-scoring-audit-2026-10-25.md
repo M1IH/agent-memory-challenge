@@ -28,3 +28,9 @@
 ## Top-5 代理边界
 
 同一公开 LongMemEval development 的 24 道 `single-session-preference` 题，第四版必要来源进入 Top-5 为 13/24，进入 Top-100 为 24/24；另外 6 道首次位于第 6–20 条，5 道首次位于第 21–100 条。公开官方协议的 Search `top_k=100`，而本地 4B 回答器只读 Top-5、上下文 8,192 tokens。故这组本地答案错误不能直接说明官方 Answer 看不到来源，也不能用 Top-5 指标预测第四次 Smoke 的 E 类或其他能力。后续若研究偏好类 Search 改动，应保持官方 Top-100 证据不回退，并用足够上下文的独立公开答案任务验证；单独提高 Top-5 来源覆盖仍不是发布理由。
+
+## 2026-10-26 多会话证据窗口诊断
+
+同一固定 LongMemEval development 每类前五题中的五道 `multi-session` 题，第四版词法 Top-5/8K 本地回答严格匹配 0/5、必要会话完整进入 Top-5 为 0/5；其中四题在 Top-100 可找齐来源。为区分本地证据窗口瓶颈，保持同一 Qwen 4B、提示和生产 Search 排序，**只**把本地读取改成 Top-20/16K，复跑五题；命令为 `py -3.13 -m benchmarks.run_longmemeval_local_answerer --per-capability 5 --capability multi-session --top-k 20 --num-ctx 16384 --skip-without --output data/longmemeval-multisession-top20-16k-2026-10-26.json`。报告 SHA-256 为 `8ebc214c39ed5eba48cad917735767c64a5e4142f9e029d3bfc52782a644a6cb`。
+
+结果仍严格匹配 **0/5**，必要会话完整进入 Top-20 **2/5**。`e831120c` 的预测仍是 `Two weeks.`，公开参考为 `3.5 weeks`；`0a995998` 从错误的具体数量变为弃答，其他三题仍弃答。Top-20 不是官方实际回答器可见窗口，此本地 4B 模型也不是官方模型；这组小样本只能否决“单纯扩大本地 Top-K 和上下文即可修复多会话题”的假设。没有新生产候选，不发第五次 Smoke。
