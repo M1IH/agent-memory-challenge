@@ -56,3 +56,11 @@
 下一步需要能在原生小样本上取得非零基线的固定回答器，或一套同题、可审计的公开答案级交互回放。得到它后，再实现 AML 记忆对照，比较正确率、探索次数、迁移前后配对差异及跨任务回退。数据库下载阻塞已解除，回答器质量与 Railway 容量仍是独立门禁。
 
 同机另试已安装的 `qwen3-vl:4b`（非 instruct）作为回答器，在原生结构化输出通路反复返回空 content，经过五次重试仍失败；已终止后续基线重试。它没有形成有效运行或分数，不作为候选比较。当前本机无其他已安装的更强回答模型，也未配置远程模型凭证。
+
+## 2026-10-26 更强本地模型的原生答案核验
+
+重核两份固定 SQLite：`products.db` 397,910,016 字节、SHA-256 `edf8ee80ff125de0bfd6c37a1d185efa9e3037ce28eb1bd1d32ae0829bd264a6`；`products_drifted.db` 432,148,480 字节、SHA-256 `a53d523f70604be0e4328f3722417895250ac35e1127cc504b609576aee70fad`；各自只读 `PRAGMA quick_check` 均为 `ok`。数据下载/损坏不再是实验阻塞。
+
+下载并固定 Ollama 文本模型 `qwen3:8b`，digest `500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`（8.2B 参数、Q4_K_M）。原生 CLBench 仍用 `database_exploration` 的本地 `local_sanity` 2+2 迁移 schedule、每题最多 15 次探索查询、ICL/LiteLLM 结构化输出，仅将模型从旧的 4B VL 换为 8B 文本模型。忽略目录中的运行配置 `data/native-clbench-local-8b-4.json` SHA-256 为 `b8ed8139d7cd1d9053c12ff200423b8ffaae0623084f04027bd4dbbee6026ae3`；原生完整轨迹 `data/clbench-source/results/database_exploration/traces/2026-10-26T10-52-56.485601Z/run_0000.json` SHA-256 为 `6b509f73dfd383998a06f91c1a315e91d6236a38a372a28c494ebf4327ebca27`。
+
+四题运行均完成，奖励仍为 **0/4**；逐题探索次数为 8、8、15、15。此次模型共 50 次调用、104,807 tokens，未产生非零答案基线。故现有本地模型路径仍无法对“阶段优先”候选做有辨别力的原生正确率或查询成本配对；不能以表观察覆盖 12/85→54/85 代替最终答案。停止继续扩大 CLBench 原生本地模型实验，保持候选离线。新下载的 8B 模型实验后已从 Ollama 删除，未改生产代码、数据或部署。
