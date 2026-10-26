@@ -10,6 +10,7 @@ import tempfile
 from pathlib import Path
 
 from app.store import MemoryStore, RetrievalConfig
+from benchmarks.add_context_modes import add_memory
 from benchmarks.public_eval_metrics import aggregate_retrieval, score_retrieval
 from benchmarks.public_eval_schema import load_suite
 
@@ -46,18 +47,20 @@ def content_diagnostics(case: dict, ranked_sources: list[str], results: list[dic
     }
 
 
-def run_case(store: MemoryStore, case: dict, *, top_k: int, include_content: bool = False) -> tuple:
+def run_case(store: MemoryStore, case: dict, *, top_k: int, include_content: bool = False,
+             context_mode: str = "native") -> tuple:
     user_id = f"public-eval:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
         messages = [
             {"role": turn["role"], "content": turn["content"], "timestamp": memory["timestamp"]}
             for turn in memory["turns"]
         ]
-        store.add(
+        add_memory(store,
             request_id=f"{case['case_id']}:{index}",
             user_id=user_id,
             session_id=memory["memory_id"],
             messages=messages,
+            mode=context_mode,
         )
     with store._connection() as connection:
         rows = connection.execute(
@@ -86,6 +89,7 @@ def main() -> None:
     parser.add_argument("--content-diagnostics", action="store_true", help="record content character counts and source placement")
     parser.add_argument("--disable-linkage", action="store_true", help="offline ablation of entity linkage")
     parser.add_argument("--compress-text", action="store_true", help="offline SQLite text compression candidate")
+    parser.add_argument("--context-mode", choices=("native", "no_assistant_to_user"), default="native")
     args = parser.parse_args()
     if args.limit < 1 or args.top_k < 1:
         parser.error("limit and top-k must be positive")
@@ -104,7 +108,8 @@ def main() -> None:
             compress_text=args.compress_text,
         )
         for case in cases:
-            result = run_case(store, case, top_k=args.top_k, include_content=args.content_diagnostics)
+            result = run_case(store, case, top_k=args.top_k, include_content=args.content_diagnostics,
+                              context_mode=args.context_mode)
             metrics, ranked_sources = result[:2]
             row = {
                 "case_id": case["case_id"],
@@ -136,6 +141,7 @@ def main() -> None:
         "compress_text": args.compress_text,
         "linkage_enabled": not args.disable_linkage,
         "content_diagnostics": args.content_diagnostics,
+        "context_mode": args.context_mode,
         "case_count": len(rows),
         "aggregate": aggregate_retrieval(row["metrics"] for row in rows),
         "cases": rows,

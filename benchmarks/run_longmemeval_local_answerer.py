@@ -17,6 +17,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from app.store import MemoryStore, RetrievalConfig
+from benchmarks.add_context_modes import add_memory
 from benchmarks.probe_session_round_robin import session_round_robin
 from benchmarks.public_eval_schema import load_suite
 from benchmarks.run_personamem_local_answerer import MODEL, OLLAMA_URL, model_digest
@@ -72,10 +73,11 @@ def select_cases(
 def run_case(
     store: MemoryStore, case: dict, top_k: int, retrieval_mode: str = "native",
     *, skip_without: bool = False, include_query_time: bool = False,
+    context_mode: str = "native",
 ) -> dict:
     user_id = f"longmemeval-answer:{case['case_id']}"
     for index, memory in enumerate(case["memories"]):
-        store.add(
+        add_memory(store,
             request_id=f"{case['case_id']}:{index}",
             user_id=user_id,
             session_id=memory["memory_id"],
@@ -83,6 +85,7 @@ def run_case(
                 {"role": turn["role"], "content": turn["content"], "timestamp": memory["timestamp"]}
                 for turn in memory["turns"]
             ],
+            mode=context_mode,
         )
     question_date = case.get("source_question_date_text") if include_query_time else None
     without, without_seconds = (None, 0.0) if skip_without else ask(
@@ -152,6 +155,7 @@ def main() -> None:
     parser.add_argument("--retrieval-mode", choices=("native", "session_round_robin", "user_role_boost", "temporal_clause"), default="native")
     parser.add_argument("--disable-linkage", action="store_true", help="offline entity-linkage ablation")
     parser.add_argument("--skip-without", action="store_true", help="skip repeated no-memory answer calls")
+    parser.add_argument("--context-mode", choices=("native", "no_assistant_to_user"), default="native")
     args = parser.parse_args()
     if args.per_capability < 1 or args.top_k < 1 or args.num_ctx < 1:
         parser.error("per-capability, top-k and num-ctx must be positive")
@@ -171,6 +175,7 @@ def main() -> None:
             rows.append(run_case(
                 store, case, args.top_k, args.retrieval_mode,
                 skip_without=args.skip_without, include_query_time=args.include_query_time,
+                context_mode=args.context_mode,
             ))
     report = {
         "kind": "longmemeval_local_answerer_development",
@@ -185,6 +190,7 @@ def main() -> None:
         "capability_filter": args.capability,
         "top_k": args.top_k,
         "retrieval_mode": args.retrieval_mode,
+        "context_mode": args.context_mode,
         "linkage_enabled": not args.disable_linkage,
         "skip_without": args.skip_without,
         "include_query_time": args.include_query_time,
