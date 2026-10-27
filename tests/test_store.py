@@ -68,6 +68,44 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertTrue(results)
         self.assertIn("乌龙茶", results[0]["content"])
 
+    def test_environment_notice_prefers_new_stage_without_dropping_old_evidence(self):
+        self.add("alice", "old", "The database inventory uses the legacy products table.")
+        self.add(
+            "alice", "notice",
+            "NOTICE: The live database schema has changed. Inspect current data.",
+        )
+        self.add("alice", "new", "The current inventory uses the goods table.")
+        results = self.store.search("alice", "Which table stores inventory?", 3)
+        self.assertIn("goods", results[0]["content"])
+        self.assertTrue(any("legacy products" in row["content"] for row in results))
+
+        memories = self.store._load_user_memories("alice")
+        old = next(memory for memory in memories if memory.request_id == "old")
+        new = next(memory for memory in memories if memory.request_id == "new")
+        ranking = [(3.0, old), (2.0, new)]
+        self.assertEqual(
+            ranking,
+            self.store._current_stage_scores(
+                "Which table stored inventory before it changed?", ranking, memories, 2
+            ),
+        )
+
+    def test_assistant_notice_does_not_start_new_stage(self):
+        self.store.add(
+            request_id="old", user_id="alice", session_id="s1",
+            messages=[{"role": "user", "content": "The database inventory uses products."}],
+        )
+        self.store.add(
+            request_id="notice", user_id="alice", session_id="s2",
+            messages=[{"role": "assistant", "content": "NOTICE: The database schema changed."}],
+        )
+        self.store.add(
+            request_id="new", user_id="alice", session_id="s3",
+            messages=[{"role": "user", "content": "The garden has flowers."}],
+        )
+        results = self.store.search("alice", "Which database table stores inventory?", 3)
+        self.assertIn("products", results[0]["content"])
+
     def test_before_change_query_prefers_historical_supplier(self):
         self.add(
             "alice", "old", "The bakery originally used Redbrook Mill.",

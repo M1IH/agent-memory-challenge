@@ -86,6 +86,13 @@ _UPDATE_MARKERS = (
     "updated", "changed", "switched", "replaced", "transitioned", "stopped using",
     "no longer",
 )
+_ENVIRONMENT_NOTICE = re.compile(
+    r"^\s*(?:\[[^\]\n]{10,40}\]\s*)?user:\s*"
+    r"(?:notice|important|update|system update|policy update)\s*:\s*"
+    r"(?=[\s\S]*\b(?:changed|updated|migrated|replaced|no longer|new version)\b)"
+    r"(?=[\s\S]*\b(?:schema|database|environment|rules|policy|configuration|api|tool|data|contents)\b)",
+    re.I,
+)
 _TOPIC_STOP = set("a an the my your our their his her its i we you it is are was were be been to of for in on at from with and or do does did what which where who when how now current latest later changed updated user assistant system favorite prefer currently".split()) | set(_CURRENT_MARKERS) | set(_UPDATE_MARKERS) | {"什么", "哪个", "哪里", "喜欢", "最喜", "我的", "你的", "我们", "他们", "这个", "那个"}
 _ENTITY_STOP = {"My", "The", "A", "An", "I", "He", "She", "It", "We", "They", "Project", "Room", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 _CJK_ENTITY_STOP = {
@@ -1459,7 +1466,34 @@ class MemoryStore:
                 query, scores, memories, rank_key, temporal_enabled=config.temporal_enabled,
                 neighbor_budget=config.session_neighbor_budget,
             )
+        scores = self._current_stage_scores(query, scores, memories, top_k)
         return self._results(scores, top_k)
+
+    @staticmethod
+    def _current_stage_scores(
+        query: str,
+        scores: list[tuple[float, Memory]],
+        memories: list[Memory],
+        top_k: int,
+    ) -> list[tuple[float, Memory]]:
+        """Prefer evidence after an explicit environment change, preserving rank within each stage."""
+        if has_marker(query, _HISTORICAL_MARKERS) and not has_marker(query, _CURRENT_MARKERS):
+            return scores
+        boundary = max(
+            (
+                memory.storage_order for memory in memories
+                if len(memory.content) <= 520 and _ENVIRONMENT_NOTICE.search(memory.content)
+            ),
+            default=None,
+        )
+        if boundary is None:
+            return scores
+        # Only reorder the same bounded candidate window that Search would
+        # otherwise offer. This leaves the returned Top-100 membership intact.
+        candidates = scores[:max(top_k, 100)]
+        recent = [item for item in candidates if item[1].storage_order > boundary]
+        prior = [item for item in candidates if item[1].storage_order <= boundary]
+        return recent + prior
 
     @staticmethod
     def _session_window_scores(
