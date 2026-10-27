@@ -46,3 +46,9 @@ py -3.13 -m benchmarks.probe_public_volume_growth --limit-messages 5000 --output
 | BEAM 100K | 18,866,176 | 8,331,011 | 7,058,715 | 81.6% |
 
 三组的 `embedding` 字节均为 0，符合当前词法配置。输入 UTF-8 分别为 4,759,651、4,237,569、8,299,794 字节；两列重复保存展示文本与词项确实是主要容量来源，`terms` 单列与 `content` 同量级。固定报告 `data/public-volume-growth-5000-columns-2026-10-26.json` 的 SHA-256 为 `3a06b506bd2fd68072a6f2e425dbb4e2a29d8bbb157e2a18207bb890b7089f22`，运行脚本 SHA-256 为 `70d7512b5df0bf433bafc7f1cb8603c7a3dc82dcd192482f52bc8d3a66b616f3`；报告位于 Git 忽略的 `data/`。此拆解解释压缩实验的空间收益，却没有解除旧版读取压缩 BLOB 的回滚缺口，也没有证明 Railway 500 MB 能容纳正式 Full。容量改动继续保持离线，不能作为第五次 Smoke 得分候选。
+
+## 2026-10-27 扩至公开历史上限
+
+同一脚本、固定来源及 SHA 校验，运行 `py -3.13 -m benchmarks.probe_public_volume_growth --limit-messages 100000 --output data/public-volume-growth-100000-2026-10-27.json`。忽略目录中的报告 SHA-256 为 `f24439b9768dbc3e425272d2bfc44da96d4ebbcd596fc3258db425e0e44af853`。LongMemEval-S development 实际写满 100,000 条、203 用户、9,744 次 Add，SQLite 文件为 **283,553,792 B**，输入 UTF-8 98,851,953 B，净增 283,512,832 B，放大率 **2.868×**，每条净增 2,835 B。PersonaMem development 在 68,522 条耗尽，文件为 **196,825,088 B**；BEAM 仍仅 3,791 条。抽样点上的 WAL 均为 0，不能据此推断并发 Add 的瞬时峰值。
+
+若把 LongMemEval 这 10 万条额外写入 10 月 27 日仍占 **63.414272/500 MB** 的生产卷，按十进制 MB 合计约 **346.97 MB**，名义剩余约 **153.03 MB**。这只证明该公开样本的离线存储量落在卷额度内；官方 Full 的总 Add 数、消息长度与重用模式未知，且本机顺序写入没有覆盖 Railway 的文件系统、并发 WAL、cgroup 或持续费用。因此正式容量门禁仍未通过，不能把 10 万条样本外推成 Full 可承载声明。
