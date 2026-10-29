@@ -287,7 +287,13 @@ app.add_middleware(
     RequestBodyLimitMiddleware,
     max_bytes=configured_max_request_bytes(),
 )
-store = MemoryStore(os.getenv("AML_DB_PATH", "data/memory.db"))
+compress_text = os.getenv("AML_COMPRESS_TEXT", "false").strip().lower()
+if compress_text not in {"true", "false"}:
+    raise ValueError("AML_COMPRESS_TEXT must be true or false")
+store = MemoryStore(
+    os.getenv("AML_DB_PATH", "data/memory.db"),
+    compress_text=compress_text == "true",
+)
 
 
 @app.exception_handler(sqlite3.Error)

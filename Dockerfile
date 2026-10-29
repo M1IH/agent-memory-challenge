@@ -24,6 +24,7 @@ RUN groupadd --system --gid 10001 aml \
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     AML_DB_PATH=/data/memory.db \
+    AML_COMPRESS_TEXT=false \
     AML_EMBED_ENABLED=true \
     AML_EMBED_MODEL=BAAI/bge-small-en-v1.5 \
     AML_EMBED_MODEL_REVISION=$AML_EMBED_MODEL_REVISION \

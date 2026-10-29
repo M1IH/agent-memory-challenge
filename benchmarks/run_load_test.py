@@ -179,6 +179,7 @@ def main() -> None:
     parser.add_argument("--max-add-p95-seconds", type=nonnegative_float)
     parser.add_argument("--max-search-p95-seconds", type=nonnegative_float)
     parser.add_argument("--no-embeddings", action="store_true")
+    parser.add_argument("--compress-text", action="store_true")
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args()
     if args.users > args.add_requests:
@@ -189,6 +190,7 @@ def main() -> None:
         store = MemoryStore(
             database_path,
             embedder=False if args.no_embeddings else None,
+            compress_text=args.compress_text,
         )
         rss_after_store_init = current_rss_bytes()
 
@@ -556,6 +558,7 @@ def main() -> None:
             "max_add_p95_seconds": args.max_add_p95_seconds,
             "max_search_p95_seconds": args.max_search_p95_seconds,
             "embeddings_enabled": not args.no_embeddings,
+            "compress_text": args.compress_text,
             "embedding_concurrency": (
                 None if store._embedder is None else store._embedder.concurrency
             ),

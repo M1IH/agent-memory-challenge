@@ -67,6 +67,37 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertIn("Sapporo", reopened.search("alice", "winter trip", 1)[0]["content"])
         self.assertEqual([], reopened.search("bob", "winter trip", 10))
 
+    def test_damaged_compressed_row_never_returns_partial_history(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "1"}):
+            store = MemoryStore(self.path, embedder=False, compress_text=True)
+        store.add("one", "alice", "one", [
+            {"role": "user", "content": "The summer trip is to Kyoto."},
+        ])
+        store.add("two", "alice", "two", [
+            {"role": "user", "content": "The winter trip is to Sapporo."},
+        ])
+        with store._connection() as connection:
+            original = connection.execute(
+                "SELECT content FROM memories WHERE request_id = 'two'"
+            ).fetchone()[0]
+            connection.execute(
+                "UPDATE memories SET content = ? WHERE request_id = 'two'",
+                (b"damaged-compressed-row",),
+            )
+
+        with self.assertRaisesRegex(sqlite3.DatabaseError, "compressed memory text"):
+            store._load_user_memories("alice")
+        self.assertEqual(0, store.memory_cache_stats()["resident_users"])
+
+        with store._connection() as connection:
+            connection.execute(
+                "UPDATE memories SET content = ? WHERE request_id = 'two'",
+                (original,),
+            )
+        recovered = store._load_user_memories("alice")
+        self.assertEqual(2, len(recovered))
+        self.assertTrue(any("Sapporo" in memory.content for memory in recovered))
+
     def test_payload_character_limits_must_be_positive_integers(self):
         self.assertEqual(200000, positive_payload_chars("200000", "LIMIT"))
         for value in ("0", "-1", "invalid"):

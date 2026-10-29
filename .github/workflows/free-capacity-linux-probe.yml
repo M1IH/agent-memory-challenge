@@ -16,6 +16,11 @@ on:
         required: true
         default: 16
         type: number
+      compress_text:
+        description: Compress new SQLite content and terms rows
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -43,6 +48,7 @@ jobs:
                 --add-workers ${{ inputs.add_workers || 16 }} \
                 --search-requests 96 --search-workers ${{ inputs.search_workers || 16 }} \
                 --top-k 100 --no-embeddings \
+                ${{ inputs.compress_text && '--compress-text' || '' }} \
                 --max-rss-bytes 524288000 \
                 --max-add-p95-seconds 45 --max-search-p95-seconds 15 \
                 --json-output /tmp/capacity-report.json;

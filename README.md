@@ -1,6 +1,6 @@
 # AML Memory Entry
 
-> **当前评测与提交入口（2026-10-25）：**第四次官方文本 Smoke `teval_4c0a22f3456a888c` 成功，得分 **63.68**，版本 `v1.3.0-temporal-c0001f8`，稳定代码 `c0001f84709ae134f3b5221574f3965f2f3f55c9`。目前没有通过发布门禁的第五版得分候选。材料截止为 **10 月 31 日 23:59（北京时间）**，评测停止为 **11 月 4 日 23:59**。官网已确认第四版绑定现有学术榜 Key 和 Add/Search URL；其余最终材料仍待验收。Railway Free 已恢复第四版服务，但正式容量、持续额度与线上镜像身份仍待验收。最新决策见[第五次 Smoke 候选决策](docs/smoke5-candidate-decision-2026-10-24.md)、[迭代规划](docs/smoke-full-score-iteration-2026-10-20.md)与[提交就绪审计](docs/submission-readiness-audit-2026-10-23.md)。
+> **当前评测与提交入口（2026-10-29）：**第五次官方文本 Smoke `teval_ba5f1ec7c158cd00` 成功，得分 **68.09**，版本 `v1.4.0-stage-notice-5d1f82d`，对应代码 `5d1f82d3d7789051b47c4a9f70f1dbf07d07c794`。Railway 当前运行该版本，deployment `daa06888-0fc1-480c-8184-6e80530eea48`。材料截止 **10 月 31 日 23:59（北京时间）**，评测停止 **11 月 4 日 23:59**。以首次 Full 为目标的最终升级与容量门禁见[最后一轮计划](docs/full-final-iteration-plan-2026-10-29.md)，[第五次官方结果](docs/smoke5-official-result-2026-10-27.md)保留分项对照。压缩候选仍在本地验证，尚非线上版本。
 
 个人参赛的 Agent Memory Challenge 文本赛道开源基线系统。
 

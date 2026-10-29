@@ -455,6 +455,17 @@ class PayloadTooLargeError(ValueError):
     """A validly shaped request exceeds the configured processing budget."""
 
 
+def _decode_stored_text(value: str | bytes) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, bytes):
+        try:
+            return zlib.decompress(value).decode("utf-8")
+        except (zlib.error, UnicodeDecodeError):
+            raise sqlite3.DatabaseError("Invalid compressed memory text") from None
+    raise sqlite3.DatabaseError("Invalid memory text storage type")
+
+
 class MemoryStore:
     def __init__(
         self,
@@ -905,6 +916,7 @@ class MemoryStore:
                     return pending.memories
 
         memories: list[Memory] | None = None
+        load_succeeded = False
         try:
             with self._connection() as connection:
                 db_rows = connection.execute(
@@ -928,12 +940,8 @@ class MemoryStore:
                         embedding = None
                     if embedding is not None and not np.all(np.isfinite(embedding)):
                         embedding = None
-                stored_terms = row["terms"]
-                if isinstance(stored_terms, bytes):
-                    stored_terms = zlib.decompress(stored_terms).decode("utf-8")
-                stored_content = row["content"]
-                if isinstance(stored_content, bytes):
-                    stored_content = zlib.decompress(stored_content).decode("utf-8")
+                stored_terms = _decode_stored_text(row["terms"])
+                stored_content = _decode_stored_text(row["content"])
                 terms = stored_terms.split()
                 term_counts: dict[str, int] = {}
                 for term in terms:
@@ -972,12 +980,13 @@ class MemoryStore:
                             self._memory_cache_stats["evictions"] += 1
                     else:
                         self._memory_cache_stats["oversized_rejections"] += 1
+            load_succeeded = True
             return memories
         finally:
             if owns_load:
                 with self._cache_lock:
                     completed = self._cache_loads.pop(user_id)
-                    completed.memories = memories
+                    completed.memories = memories if load_succeeded else None
                     completed.event.set()
 
     def search(

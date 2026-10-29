@@ -21,6 +21,25 @@ from app.store import MemoryStore
 
 
 class ApiContractTests(unittest.TestCase):
+    def test_compression_switch_is_applied_at_service_startup(self):
+        with tempfile.TemporaryDirectory() as directory:
+            environment = os.environ.copy()
+            environment.update({
+                "AML_DB_PATH": str(Path(directory) / "memory.db"),
+                "AML_EMBED_ENABLED": "false",
+                "AML_COMPRESS_TEXT": "true",
+                "AML_LOCKDOWN": "false",
+            })
+            completed = subprocess.run(
+                [sys.executable, "-c", "from app.main import store; assert store._compress_text"],
+                cwd=Path(__file__).resolve().parents[1],
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(0, completed.returncode, completed.stderr)
+
     def test_request_byte_limit_configuration_fails_closed(self):
         for value in ("0", "-1", "invalid"):
             with self.subTest(value=value), patch.dict(
