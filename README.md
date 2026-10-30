@@ -1,6 +1,6 @@
 # AML Memory Entry
 
-> **当前评测与提交入口（2026-10-29）：**第五次官方文本 Smoke `teval_ba5f1ec7c158cd00` 成功，得分 **68.09**，版本 `v1.4.0-stage-notice-5d1f82d`，对应代码 `5d1f82d3d7789051b47c4a9f70f1dbf07d07c794`。Railway 当前运行压缩候选 `3d5f42258365a57a1425ae64f01525a06429f26c`，deployment `fac32883-bdb3-40b5-a273-3089e661c38a`；该候选尚无官方 Smoke 分数，第五版仍是已验证回退锚点。材料截止 **10 月 31 日 23:59（北京时间）**，评测停止 **11 月 4 日 23:59**。以首次 Full 为目标的最终升级与容量门禁见[最后一轮计划](docs/full-final-iteration-plan-2026-10-29.md)，[第五次官方结果](docs/smoke5-official-result-2026-10-27.md)保留分项对照。
+> **当前评测与提交入口（2026-10-30）：**第五次官方文本 Smoke `teval_ba5f1ec7c158cd00` 的 **68.09** 仍为最高分，版本 `v1.4.0-stage-notice-5d1f82d`，源码 `5d1f82d3d7789051b47c4a9f70f1dbf07d07c794`。第六次压缩候选得 **61.36**；第七次同镜像关闭压缩的对照 `teval_77b4ae1694199221` 得 **62.84**，两者均未恢复第五次分数。Railway 已从第五版精确源码重新构建，当前 deployment `26221aea-5c33-4a63-96d7-b6900fd6cf0d`、镜像 `sha256:df52c23e0d7d36fd59ec80bb2a6d9e5e49ee5615b0a2242a054d51ad49649904`，健康检查 200；新镜像尚未完成独立 Smoke。材料截止 **10 月 31 日 23:59（北京时间）**，评测停止 **11 月 4 日 23:59**。最终决策依据见[最后一轮计划](docs/full-final-iteration-plan-2026-10-29.md)、[第六、七次官方结果](docs/smoke6-official-result-2026-10-29.md)。
 
 个人参赛的 Agent Memory Challenge 文本赛道开源基线系统。
 
