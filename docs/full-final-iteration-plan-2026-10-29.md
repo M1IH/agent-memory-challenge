@@ -1,5 +1,11 @@
 # 首次 Full 最后一轮升级计划（2026-10-29，北京时间）
 
+## 10 月 31 日执行状态
+
+公开分支 `codex/smoke4-iteration` 已推送至 `23b1ee2`，压缩候选精确源码 `3d5f42258365a57a1425ae64f01525a06429f26c` 可从公开仓库读取。当前 Railway 镜像仍为 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`，`/health` 返回 200，卷约 75.13/500 MB。
+
+官网已绑定 `v1.5.2-compress-3d5f422`，第九次 Smoke 任务 `teval_27981a1477d5ca6c` 于北京时间 09:05:33 以 `ADD_ACCESS_DENIED · HTTP 403` 失败，0/1、无分数。Railway 同时段 Add/Search 请求均为 200，未记录 403；故仍需定位平台返回码来源。官网提供原任务断点续跑入口。用户已授权在本次 Smoke 成功并整理证据后启动首次 Full；目前该条件尚未满足，不得把失败任务当作通过，也不创建 Full。下文 10 月 30 日及更早的时间表仅保留决策历史。
+
 ## 10 月 30 日执行更新
 
 18:48 已从提交 `3d5f42258365a57a1425ae64f01525a06429f26c` 的独立工作区重新部署压缩候选：本机 269 passed；Railway deployment `afb585d2-3178-4252-a1e4-22f2d88bd949` 为 SUCCESS，镜像 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`；`/health` 200，`AML_COMPRESS_TEXT=true`、`AML_EMBED_ENABLED=false`、数据库 `/data/memory.db`。新镜像必须单独绑定版本并通过 Smoke，不能继承第六次 61.36 的镜像成绩。原第五版与第六版源码都有压缩解码路径，现有混合行可读。
