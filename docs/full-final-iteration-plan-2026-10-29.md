@@ -8,6 +8,8 @@
 
 09:41:19 原任务第二次尝试仍为相同 403，官网续跑入口随后消失，下一次新 Smoke 允许时间为 10:05。两次 Railway `HEAD /add` 均在休眠唤醒阶段约 10 秒被客户端取消，记录 499；这与官网 403 的因果映射尚未确认。Railway Free 要求 serverless，拒绝关闭休眠。已将服务配置恢复，并从候选源码工作区重新部署；当前 deployment `4d5c34c8-2533-4612-9351-7e69eedcc348` 为 SUCCESS，镜像 digest 与原压缩镜像一致。10:05 后应在保持服务唤醒的条件下只再运行一次新 Smoke；成功前不启动 Full。
 
+冷却结束后按上述条件新建的第十次 Smoke `teval_32dc68b405e552f0` 仍以 `ADD_ACCESS_DENIED · HTTP 403` 失败。Railway 在对应时段只记录 200/405，未记录 403，WAF Under Attack Mode 关闭；故障并非单纯的休眠冷启动。停止重复创建评测任务，优先定位平台到 Railway 的请求链路或鉴权映射。首次 Full 仍以同一镜像的成功 Smoke 为前提。
+
 ## 10 月 30 日执行更新
 
 18:48 已从提交 `3d5f42258365a57a1425ae64f01525a06429f26c` 的独立工作区重新部署压缩候选：本机 269 passed；Railway deployment `afb585d2-3178-4252-a1e4-22f2d88bd949` 为 SUCCESS，镜像 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`；`/health` 200，`AML_COMPRESS_TEXT=true`、`AML_EMBED_ENABLED=false`、数据库 `/data/memory.db`。新镜像必须单独绑定版本并通过 Smoke，不能继承第六次 61.36 的镜像成绩。原第五版与第六版源码都有压缩解码路径，现有混合行可读。
