@@ -10,5 +10,6 @@
 - Railway HTTP 日志在失败时段见 `/add`、`/search` 的 200 响应，HEAD 请求在唤醒时有 499、唤醒后有 405；未见 403。WAF Under Attack Mode 为 disabled。第十次提交前已确认服务在运行并返回 200。
 - 此前相同账户已有八次成功的文本 Smoke；第九、十次是新绑定版本与当前部署镜像的评测。当前镜像的官方 Smoke 尚未通过，因此未启动 Full。
 - [官方 API 指南](https://agentmemoryleaderboard.ai/api-guide)将 HTTP 403 定义为 Add/Search 访问被拒绝，并注明不会自动重试。由于应用鉴权代码只会返回 401，Railway HTTP 日志也无 403，这一分类尚不能证明 403 由参赛服务产生；需要评测侧提供实际请求与响应来源才能定位。
+- [GitHub Actions 公网探测](https://github.com/M1IH/agent-memory-challenge/actions/runs/41216980201)从另一条云端出口运行成功：`GET /health` 为 200，`GET /add` 与 `/search` 为预期的 405，以故意无效的 Bearer Key 请求 `POST /add` 为应用预期的 401。这排除了 Railway 对所有云端出口的一般性 403，仍不能证明赛事评测节点与其凭据转发正常。
 
 拟发送的技术问题：请检查这些任务的评测节点实际请求目标、收到的 403 响应来源及响应体、鉴权头是否被转发，以及是否有平台侧访问策略拦截。请告知是否可对相同任务续跑或在问题修复后重新运行 Smoke。
