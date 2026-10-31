@@ -14,7 +14,7 @@
 | HTTPS 接口 | `https://api-production-40d75.up.railway.app/add`、`https://api-production-40d75.up.railway.app/search`、`https://api-production-40d75.up.railway.app/health` |
 | 鉴权 | `Authorization: Bearer <Memory System Key>`；Key 只能填官网指定安全字段，不写进公开材料 |
 | 当前运行配置 | 纯词法、`AML_EMBED_ENABLED=false`、`AML_MEMORY_CACHE_USERS=1`、`AML_COMPRESS_TEXT=true`；新提交具备压缩编码及混合行解码路径 |
-| 当前候选精确源码 | `https://github.com/M1IH/agent-memory-challenge/commit/5d1f82d3d7789051b47c4a9f70f1dbf07d07c794`；第五次原镜像 Smoke 68.09，新构建镜像第八次独立 Smoke 62.19，任务 `teval_55e300718ab6b533`、46/46 成功。压缩候选 `3d5f42258365a57a1425ae64f01525a06429f26c` 在第六、七次分别为 61.36、62.84 |
+| 当前候选精确源码 | `https://github.com/M1IH/agent-memory-challenge/commit/3d5f42258365a57a1425ae64f01525a06429f26c`；当前重新构建的压缩镜像 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0` 尚无独立 Smoke。第六、七次同源码的较早镜像分别为 61.36、62.84，不能作为当前镜像成绩。第五版原镜像 68.09、新构建镜像第八次 62.19，仅作为对照 |
 | 当前资源 | Railway Free，单副本，1 vCPU/0.5 GB RAM 上限，`/data` 卷 68.395008/500 MB（2026-10-30 CLI）；`/health` 返回 200。容量数字仍不能证明 Full 峰值安全 |
 
 ## 可粘贴的方法与来源说明
