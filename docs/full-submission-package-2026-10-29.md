@@ -6,6 +6,8 @@
 
 官网已绑定当前压缩镜像对应版本 `v1.5.2-compress-3d5f422`，Add/Search 均指向下表 Railway 域名。文本 Smoke 任务 `teval_27981a1477d5ca6c` 于北京时间 09:05:33 失败，0/1、无分数，错误 `ADD_ACCESS_DENIED · HTTP 403`。确认页参数为 Add/Search 并发 16/16、Top K 100，运行标签 `smoke9-compress-rebuilt-3d5f422-20261031`。Railway 同时段只显示对 `/add`、`/search` 的 200 响应，未记录 403；应用代码鉴权失败返回 401。故 403 来源尚未定位，不能当作当前镜像的通过记录，也不能据此发起 Full。官网提供原任务断点续跑入口，但浏览器确认后无法可靠核实是否生效；应先查原任务状态，避免另建 Full。
 
+北京时间 09:41:19，原任务断点续跑的第二次尝试也以相同 403 失败；官网现显示失败尝试共 2 次，续跑入口消失，新 Smoke 冷却至 10:05。Railway 在两次失败时均从休眠唤醒，`HEAD /add` 在约 10 秒时被客户端取消并记为 499；服务随后响应 200。冷启动与平台所报 403 的具体映射尚未证实。Railway Free 拒绝关闭休眠（要求 serverless）；配置尝试导致一次从默认 `main` 分支构建的部署，已从固定源码工作区重新部署并恢复原压缩镜像 digest。当前 deployment `4d5c34c8-2533-4612-9351-7e69eedcc348` 为 SUCCESS，镜像仍是 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`，`/health` 200。冷却期保持服务唤醒后再独立运行 Smoke；未通过前不启动 Full。
+
 ## 已核实的可填信息
 
 | 字段 | 目前准确值或说明 |
@@ -14,7 +16,7 @@
 | 已通过 Smoke 的版本 | `v1.4.0-stage-notice-5d1f82d`，任务 `teval_ba5f1ec7c158cd00`，2026-10-27 成功，平均 68.09 |
 | 公开仓库 | `https://github.com/M1IH/agent-memory-challenge`；必须同时给精确提交，不能只填仓库根地址 |
 | 已通过 Smoke 的精确源码 | `https://github.com/M1IH/agent-memory-challenge/commit/5d1f82d3d7789051b47c4a9f70f1dbf07d07c794` |
-| 当前生产部署 | Railway `production/api`，从压缩提交 `3d5f42258365a57a1425ae64f01525a06429f26c` 重新构建的 deployment `afb585d2-3178-4252-a1e4-22f2d88bd949`，镜像 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`；2026-10-30 18:48 CLI 显示 SUCCESS，`/health` 返回 200。此镜像尚未独立 Smoke |
+| 当前生产部署 | Railway `production/api`，从压缩提交 `3d5f42258365a57a1425ae64f01525a06429f26c` 独立工作区部署的 deployment `4d5c34c8-2533-4612-9351-7e69eedcc348`，镜像 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`；2026-10-31 CLI 显示 SUCCESS，`/health` 返回 200。当前镜像对应的第九次 Smoke 因访问错误失败，无有效分数 |
 | HTTPS 接口 | `https://api-production-40d75.up.railway.app/add`、`https://api-production-40d75.up.railway.app/search`、`https://api-production-40d75.up.railway.app/health` |
 | 鉴权 | `Authorization: Bearer <Memory System Key>`；Key 只能填官网指定安全字段，不写进公开材料 |
 | 当前运行配置 | 纯词法、`AML_EMBED_ENABLED=false`、`AML_MEMORY_CACHE_USERS=1`、`AML_COMPRESS_TEXT=true`；新提交具备压缩编码及混合行解码路径 |
