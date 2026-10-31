@@ -9,5 +9,6 @@
 - Railway `production/api` 当前 deployment `4d5c34c8-2533-4612-9351-7e69eedcc348`，镜像 `sha256:e0fba106290992d5cc6b9cf69b3e4852d615d4be10a02cee2a025cfd9c66dfd0`；服务开启鉴权，应用无 403 返回路径，错误鉴权返回 401。
 - Railway HTTP 日志在失败时段见 `/add`、`/search` 的 200 响应，HEAD 请求在唤醒时有 499、唤醒后有 405；未见 403。WAF Under Attack Mode 为 disabled。第十次提交前已确认服务在运行并返回 200。
 - 此前相同账户已有八次成功的文本 Smoke；第九、十次是新绑定版本与当前部署镜像的评测。当前镜像的官方 Smoke 尚未通过，因此未启动 Full。
+- [官方 API 指南](https://agentmemoryleaderboard.ai/api-guide)将 HTTP 403 定义为 Add/Search 访问被拒绝，并注明不会自动重试。由于应用鉴权代码只会返回 401，Railway HTTP 日志也无 403，这一分类尚不能证明 403 由参赛服务产生；需要评测侧提供实际请求与响应来源才能定位。
 
 拟发送的技术问题：请检查这些任务的评测节点实际请求目标、收到的 403 响应来源及响应体、鉴权头是否被转发，以及是否有平台侧访问策略拦截。请告知是否可对相同任务续跑或在问题修复后重新运行 Smoke。
