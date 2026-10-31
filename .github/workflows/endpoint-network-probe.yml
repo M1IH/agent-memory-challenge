@@ -1,0 +1,31 @@
+name: endpoint-network-probe
+
+on:
+  push:
+    branches: [codex/smoke4-iteration]
+    paths: [.github/workflows/endpoint-network-probe.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe public endpoint from GitHub runner without a secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=https://api-production-40d75.up.railway.app
+          for path in health add search; do
+            curl --retry 2 --retry-delay 3 --max-time 30 -sS -o /dev/null \
+              -w "GET /$path -> %{http_code} remote_ip=%{remote_ip}\n" "$base/$path"
+          done
+          status=$(curl --retry 2 --retry-delay 3 --max-time 30 -sS -o /dev/null \
+            -w '%{http_code}' -X POST "$base/add" \
+            -H 'Authorization: Bearer deliberately-invalid-probe' \
+            -H 'Content-Type: application/json' -d '{}')
+          echo "POST /add with invalid key -> $status"
+          test "$status" = 401
