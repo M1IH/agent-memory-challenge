@@ -9,8 +9,10 @@ from typing import Any, Awaitable, Callable
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator, model_validator
+from botocore.exceptions import BotoCoreError, ClientError
 
 from .store import MemoryStore, PayloadTooLargeError, RequestConflictError
+from .overflow import OverflowJournal
 
 
 logger = logging.getLogger(__name__)
@@ -290,10 +292,16 @@ app.add_middleware(
 compress_text = os.getenv("AML_COMPRESS_TEXT", "false").strip().lower()
 if compress_text not in {"true", "false"}:
     raise ValueError("AML_COMPRESS_TEXT must be true or false")
-store = MemoryStore(
-    os.getenv("AML_DB_PATH", "data/memory.db"),
-    compress_text=compress_text == "true",
-)
+seed_path = os.getenv("AML_DB_PATH", "data/memory.db")
+journal = OverflowJournal.from_environment()
+replay_keys = []
+database_path = seed_path
+if journal is not None:
+    database_path = os.getenv("AML_OVERFLOW_RUNTIME_PATH", "/tmp/aml-memory.db")
+    replay_keys = journal.prepare(seed_path=seed_path, runtime_path=database_path)
+store = MemoryStore(database_path, compress_text=compress_text == "true", journal=journal)
+if journal is not None:
+    logger.info("Restored %d durable Add requests", journal.replay(store, replay_keys))
 
 
 @app.exception_handler(sqlite3.Error)
@@ -301,6 +309,17 @@ async def storage_error_response(_request: Request, exc: sqlite3.Error) -> JSONR
     logger.error("storage operation failed (%s)", type(exc).__name__)
     return JSONResponse(
         status_code=503,
+        content={"detail": "Storage temporarily unavailable"},
+    )
+
+
+@app.exception_handler(BotoCoreError)
+@app.exception_handler(ClientError)
+async def bucket_error_response(_request: Request, exc: Exception) -> JSONResponse:
+    logger.error("durable journal operation failed (%s)", type(exc).__name__)
+    return JSONResponse(
+        status_code=503,
+        headers={"Retry-After": "5"},
         content={"detail": "Storage temporarily unavailable"},
     )
 

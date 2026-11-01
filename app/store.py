@@ -473,6 +473,7 @@ class MemoryStore:
         embedder: Encoder | bool | None = None,
         retrieval_config: RetrievalConfig | None = None,
         compress_text: bool = False,
+        journal=None,
     ):
         self.path = str(path)
         if self.path == ":memory:":
@@ -484,6 +485,7 @@ class MemoryStore:
         self._lock = threading.RLock()
         self._retrieval = retrieval_config or RetrievalConfig()
         self._compress_text = compress_text
+        self._journal = journal
         if embedder is False:
             self._embedder = None
         elif embedder is not None:
@@ -688,6 +690,8 @@ class MemoryStore:
         user_id: str,
         session_id: str,
         messages: Iterable[dict],
+        _created_at: str | None = None,
+        _skip_journal: bool = False,
     ) -> None:
         message_values = list(messages)
         if sum(len(message["content"]) for message in message_values) > self.max_add_chars:
@@ -756,7 +760,7 @@ class MemoryStore:
         if len(vector_shapes) > 1:
             raise RuntimeError("embedding backend returned inconsistent vector dimensions")
         rows = []
-        now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        now = _created_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         for index, (message, content, display_content, index_content, embedding) in enumerate(
             zip(
                 message_values,
@@ -858,6 +862,19 @@ class MemoryStore:
                 """,
                 (user_id,),
             )
+            if self._journal is not None and not _skip_journal:
+                # Keep this inside the transaction: failed S3 writes roll back
+                # SQLite, while a crash after S3 writes can be replayed.
+                durable_created_at = self._journal.record(
+                    request_id=request_id, user_id=user_id,
+                    session_id=session_id, messages=message_values,
+                    created_at=now, payload_hash=payload_hash,
+                )
+                if durable_created_at != now:
+                    connection.execute(
+                        "UPDATE memories SET created_at = ? WHERE user_id = ? AND request_id = ?",
+                        (durable_created_at, user_id, request_id),
+                    )
         self._invalidate_memory_cache(user_id)
 
     def _invalidate_memory_cache(self, user_id: str) -> None:
