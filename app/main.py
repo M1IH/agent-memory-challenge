@@ -5,6 +5,7 @@ import os
 import secrets
 import sqlite3
 import threading
+import time
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
@@ -307,6 +308,21 @@ store = MemoryStore(database_path, compress_text=compress_text == "true", journa
 search_slots = threading.BoundedSemaphore(4 if journal is not None else 16)
 recovery_ready = threading.Event()
 if journal is not None:
+    def release_db_cache() -> None:
+        # Railway counts clean SQLite file cache against its 512 MB memory
+        # limit. DONTNEED only evicts cached pages; it does not alter data.
+        if not hasattr(os, "posix_fadvise"):
+            return
+        for path in (seed_path, database_path):
+            try:
+                descriptor = os.open(path, os.O_RDONLY)
+                try:
+                    os.posix_fadvise(descriptor, 0, 0, os.POSIX_FADV_DONTNEED)
+                finally:
+                    os.close(descriptor)
+            except OSError:
+                logger.warning("Could not release SQLite file cache", exc_info=True)
+
     def restore_journal() -> None:
         try:
             restored = journal.replay(store, replay_keys)
@@ -314,9 +330,24 @@ if journal is not None:
             logger.exception("Durable Add recovery failed")
             return
         logger.info("Restored %d durable Add requests", restored)
+        release_db_cache()
         recovery_ready.set()
 
+    def sweep_db_cache() -> None:
+        while True:
+            time.sleep(5)
+            if not recovery_ready.is_set():
+                continue
+            try:
+                with open("/sys/fs/cgroup/memory.current") as handle:
+                    current_bytes = int(handle.read())
+            except (OSError, ValueError):
+                return
+            if current_bytes > 300 * 1024 * 1024:
+                release_db_cache()
+
     threading.Thread(target=restore_journal, name="overflow-recovery", daemon=True).start()
+    threading.Thread(target=sweep_db_cache, name="sqlite-cache-sweep", daemon=True).start()
 else:
     recovery_ready.set()
 
