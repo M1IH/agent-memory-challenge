@@ -4,6 +4,7 @@ import logging
 import os
 import secrets
 import sqlite3
+import threading
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
@@ -223,7 +224,7 @@ class AddResponse(BaseModel):
 
 
 class SearchRequest(BaseModel):
-    query: str = Field(min_length=1, max_length=100_000)
+    query: str = Field(min_length=1, max_length=250_000)
     options: list[str] | None = Field(default=None, max_length=1000)
     user_id: str = Field(min_length=1, max_length=512)
     top_k: int = Field(ge=1, le=1000)
@@ -299,9 +300,30 @@ database_path = seed_path
 if journal is not None:
     database_path = os.getenv("AML_OVERFLOW_RUNTIME_PATH", "/tmp/aml-memory.db")
     replay_keys = journal.prepare(seed_path=seed_path, runtime_path=database_path)
+    # The Free container has 512 MB RAM; concurrent user snapshots and cached
+    # snapshots otherwise push the process over that limit during Full Search.
+    os.environ["AML_MEMORY_CACHE_USERS"] = "0"
 store = MemoryStore(database_path, compress_text=compress_text == "true", journal=journal)
+search_slots = threading.BoundedSemaphore(4 if journal is not None else 16)
+recovery_ready = threading.Event()
 if journal is not None:
-    logger.info("Restored %d durable Add requests", journal.replay(store, replay_keys))
+    def restore_journal() -> None:
+        try:
+            restored = journal.replay(store, replay_keys)
+        except Exception:
+            logger.exception("Durable Add recovery failed")
+            return
+        logger.info("Restored %d durable Add requests", restored)
+        recovery_ready.set()
+
+    threading.Thread(target=restore_journal, name="overflow-recovery", daemon=True).start()
+else:
+    recovery_ready.set()
+
+
+def require_recovery_ready() -> None:
+    if not recovery_ready.is_set():
+        raise HTTPException(status_code=503, detail="Memory recovery in progress", headers={"Retry-After": "10"})
 
 
 @app.exception_handler(sqlite3.Error)
@@ -326,12 +348,15 @@ async def bucket_error_response(_request: Request, exc: Exception) -> JSONRespon
 
 @app.get("/health")
 def health() -> dict[str, str]:
+    if not recovery_ready.is_set():
+        return {"status": "recovering"}
     store.check_health()
     return {"status": "ok"}
 
 
 @app.post("/add", response_model=AddResponse, dependencies=[Depends(require_api_key)])
 def add_memory(request: AddRequest) -> AddResponse:
+    require_recovery_ready()
     try:
         store.add(
             request_id=request.request_id,
@@ -353,15 +378,17 @@ def add_memory(request: AddRequest) -> AddResponse:
 
 @app.post("/search", response_model=SearchResponse, dependencies=[Depends(require_api_key)])
 def search_memory(request: SearchRequest) -> SearchResponse:
-    try:
-        return SearchResponse(
-            data=store.search(
-                user_id=request.user_id,
-                query=request.query,
-                options=request.options,
-                top_k=request.top_k,
-                query_at_ms=request.query_timestamp,
+    require_recovery_ready()
+    with search_slots:
+        try:
+            return SearchResponse(
+                data=store.search(
+                    user_id=request.user_id,
+                    query=request.query,
+                    options=request.options,
+                    top_k=request.top_k,
+                    query_at_ms=request.query_timestamp,
+                )
             )
-        )
-    except PayloadTooLargeError as exc:
-        raise HTTPException(status_code=413, detail=str(exc)) from exc
+        except PayloadTooLargeError as exc:
+            raise HTTPException(status_code=413, detail=str(exc)) from exc

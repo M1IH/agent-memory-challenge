@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import sqlite3
 import zlib
+from concurrent.futures import ThreadPoolExecutor
 
 import boto3
 from botocore.exceptions import ClientError
@@ -105,14 +106,21 @@ class OverflowJournal:
         return keys
 
     def replay(self, store, keys: list[str]) -> int:
-        count = 0
-        for key in keys:
+        def fetch_record(key: str) -> dict:
             payload = self.client.get_object(Bucket=self.bucket, Key=key)["Body"].read()
-            record = json.loads(zlib.decompress(payload))
-            store.add(
-                request_id=record["request_id"], user_id=record["user_id"],
-                session_id=record["session_id"], messages=record["messages"],
-                _created_at=record["created_at"], _skip_journal=True,
-            )
-            count += 1
+            return json.loads(zlib.decompress(payload))
+
+        count = 0
+        # Fetch in bounded parallel batches; apply in stable key order so a
+        # restart rebuilds the same SQLite state without holding every record
+        # in memory. The S3 client supports concurrent requests.
+        with ThreadPoolExecutor(max_workers=16) as pool:
+            for offset in range(0, len(keys), 128):
+                for record in pool.map(fetch_record, keys[offset:offset + 128]):
+                    store.add(
+                        request_id=record["request_id"], user_id=record["user_id"],
+                        session_id=record["session_id"], messages=record["messages"],
+                        _created_at=record["created_at"], _skip_journal=True,
+                    )
+                    count += 1
         return count
