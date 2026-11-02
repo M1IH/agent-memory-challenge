@@ -342,8 +342,9 @@ if journal is not None:
     def sweep_db_cache() -> None:
         while True:
             time.sleep(1)
-            if not recovery_ready.is_set():
-                continue
+            # Seed copy and durable Add replay can fill the 512 MiB cgroup
+            # before recovery_ready is set. Evict clean SQLite pages during
+            # recovery too, so the restore itself does not exhaust memory.
             try:
                 with open("/sys/fs/cgroup/memory.current") as handle:
                     current_bytes = int(handle.read())
