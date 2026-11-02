@@ -210,6 +210,47 @@ class StoreSafetyTests(unittest.TestCase):
         self.assertEqual({}, store._memory_cache)
         self.assertEqual({}, store._cache_loads)
 
+    def test_concurrent_loads_share_snapshot_with_resident_cache_disabled(self):
+        with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "0"}):
+            store = MemoryStore(self.path, embedder=False)
+        store.add("one", "alice", "session", [{"role": "user", "content": "tea"}])
+        original_connection = store._connection
+        connection_count = 0
+        count_lock = threading.Lock()
+        owner_loading = threading.Event()
+        release_owner = threading.Event()
+        waiter_checked_generation = threading.Event()
+
+        @contextmanager
+        def controlled_connection():
+            nonlocal connection_count
+            with count_lock:
+                connection_count += 1
+                call_number = connection_count
+            if call_number == 2:
+                owner_loading.set()
+                if not release_owner.wait(timeout=5):
+                    raise AssertionError("owner load was not released")
+            with original_connection() as connection:
+                yield connection
+            if call_number == 3:
+                waiter_checked_generation.set()
+
+        with (
+            patch.object(store, "_connection", controlled_connection),
+            ThreadPoolExecutor(max_workers=2) as executor,
+        ):
+            owner = executor.submit(store._load_user_memories, "alice")
+            self.assertTrue(owner_loading.wait(timeout=5))
+            waiter = executor.submit(store._load_user_memories, "alice")
+            self.assertTrue(waiter_checked_generation.wait(timeout=5))
+            release_owner.set()
+            first, second = owner.result(timeout=10), waiter.result(timeout=10)
+
+        self.assertIs(first, second)
+        self.assertEqual(1, store.memory_cache_stats()["waiter_reuses"])
+        self.assertEqual(0, store.memory_cache_stats()["resident_users"])
+
     def test_memory_cache_evicts_users_to_stay_within_byte_budget(self):
         with patch.dict("os.environ", {"AML_MEMORY_CACHE_USERS": "3"}):
             store = MemoryStore(self.path, embedder=False)

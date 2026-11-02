@@ -898,39 +898,41 @@ class MemoryStore:
     def _load_user_memories(self, user_id: str) -> list[Memory]:
         generation = 0
         owns_load = False
-        if self.memory_cache_users:
-            while True:
-                with self._connection() as connection:
-                    row = connection.execute(
-                        "SELECT generation FROM memory_generations WHERE user_id = ?",
-                        (user_id,),
-                    ).fetchone()
-                generation = 0 if row is None else row["generation"]
+        # Coalesce overlapping loads even when the resident cache is disabled.
+        # Full Search sends many requests for one large user at once; building
+        # a separate Python snapshot for each request can exhaust Free memory.
+        while True:
+            with self._connection() as connection:
+                row = connection.execute(
+                    "SELECT generation FROM memory_generations WHERE user_id = ?",
+                    (user_id,),
+                ).fetchone()
+            generation = 0 if row is None else row["generation"]
+            with self._cache_lock:
+                cached = self._memory_cache.get(user_id)
+                if cached is not None and cached[0] == generation:
+                    self._memory_cache.move_to_end(user_id)
+                    self._memory_cache_stats["hits"] += 1
+                    return cached[2]
+                pending = self._cache_loads.get(user_id)
+                if pending is None:
+                    self._cache_loads[user_id] = _MemoryLoad(generation)
+                    owns_load = True
+                    break
+            pending.event.wait()
+            with self._connection() as connection:
+                row = connection.execute(
+                    "SELECT generation FROM memory_generations WHERE user_id = ?",
+                    (user_id,),
+                ).fetchone()
+            current_generation = 0 if row is None else row["generation"]
+            if (
+                pending.generation == current_generation
+                and pending.memories is not None
+            ):
                 with self._cache_lock:
-                    cached = self._memory_cache.get(user_id)
-                    if cached is not None and cached[0] == generation:
-                        self._memory_cache.move_to_end(user_id)
-                        self._memory_cache_stats["hits"] += 1
-                        return cached[2]
-                    pending = self._cache_loads.get(user_id)
-                    if pending is None:
-                        self._cache_loads[user_id] = _MemoryLoad(generation)
-                        owns_load = True
-                        break
-                pending.event.wait()
-                with self._connection() as connection:
-                    row = connection.execute(
-                        "SELECT generation FROM memory_generations WHERE user_id = ?",
-                        (user_id,),
-                    ).fetchone()
-                current_generation = 0 if row is None else row["generation"]
-                if (
-                    pending.generation == current_generation
-                    and pending.memories is not None
-                ):
-                    with self._cache_lock:
-                        self._memory_cache_stats["waiter_reuses"] += 1
-                    return pending.memories
+                    self._memory_cache_stats["waiter_reuses"] += 1
+                return pending.memories
 
         memories: list[Memory] | None = None
         load_succeeded = False
