@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ctypes
+import gc
 import logging
 import os
 import secrets
@@ -306,6 +308,7 @@ if journal is not None:
     os.environ["AML_MEMORY_CACHE_USERS"] = "0"
 store = MemoryStore(database_path, compress_text=compress_text == "true", journal=journal)
 search_slots = threading.BoundedSemaphore(2 if journal is not None else 16)
+search_cleanup_lock = threading.Lock()
 recovery_ready = threading.Event()
 if journal is not None:
     def release_db_cache() -> None:
@@ -423,3 +426,13 @@ def search_memory(request: SearchRequest) -> SearchResponse:
             )
         except PayloadTooLargeError as exc:
             raise HTTPException(status_code=413, detail=str(exc)) from exc
+        finally:
+            if journal is not None:
+                with search_cleanup_lock:
+                    gc.collect()
+                    if os.name == "posix":
+                        try:
+                            ctypes.CDLL(None).malloc_trim(0)
+                        except AttributeError:
+                            pass
+                    release_db_cache()
