@@ -305,7 +305,7 @@ if journal is not None:
     # snapshots otherwise push the process over that limit during Full Search.
     os.environ["AML_MEMORY_CACHE_USERS"] = "0"
 store = MemoryStore(database_path, compress_text=compress_text == "true", journal=journal)
-search_slots = threading.BoundedSemaphore(4 if journal is not None else 16)
+search_slots = threading.BoundedSemaphore(2 if journal is not None else 16)
 recovery_ready = threading.Event()
 if journal is not None:
     def release_db_cache() -> None:
@@ -335,7 +335,7 @@ if journal is not None:
 
     def sweep_db_cache() -> None:
         while True:
-            time.sleep(5)
+            time.sleep(1)
             if not recovery_ready.is_set():
                 continue
             try:
@@ -343,7 +343,7 @@ if journal is not None:
                     current_bytes = int(handle.read())
             except (OSError, ValueError):
                 return
-            if current_bytes > 300 * 1024 * 1024:
+            if current_bytes > 220 * 1024 * 1024:
                 release_db_cache()
 
     threading.Thread(target=restore_journal, name="overflow-recovery", daemon=True).start()
