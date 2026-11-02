@@ -935,6 +935,7 @@ class MemoryStore:
         memories: list[Memory] | None = None
         load_succeeded = False
         try:
+            memories = []
             with self._connection() as connection:
                 db_rows = connection.execute(
                     """
@@ -945,37 +946,35 @@ class MemoryStore:
                     FROM memories WHERE user_id = ?
                     """,
                     (user_id,),
-                ).fetchall()
-
-            memories = []
-            for row in db_rows:
-                embedding = None
-                if row["embedding"] is not None:
-                    try:
-                        embedding = np.frombuffer(row["embedding"], dtype=np.float32)
-                    except ValueError:
-                        embedding = None
-                    if embedding is not None and not np.all(np.isfinite(embedding)):
-                        embedding = None
-                stored_terms = _decode_stored_text(row["terms"])
-                stored_content = _decode_stored_text(row["content"])
-                terms = stored_terms.split()
-                term_counts: dict[str, int] = {}
-                for term in terms:
-                    term_counts[term] = term_counts.get(term, 0) + 1
-                memories.append(Memory(
-                    id=row["id"], request_id=row["request_id"],
-                    session_id=row["session_id"], storage_order=row["storage_order"],
-                    content=stored_content,
-                    timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
-                    observed_at_ms=row["observed_at_ms"],
-                    valid_from_ms=row["valid_from_ms"], valid_to_ms=row["valid_to_ms"],
-                    retracted_at_ms=row["retracted_at_ms"],
-                    fact_subject=row["fact_subject"],
-                    fact_relation=row["fact_relation"],
-                    fact_object=row["fact_object"],
-                    terms=terms, term_counts=term_counts, embedding=embedding,
-                ))
+                )
+                for row in db_rows:
+                    embedding = None
+                    if row["embedding"] is not None:
+                        try:
+                            embedding = np.frombuffer(row["embedding"], dtype=np.float32)
+                        except ValueError:
+                            embedding = None
+                        if embedding is not None and not np.all(np.isfinite(embedding)):
+                            embedding = None
+                    stored_terms = _decode_stored_text(row["terms"])
+                    stored_content = _decode_stored_text(row["content"])
+                    terms = stored_terms.split()
+                    term_counts: dict[str, int] = {}
+                    for term in terms:
+                        term_counts[term] = term_counts.get(term, 0) + 1
+                    memories.append(Memory(
+                        id=row["id"], request_id=row["request_id"],
+                        session_id=row["session_id"], storage_order=row["storage_order"],
+                        content=stored_content,
+                        timestamp_ms=row["timestamp_ms"], created_at=row["created_at"],
+                        observed_at_ms=row["observed_at_ms"],
+                        valid_from_ms=row["valid_from_ms"], valid_to_ms=row["valid_to_ms"],
+                        retracted_at_ms=row["retracted_at_ms"],
+                        fact_subject=row["fact_subject"],
+                        fact_relation=row["fact_relation"],
+                        fact_object=row["fact_object"],
+                        terms=terms, term_counts=term_counts, embedding=embedding,
+                    ))
             if self.memory_cache_users:
                 snapshot_bytes = memory_snapshot_size_bytes(memories)
                 with self._cache_lock:
@@ -1019,6 +1018,8 @@ class MemoryStore:
                 "Search query and options exceed the configured character limit"
             )
         query_terms = tokenize(query)
+        unique_query_terms = set(query_terms)
+        sorted_query_terms = tuple(sorted(unique_query_terms))
         config = self._retrieval
         expansion_terms = semantic_expansion_terms(query) if config.expansion_enabled else []
         option_texts = [
@@ -1027,6 +1028,9 @@ class MemoryStore:
             if option.strip()
         ]
         option_terms = [tokenize(option) for option in option_texts]
+        sorted_option_terms = [tuple(sorted(set(terms))) for terms in option_terms if terms]
+        query_lower = query.lower()
+        option_lowers = [option.lower() for option in option_texts]
         if not query_terms and self._embedder is None:
             return []
 
@@ -1132,7 +1136,7 @@ class MemoryStore:
                     " ".join(memory.fact_relation.casefold().split()),
                 )
                 groups.setdefault(key, []).append(memory)
-            query_term_set = set(query_terms)
+            query_term_set = unique_query_terms
             comparison_query = (
                 has_marker(query, _CURRENT_MARKERS)
                 and has_marker(query, _HISTORICAL_MARKERS)
@@ -1181,8 +1185,8 @@ class MemoryStore:
             return (-item[0], -rank_timestamp(item[1]), item[1].id)
 
         for memory in memories:
-            score = self._bm25(
-                query_terms, memory.term_counts, len(memory.terms),
+            score = self._bm25_unique(
+                sorted_query_terms, memory.term_counts, len(memory.terms),
                 document_frequency, len(memories), average_length,
             )
             # Options are supporting evidence, not extra query text. Scoring each
@@ -1190,11 +1194,11 @@ class MemoryStore:
             # user's actual question.
             option_score = max(
                 (
-                    self._bm25(
+                    self._bm25_unique(
                         terms, memory.term_counts, len(memory.terms),
                         document_frequency, len(memories), average_length,
                     )
-                    for terms in option_terms if terms
+                    for terms in sorted_option_terms
                 ),
                 default=0.0,
             )
@@ -1205,7 +1209,6 @@ class MemoryStore:
                     document_frequency, len(memories), average_length,
                 )
 
-            unique_query_terms = set(query_terms)
             matched_query_terms = unique_query_terms.intersection(memory.terms)
             score += 0.75 * len(matched_query_terms) / max(len(unique_query_terms), 1)
             if (
@@ -1215,9 +1218,10 @@ class MemoryStore:
                 and has_marker(memory.content, _HISTORICAL_MARKERS)
             ):
                 score += 10.0
-            if query.lower() in memory.content.lower():
+            content_lower = memory.content.lower()
+            if query_lower in content_lower:
                 score += 2.0
-            if any(option.lower() in memory.content.lower() for option in option_texts):
+            if any(option in content_lower for option in option_lowers):
                 score += 0.5
             score += event_consistency_score(query, memory.content)
             if memory.id in temporal_ids:
@@ -1613,9 +1617,20 @@ class MemoryStore:
         document_frequency: dict[str, int], document_count: int,
         average_length: float,
     ) -> float:
+        return MemoryStore._bm25_unique(
+            tuple(sorted(set(query_terms))), term_counts, document_length,
+            document_frequency, document_count, average_length,
+        )
+
+    @staticmethod
+    def _bm25_unique(
+        query_terms: tuple[str, ...], term_counts: dict[str, int], document_length: int,
+        document_frequency: dict[str, int], document_count: int,
+        average_length: float,
+    ) -> float:
         k1, b = 1.5, 0.75
         score = 0.0
-        for term in sorted(set(query_terms)):
+        for term in query_terms:
             frequency = term_counts.get(term, 0)
             if not frequency:
                 continue
