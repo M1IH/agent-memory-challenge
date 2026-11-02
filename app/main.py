@@ -307,7 +307,10 @@ if journal is not None:
     # snapshots otherwise push the process over that limit during Full Search.
     os.environ["AML_MEMORY_CACHE_USERS"] = "0"
 store = MemoryStore(database_path, compress_text=compress_text == "true", journal=journal)
-search_slots = threading.BoundedSemaphore(2 if journal is not None else 16)
+# The Free container has only 512 MB. Sustained mixed-user Full searches can
+# overlap two large Python snapshots and exhaust memory even with load sharing.
+# Serialize Search so cleanup can release each snapshot before the next load.
+search_slots = threading.BoundedSemaphore(1 if journal is not None else 16)
 search_cleanup_lock = threading.Lock()
 recovery_ready = threading.Event()
 if journal is not None:
