@@ -1,0 +1,44 @@
+name: keepalive
+
+# Railway Free 强制 sleepApplication=true，空闲约 5-11 分钟即休眠。
+# 冷启动实测 19 分钟（容器启动 4 min + 恢复 15 min），而官方 Add 重试预算
+# 仅约 10 分钟（32 次 @ ~20s）。因此一旦休眠，评测必然 503 失败。
+# 本 workflow 以 5 分钟间隔持续打 /health，使容器保持唤醒。
+#
+# 校验 body 为 {"status":"ok"} 而非仅 HTTP 200：
+# 恢复期间 /health 返回 200 + {"status":"recovering"}，此时不可服务。
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping health and assert body status
+        shell: bash
+        run: |
+          set -uo pipefail
+          base=https://api-production-40d75.up.railway.app
+          for attempt in 1 2 3 4 5 6; do
+            code=$(curl -sS --max-time 40 -o /tmp/body -w '%{http_code}' "$base/health" || echo 000)
+            body=$(cat /tmp/body 2>/dev/null || true)
+            echo "attempt $attempt -> HTTP $code body=$body"
+            if [ "$code" = "200" ] && printf '%s' "$body" | grep -q '"status"[[:space:]]*:[[:space:]]*"ok"'; then
+              echo "healthy: status=ok"
+              exit 0
+            fi
+            sleep 45
+          done
+          echo "::warning::health did not reach status=ok within the retry window (service may be recovering)"
+          exit 0
